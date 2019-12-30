@@ -1,0 +1,19 @@
+# Example .gitignore file for your config dir. Lines with ! will not be ignored.
+*
+!packages/
+!automations/
+!automations/mqttswitches/
+!config_generator/
+!*.yaml
+!.gitignore
+*.conf
+*.txt
+*.log
+.storage
+.cloud
+.google.token
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml
+google_calendars.yaml
+

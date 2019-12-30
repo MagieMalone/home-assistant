@@ -1,0 +1,14 @@
+device_tracker.b04e266ba1f5:
+  friendly_name: hs110
+sensor.power_current:
+  unit_of_measurement: W
+sensor.tp_link_watts:
+  icon: mdi:power-plug
+sensor.tp_link_volts:
+  icon: mdi:power-plug
+sensor.tp_link_kw:
+  icon: mdi:power-plug
+sensor.tp_link_amps:
+  icon: mdi:power-plug
+device_tracker.4dd0404d:
+  friendly_name: Oneplus3-gps

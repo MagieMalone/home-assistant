@@ -1,0 +1,69 @@
+input_boolean:
+  cleaningmode:
+    name: cleaning mode
+automation:
+  - alias: 'cleaning mode on'
+    id: '0643587777777738989'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: input_boolean.cleaningmode
+        to: 'on'
+    action:
+      - service: script.cleaningmode_on
+  - alias: 'cleaning mode off'
+    id: '6753290123480'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: input_boolean.cleaningmode
+        to: 'off'
+    action:
+      - service: script.cleaningmode_off
+  - alias: 'hue dimmer switch on'
+    id: '87504935709864210938'
+    hide_entity: true
+    trigger: 
+      - platform: state
+        entity_id: sensor.hue_dimmer_switch_1
+        to: '1_click_up'
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.cleaningmode
+  - alias: 'hue dimmer switch off'
+    id: '87504935709864210938'
+    hide_entity: true
+    trigger: 
+      - platform: state
+        entity_id: sensor.hue_dimmer_switch_1
+        to: '4_click_up'
+    action:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.cleaningmode
+script:
+  cleaningmode_on:
+    sequence:
+      - service: light.turn_on
+        entity_id: light.computer, light.eettafel, light.hal, light.slaapkamer, light.staande_lamp
+        data:
+          color_name: white
+          brightness_pct: 100
+          transition: 15
+      - service: light.turn_on
+        entity_id: light.keuken, light.trap_hal, light.overloop, light.sk_spot_1, light.sk_spot_2
+        data:
+          color_temp: 153
+          brightness_pct: 100
+          transition: 15
+  cleaningmode_off:
+    sequence:
+      - service: light.turn_on
+        entity_id: light.computer, light.eettafel, light.hal, light.slaapkamer, light.staande_lamp, light.keuken, light.trap_hal, light.overloop
+        data:
+          color_temp: 153
+          brightness_pct: 50
+          transition: 15
+      - service: light.turn_off
+        entity_id: light.computer, light.eettafel, light.hal, light.slaapkamer, light.staande_lamp
+      - service: light.turn_off
+        entity_id: light.keuken, light.trap_hal, light.overloop, light.sk_spot_1, light.sk_spot_2

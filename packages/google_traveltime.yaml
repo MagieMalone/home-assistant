@@ -1,0 +1,56 @@
+sensor:
+#  - platform: google_travel_time
+#    scan_interval: 1800
+#    name: Phone To Home
+#    api_key: !secret google_apikey
+#    origin: device_tracker.4dd0404d
+#    destination: zone.home
+  - platform: google_travel_time
+    scan_interval: 600
+    name: Home to ING
+    api_key: !secret google_apikey
+    origin: zone.home
+    destination: zone.ING
+  - platform: google_travel_time
+    scan_interval: 600
+    name: ING to Home
+    api_key: !secret google_apikey
+    origin: zone.ING
+    destination: zone.home 
+  - platform: google_travel_time
+    scan_interval: 900
+    api_key: !secret google_apikey
+    origin: device_tracker.4dd0404d
+    destination: sensor.cal_location
+    name: google_travel_time_driving
+  - platform: google_travel_time
+    scan_interval: 900
+    api_key: !secret google_apikey
+    origin: zone.home
+    destination: sensor.cal_location_alarm
+    name: google_travel_time_alarm
+    
+  - platform: statistics
+    entity_id: sensor.ing_to_home
+    name: ing_to_home_stats
+    sampling_size: 288
+  - platform: statistics
+    entity_id: sensor.home_to_ing
+    name: home_to_ing_stats
+    sampling_size: 288
+  - platform: template
+    sensors:
+      calc_travel_time:
+        value_template: >
+          {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
+          {%if duration == None %}
+            0
+          {% else %}
+            {%if duration.split(" ")[2]==Null %}
+              {{ duration.split(" ")[0] | int * 60 }}
+            {% else %}
+              {{ duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60}}
+            {% endif %}
+          {% endif %}
+      google_api_key:
+        value_template: !secret google_apikey

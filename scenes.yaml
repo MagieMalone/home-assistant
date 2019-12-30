@@ -1,0 +1,61 @@
+- id: '1575027586508'
+  name: film
+  entities:
+    light.computer:
+      state: 'off'
+    light.eettafel:
+      state: 'off'
+    light.hal:
+      state: 'off'
+    light.hue_lightstrip_plus_1:
+      brightness: 49
+      effect: none
+      hs_color:
+      - 289.955
+      - 86.667
+      rgb_color:
+      - 218
+      - 33
+      - 255
+      state: 'on'
+      xy_color:
+      - 0.336
+      - 0.137
+    light.keuken_1:
+      state: 'off'
+    light.keuken_2:
+      state: 'off'
+    light.keuken_3:
+      state: 'off'
+    light.overloop:
+      state: 'off'
+    light.sk_spot_1:
+      state: 'off'
+    light.sk_spot_2:
+      state: 'off'
+    light.slaapkamer:
+      state: 'off'
+    light.staande_lamp:
+      brightness: 64
+      effect: none
+      hs_color:
+      - 278.182
+      - 4.314
+      rgb_color:
+      - 250
+      - 243
+      - 255
+      state: 'on'
+      xy_color:
+      - 0.322
+      - 0.316
+    light.trap_hal:
+      state: 'off'
+    switch.0x7cb03eaa0a0036d6_switch:
+      state: 'on'
+    switch.0x7cb03eaa0a0219e9_switch:
+      state: 'on'
+    switch.0x7cb03eaa0a031c8d_switch:
+      state: 'on'
+    switch.circadian_lighting_circadian_lighting:
+      state: 'off'

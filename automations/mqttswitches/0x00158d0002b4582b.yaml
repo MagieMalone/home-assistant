@@ -1,0 +1,143 @@
+- alias: 'button click keuken  right '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: 'right'
+  action:
+    service_template: >
+      {% if is_state('light.keuken_1', 'off') %}
+        script.turn_on_light
+      {% else %}
+        script.turn_off_light
+      {% endif %}
+    data:
+      light_entities: light.keuken_1, light.keuken_2, light.keuken_3
+      kelvin: 5000
+      brightness_pct: 100
+
+- alias: 'button click keuken  left '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: 'left'
+  action:
+    service_template: >
+      {% if is_state('light.eettafel', 'off') %}
+        script.turn_on_light
+      {% else %}
+        script.turn_off_light
+      {% endif %}
+    data:
+      light_entities: light.eettafel
+      kelvin: 2000
+      brightness_pct: 33
+
+- alias: 'button click keuken  both '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: 'both'
+  action:
+    service_template: >
+      {% if is_state('light.keuken_1', 'off') %}
+        script.turn_on_light
+      {% else %}
+        script.turn_off_light
+      {% endif %}
+    data:
+        light_entities: light.eettafel, light.keuken_1, light.keuken_2, light.keuken_3
+
+- alias: 'button long_click keuken  right on '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: 'right_long'
+  action:
+    - service: script.dim_light
+      data:
+        light_entity: light.keuken_1, light.keuken_2, light.keuken_3
+
+- alias: 'button long_click keuken  right off'
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: ''
+      from: 'right_long'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: script.dim_light
+    - service: homeassistant.turn_off
+      entity_id: script.dim_light_loop
+      
+- alias: 'button long_click keuken  left on '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: 'left_long'
+  action:
+    - service: script.dim_light
+      data:
+        light_entity: light.eettafel
+
+- alias: 'button long_click keuken  left off'
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: ''
+      from: 'left_long'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: script.dim_light
+    - service: homeassistant.turn_off
+      entity_id: script.dim_light_loop
+
+- alias: 'button click keuken  right_double '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: 'right_double'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.circadian_lighting_circadian_lighting
+    - service: script.turn_on_light
+      data_template:
+        light_entities: light.keuken_1, light.keuken_2, light.keuken_3
+        kelvin: >
+            {% set current = state_attr('light.keuken_1', 'color_temp') |int %}
+            {% if current <= 200 %}
+              3000
+            {% elif current <= 350  %}
+              2000
+            {% else %}
+              6000
+            {% endif %}
+      
+- alias: 'button click keuken  left_double '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.0x00158d0002b4582b_click
+      to: 'left_double'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.circadian_lighting_circadian_lighting
+    - service: script.turn_on_light
+      data_template:
+        light_entities: light.eettafel
+        kelvin: >
+            {% set current = state_attr('light.eettafel', 'color_temp') |int %}
+            {% if current <= 200  %} 
+              3000
+            {% elif current <= 350  %}
+              2000
+            {% else %}
+              6000
+            {% endif %}

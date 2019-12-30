@@ -1,0 +1,69 @@
+
+camera:
+#  - platform: generic
+#    name: buienradar
+#    still_image_url:  https://api.buienradar.nl/image/1.0/RadarMapNL?w=500&h=512
+#  - platform: generic
+#    still_image_url:  http://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADAR_loop.gif
+  - platform: buienradar
+    name: buienradar
+input_number:
+  berkhout_temperatuur_0d:
+    name: Berkhout temparatuur forcast vandaag
+    unit_of_measurement: °C
+    min: -50
+    max: 50
+    mode: box
+    icon: mdi:thermometer
+  
+weather:
+  - platform: buienradar
+    name: 'Berkhout' 
+    latitude: 52.65
+    longitude: 4.98
+sensor:
+  - platform: buienradar
+    name: 'Berkhout' 
+    latitude: 52.65
+    longitude: 4.98
+    timeframe: 30
+    monitored_conditions:
+      - symbol
+      - humidity
+      - temperature
+      - windspeed
+      - conditiondetailed
+      - condition
+      - conditioncode
+      - visibility
+      - irradiance
+      - windazimuth
+      - precipitation_forecast_total
+      - temperature_1d
+  - platform: buienradar
+    name: 'de Bilt' 
+    latitude: 52.10
+    longitude: 5.18
+    monitored_conditions:
+      - symbol
+  - platform: buienradar
+    name: 'Schiphol' 
+    latitude: 52.30
+    longitude: 4.77
+    monitored_conditions:
+      - symbol
+      - pressure
+automation:
+  - alias: 'kopieer forecast naar input_number'
+    id: '8749832079108927490821'
+    hide_entity: true
+    trigger:
+      - platform: time
+        at: '00:00:01'
+    action:
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.berkhout_temperatuur_0d
+          value: '{{ states("sensor.berkhout_temperature_1d") }}'
+        
+      

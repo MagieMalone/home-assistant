@@ -1,0 +1,390 @@
+toon:
+  client_id: !secret toon_consumer_key
+  client_secret: !secret toon_consumer_secret
+input_select:
+  heating:
+    name: Heating options
+    options:
+      - sleep
+      - home
+      - comfort
+      - away
+    initial: away
+    icon: mdi:flame
+
+input_number:
+  thermostat_set_point:
+    name: Thermostaat
+    min: 5
+    max: 35
+    initial: 15
+    step: 0.5
+    unit_of_measurement: °C
+    icon: mdi:thermometer
+sensor:
+  - platform: template
+    sensors:
+      heating_set_temperature:
+        value_template: '{{state_attr("climate.toon_thermostat", "temperature") | float }}'
+      heating_preset_mode: 
+        value_template: '{{state_attr("climate.toon_thermostat", "preset_mode")}}'
+      thermostat_condition:
+        value_template: >
+          {% if is_state('sensor.0x00158d00031e0aff_temperature', 'unknown') %}
+            {% if is_state('sensor.0x00158d00036c1ba4_temperature', 'unknown') %}
+              {{(states('input_number.berkhout_temperatuur_0d') |float ) <20}}
+            {% else %}
+              {{(states('sensor.0x00158d00031e0aff_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+            {% endif %}
+          {% else %}
+            {{(( states('sensor.0x00158d00031e0aff_temperature')  )|float) < (( states('sensor.0x00158d00036c1ba4_temperature') ) | float) and (states('sensor.0x00158d00031e0aff_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+          {% endif %}
+automation:
+  - alias: 'kachel aan bij thuiskomst'
+    id: '48794350603208'
+    hide_entity: true
+    trigger:
+#      - platform: numeric_state
+#        entity_id: sensor.phone_to_home
+#        below: 15
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Thuis'
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: sensor.thermostat_condition
+          state: 'True'
+        - condition: or
+          conditions:
+            - condition: time
+              after: '15:00:00'
+              before: '21:00:00' 
+              weekday:
+                - mon
+                - tue
+                - wed
+                - thu
+                - fri
+            - condition: time
+              after: '09:00:00'
+              before: '22:00:00'
+              weekday:
+                - sat
+                - sun
+    action:
+      alias: 'zet kachel aan'
+      service: climate.set_preset_mode
+      data:
+        entity_id: climate.toon_thermostat
+        preset_mode: home
+  - alias: 'kachel uit'
+    id: '3487932089739032'
+    hide_entity: true
+    trigger:
+      platform: time
+      at: '21:30:00'
+    condition:
+      condition: time
+      weekday:
+        - sun
+        - mon
+        - tue
+        - wed
+        - thu
+    action:
+      alias: 'zet kachel uit'
+      service: climate.set_preset_mode
+      data:
+        entity_id: climate.toon_thermostat
+        preset_mode: sleep
+  - alias: 'kachel uit weekend'
+    id: '899328673478992'
+    hide_entity: true
+    trigger:
+      platform: time
+      at: '23:00:00'
+    condition:
+      condition: time
+      weekday:
+        - fri
+        - sat
+    action:
+      alias: 'zet kachel uit'
+      service: climate.set_preset_mode
+      data:
+        entity_id: climate.toon_thermostat
+        preset_mode: sleep
+  - alias: 'kachel aan op tijd'
+    id: '487943503783603208'
+    hide_entity: true
+    trigger:
+      - platform: time
+        at: '09:00:00' 
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: sensor.thermostat_condition
+          state: 'True'
+        - condition: or
+          conditions:
+            - condition: state
+              entity_id: input_select.arnoud_status
+              state: 'Net Thuis'
+            - condition: state
+              entity_id: input_select.arnoud_status
+              state: 'Thuis'
+    action:
+      alias: 'zet kachel aan'
+      service: climate.set_preset_mode
+      data:
+        entity_id: climate.toon_thermostat
+        preset_mode: home
+  - alias: 'kachel aan smorgens voor vertrek'
+    id: '34567384890732300888734'
+    hide_entity: true
+    trigger:
+      platform: time_pattern
+      seconds: 00
+    condition:
+      condition: and
+      conditions:
+        - condition: template
+          value_template: "{{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time')) - 3600 )| timestamp_custom('%D %H:%M', 1)) }}"
+          # temp badkamer
+        - condition: numeric_state
+          entity_id: sensor.0x00158d00031e31ac_temperature
+          below: 20
+        - condition: state
+          entity_id: sensor.thermostat_condition
+          state: 'true'
+        - condition: or
+          conditions:
+            - condition: state
+              entity_id: input_select.arnoud_status
+              state: 'Net Thuis'
+            - condition: state
+              entity_id: input_select.arnoud_status
+              state: 'Thuis'
+    action:
+      alias: 'zet kachel aan'
+      service: climate.set_preset_mode
+      data:
+        entity_id: climate.toon_thermostat
+        preset_mode: comfort
+  - alias: 'Zet kachel uit smorgens zodra badkamer warm is'
+    id: '83746345875808312346030'
+    hide_entity: true
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.0x00158d00031e31ac_temperature
+        above: 20
+    condition:
+        condition: and
+        conditions:
+          - condition: template
+            value_template: "{{ now().strftime('%D %H:%M') < (as_timestamp(states('sensor.calc_leave_time')) | timestamp_custom('%D %H:%M', 1)) }}"
+          - condition: state
+            entity_id: sensor.heating_operation_mode
+            state: 'heat'
+          - condition: time
+            before: '09:00:00' 
+    action:
+      alias: 'zet kachel uit'
+      service: climate.set_operation_mode
+      data:
+        entity_id: climate.set_preset_mode
+        preset_mode: away
+#  - alias: 'kachel uit bij vertrek'
+#    id: '87532892385670923'
+#    trigger:
+#      - platform: state
+#        entity_id: input_select.arnoud_status
+#        to: 'Weg'
+#    action:
+#      - service: climate.set_preset_mode
+#        data:
+#          entity_id: climate.toon_thermostat
+#          preset_mode: away
+########################
+##
+## testing new model
+##
+########################
+  - alias: 'proximity based kachel aan'
+    id: '36142780901230468498301'
+    hide_entity: true
+    trigger: 
+      - platform: numeric_state
+        entity_id: proximity.home
+        below: 25
+#      - platform: template
+#        value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'towards')}}"  
+    condition:
+      condition: and
+      conditions:
+        - condition: template
+          value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'towards')}}"
+        - condition: numeric_state
+          entity_id: proximity.home
+          below: 25
+        - condition: or
+          conditions:
+            - condition: state
+              entity_id: sensor.heating_preset_mode
+              state: 'sleep'
+            - condition: state
+              entity_id: sensor.heating_preset_mode
+              state: 'away'
+        - condition: state
+          entity_id: sensor.thermostat_condition
+          state: 'true'
+        - condition: or
+          conditions:
+            - condition: time
+              after: '15:00:00'
+              before: '21:00:00' 
+              weekday:
+                - mon
+                - tue
+                - wed
+                - thu
+                - fri
+            - condition: time
+              after: '09:00:00'
+              before: '22:00:00'
+              weekday:
+                - sat
+                - sun
+    action:
+#      service: notify.pushover
+#      data_template:
+#        title: 'kachel aan'
+#        message: "Kachel aan, GPS is {{states('proximity.home')}}km ver weg en heeft status {{state_attr('proximity.home', 'dir_of_travel')}}  en kachel staat in stand {{states('sensor.heating_operation_mode')}}"
+      alias: 'zet kachel aan'
+      service: climate.set_preset_mode
+      data:
+        entity_id: climate.toon_thermostat
+        preset_mode: home
+  - alias: 'proximity based kachel uit'
+    id: '65781233029308062315'
+    hide_entity: true
+    trigger: 
+      - platform: numeric_state
+        entity_id: proximity.home
+        above: 11.8
+#      - platform: template
+#        value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'away_from')}}"
+    condition:
+      condition: and
+      conditions:
+        - condition: template
+          value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'away_from')}}"
+        - condition: numeric_state
+          entity_id: proximity.home
+          above: 11.8
+        - condition: or
+          conditions:
+            - condition: state
+              entity_id: sensor.heating_preset_mode
+              state: 'home'
+            - condition: state
+              entity_id: sensor.heating_preset_mode
+              state: 'comfort'
+    action:
+#      service: notify.pushover
+#      data_template:
+#        title: 'kachel uit'
+#        message: "Kachel uit, GPS is {{states('proximity.home')}}km ver weg en heeft status {{state_attr('proximity.home', 'dir_of_travel')}} en kachel staat in stand {{states('sensor.heating_operation_mode')}}"
+      alias: 'zet kachel uit'
+      service: climate.set_operation_mode
+      data:
+        entity_id: climate.set_preset_mode
+        preset_mode: away
+  - alias: 'test new condition'
+    id: '578094357868690285602'
+    hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: sensor.thermostat_condition
+    action:
+      service: notify.pushover
+      data_template:
+        title: 'test condition'
+        message: >
+         state: {{states('sensor.thermostat_condition')}}
+         buiten: {{(states('sensor.temperatuur_buiten')  )|float}}
+         woonkamer: {{(states('sensor.temperatuur_woonkamer') ) | float}}
+         forecast: {{(states('input_number.berkhout_temperatuur_0d')) |float}}
+         
+########################
+##
+## keep state between Toon and inputs 
+##
+########################
+
+  - alias: 'zet heating input select based on toon output'
+    id: '32847030987420324'
+    hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: sensor.heating_preset_mode
+    condition: 
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.heating_preset_mode
+          state: sleep
+        - condition: state
+          entity_id: sensor.heating_preset_mode
+          state: home
+        - condition: state
+          entity_id: sensor.heating_preset_mode
+          state: comfort
+        - condition: state
+          entity_id: sensor.heating_preset_mode
+          state: away
+    action:
+      service: input_select.select_option
+      data_template:
+        entity_id: input_select.heating
+        option: "{{states('sensor.heating_preset_mode')}}"
+  - alias: 'zet toon based on heating input select'
+    id: '3098476890309834039342'
+    hide_entity: true
+    trigger:
+      platform: state
+      entity_id: input_select.heating
+    action:
+      service: climate.set_preset_mode
+      data_template:
+        entity_id: climate.toon_thermostat
+        preset_mode: "{{states('input_select.heating')}}"
+  - alias: 'zet toon thermostaat based on input value'
+    id: '98487940987349821'
+    hide_entity: true
+    trigger:
+      platform: state
+      entity_id: input_number.thermostat_set_point
+    condition:
+      condition: template
+      value_template: "{{ ( states('input_number.thermostat_set_point')  ) != ( states('sensor.heating_set_temperature') ) }}"
+    action:
+      service: climate.set_temperature
+      data_template:
+        entity_id: climate.toon_thermostat
+        temperature: "{{states('input_number.thermostat_set_point')}}"
+  - alias: 'zet thermostaat input value based on toon'
+    id: '230983248701908743'
+    hide_entity: true
+    trigger:
+      platform: state
+      entity_id: sensor.heating_set_temperature
+    action:
+      service: input_number.set_value
+      data_template:
+        entity_id: input_number.thermostat_set_point
+        value: "{{ states('sensor.heating_set_temperature') }}"
+

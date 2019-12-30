@@ -1,0 +1,140 @@
+alarm_control_panel:
+  - platform: manual
+    code_template: !secret alarm_code_template
+input_text:
+  last_alarm_trigger_reason:
+    name: Last Alarm trigger sensor
+    max: 255
+automation:
+  - alias: 'leave home immidiate'
+    id: '438709184787098346'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Weg'
+    action:
+      - service: alarm_control_panel.alarm_arm_away
+        entity_id: alarm_control_panel.ha_alarm
+  - alias: 'return home immidiate '
+    id: '43246809632049861384906'
+    hide_entity: true
+    trigger: 
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Thuis'
+    action:
+      - service: alarm_control_panel.alarm_disarm
+        data:
+          entity_id: alarm_control_panel.ha_alarm
+          code: !secret alarm_code
+  - alias: 'return home delayed'
+    id: '892340910348790'
+    hide_entity: true
+    trigger: 
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Thuis'
+    action:
+      - service: alarm_control_panel.alarm_disarm
+        data:
+          entity_id: alarm_control_panel.ha_alarm
+          code: !secret alarm_code
+  - alias: 'deur open en niet thuis'
+    id: '3567312503718013980'
+    hide_entity: true
+    trigger:
+      platform: state
+      entity_id: binary_sensor.0x00158d000289e817_contact, binary_sensor.0x00158d000289ec2d_contact
+      from: 'off'
+      to: 'on'
+    condition:
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: 'Net Weg'
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: 'Weg'
+    action:
+      service: notify.pushover
+      data_template:
+        message: "De {{states[trigger.to_state.domain][trigger.to_state.object_id].name}} is open"
+        title: 'Deur alarm'
+        data:
+          priority: 1
+  
+  - alias: 'trigger alarm based on door & motion sensors if armed away'
+    id: '521368393280359863'
+    hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: binary_sensor.0x00158d000289e817_contact, binary_sensor.0x00158d000289ec2d_contact, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy, binary_sensor.0x00158d0002b5d42f_occupancy
+      from: 'off'
+      to: 'on'
+    condition:
+      - condition: state
+        entity_id: alarm_control_panel.ha_alarm
+        state: armed_away
+    action:
+      - service: alarm_control_panel.alarm_trigger
+        entity_id: alarm_control_panel.ha_alarm
+      - service: input_text.set_value
+        data_template:
+          entity_id: input_text.last_alarm_trigger_reason
+          value: >
+            {%- set ns = namespace(first=false) %}
+            {%- for sensor in dict(states.binary_sensor|groupby('state'))['on'] %}
+              {%- set d_class = sensor.attributes.device_class %}
+              {%- if d_class != 'opening' and d_class != 'motion' %}
+                {%- if loop.first %}{%set ns.first =true %}{% endif %}
+              {%- else %}
+                {%- if loop.first or ns.first  %}{% else %}, {% endif %}
+                {{ sensor.name | lower }}
+              {%- endif %}
+              {%- if loop.last %}{% endif %}
+            {%-  endfor  %}
+  - alias: 'Send notification when alarm triggered'
+    id: '462313490860234890'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: alarm_control_panel.ha_alarm
+        to: 'triggered'
+    action:
+      - service: notify.pushover
+        data_template:
+          title: 'ALARM'
+          message: "ALARM! The alarm has been triggered by {{states('input_text.last_alarm_trigger_reason')}}"
+          data:
+            priority: 1
+      - service: browser_mod.command
+        data:
+          command: more-info
+          entity_id: alarm_control_panel.ha_alarm
+
+  - alias: 'Sound alarm if  trigger remains for 2 minutes'
+    id: '7680218940823460'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: alarm_control_panel.ha_alarm
+        to: 'triggered'
+        for: '00:02:00'
+    action:
+      - service: script.both_speakers
+        data_template:
+          tekst: 'Alarm! Alarm! Alarm! indringer in huis! '
+      - service: light.turn_on
+        entity_id: light.computer, light.eettafel, light.hal, light.slaapkamer, light.staande_lamp
+        data:
+          color_name: white
+          brightness_pct: 100
+      - service: light.turn_on
+        entity_id: light.keuken, light.trap_hal, light.overloop, light.sk_spot_1, light.sk_spot_2
+        data:
+          color_temp: 153
+          brightness_pct: 100
+      - service: script.flash_lights
+

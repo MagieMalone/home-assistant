@@ -1,0 +1,154 @@
+{%- set leftfirst = left.entity.split(',') %}
+{%- set rightfirst = right.entity.split(',') -%}
+
+- alias: 'button click {{room}}  right '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: 'right'
+  action:
+    service_template: >
+      {{ '{%' }} if is_state('{{rightfirst[0]}}', 'off') {{ '%}' }}
+        script.turn_on_light
+      {{ '{%' }} else {{ '%}' }}
+        script.turn_off_light
+      {{ '{%' }} endif {{ '%}' }}
+    data:
+      light_entities: {{right.entity}}
+      {% if right.kelvin %}
+      kelvin: {{right.kelvin}}
+      {% endif %}
+      {% if right.brightness_pct %}
+      brightness_pct: {{right.brightness_pct}}
+      {% endif %}
+
+- alias: 'button click {{room}}  left '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: 'left'
+  action:
+    service_template: >
+      {{ '{%' }} if is_state('{{leftfirst[0]}}', 'off') {{ '%}' }}
+        script.turn_on_light
+      {{ '{%' }} else {{ '%}' }}
+        script.turn_off_light
+      {{ '{%' }} endif {{ '%}' }}
+    data:
+      light_entities: {{left.entity}}
+      {% if left.kelvin %}
+      kelvin: {{left.kelvin}}
+      {% endif %}
+      {% if left.brightness_pct %}
+      brightness_pct: {{left.brightness_pct}}
+      {% endif %}
+
+- alias: 'button click {{room}}  both '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: 'both'
+  action:
+    service_template: >
+      {{ '{%' }} if is_state('{{rightfirst[0]}}', 'off') {{ '%}' }}
+        script.turn_on_light
+      {{ '{%' }} else {{ '%}' }}
+        script.turn_off_light
+      {{ '{%' }} endif {{ '%}' }}
+    data:
+        light_entities: {{left.entity}}, {{right.entity}}
+
+- alias: 'button long_click {{room}}  right on '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: 'right_long'
+  action:
+    - service: script.dim_light
+      data:
+        light_entity: {{right.entity}}
+
+- alias: 'button long_click {{room}}  right off'
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: ''
+      from: 'right_long'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: script.dim_light
+    - service: homeassistant.turn_off
+      entity_id: script.dim_light_loop
+      
+- alias: 'button long_click {{room}}  left on '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: 'left_long'
+  action:
+    - service: script.dim_light
+      data:
+        light_entity: {{left.entity}}
+
+- alias: 'button long_click {{room}}  left off'
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: ''
+      from: 'left_long'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: script.dim_light
+    - service: homeassistant.turn_off
+      entity_id: script.dim_light_loop
+
+- alias: 'button click {{room}}  right_double '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: 'right_double'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.circadian_lighting_circadian_lighting
+    - service: script.turn_on_light
+      data_template:
+        light_entities: {{right.entity}}
+        kelvin: >
+            {{ '{%' }} set current = state_attr('{{rightfirst[0]}}', 'color_temp') |int {{ '%}' }}
+            {{ '{%' }} if current <= 200 {{ '%}' }}
+              3000
+            {{ '{%' }} elif current <= 350  {{ '%}' }}
+              2000
+            {{ '{%' }} else {{ '%}' }}
+              6000
+            {{ '{%' }} endif {{ '%}' }}
+      
+- alias: 'button click {{room}}  left_double '
+  hide_entity: true
+  trigger:
+    - platform: state
+      entity_id: sensor.{{switchname}}_click
+      to: 'left_double'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.circadian_lighting_circadian_lighting
+    - service: script.turn_on_light
+      data_template:
+        light_entities: {{left.entity}}
+        kelvin: >
+            {{ '{%' }} set current = state_attr('{{leftfirst[0]}}', 'color_temp') |int {{ '%}' }}
+            {{ '{%' }} if current <= 200  {{ '%}' }} 
+              3000
+            {{ '{%' }} elif current <= 350  {{ '%}' }}
+              2000
+            {{ '{%' }} else {{ '%}' }}
+              6000
+            {{ '{%' }} endif {{ '%}' }}

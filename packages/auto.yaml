@@ -1,0 +1,170 @@
+mercedesmeapi:
+  username: !secret mb_username
+  password: !secret mb_password
+  pin: !secret mb_pin
+  country_code: NL               # two digts country code
+  accept_lang: en_NL             # four digits country code
+#  save_car_details: true         # save a json to the HA config directory with the features and states, please use this for debug only 
+camera: 
+  - platform: generic
+    name: mercedes
+    still_image_url: "https://europe.starconnect-ce.i.daimler.com/iris/iris?COSY-EU-100-1713d0VXq5SFqtyO35PobzIDieWql9TQw2Mpxikzmxxom7ssM0uBjBHB2Z0iD%25W%25kiWm7G3PdhKHhdf%25v8%257EyLibUlYa4ul2rHg3wpn8P9BmaxXIAtH1JQ7h8wOkiFiZbm4T4FIhdIg9Q%25AMPDky5IeWmoWosdhMdMZkzNwzn0uoiGmxhH1Jh4Y8wO%25CUiZbyzn4FIYcHg9QrXMPDknJteWmoCfsdhFqkUf%259RLGEyDA60lYW5pB2rd4yApnfsO5uoRiXC3Mx4BzNT1gT7j6wjIKVSZVOvqtFHvLRc98GaxXDAawtsd5c3cUfCXyaWm7nYCdhKo7oyzNT5fA7j6CrqKVSzAyvqt7ihLRcdUmaxXfuhH1JE9%258wOlGLiZbVA54FIq7Cg9QRagPDkx5deWm1CQsdhQqXUf%25kwlGEymQh0lYh3%25B2rNH8ApnjpY5uoVPaC3MqegzNTRPe7vzAIkb1OsdhkLCUf%25QfJdm7jp80lYp89QCtjcUfOnCXGELGXJ0la4hOB2iRcUYn3xXGjEWmsdh4dhUf%25gRmbm7jFQo33M4nQ7NTgoqgj6PMRWVSeTfKqts6e1RcUSvKxXGtLK1J0caJwOBi2HZbA4q0FI5Qul9QCkQHDkzmkZWm7hSFdhK%25xKf%25vy1REyLYCPlYarzd2rH01Lpn8Blm7jDC0lwXRheC6ocBXwM18Y2YaBrymuuMOCbngrbA4IOcDcayaj%251ZNmV%25pTug8ASbWzANq&&IMGT=A27&POV=BE320,PZM"
+    
+sensor:
+  - platform: template
+    sensors:
+      sz_436_p_park_brake_wear:
+        value_template: >
+            {{ state_attr("binary_sensor.sz_436_p_park_brake_status", "preWarningBrakeLiningWear") }}
+        friendly_name: Rem slijtage indicator
+      sz_436_p_tire_pressurerearleft:
+        value_template: >
+            {{ state_attr("binary_sensor.sz_436_p_tire_warning", "tirepressureRearLeft") | float }}
+        unit_of_measurement: 'kPa'
+        friendly_name: Bandenspanning linksachter
+      sz_436_p_tire_pressurefrontright:
+        value_template: >
+            {{ state_attr("binary_sensor.sz_436_p_tire_warning", "tirepressureFrontRight") | float }}
+        unit_of_measurement: 'kPa'
+        friendly_name: Bandenspanning rechtsvoor
+      sz_436_p_tire_pressurerearright:
+        value_template: >
+            {{ state_attr("binary_sensor.sz_436_p_tire_warning", "tirepressureRearRight") | float }}
+        unit_of_measurement: 'kPa'
+        friendly_name: Bandenspanning rechtsachter
+      sz_436_p_tire_pressurefrontleft:
+        value_template: >
+            {{ state_attr("binary_sensor.sz_436_p_tire_warning", "tirepressureFrontLeft") | float }}
+        unit_of_measurement: 'kPa'
+        friendly_name: Bandenspanning linksvoor
+      sz_436_p_ecoscoreaccel:
+        value_template: >
+            {{ state_attr("sensor.sz_436_p_odometer", "ecoscoreaccel") | float }}
+        unit_of_measurement: '%'
+        friendly_name: Eco score Acceleratie
+      sz_436_p_ecoscorefreewhl:
+        value_template: >
+            {{ state_attr("sensor.sz_436_p_odometer", "ecoscorefreewhl") | float }}
+        unit_of_measurement: '%'
+        friendly_name: Eco score uitrijden
+      sz_436_p_ecoscoreconst:
+        value_template: >
+            {{ state_attr("sensor.sz_436_p_odometer", "ecoscoreconst") | float }}
+        unit_of_measurement: '%'
+        friendly_name: Eco score constant
+      sz_436_p_liquidconsumptionstart:
+        value_template: >
+            {{ state_attr("sensor.sz_436_p_odometer", "liquidconsumptionstart") | float }}
+        unit_of_measurement: 'l/100 Km'
+        friendly_name: Laatste rit verbruik
+      sz_436_p_averagespeedstart:
+        value_template: >
+            {{ state_attr("sensor.sz_436_p_odometer", "averageSpeedStart") | float }}
+        unit_of_measurement: 'Km/h'
+        friendly_name: Laatste rit gemiddelde snelheid
+      sz_436_p_distancestart:
+        value_template: >
+            {{ state_attr("sensor.sz_436_p_odometer", "distanceStart") | float }}
+        unit_of_measurement: 'Km'
+        friendly_name: Laatste rit afstand
+      sz_436_p_drivenytimestart:
+        value_template: >
+            {{ state_attr("sensor.sz_436_p_odometer", "drivenTimeStart") }}
+        friendly_name: Laatste rit tijd
+      sz_436_p_rangeliquid:
+        value_template: >
+            {{ state_attr("sensor.sz_436_p_odometer", "rangeliquid") | float }}
+        unit_of_measurement: 'Km'
+        friendly_name: km tot tank leeg
+      sz_436_p_door_open_rearleft:
+        value_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "rearLeftDoorClosed") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        friendly_name: Deur linksachter open
+        icon_template: 'mdi:car-door'
+      sz_436_p_door_open_rearright:
+        value_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "rearRightDoorClosed") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        friendly_name: Deur rechtsachter open
+        icon_template: 'mdi:car-door'
+      sz_436_p_door_open_frontright:
+        value_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "frontRightDoorClosed") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        friendly_name: Deur rechtsvoor open
+        icon_template: 'mdi:car-door'
+      sz_436_p_door_open_frontleft:
+        value_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "frontLeftDoorClosed") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        friendly_name: Deur linksvoor open
+        icon_template: 'mdi:car-door'
+      sz_436_p_door_lock_rearleft:
+        value_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "rearLeftDoorLocked") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        icon_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "rearLeftDoorLocked") %}
+              mdi:lock
+            {% else %}
+              mdi:lock-open
+            {% endif %}
+        friendly_name: Deur linksachter slot
+      sz_436_p_door_lock_frontleft:
+        value_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "frontLeftDoorLocked") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        icon_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "frontLeftDoorLocked") %}
+              mdi:lock
+            {% else %}
+              mdi:lock-open
+            {% endif %}
+        friendly_name: Deur linksvoor slot
+      sz_436_p_door_lock_frontright:
+        value_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "frontRightDoorLocked") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        icon_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "frontRightDoorLocked") %}
+              mdi:lock
+            {% else %}
+              mdi:lock-open
+            {% endif %}
+        friendly_name: Deur rechtsvoor slot
+      sz_436_p_door_lock_rearright:
+        value_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "rearRightDoorLocked") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        icon_template: >
+            {%if state_attr("sensor.sz_436_p_lock", "rearRightDoorLocked") %}
+              mdi:lock
+            {% else %}
+              mdi:lock-open
+            {% endif %}
+        friendly_name: Deur rechtsachter slot

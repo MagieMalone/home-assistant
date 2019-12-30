@@ -1,0 +1,11 @@
+automation:
+  - alias: 'Update Available Notifications'
+    id: '43897023907390'
+    hide_entity: true
+    trigger:
+      platform: state
+      entity_id: updater.updater
+    action:
+      service: notify.pushover
+      data_template:
+        message: "Update to {{states('updater.updater')}} for Home Assistant is available."

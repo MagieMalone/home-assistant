@@ -1,0 +1,11 @@
+- id: '1575027986105'
+  alias: New Automation
+  description: ''
+  trigger:
+  - entity_id: input_select.arnoud_status
+    from: Weg
+    platform: state
+    to: Thuis
+  condition: []
+  action:
+  - scene: scene.film

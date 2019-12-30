@@ -1,0 +1,316 @@
+group:
+  sk_spot:
+    entities: light.sk_spot_1, light.sk_spot_2
+  switch-wk:
+    entities: light.onoff_plug_1, light.onoff_plug_2, light.onoff_plug_3
+  lampen:
+    entities: light.computer, light.eettafel, light.hal, light.trap_hal, light.hue_lightstrip_plus_1, light.overloop, light.slaapkamer, light.staande_lamp, light.sk_spot_1, light.sk_spot_2, light.keuken_1, light.keuken_2, light.keuken_3
+  motion_sensors:
+    entities: binary_sensor.motion_sensor_158d0002b5d42f, binary_sensor.motion_sensor_158d0002b7eda4, binary_sensor.motion_sensor_158d0002b8586b
+
+# Track the sun
+sun:
+
+circadian_lighting:
+  min_colortemp: 2000
+  max_colortemp: 6500
+
+input_number:
+  lightlevel:
+    name: light level for motion sensors
+    min: 0
+    max: 200
+    step: 5
+    unit_of_measurement: lx
+switch:
+  - platform: circadian_lighting
+    lights_ct:
+      - light.trap_hal
+      - light.overloop
+      - light.sk_spot_1
+      - light.sk_spot_2
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+    lights_xy:
+      - light.computer
+      - light.eettafel
+      - light.hal
+      - light.slaapkamer
+      - light.staande_lamp
+
+binary_sensor:
+# custom hue component
+  - platform: huesensor
+sensor:
+#custom hue component
+  - platform: huesensor
+#light:
+#  - platform: rflink
+#    automatic_add: true
+script:
+  flash_lights:
+    sequence:
+      - service: light.turn_on
+        data_template:
+          entity_id: >
+            {% for device in dict(states.light|groupby("state"))["on"] %}
+              {%- if device.entity_id |regex_match('.*onoff')  %}
+              {%- else %}
+                {%- if loop.first %}{% else %}, {% endif %}
+                {{- device.entity_id | lower }}
+              {%- endif %}
+                {%- if loop.last %}{% endif %}
+            {%-  endfor  %}
+          flash: long
+  turn_on_light:
+    fields:
+      light_entities:
+        description: 'Light entity_ids'
+        example: 'light.overloop'
+      kelvin:
+        description: 'color temp in kelvin'
+        example: 5000
+      brightness_pct:
+        description: 'brightness in %'
+        example: 75
+    sequence:
+      - service: light.turn_on
+        data_template:
+          entity_id: "{{light_entities}}"
+          transition: >
+              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
+                0
+              {% else %}
+                5
+              {% endif %}
+          brightness_pct: >
+              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
+               {{ state_attr('switch.circadian_lighting_circadian_lighting', 'brightness') | int }}
+              {% else %}
+                {% if (states("sensor.time") >='00:00' and states("sensor.time") <='06:00') or (states("sensor.time") >='22:00' and states("sensor.time") <='23:59') %}
+                  10
+                {% else %}
+                  {% if brightness_pct %}
+                    {{brightness_pct}}
+                  {% else %}
+                    100
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+          kelvin: >
+              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
+                {{ state_attr('sensor.circadian_values', 'colortemp') | int }}
+              {% else %}
+                {% if kelvin %}
+                  {{kelvin | int}}
+                {% else %}
+                  3000
+                {% endif %}
+              {% endif %}
+  turn_on_colorlight:
+    fields:
+      light_entities:
+        description: 'Light entity_ids'
+        example: 'light.overloop'
+      xy_color:
+        description: 'xy color pair'
+        example: '[0.5, 0.5]'
+      
+    sequence:
+#      - service: notify.pushover
+#        data_template:
+#          message: >
+#              entity: "{{light_entities}}"
+#              xy_color:  "{{xy_color}}"
+#              0: "{{xy_color[0]|float}}"
+#              1: "{{xy_color[1]|float}}"
+      - service: light.turn_on
+        data_template:
+          entity_id: "{{light_entities}}"
+          transition: >
+              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
+                0
+              {% else %}
+                5
+              {% endif %}
+          brightness_pct: >
+            {% if brightness_pct %}
+              {{brightness_pct}}
+            {% else %}
+              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
+               {{ state_attr('switch.circadian_lighting_circadian_lighting', 'brightness') | int }}
+              {% else %}
+                30
+              {% endif %}
+            {% endif %}
+          xy_color: >
+            {% if xy_color %}
+              [ {{xy_color[0]|float}}, {{xy_color[1]|float}}]
+            {% else %}
+              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
+                {{ state_attr('sensor.circadian_values', 'xy_color') }}
+              {% else %}
+                [0.5, 0.5]
+              {% endif %}
+            {% endif %}
+
+
+  turn_off_light:
+    fields:
+      light_entities:
+        description: 'Light entity_ids'
+        example: 'light.overloop'
+    sequence:
+      - service: light.turn_off
+        data_template:
+          entity_id: "{{light_entities}}"
+          transition: >
+              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
+                0
+              {% else %}
+                5
+              {% endif %}
+  dim_light:
+    fields:
+      light_entity:
+        description: 'Light entity_id'
+        example: 'light.overloop'
+    sequence:
+      - service: homeassistant.turn_on
+        data_template:
+          entity_id: "{{light_entity}}"
+          transition: 1
+          brightness: >
+            {% set brightness = state_attr(light_entity, 'brightness') %}
+            {%if brightness == None %}
+              31
+            {% else %}
+              {% if brightness < 224 %}
+                {{( brightness+32)|min(255)}}
+              {% else %}
+                31
+              {% endif %}
+            {% endif %}
+      - service: script.dim_light_loop
+        data_template:
+          light_entity: "{{light_entity}}"
+
+  dim_light_loop:
+    fields:
+      light_entity:
+        description: 'Light entity_id'
+        example: 'light.overloop'
+    sequence:
+      - delay: '00:00:01'
+      - service: script.dim_light
+        data_template:
+          light_entity: "{{light_entity}}"
+automation:
+  - alias: 'lights off when leaving'
+    id: '782368093283658209'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Weg'
+    action:
+      - service: light.turn_off
+        entity_id: group.lampen
+        
+#######################################        
+#       Motion sensors on             #
+#######################################
+  - alias: 'motion sensor mqtt overloop'
+    id: '467606384609869894109134'
+    hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
+      from: 'off'
+      to: 'on'  
+    condition:
+      - condition: template
+        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float)}}"
+      - condition: state
+        entity_id: input_boolean.cleaningmode
+        state: 'off'
+    action:
+      - service: script.turn_on_light
+        data:
+          light_entities: light.overloop
+  - alias: 'motion sensor mqtt traphal'
+    id: '47808636478871347896'
+    hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: binary_sensor.0x00158d0002b8586b_occupancy
+      from: 'off'
+      to: 'on'  
+    condition:
+      - condition: template
+        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float) }}"
+      - condition: state
+        entity_id: input_boolean.cleaningmode
+        state: 'off'
+    action:
+      - service: script.turn_on_light
+        data:
+          light_entities: light.trap_hal
+  - alias: 'motion sensor mqtt hal'
+    id: '567327632089382383432489065'
+    hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: binary_sensor.0x00158d0002b5d42f_occupancy
+      from: 'off'
+      to: 'on'  
+    condition:
+      - condition: template
+        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float)}}"
+      - condition: state
+        entity_id: input_boolean.cleaningmode
+        state: 'off'
+    action:
+      - service: script.turn_on_light
+        data:
+          light_entities: light.hal
+
+#######################################        
+#       Motion sensors off            #
+#######################################
+
+
+  - alias: 'motion sensor light off'
+    id: '432174083284601304'
+    hide_entity: true
+    trigger: 
+      platform: state
+      entity_id: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
+      from: 'on'
+      to: 'off'
+    condition:
+      condition: state
+      entity_id: input_boolean.cleaningmode
+      state: 'off'
+    action:
+      service: light.turn_off
+      data_template:
+        entity_id: >
+            {% if trigger.entity_id == 'binary_sensor.0x00158d0002b5d42f_occupancy' %}
+            light.hal
+            {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b8586b_occupancy' %}
+            light.trap_hal
+            {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b7eda4_occupancy' %}
+            light.overloop
+            {% else %}
+            light.computer
+            {% endif %}
+        transition: >
+            {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
+              0
+            {% else %}
+              5
+            {% endif %}
+
+

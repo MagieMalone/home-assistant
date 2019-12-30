@@ -1,0 +1,129 @@
+group:
+  arnoud:
+    entities: device_tracker.4dd0404d, device_tracker.oneplus_3, device_tracker.c0eefbd51601
+input_select:
+  arnoud_status:
+    name: Arnoud
+    options:
+      - Thuis
+      - Net Thuis
+      - Net Weg
+      - Weg
+  helen_status_dropdown:
+    name: placeholder
+    options:
+      - Thuis
+      - Net Thuis
+      - Net Weg
+      - Weg
+device_tracker:
+#  - platform: gpslogger
+#  - platform: bluetooth_tracker
+#    new_device_defaults:
+#      track_new_devices: false
+sensor:
+  - platform: template
+    sensors:
+      arnoud_status:
+        value_template: '{{ states("input_select.arnoud_status") }}'
+        friendly_name: 'Arnoud'
+proximity:
+  home:
+    ignored_zones:
+      - Ymke
+    devices:
+      - device_tracker.4dd0404d
+    unit_of_measurement: km
+    tolerance: 50
+automation:
+  - alias: 'Mark person as just arrived'
+    id: '548327489170419324086'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: group.arnoud
+        from: 'not_home'
+        to: 'home'
+    action:
+      - service: input_select.select_option
+        data_template:
+          entity_id: >
+            {% if trigger.entity_id == 'group.arnoud' %}
+              input_select.arnoud_status
+            {% else %}
+              input_select.helen_status_dropdown
+            {% endif %}
+          option: >
+            {% if trigger.entity_id == 'group.arnoud' %}
+              {% if states('input_select.arnoud_status') == 'Net Weg' %}
+                Thuis
+              {% else %}
+                Net Thuis
+              {% endif %}
+            {% else %}
+              {% if states('input_select.helen_status_dropdown') == 'Net Weg' %}
+                Thuis
+              {% else %}
+                Net Thuis
+              {% endif %}
+            {% endif %}
+  - alias: 'Mark person as home'
+    id: '014567856438345707843571'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Thuis'
+        for:
+          minutes: 15
+      - platform: state
+        entity_id: input_select.arnoud_status
+        from: 'Net Weg'
+        to: 'Net Thuis'
+    action:
+      - service: input_select.select_option
+        data_template:
+          entity_id: >
+            {% if trigger.entity_id == 'input_select.arnoud_status' %}
+              input_select.arnoud_status
+            {% else %}
+              input_select.helen_status_dropdown
+            {% endif %}
+          option: Thuis
+  - alias: 'Mark person as just left'
+    id: '578344801378074356'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: group.arnoud
+        from: 'home'
+        to: 'not_home'
+    action:
+      - service: input_select.select_option
+        data_template:
+          entity_id: >
+            {% if trigger.entity_id == 'group.arnoud' %}
+              input_select.arnoud_status
+            {% else %}
+              input_select.helen_status_dropdown
+            {% endif %}
+          option: Net Weg
+  - alias: 'Mark person as away'
+    id: '80941237089760310'
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Weg'
+        for:
+          minutes: 15
+    action:
+      - service: input_select.select_option
+        data_template:
+          entity_id: >
+            {% if trigger.entity_id == 'input_select.arnoud_status' %}
+              input_select.arnoud_status
+            {% else %}
+              input_select.helen_status_dropdown
+            {% endif %}
+          option: Weg

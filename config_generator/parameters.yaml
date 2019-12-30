@@ -1,0 +1,41 @@
+- switchname: '0x00158d0002b4a149'
+  room: 'woonkamer'
+  right: 
+    entity: 'light.staande_lamp'
+    kelvin: 2000
+    brightness_pct: 50
+  left: 
+    entity: 'light.hue_lightstrip_plus_1'
+    kelvin: 2000
+    brightness_pct: 33
+- switchname: '0x00158d0002b4582b'
+  room: 'keuken'
+  right: 
+    entity: 'light.keuken_1, light.keuken_2, light.keuken_3'
+    kelvin: 5000
+    brightness_pct: 100
+  left: 
+    entity: 'light.eettafel'
+    kelvin: 2000
+    brightness_pct: 33
+- switchname: '0x00158d0002b42afb'
+  room: 'slaapkamer'
+  right: 
+    entity: 'light.slaapkamer'
+    kelvin: 2000
+    brightness_pct: 33
+  left: 
+    entity: 'light.sk_spot_1, light.sk_spot_2'
+    kelvin: 5000
+    brightness_pct: 100
+- switchname: '0x00158d0002b4a1cf'
+  room: 'studeerkamer'
+  right: 
+    entity: 'group.lampen'
+    kelvin: 5000
+    brightness_pct: 100
+  left: 
+    entity: 'light.computer' 
+    kelvin: 3000
+    brightness_pct: 50
+

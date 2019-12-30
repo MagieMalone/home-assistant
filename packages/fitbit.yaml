@@ -1,0 +1,6 @@
+sensor:
+  - platform: fitbit
+    clock_format: 24H
+    monitored_resources:
+      - "body/weight"
+      - "sleep/startTime"

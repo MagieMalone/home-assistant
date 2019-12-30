@@ -1,0 +1,20 @@
+mqtt:
+  broker: 127.0.0.1
+  port: 1883
+  client_id: home-assistant-1
+  keepalive: 60
+  username: !secret mqtt_user
+  password: !secret mqtt_password
+  discovery: true
+  birth_message:
+   topic: 'hass/status'
+   payload: 'online'
+  will_message:
+    topic: 'hass/status'
+    payload: 'offline'
+light:
+  - platform: mqtt
+    schema: json
+    name: media_group
+    command_topic: "zigbee2mqtt/media_group/set"
+    state_topic: "zigbee2mqtt/media_group"

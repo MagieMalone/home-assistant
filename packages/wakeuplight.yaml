@@ -1,0 +1,213 @@
+input_boolean:
+  wakeuplight_automatic:
+    name: Wakeup light based on calendar
+  wakeuplight_manual:
+    name: Wakeup light based on manual input
+input_number:
+  wul_time_before_leave:
+    name: Wakeup light time before leave
+    min: 0
+    max: 60
+    step: 1
+    unit_of_measurement: minutes
+input_datetime:
+  wul_manual_time:
+    name: Wakeup light manual time
+    has_date: false
+    has_time: true
+sensor:
+  - platform: template
+    sensors:
+      wakeuplight_time:
+        entity_id: sensor.calc_leave_time_alarm
+        value_template: >
+          {% if states("sensor.calc_leave_time_alarm") == "unknown" %}
+            09:00
+          {% else %}
+            {{((as_timestamp(states("sensor.calc_leave_time_alarm")) - ((states("input_number.wul_time_before_leave") |int ) * 60))| timestamp_custom("%D %H:%M", 1)) }}
+          {% endif %}
+          
+script:
+  wakeup_light_circ: 
+    sequence:
+      - service: switch.turn_off
+        entity_id: switch.circadian_lighting_circadian_lighting
+      - service: script.wakeup_light
+      - delay:
+          minutes: 10
+      - service: switch.turn_on
+        entity_id: switch.circadian_lighting_circadian_lighting
+  wakeup_light:
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id: light.slaapkamer
+          brightness_pct: 1
+          xy_color:
+          - 0.64
+          - 0.33
+      - service: light.turn_on
+        data:
+          entity_id: light.slaapkamer
+          transition: 600
+          brightness_pct: 100
+          xy_color:
+          - 0.442
+          - 0.447
+      - alias: mediaplayer_setmedia
+        service: media_player.play_media
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          media_content_id: 'https://streaming.radio.co/s5c5da6a36/listen'
+          media_content_type: audio/mp4
+      - alias: mediaplayer_play_pause     
+        service: media_player.media_play
+        data:
+          entity_id: media_player.slaapkamer_speaker
+      - alias: mediaplayer_play_pause     
+        service: media_player.media_play
+        data:
+          entity_id: media_player.slaapkamer_speaker
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.05'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.1'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.15'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.2'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.25'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.3'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.35'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.4'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.45'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.5'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '1.0'
+      - delay: 
+          minutes: 1
+      - alias: opstaan!
+        service: tts.google_say
+        entity_id: media_player.slaapkamer_speaker
+        data:
+          message: 'Goeie morgen, tijd om op te staan'
+          language: 'nl'
+automation:
+  - alias: 'wakeup light'
+    id: '342090870414607831'
+    hide_entity: true
+    trigger:
+      platform: time_pattern
+      seconds: 00
+    condition:
+      condition: and
+      conditions:
+        - condition: template
+          value_template: "{{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time')) - ((states('input_number.wul_time_before_leave') |int ) * 60))| timestamp_custom('%D %H:%M', 1)) }}"
+        - condition: time
+          before: '10:00:00'
+        - condition: state
+          entity_id: input_boolean.wakeuplight_automatic
+          state: 'on'
+        - condition: state
+          entity_id: switch.circadian_lighting_circadian_lighting
+          state: 'off'
+    action:
+      - service: script.wakeup_light
+  - alias: 'wakeup light circ'
+    id: '67543058600329801'
+    hide_entity: true
+    trigger:
+      platform: time_pattern
+      seconds: 00
+    condition:
+      condition: and
+      conditions:
+        - condition: template
+          value_template: "{{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time')) - ((states('input_number.wul_time_before_leave') |int ) * 60))| timestamp_custom('%D %H:%M', 1)) }}"
+        - condition: time
+          before: '10:00:00'
+        - condition: state
+          entity_id: input_boolean.wakeuplight_automatic
+          state: 'on'
+        - condition: state
+          entity_id: switch.circadian_lighting_circadian_lighting
+          state: 'on'
+    action:
+      - service: script.wakeup_light_circ
+  - alias: 'Manual wakeup light'
+    id: '6583925910238569382012'
+    hide_entity: true
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.time') == (state_attr('input_datetime.wul_manual_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
+    condition: 
+      condition: state
+      entity_id: input_boolean.wakeuplight_manual
+      state: 'on'
+    action:
+      - alias: 'run script wakeuplight'
+        service: script.wakeup_light
+      - alias: 'turn manual wakeup off' 
+        service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.wakeuplight_manual

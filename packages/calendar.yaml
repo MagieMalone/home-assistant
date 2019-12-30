@@ -1,0 +1,134 @@
+google:
+  client_id: 836630737755-pr91j52c6n1700mvlsu5tn3tn4maoel6.apps.googleusercontent.com
+  client_secret: !secret google_cal_apikey
+
+camera:
+  - platform: generic
+    name: Destination
+    still_image_url: https://maps.googleapis.com/maps/api/staticmap?key={{states("sensor.google_api_key")}}&center={{state_attr("calendar.abuurmangmailcom", "location")}}&zoom=17&size=600x300&maptype=roadmap&markers=color:blue%7C{{state_attr("calendar.abuurmangmailcom", "location")}}
+    limit_refetch_to_url_change: true
+    
+sensor:
+  - platform: time_date
+    display_options:
+      - 'time'
+  - platform: template
+    sensors:
+      cal_title:
+        value_template: '{{ state_attr("calendar.abuurmangmailcom", "message") | replace("#alarm", "") }}'
+        friendly_name: 'Title'
+      cal_travelmode:
+        value_template: >-
+          {% if "#ov" in state_attr("calendar.abuurmangmailcom", "message") %}
+            transit
+          {% else %}
+            driving
+          {% endif %}
+      cal_location:
+        value_template: >
+          {% if is_state_attr("calendar.abuurmangmailcom", "location", "") or is_state_attr("calendar.abuurmangmailcom", "location", "unknown") %}
+            {{state_attr("zone.home", "latitude")}},{{state_attr("zone.home", "longitude")}}
+          {% else %}
+            {{ state_attr("calendar.abuurmangmailcom", "location") }}
+          {% endif %}
+      cal_location_alarm:
+        value_template: >
+          {% if is_state_attr("calendar.alarm", "location", "") or is_state_attr("calendar.alarm", "location", "unknown") %}
+            {{state_attr("zone.home", "latitude")}},{{state_attr("zone.home", "longitude")}}
+          {% else %}
+            {{ state_attr("calendar.alarm", "location") }}
+          {% endif %}
+        friendly_name: 'Location'
+      cal_reminders_name:
+        value_template: '{{ state_attr("calendar.reminders", "message") | replace("#reminders", "")}}'
+        friendly_name: 'Title'
+      cal_reminders_date:
+        value_template: '{{ state_attr("calendar.reminders", "start_time") }}'
+        friendly_name: 'Start Time'
+      cal_start_time:
+        value_template: '{{ state_attr("calendar.abuurmangmailcom", "start_time") }}'
+        friendly_name: 'Start Time'
+      calc_leave_time:
+        value_template: >
+          {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
+          {% set starttime = as_timestamp(state_attr("calendar.abuurmangmailcom", "start_time")) %}           
+          {%if duration == None %}
+            {{ starttime  | timestamp_custom("%Y-%m-%d %H:%M") }}
+          {% else %}
+            {%if duration.split(" ")[2]==Null %}
+              {{ (starttime  - (duration.split(" ")[0]  | int * 60 )) | timestamp_custom("%Y-%m-%d %H:%M") }}
+            {% else %}
+              {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) | timestamp_custom("%Y-%m-%d %H:%M")}}
+            {% endif %} 
+          {% endif %} 
+        friendly_name: 'Leave Time'
+      calc_leave_time_alarm:
+        value_template: >
+          {% set duration = state_attr("sensor.google_travel_time_alarm", "duration") %}
+          {% set starttime = as_timestamp(state_attr("calendar.alarm", "start_time")) %}           
+          {%if duration == None %}
+            {{ starttime  | timestamp_custom("%Y-%m-%d %H:%M") }}
+          {% else %}
+            {%if duration.split(" ")[2]==Null %}
+              {{ (starttime  - (duration.split(" ")[0]  | int * 60 )) | timestamp_custom("%Y-%m-%d %H:%M") }}
+            {% else %}
+              {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) | timestamp_custom("%Y-%m-%d %H:%M")}}
+            {% endif %} 
+          {% endif %} 
+        friendly_name: 'Alarm Leave Time'
+      cal_contacts_start_time:
+        value_template: '{{as_timestamp(state_attr("calendar.contacts", "start_time")) | timestamp_custom("%m-%d-%Y")}}'
+        friendly_name: 'Datum' 
+      cal_contacts_message:  
+        value_template: '{{state_attr("calendar.contacts", "message")}}'
+        friendly_name: 'Contacts:' 
+automation:
+  - alias: 'vertrek melding'
+    id: '567812438901831653879'
+    hide_entity: true
+    trigger:
+      platform: time_pattern
+      seconds: 00
+    condition:
+    - condition: template
+      value_template: '{{ now().strftime("%D %H:%M") == ( (as_timestamp(states("sensor.calc_leave_time")) - 300 )| timestamp_custom("%D %H:%M", 1)) }}'
+    action:
+      - service: script.both_speakers
+        data_template:
+          tekst: >
+            {% set reistijd = states("sensor.calc_travel_time") %}
+            {%if reistijd=="unknown" %} 
+              Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd is onbekend.
+            {% else %}
+              Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
+            {% endif %}
+      - service: tts.google_say
+        entity_id: media_player.desktop
+        data_template:
+          message: >
+            {% set reistijd = states("sensor.calc_travel_time") %}
+            {%if reistijd=="unknown" %} 
+              Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd is onbekend.
+            {% else %}
+              Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
+            {% endif %}
+          cache: false
+          language: 'nl'
+  - alias: 'F1 begin wedstrijd' 
+    id: '3478021346858103290'
+    hide_entity: true
+    trigger:
+      platform: time_pattern
+      seconds: 00
+    condition:
+    - condition: template
+      value_template: >
+        {% if state_attr('calendar.f1_calendar_2018', 'start_time') == None %}
+          False
+        {% else %}
+          {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr("calendar.f1_calendar_2018", "start_time"))-600)   | timestamp_custom('%D %H:%M', 1)) }}
+        {% endif %}
+    action:
+      - service: script.both_speakers
+        data_template:
+          tekst: 'De {{state_attr("calendar.f1_calendar_2018", "message")}} begint over tien minuten '
