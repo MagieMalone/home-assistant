@@ -21,10 +21,11 @@ sensor:
       wakeuplight_time:
         entity_id: sensor.calc_leave_time_alarm
         value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
           {% if states("sensor.calc_leave_time_alarm") == "unknown" %}
             09:00
           {% else %}
-            {{((as_timestamp(states("sensor.calc_leave_time_alarm")) - ((states("input_number.wul_time_before_leave") |int ) * 60))| timestamp_custom("%D %H:%M", 1)) }}
+            {{((as_timestamp(states("sensor.calc_leave_time_alarm")+ tz ) - ((states("input_number.wul_time_before_leave") |int ) * 60))| timestamp_custom("%D %H:%M", 1)) }}
           {% endif %}
           
 script:
@@ -151,6 +152,13 @@ script:
         data:
           message: 'Goeie morgen, tijd om op te staan'
           language: 'nl'
+      - delay:
+          minutes: 1
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0.4'
 automation:
   - alias: 'wakeup light'
     id: '342090870414607831'
@@ -162,38 +170,33 @@ automation:
       condition: and
       conditions:
         - condition: template
-          value_template: "{{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time')) - ((states('input_number.wul_time_before_leave') |int ) * 60))| timestamp_custom('%D %H:%M', 1)) }}"
-        - condition: time
-          before: '10:00:00'
+          value_template: >
+            {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+            {{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time')+tz ) - ((states('input_number.wul_time_before_leave') |int ) * 60))| timestamp_custom('%D %H:%M', 1)) }}
+#        - condition: time
+#          before: '10:00:00'
         - condition: state
           entity_id: input_boolean.wakeuplight_automatic
           state: 'on'
-        - condition: state
-          entity_id: switch.circadian_lighting_circadian_lighting
-          state: 'off'
+        - condition: or
+          conditions: 
+            - condition: state
+              entity_id: sensor.prox_home_dir_of_travel
+              state: 'arrived'
+            - condition: state
+              entity_id: sensor.prox_home_dir_of_travel
+              state: 'towards'
+#            - condition: state
+#              entity_id: sensor.prox_home_dir_of_travel
+#              state: 'stationary'
     action:
-      - service: script.wakeup_light
-  - alias: 'wakeup light circ'
-    id: '67543058600329801'
-    hide_entity: true
-    trigger:
-      platform: time_pattern
-      seconds: 00
-    condition:
-      condition: and
-      conditions:
-        - condition: template
-          value_template: "{{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time')) - ((states('input_number.wul_time_before_leave') |int ) * 60))| timestamp_custom('%D %H:%M', 1)) }}"
-        - condition: time
-          before: '10:00:00'
-        - condition: state
-          entity_id: input_boolean.wakeuplight_automatic
-          state: 'on'
-        - condition: state
-          entity_id: switch.circadian_lighting_circadian_lighting
-          state: 'on'
-    action:
-      - service: script.wakeup_light_circ
+      service_template: >
+        {% if is_state('switch.circadian_lighting_circadian_lighting', 'off') %}
+          script.wakeup_light
+        {% else %}
+          script.wakeup_light_circ
+        {% endif %}
+    
   - alias: 'Manual wakeup light'
     id: '6583925910238569382012'
     hide_entity: true

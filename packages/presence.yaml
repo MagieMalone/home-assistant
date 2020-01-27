@@ -1,6 +1,6 @@
 group:
   arnoud:
-    entities: device_tracker.4dd0404d, device_tracker.oneplus_3, device_tracker.c0eefbd51601
+    entities: device_tracker.4dd0404d, device_tracker.oneplus3_lan_foto_album_com
 input_select:
   arnoud_status:
     name: Arnoud
@@ -27,6 +27,9 @@ sensor:
       arnoud_status:
         value_template: '{{ states("input_select.arnoud_status") }}'
         friendly_name: 'Arnoud'
+      prox_home_dir_of_travel:
+         value_template: '{{state_attr("proximity.home","dir_of_travel")}}'
+         friendly_name: 'Direction of travel to/from home'
 proximity:
   home:
     ignored_zones:

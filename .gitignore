@@ -9,6 +9,7 @@
 *.conf
 *.txt
 *.log
+*.json
 .storage
 .cloud
 .google.token

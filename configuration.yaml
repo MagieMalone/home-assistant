@@ -102,6 +102,10 @@ history:
 
 # View all events in a logbook
 logbook:
+  exclude:
+    entities:
+      - automation.set_input_select_cast_devices_based_on_sensor_chromecast_devices
+      - input_select.cast_devices
 
 # Enables a map showing the location of tracked devices
 map:
@@ -136,6 +140,7 @@ influxdb:
       - weblink
       - updater
       - camera
+      - automation
     entities:
       - sun.sun
       - sensor.last_boot
@@ -143,6 +148,16 @@ influxdb:
       - sensor.time
       - proximity.home2
       - sensor.iss
+  tags_attributes:
+    - friendly_name
+    - device_class
+  component_config_glob:
+    "sensor.*humidity":
+      override_measurement: humidity
+    "sensor.*temperature":
+      override_measurement: temperature
+    "sensor.*battery":
+      override_measurement: battery
   
 # Text to speech
 tts:

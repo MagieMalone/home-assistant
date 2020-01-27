@@ -38,8 +38,8 @@ views:
             entities:
               - sensor.last_ring
               - sensor.last_motion
-              - binary_sensor.ring_front_door_ding
-              - binary_sensor.ring_front_door_motion
+              - binary_sensor.front_door_ding
+              - binary_sensor.front_door_motion
           - type: picture-entity
             id: home_ring_picture
             entity: camera.front_door
@@ -100,7 +100,18 @@ views:
               - entity: sensor.ing_to_home_stats_mean
                 name: Average
             hours_to_show: 168
-
+      - entity: sensor.ambulance
+        icon: 'mdi:ambulance'
+        name: P2000 Ambulance
+        type: sensor
+      - entity: sensor.brandweer
+        icon: 'mdi:fire-truck'
+        name: P2000 Brandweer
+        type: sensor
+      - entity: sensor.trauma_heli
+        icon: 'mdi:helicopter'
+        name: P2000 Trauma-heli
+        type: sensor
 #  - title: Pakjes
 #    icon: mdi:package-variant
 #    id: pakjes
@@ -496,6 +507,9 @@ views:
                 name: Driving time
               - entity: sensor.cal_location
                 name: Location
+#              - entity: sensor.cal_start_time_unix
+#                name: Start time
+#                format: datetime
           - type: picture-entity
             id: cal_afspraak_destination
             entity: camera.destination
@@ -721,7 +735,18 @@ views:
               - type: gauge
                 entity: sensor.0x00158d00031632ed_humidity
                 name: Zolder achter
-
+  - title: test
+    panel: false
+    cards:
+      - type: iframe
+        id: graf1
+        url: http://192.168.1.6:3000/d-solo/Jl7Q1aYWz/home-assistant?orgId=1&panelId=4&theme=light&from=now-196h&to=now&refresh=5m
+        aspect_ratio: 65%
+      - type: iframe
+        id: graf2
+        url: http://192.168.1.6:3000/d-solo/Jl7Q1aYWz/home-assistant?orgId=1&panelId=2&theme=light&from=now-196h&to=now&refresh=5m
+        aspect_ratio: 65%
+        
   - title: Utility
     id: utility
     icon: mdi:power-plug
@@ -858,9 +883,7 @@ views:
         entities:
          - entity: device_tracker.4dd0404d
            name: Oneplus3-gps
-         - entity: device_tracker.oneplus_3
-           name: Oneplus3-bt
-         - entity: device_tracker.c0eefbd51601
+         - entity: device_tracker.oneplus3_lan_foto_album_com
            name: Oneplus3-wifi
          - group.arnoud
          - input_select.arnoud_status
@@ -869,14 +892,15 @@ views:
          - automation.mark_person_as_home
          - automation.mark_person_as_just_arrived
          - automation.mark_person_as_just_left
+         - sensor.prox_home_dir_of_travel
       - type: history-graph
         id: entities_graph
         title: history
         entities: 
           - person.arnoud
-          - device_tracker.oneplus_3
-          - device_tracker.c0eefbd51601
+          - device_tracker.oneplus3_lan_foto_album_com
           - device_tracker.4dd0404d
+          - sensor.prox_home_dir_of_travel
   - title: Zigbee2mqtt
     cards:
       - type: entities
@@ -921,10 +945,6 @@ views:
           - zone.routz
           - zone.ymke
           - device_tracker.4dd0404d
-  - title: Cloud9
-    id: cloud9
-    icon: mdi:cloud-braces
-    panel: true
-    cards:
-      - type: iframe
-        url: https://foto-album.duckdns.org:8181/ide.html
+          - sensor.ambulance
+          - sensor.brandweer
+          - sensor.trauma_heli

@@ -159,7 +159,7 @@ automation:
           below: 20
         - condition: state
           entity_id: sensor.thermostat_condition
-          state: 'true'
+          state: 'True'
         - condition: or
           conditions:
             - condition: state
@@ -240,7 +240,7 @@ automation:
               state: 'away'
         - condition: state
           entity_id: sensor.thermostat_condition
-          state: 'true'
+          state: 'True'
         - condition: or
           conditions:
             - condition: time

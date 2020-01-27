@@ -1,11 +1,11 @@
 mqtt:
-  broker: 127.0.0.1
-  port: 1883
-  client_id: home-assistant-1
-  keepalive: 60
-  username: !secret mqtt_user
-  password: !secret mqtt_password
-  discovery: true
+#  broker: 127.0.0.1
+#  port: 1883
+#  client_id: home-assistant-1
+#  keepalive: 60
+#  username: !secret mqtt_user
+#  password: !secret mqtt_password
+#  discovery: true
   birth_message:
    topic: 'hass/status'
    payload: 'online'

@@ -11,7 +11,8 @@
 #     track_devices: false
 google_assistant:
   project_id: moonlit-helper-211706
-  api_key: !secret google_apikey
+#  api_key: !secret google_apikey
+  service_account: !include 27024-2f07ec3df416.json
 #  expose_by_default: false
 #  exposed_domains:
 #    - group

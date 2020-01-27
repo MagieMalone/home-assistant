@@ -43,15 +43,29 @@ sensor:
         value_template: '{{ state_attr("calendar.reminders", "message") | replace("#reminders", "")}}'
         friendly_name: 'Title'
       cal_reminders_date:
-        value_template: '{{ state_attr("calendar.reminders", "start_time") }}'
+        value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% set time = state_attr("calendar.reminders", "start_time") + tz %}
+          {{as_timestamp(time)|timestamp_local}}
         friendly_name: 'Start Time'
       cal_start_time:
-        value_template: '{{ state_attr("calendar.abuurmangmailcom", "start_time") }}'
+        value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
+          {{as_timestamp(time)|timestamp_local}}
+        friendly_name: 'Start Time'
+      cal_start_time_unix:
+        value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
+          {{as_timestamp(time)}}
         friendly_name: 'Start Time'
       calc_leave_time:
         value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
+          {% set starttime = as_timestamp(time) %}    
           {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
-          {% set starttime = as_timestamp(state_attr("calendar.abuurmangmailcom", "start_time")) %}           
           {%if duration == None %}
             {{ starttime  | timestamp_custom("%Y-%m-%d %H:%M") }}
           {% else %}
@@ -62,10 +76,27 @@ sensor:
             {% endif %} 
           {% endif %} 
         friendly_name: 'Leave Time'
+      calc_leave_time_unix:
+        value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
+          {% set starttime = as_timestamp(time) %}    
+          {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
+          {%if duration == None %}
+            {{ starttime }}
+          {% else %}
+            {%if duration.split(" ")[2]==Null %}
+              {{ (starttime  - (duration.split(" ")[0]  | int * 60 )) }}
+            {% else %}
+              {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) }}
+            {% endif %} 
+          {% endif %} 
       calc_leave_time_alarm:
         value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% set time = state_attr("calendar.alarm", "start_time") + tz %}
+          {% set starttime = as_timestamp(time) %}   
           {% set duration = state_attr("sensor.google_travel_time_alarm", "duration") %}
-          {% set starttime = as_timestamp(state_attr("calendar.alarm", "start_time")) %}           
           {%if duration == None %}
             {{ starttime  | timestamp_custom("%Y-%m-%d %H:%M") }}
           {% else %}
@@ -77,7 +108,10 @@ sensor:
           {% endif %} 
         friendly_name: 'Alarm Leave Time'
       cal_contacts_start_time:
-        value_template: '{{as_timestamp(state_attr("calendar.contacts", "start_time")) | timestamp_custom("%m-%d-%Y")}}'
+        value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% set time = state_attr("calendar.contacts", "start_time") + tz %}
+          {{as_timestamp(time)|timestamp_custom("%m-%d-%Y")}}
         friendly_name: 'Datum' 
       cal_contacts_message:  
         value_template: '{{state_attr("calendar.contacts", "message")}}'
@@ -91,7 +125,9 @@ automation:
       seconds: 00
     condition:
     - condition: template
-      value_template: '{{ now().strftime("%D %H:%M") == ( (as_timestamp(states("sensor.calc_leave_time")) - 300 )| timestamp_custom("%D %H:%M", 1)) }}'
+      value_template: >
+        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+        {{ now().strftime("%D %H:%M") == ( (as_timestamp(states("sensor.calc_leave_time") + tz ) - 300 )| timestamp_custom("%D %H:%M", 1)) }}
     action:
       - service: script.both_speakers
         data_template:
@@ -123,10 +159,11 @@ automation:
     condition:
     - condition: template
       value_template: >
+        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
         {% if state_attr('calendar.f1_calendar_2018', 'start_time') == None %}
           False
         {% else %}
-          {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr("calendar.f1_calendar_2018", "start_time"))-600)   | timestamp_custom('%D %H:%M', 1)) }}
+          {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr("calendar.f1_calendar_2018", "start_time") + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
         {% endif %}
     action:
       - service: script.both_speakers

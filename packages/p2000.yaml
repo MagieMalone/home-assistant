@@ -1,0 +1,17 @@
+sensor:
+  - platform: p2000
+    name: Brandweer
+    regios: 10
+    disciplines: 1
+    radius: 7500
+  - platform: p2000
+    name: Ambulance
+    regios: 10
+    disciplines: 2
+    radius: 1000
+  - platform: p2000
+    name: Trauma-heli
+    regios: 8,13,17
+    disciplines: 2
+    radius: 15000
+    capcodes: 0120901,0923993,1420059

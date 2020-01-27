@@ -1,30 +1,30 @@
-ring:
-  username: !secret ring_username
-  password: !secret ring_password
-binary_sensor:
-  - platform: ring
-    monitored_conditions:
-      - ding
-      - motion
-camera:
-  - platform: ring
-ffmpeg:
+#ring:
+#  username: !secret ring_username
+#  password: !secret ring_password
+#binary_sensor:
+#  - platform: ring
+#    monitored_conditions:
+#      - ding
+#      - motion
+# camera:
+#   - platform: ring
+# ffmpeg:
 
 sensor:
-  - platform: ring
-    monitored_conditions:
-      - battery
-      - last_activity
-      - last_ding
-      - last_motion
-      - volume
+#  - platform: ring
+#    monitored_conditions:
+#      - battery
+#      - last_activity
+#      - last_ding
+#      - last_motion
+#      - volume
   - platform: template
     sensors:
       last_ring:
-        entity_id: sensor.ring_front_door_last_ding
+        entity_id: sensor.front_door_last_ding
         value_template: >-
           {% set today = now().day | int %}
-          {% set ring_date = (((as_timestamp(state_attr('sensor.ring_front_door_last_ding','created_at'))) | timestamp_custom("%d")) | int) %}
+          {% set ring_date = (((as_timestamp(state_attr('sensor.front_door_last_ding','created_at'))) | timestamp_custom("%d")) | int) %}
           {% if today == ring_date %}
             {% set day = "Today" %}
           {% elif (today - 1) == ring_date %}
@@ -32,17 +32,17 @@ sensor:
           {% elif today == 1 and ring_date > 27 %}
             {% set day = "Yesterday" %}
           {%elif (today-ring_date)>7 %}
-              {% set day = as_timestamp(state_attr('sensor.ring_front_door_last_ding','created_at')) | timestamp_custom("%x")%}
+              {% set day = as_timestamp(state_attr('sensor.front_door_last_ding','created_at')) | timestamp_custom("%x")%}
           {% else %}
-            {% set day = as_timestamp(state_attr('sensor.ring_front_door_last_ding','created_at')) | timestamp_custom("%A")%}
+            {% set day = as_timestamp(state_attr('sensor.front_door_last_ding','created_at')) | timestamp_custom("%A")%}
           {% endif %}
-          {% set time = as_timestamp(state_attr('sensor.ring_front_door_last_ding','created_at')) | timestamp_custom("%H:%M")%}
+          {% set time = as_timestamp(state_attr('sensor.front_door_last_ding','created_at')) | timestamp_custom("%H:%M")%}
           {{[day,time]|join(" at ")}}
       last_motion:
-        entity_id: sensor.ring_front_door_last_motion
+        entity_id: sensor.front_door_last_motion
         value_template: >-
           {% set today = now().day | int %}
-          {% set ring_date = (((as_timestamp(state_attr('sensor.ring_front_door_last_motion','created_at'))) | timestamp_custom("%d")) | int) %}
+          {% set ring_date = (((as_timestamp(state_attr('sensor.front_door_last_motion','created_at'))) | timestamp_custom("%d")) | int) %}
           {% if today == ring_date %}
             {% set day = "Today" %}
           {% elif (today - 1) == ring_date %}
@@ -50,11 +50,11 @@ sensor:
           {% elif today == 1 and ring_date > 27 %}
             {% set day = "Yesterday" %}
           {%elif (today-ring_date)>7 %}
-              {% set day = as_timestamp(state_attr('sensor.ring_front_door_last_motion','created_at')) | timestamp_custom("%x")%}
+              {% set day = as_timestamp(state_attr('sensor.front_door_last_motion','created_at')) | timestamp_custom("%x")%}
           {% else %}
-            {% set day = as_timestamp(state_attr('sensor.ring_front_door_last_motion','created_at')) | timestamp_custom("%A")%}
+            {% set day = as_timestamp(state_attr('sensor.front_door_last_motion','created_at')) | timestamp_custom("%A")%}
           {% endif %}
-          {% set time = as_timestamp(state_attr('sensor.ring_front_door_last_motion','created_at')) | timestamp_custom("%H:%M")%}
+          {% set time = as_timestamp(state_attr('sensor.front_door_last_motion','created_at')) | timestamp_custom("%H:%M")%}
           {{[day,time]|join(" at ")}}
 automation:
   - alias: 'flash lights with doorbell'
@@ -62,7 +62,7 @@ automation:
     hide_entity: true
     trigger:
       platform: state
-      entity_id: binary_sensor.ring_front_door_ding
+      entity_id: binary_sensor.front_door_ding
       to: 'on'
     action:
       service: script.flash_lights
