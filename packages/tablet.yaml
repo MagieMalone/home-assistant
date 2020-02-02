@@ -1,0 +1,20 @@
+automation:
+  - alias: 'Laad tablet'
+    id: '54263098623458560' 
+    hide_entity: true
+    trigger:
+      platform: template
+      value_template: "{{(state_attr('device_tracker.scarlet', 'battery_level') | int)<40}}"
+    action:
+      - service: switch.turn_on
+        entity_id: switch.0x8418260000105782_switch
+
+  - alias: 'Tablet lader uit'
+    id: '57802395701892350865743010983' 
+    hide_entity: true
+    trigger:
+      platform: template
+      value_template: "{{(state_attr('device_tracker.scarlet', 'battery_level') | int)>90}}"
+    action:
+      - service: switch.turn_off
+        entity_id: switch.0x8418260000105782_switch

@@ -35,29 +35,29 @@ automation:
               {% else %}
                 50
               {% endif %}
-      - service: switch.turn_on
-        entity_id: switch.0x8418260000105782_switch
+#     - service: switch.turn_on
+#       entity_id: switch.0x8418260000105782_switch
 
-  - alias: 'kerstboom aan'
-    id: '72409384614820941' 
-    hide_entity: true
-    trigger:
-      - at: '08:00'
-        platform: time
-    condition:
-      condition: or
-      conditions:
-        - condition: state
-          entity_id: input_select.arnoud_status
-          state: 'Net Thuis'
-        - condition: state
-          entity_id: input_select.arnoud_status
-          state: 'Thuis'
-         
-    action:
-      - service: switch.turn_on
-        entity_id: switch.0x8418260000105782_switch
-
+# - alias: 'kerstboom aan'
+#   id: '72409384614820941' 
+#   hide_entity: true
+#   trigger:
+#     - at: '08:00'
+#       platform: time
+#   condition:
+#     condition: or
+#     conditions:
+#       - condition: state
+#         entity_id: input_select.arnoud_status
+#         state: 'Net Thuis'
+#       - condition: state
+#         entity_id: input_select.arnoud_status
+#         state: 'Thuis'
+#        
+#   action:
+#     - service: switch.turn_on
+#       entity_id: switch.0x8418260000105782_switch
+#
   - alias: 'Lights on thuiskomst'
     id: '5480797213460891' 
     hide_entity: true
@@ -89,8 +89,8 @@ automation:
               {% else %}
                 50
               {% endif %}
-      - service: switch.turn_on
-        entity_id: switch.0x8418260000105782_switch
+#      - service: switch.turn_on
+#        entity_id: switch.0x8418260000105782_switch
 
   - alias: 'sunrise lights off'
     id: '47893265301237' 
@@ -124,8 +124,8 @@ automation:
                 900
               {% endif %}
           entity_id: group.lampen
-      - service: switch.turn_off
-        entity_id: switch.0x8418260000105782_switch
+#      - service: switch.turn_off
+#        entity_id: switch.0x8418260000105782_switch
 
   - alias: 'lights off weekenddays'
     id: '1528912303472'
@@ -148,8 +148,8 @@ automation:
                 900
               {% endif %}
           entity_id: group.lampen
-      - service: switch.turn_off
-        entity_id: switch.0x8418260000105782_switch
+#      - service: switch.turn_off
+#        entity_id: switch.0x8418260000105782_switch
 script:
   woonkamer_lights_fadein:
     sequence:

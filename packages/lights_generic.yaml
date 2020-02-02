@@ -42,7 +42,7 @@ switch:
 binary_sensor:
 # custom hue component
   - platform: huesensor
-sensor:
+remote:
 #custom hue component
   - platform: huesensor
 #light:

@@ -25,7 +25,7 @@ automation:
     hide_entity: true
     trigger: 
       - platform: state
-        entity_id: sensor.hue_dimmer_switch_1
+        entity_id: remote.hue_dimmer_switch_1
         to: '1_click_up'
     action:
       - service: input_boolean.turn_on
@@ -35,7 +35,7 @@ automation:
     hide_entity: true
     trigger: 
       - platform: state
-        entity_id: sensor.hue_dimmer_switch_1
+        entity_id: remote.hue_dimmer_switch_1
         to: '4_click_up'
     action:
       - service: input_boolean.turn_off
