@@ -188,7 +188,7 @@ automation:
             value_template: "{{ now().strftime('%D %H:%M') < (as_timestamp(states('sensor.calc_leave_time')) | timestamp_custom('%D %H:%M', 1)) }}"
           - condition: state
             entity_id: sensor.heating_operation_mode
-            state: 'heat'
+            state: 'comfort'
           - condition: time
             before: '09:00:00' 
     action:
@@ -227,9 +227,9 @@ automation:
       conditions:
         - condition: template
           value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'towards')}}"
-        - condition: numeric_state
-          entity_id: proximity.home
-          below: 25
+#        - condition: numeric_state
+#          entity_id: proximity.home
+#          below: 25
         - condition: or
           conditions:
             - condition: state
@@ -282,9 +282,9 @@ automation:
       conditions:
         - condition: template
           value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'away_from')}}"
-        - condition: numeric_state
-          entity_id: proximity.home
-          above: 11.8
+#        - condition: numeric_state
+#          entity_id: proximity.home
+#          above: 11.8
         - condition: or
           conditions:
             - condition: state
