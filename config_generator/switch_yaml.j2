@@ -2,7 +2,6 @@
 {%- set rightfirst = right.entity.split(',') -%}
 
 - alias: 'button click {{room}}  right '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click
@@ -24,7 +23,6 @@
       {% endif %}
 
 - alias: 'button click {{room}}  left '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click
@@ -46,7 +44,6 @@
       {% endif %}
 
 - alias: 'button click {{room}}  both '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click
@@ -62,7 +59,6 @@
         light_entities: {{left.entity}}, {{right.entity}}
 
 - alias: 'button long_click {{room}}  right on '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click
@@ -73,7 +69,6 @@
         light_entity: {{right.entity}}
 
 - alias: 'button long_click {{room}}  right off'
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click
@@ -86,7 +81,6 @@
       entity_id: script.dim_light_loop
       
 - alias: 'button long_click {{room}}  left on '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click
@@ -97,7 +91,6 @@
         light_entity: {{left.entity}}
 
 - alias: 'button long_click {{room}}  left off'
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click
@@ -110,7 +103,6 @@
       entity_id: script.dim_light_loop
 
 - alias: 'button click {{room}}  right_double '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click
@@ -132,7 +124,6 @@
             {{ '{%' }} endif {{ '%}' }}
       
 - alias: 'button click {{room}}  left_double '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.{{switchname}}_click

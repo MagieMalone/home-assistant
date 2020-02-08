@@ -4,7 +4,6 @@ input_boolean:
 automation:
   - alias: 'cleaning mode on'
     id: '0643587777777738989'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_boolean.cleaningmode
@@ -13,7 +12,6 @@ automation:
       - service: script.cleaningmode_on
   - alias: 'cleaning mode off'
     id: '6753290123480'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_boolean.cleaningmode
@@ -21,8 +19,7 @@ automation:
     action:
       - service: script.cleaningmode_off
   - alias: 'hue dimmer switch on'
-    id: '87504935709864210938'
-    hide_entity: true
+    id: '167521365098632509816235'
     trigger: 
       - platform: state
         entity_id: remote.hue_dimmer_switch_1
@@ -32,7 +29,6 @@ automation:
         entity_id: input_boolean.cleaningmode
   - alias: 'hue dimmer switch off'
     id: '87504935709864210938'
-    hide_entity: true
     trigger: 
       - platform: state
         entity_id: remote.hue_dimmer_switch_1

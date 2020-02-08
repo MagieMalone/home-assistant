@@ -59,7 +59,6 @@ sensor:
 automation:
   - alias: 'flash lights with doorbell'
     id: '753125809170657784308'
-    hide_entity: true
     trigger:
       platform: state
       entity_id: binary_sensor.front_door_ding

@@ -56,7 +56,6 @@ sensor:
 automation:
   - alias: 'kopieer forecast naar input_number'
     id: '8749832079108927490821'
-    hide_entity: true
     trigger:
       - platform: time
         at: '00:00:01'

@@ -37,11 +37,7 @@ logger:
 #    custom_components.mercedesmeapi.OAuth: debug
 #
 
-#hacs:
-#  token: !secret my_github_access_token
 
-# Enables the frontend
-frontend:
 
 # https://github.com/thomasloven/hass-browser_mod
 #browser_mod:
@@ -50,12 +46,6 @@ frontend:
 #      name: Desktop
 #    ee15c3f5 b0c15c44:
 #      name: Oneplus3
-## Enables configuration UI
-config:
-
-
-# enable the person component
-person:
 
 lovelace:
   mode: yaml
@@ -72,7 +62,7 @@ http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
 
-  # Checks for available updates
+# Checks for available updates
 # Note: This component will send some information about your system to
 # the developers to assist with development of Home Assistant.
 # For more information, please see:
@@ -83,14 +73,21 @@ updater:
 
 # Discover some devices automatically
 discovery:
-
 zeroconf:
 ssdp:
-
+cloud:
 mobile_app:
-
+# Enables a map showing the location of tracked devices
+map:
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
+# Enables the frontend
+frontend:
+## Enables configuration UI
+config:
+# enable the person component
+person:
+system_health:
 
 # Enables support for tracking state changes over time
 history:
@@ -109,8 +106,7 @@ logbook:
       - automation.set_input_select_cast_devices_based_on_sensor_chromecast_devices
       - input_select.cast_devices
 
-# Enables a map showing the location of tracked devices
-map:
+
 
 
 
@@ -118,7 +114,6 @@ recorder:
 #  db_url: !secret db_url
   exclude:
     domains:
-      - weblink
       - updater
       - camera
     entities:
@@ -129,7 +124,7 @@ recorder:
       - proximity.home2
       - sensor.iss
 
-system_health:
+
 
 
 influxdb:
@@ -139,7 +134,6 @@ influxdb:
   password: !secret influxdb_password
   exclude:
     domains:
-      - weblink
       - updater
       - camera
       - automation
@@ -166,8 +160,6 @@ tts:
   - platform: google_translate
     service_name: google_say
 
-# Cloud
-#cloud:
 
 
 notify:

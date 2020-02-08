@@ -1,5 +1,4 @@
 - alias: 'button click slaapkamer  right '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click
@@ -17,7 +16,6 @@
       brightness_pct: 33
 
 - alias: 'button click slaapkamer  left '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click
@@ -35,7 +33,6 @@
       brightness_pct: 100
 
 - alias: 'button click slaapkamer  both '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click
@@ -51,7 +48,6 @@
         light_entities: light.sk_spot_1, light.sk_spot_2, light.slaapkamer
 
 - alias: 'button long_click slaapkamer  right on '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click
@@ -62,7 +58,6 @@
         light_entity: light.slaapkamer
 
 - alias: 'button long_click slaapkamer  right off'
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click
@@ -75,7 +70,6 @@
       entity_id: script.dim_light_loop
       
 - alias: 'button long_click slaapkamer  left on '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click
@@ -86,7 +80,6 @@
         light_entity: light.sk_spot_1, light.sk_spot_2
 
 - alias: 'button long_click slaapkamer  left off'
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click
@@ -99,7 +92,6 @@
       entity_id: script.dim_light_loop
 
 - alias: 'button click slaapkamer  right_double '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click
@@ -121,7 +113,6 @@
             {% endif %}
       
 - alias: 'button click slaapkamer  left_double '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b42afb_click

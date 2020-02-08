@@ -1,5 +1,4 @@
 - alias: 'button click studeerkamer  right '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click
@@ -17,7 +16,6 @@
       brightness_pct: 100
 
 - alias: 'button click studeerkamer  left '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click
@@ -35,7 +33,6 @@
       brightness_pct: 50
 
 - alias: 'button click studeerkamer  both '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click
@@ -51,7 +48,6 @@
         light_entities: light.computer, group.lampen
 
 - alias: 'button long_click studeerkamer  right on '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click
@@ -62,7 +58,6 @@
         light_entity: group.lampen
 
 - alias: 'button long_click studeerkamer  right off'
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click
@@ -75,7 +70,6 @@
       entity_id: script.dim_light_loop
       
 - alias: 'button long_click studeerkamer  left on '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click
@@ -86,7 +80,6 @@
         light_entity: light.computer
 
 - alias: 'button long_click studeerkamer  left off'
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click
@@ -99,7 +92,6 @@
       entity_id: script.dim_light_loop
 
 - alias: 'button click studeerkamer  right_double '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click
@@ -121,7 +113,6 @@
             {% endif %}
       
 - alias: 'button click studeerkamer  left_double '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a1cf_click

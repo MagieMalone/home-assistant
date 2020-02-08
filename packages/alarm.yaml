@@ -8,7 +8,6 @@ input_text:
 automation:
   - alias: 'leave home immidiate'
     id: '438709184787098346'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
@@ -18,7 +17,6 @@ automation:
         entity_id: alarm_control_panel.ha_alarm
   - alias: 'return home immidiate '
     id: '43246809632049861384906'
-    hide_entity: true
     trigger: 
       - platform: state
         entity_id: input_select.arnoud_status
@@ -30,7 +28,6 @@ automation:
           code: !secret alarm_code
   - alias: 'return home delayed'
     id: '892340910348790'
-    hide_entity: true
     trigger: 
       - platform: state
         entity_id: input_select.arnoud_status
@@ -42,7 +39,6 @@ automation:
           code: !secret alarm_code
   - alias: 'deur open en niet thuis'
     id: '3567312503718013980'
-    hide_entity: true
     trigger:
       platform: state
       entity_id: binary_sensor.0x00158d000289e817_contact, binary_sensor.0x00158d000289ec2d_contact
@@ -67,7 +63,6 @@ automation:
   
   - alias: 'trigger alarm based on door & motion sensors if armed away'
     id: '521368393280359863'
-    hide_entity: true
     trigger: 
       platform: state
       entity_id: binary_sensor.0x00158d000289e817_contact, binary_sensor.0x00158d000289ec2d_contact, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy, binary_sensor.0x00158d0002b5d42f_occupancy
@@ -97,7 +92,6 @@ automation:
             {%-  endfor  %}
   - alias: 'Send notification when alarm triggered'
     id: '462313490860234890'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: alarm_control_panel.ha_alarm
@@ -116,7 +110,6 @@ automation:
 
   - alias: 'Sound alarm if  trigger remains for 2 minutes'
     id: '7680218940823460'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: alarm_control_panel.ha_alarm

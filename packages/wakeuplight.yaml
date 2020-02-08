@@ -162,7 +162,6 @@ script:
 automation:
   - alias: 'wakeup light'
     id: '342090870414607831'
-    hide_entity: true
     trigger:
       platform: time_pattern
       seconds: 00
@@ -199,7 +198,6 @@ automation:
     
   - alias: 'Manual wakeup light'
     id: '6583925910238569382012'
-    hide_entity: true
     trigger:
       platform: template
       value_template: "{{ states('sensor.time') == (state_attr('input_datetime.wul_manual_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"

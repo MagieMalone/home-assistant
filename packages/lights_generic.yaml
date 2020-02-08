@@ -209,7 +209,6 @@ script:
 automation:
   - alias: 'lights off when leaving'
     id: '782368093283658209'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
@@ -223,7 +222,6 @@ automation:
 #######################################
   - alias: 'motion sensor mqtt overloop'
     id: '467606384609869894109134'
-    hide_entity: true
     trigger: 
       platform: state
       entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
@@ -241,7 +239,6 @@ automation:
           light_entities: light.overloop
   - alias: 'motion sensor mqtt traphal'
     id: '47808636478871347896'
-    hide_entity: true
     trigger: 
       platform: state
       entity_id: binary_sensor.0x00158d0002b8586b_occupancy
@@ -259,7 +256,6 @@ automation:
           light_entities: light.trap_hal
   - alias: 'motion sensor mqtt hal'
     id: '567327632089382383432489065'
-    hide_entity: true
     trigger: 
       platform: state
       entity_id: binary_sensor.0x00158d0002b5d42f_occupancy
@@ -283,7 +279,6 @@ automation:
 
   - alias: 'motion sensor light off'
     id: '432174083284601304'
-    hide_entity: true
     trigger: 
       platform: state
       entity_id: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy

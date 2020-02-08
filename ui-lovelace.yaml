@@ -3,7 +3,6 @@ title: My Awesome Home
 background: center / cover no-repeat url("/background.png") fixed
 # Exclude entities from "Unused entities" view
 excluded_entities:
-  - weblink.router
 resources:
   - url: /community_plugin/weather-card/weather-card.js
     type: module
@@ -289,22 +288,13 @@ views:
           entity: media_player.studeerkamer_speaker
       - type: conditional
         conditions:
-          - entity: media_player.spotify
+          - entity: media_player.spotify_arnoud_buurman
             state_not: "unavailable"
         card:
           type: media-control
           id: mediaplayer_spotify
           title: Spotify
-          entity: media_player.spotify
-      - type: conditional
-        conditions:
-          - entity: media_player.samsung_tv_remote
-            state_not: "unavailable"
-        card:
-          type: media-control
-          id: mediaplayer_samsung_tv_remote
-          title: TV
-          entity:  media_player.samsung_tv_remote
+          entity: media_player.spotify_arnoud_buurman
       - type: conditional
         conditions:
           - entity: media_player.chrome_3

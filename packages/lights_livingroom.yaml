@@ -1,7 +1,6 @@
 automation:
   - alias: 'Lights on'
     id: '1528911899317' 
-    hide_entity: true
     trigger:
       - platform: numeric_state
         entity_id: sun.sun
@@ -60,7 +59,6 @@ automation:
 #
   - alias: 'Lights on thuiskomst'
     id: '5480797213460891' 
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
@@ -94,7 +92,6 @@ automation:
 
   - alias: 'sunrise lights off'
     id: '47893265301237' 
-    hide_entity: true
     trigger: 
       platform: sun
       event: sunrise
@@ -105,7 +102,6 @@ automation:
 
   - alias: 'lights off weekdays'
     id: '1528912303194'
-    hide_entity: true
     trigger:
       - platform: template
         value_template: >
@@ -129,7 +125,6 @@ automation:
 
   - alias: 'lights off weekenddays'
     id: '1528912303472'
-    hide_entity: true
     trigger:
       - at: '23:59'
         platform: time

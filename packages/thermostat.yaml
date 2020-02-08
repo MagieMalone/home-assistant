@@ -42,7 +42,6 @@ sensor:
 automation:
   - alias: 'kachel aan bij thuiskomst'
     id: '48794350603208'
-    hide_entity: true
     trigger:
 #      - platform: numeric_state
 #        entity_id: sensor.phone_to_home
@@ -81,7 +80,6 @@ automation:
         preset_mode: home
   - alias: 'kachel uit'
     id: '3487932089739032'
-    hide_entity: true
     trigger:
       platform: time
       at: '21:30:00'
@@ -101,7 +99,6 @@ automation:
         preset_mode: sleep
   - alias: 'kachel uit weekend'
     id: '899328673478992'
-    hide_entity: true
     trigger:
       platform: time
       at: '23:00:00'
@@ -118,7 +115,6 @@ automation:
         preset_mode: sleep
   - alias: 'kachel aan op tijd'
     id: '487943503783603208'
-    hide_entity: true
     trigger:
       - platform: time
         at: '09:00:00' 
@@ -144,7 +140,6 @@ automation:
         preset_mode: home
   - alias: 'kachel aan smorgens voor vertrek'
     id: '34567384890732300888734'
-    hide_entity: true
     trigger:
       platform: time_pattern
       seconds: 00
@@ -176,7 +171,6 @@ automation:
         preset_mode: comfort
   - alias: 'Zet kachel uit smorgens zodra badkamer warm is'
     id: '83746345875808312346030'
-    hide_entity: true
     trigger:
       - platform: numeric_state
         entity_id: sensor.0x00158d00031e31ac_temperature
@@ -187,7 +181,7 @@ automation:
           - condition: template
             value_template: "{{ now().strftime('%D %H:%M') < (as_timestamp(states('sensor.calc_leave_time')) | timestamp_custom('%D %H:%M', 1)) }}"
           - condition: state
-            entity_id: sensor.heating_operation_mode
+            entity_id: sensor.heating_preset_mode
             state: 'comfort'
           - condition: time
             before: '09:00:00' 
@@ -195,7 +189,7 @@ automation:
       alias: 'zet kachel uit'
       service: climate.set_operation_mode
       data:
-        entity_id: climate.set_preset_mode
+        entity_id: climate.toon_thermostat
         preset_mode: away
 #  - alias: 'kachel uit bij vertrek'
 #    id: '87532892385670923'
@@ -213,9 +207,22 @@ automation:
 ## testing new model
 ##
 ########################
+  - alias: 'alerting on proximity'
+    id: '58708495628290562435806'
+    trigger:
+      - platform: numeric_state
+        entity_id: proximity.home
+        below: 25
+      - platform: numeric_state
+        entity_id: proximity.home
+        above: 11.8
+    action:
+      service: notify.pushover
+      data_template:
+        title: 'proximity testing'
+        message: "GPS is {{states('proximity.home')}}km ver weg en heeft status {{state_attr('proximity.home', 'dir_of_travel')}}  en kachel staat in stand {{states('sensor.heating_preset_mode')}} en condition is {{states('sensor.thermostat_condition')}}"
   - alias: 'proximity based kachel aan'
     id: '36142780901230468498301'
-    hide_entity: true
     trigger: 
       - platform: numeric_state
         entity_id: proximity.home
@@ -259,10 +266,6 @@ automation:
                 - sat
                 - sun
     action:
-#      service: notify.pushover
-#      data_template:
-#        title: 'kachel aan'
-#        message: "Kachel aan, GPS is {{states('proximity.home')}}km ver weg en heeft status {{state_attr('proximity.home', 'dir_of_travel')}}  en kachel staat in stand {{states('sensor.heating_operation_mode')}}"
       alias: 'zet kachel aan'
       service: climate.set_preset_mode
       data:
@@ -270,7 +273,6 @@ automation:
         preset_mode: home
   - alias: 'proximity based kachel uit'
     id: '65781233029308062315'
-    hide_entity: true
     trigger: 
       - platform: numeric_state
         entity_id: proximity.home
@@ -294,10 +296,6 @@ automation:
               entity_id: sensor.heating_preset_mode
               state: 'comfort'
     action:
-#      service: notify.pushover
-#      data_template:
-#        title: 'kachel uit'
-#        message: "Kachel uit, GPS is {{states('proximity.home')}}km ver weg en heeft status {{state_attr('proximity.home', 'dir_of_travel')}} en kachel staat in stand {{states('sensor.heating_operation_mode')}}"
       alias: 'zet kachel uit'
       service: climate.set_operation_mode
       data:
@@ -305,7 +303,6 @@ automation:
         preset_mode: away
   - alias: 'test new condition'
     id: '578094357868690285602'
-    hide_entity: true
     trigger: 
       platform: state
       entity_id: sensor.thermostat_condition
@@ -327,7 +324,6 @@ automation:
 
   - alias: 'zet heating input select based on toon output'
     id: '32847030987420324'
-    hide_entity: true
     trigger: 
       platform: state
       entity_id: sensor.heating_preset_mode
@@ -353,7 +349,6 @@ automation:
         option: "{{states('sensor.heating_preset_mode')}}"
   - alias: 'zet toon based on heating input select'
     id: '3098476890309834039342'
-    hide_entity: true
     trigger:
       platform: state
       entity_id: input_select.heating
@@ -364,7 +359,6 @@ automation:
         preset_mode: "{{states('input_select.heating')}}"
   - alias: 'zet toon thermostaat based on input value'
     id: '98487940987349821'
-    hide_entity: true
     trigger:
       platform: state
       entity_id: input_number.thermostat_set_point
@@ -378,7 +372,6 @@ automation:
         temperature: "{{states('input_number.thermostat_set_point')}}"
   - alias: 'zet thermostaat input value based on toon'
     id: '230983248701908743'
-    hide_entity: true
     trigger:
       platform: state
       entity_id: sensor.heating_set_temperature

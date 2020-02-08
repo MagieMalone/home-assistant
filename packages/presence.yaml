@@ -41,7 +41,6 @@ proximity:
 automation:
   - alias: 'Mark person as just arrived'
     id: '548327489170419324086'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: group.arnoud
@@ -72,7 +71,6 @@ automation:
             {% endif %}
   - alias: 'Mark person as home'
     id: '014567856438345707843571'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
@@ -95,7 +93,6 @@ automation:
           option: Thuis
   - alias: 'Mark person as just left'
     id: '578344801378074356'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: group.arnoud
@@ -113,7 +110,6 @@ automation:
           option: Net Weg
   - alias: 'Mark person as away'
     id: '80941237089760310'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status

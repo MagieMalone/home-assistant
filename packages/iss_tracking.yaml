@@ -48,7 +48,6 @@ sensor:
 automation:
   - alias: 'ISS in range'
     id: '130256743518934101213' 
-    hide_entity: true
     trigger:
       platform: template
       value_template: ' {{states("proximity.home2") < states("sensor.iss_horizon")}}'

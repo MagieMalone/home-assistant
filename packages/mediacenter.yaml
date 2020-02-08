@@ -5,9 +5,9 @@
 #  - host: 192.168.1.132
 #  - host: 192.168.1.239
 media_player:
-  - platform: samsungtv
-    host: 192.168.3.222
-    mac: 90:F1:AA:2A:59:50
+#  - platform: samsungtv
+#    host: 192.168.3.222
+#    mac: 90:F1:AA:2A:59:50
   - platform: songpal
     name: soundbar
     endpoint: http://192.168.3.152:10000/sony
@@ -22,7 +22,6 @@ input_select:
 automation:
   - alias: 'Turn off mediacenter when leaving'
     id: '1528971801050'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
@@ -32,7 +31,6 @@ automation:
         entity_id: light.media_group
   - alias: 'Turn on mediacenter'
     id: '543216798041047810'
-    hide_entity: true
     trigger:
       - platform: time
         at: '16:00:00' 
@@ -59,7 +57,6 @@ automation:
 
   - alias: 'set input select cast devices based on sensor chromecast devices'
     id: '87582340659086321048961824360'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: sensor.chromecast_devices

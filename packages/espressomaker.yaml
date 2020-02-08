@@ -1,7 +1,6 @@
 automation:
   - alias: 'turn off espressomaker when away'
     id: '678328023792301'
-    hide_entity: true
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
@@ -15,7 +14,6 @@ automation:
           entity_id: switch.0x7cb03eaa0a02be43_switch
   - alias: 'turn off esspresso maker'
     id: '1529161972987'
-    hide_entity: true
     trigger:
     - at: '21:00:00'
       platform: time
@@ -29,7 +27,6 @@ automation:
           entity_id: switch.0x7cb03eaa0a02be43_switch
   - alias: 'Turn on espresso  maker'
     id: '1529161700562'
-    hide_entity: true
     trigger:
     - at: ' 07:00:00' 
       platform: time
@@ -52,7 +49,6 @@ automation:
 
   - alias: 'Turn on espresso maker (afternoon)'
     id: '1529161701532'
-    hide_entity: true
     trigger:
       - platform: time
         at: '17:30:00' 

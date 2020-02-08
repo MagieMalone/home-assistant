@@ -1,7 +1,6 @@
 automation:
   - alias: 'Laad tablet'
     id: '54263098623458560' 
-    hide_entity: true
     trigger:
       platform: template
       value_template: "{{(state_attr('device_tracker.scarlet', 'battery_level') | int)<40}}"
@@ -11,7 +10,6 @@ automation:
 
   - alias: 'Tablet lader uit'
     id: '57802395701892350865743010983' 
-    hide_entity: true
     trigger:
       platform: template
       value_template: "{{(state_attr('device_tracker.scarlet', 'battery_level') | int)>90}}"

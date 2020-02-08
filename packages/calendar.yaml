@@ -119,7 +119,6 @@ sensor:
 automation:
   - alias: 'vertrek melding'
     id: '567812438901831653879'
-    hide_entity: true
     trigger:
       platform: time_pattern
       seconds: 00
@@ -152,7 +151,6 @@ automation:
           language: 'nl'
   - alias: 'F1 begin wedstrijd' 
     id: '3478021346858103290'
-    hide_entity: true
     trigger:
       platform: time_pattern
       seconds: 00

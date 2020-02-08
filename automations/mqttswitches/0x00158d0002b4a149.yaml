@@ -1,5 +1,4 @@
 - alias: 'button click woonkamer  right '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click
@@ -17,7 +16,6 @@
       brightness_pct: 50
 
 - alias: 'button click woonkamer  left '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click
@@ -35,7 +33,6 @@
       brightness_pct: 33
 
 - alias: 'button click woonkamer  both '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click
@@ -51,7 +48,6 @@
         light_entities: light.hue_lightstrip_plus_1, light.staande_lamp
 
 - alias: 'button long_click woonkamer  right on '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click
@@ -62,7 +58,6 @@
         light_entity: light.staande_lamp
 
 - alias: 'button long_click woonkamer  right off'
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click
@@ -75,7 +70,6 @@
       entity_id: script.dim_light_loop
       
 - alias: 'button long_click woonkamer  left on '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click
@@ -86,7 +80,6 @@
         light_entity: light.hue_lightstrip_plus_1
 
 - alias: 'button long_click woonkamer  left off'
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click
@@ -99,7 +92,6 @@
       entity_id: script.dim_light_loop
 
 - alias: 'button click woonkamer  right_double '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click
@@ -121,7 +113,6 @@
             {% endif %}
       
 - alias: 'button click woonkamer  left_double '
-  hide_entity: true
   trigger:
     - platform: state
       entity_id: sensor.0x00158d0002b4a149_click

@@ -54,8 +54,7 @@ script:
 #automation:
 #  - alias: 'melding nieuw alarm'
 #    id: '7480949648104893'
-#    hide_entity: true
-#    trigger:
+##    trigger:
 #      - platform: state
 #        entity_id: sensor.slaapkamer_speaker_alarm, sensor.huiskamer_speaker_alarm, sensor.studeerkamer_speaker_alarm
 #    action:
