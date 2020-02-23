@@ -1,5 +1,5 @@
 automation:
-  - alias: 'Lights on'
+  - alias: 'Lights on normal'
     id: '1528911899317' 
     trigger:
       - platform: numeric_state
@@ -12,51 +12,37 @@ automation:
         - condition: state
           entity_id: light.woonkamer
           state: 'off'
-        - condition: or
-          conditions:
-            - condition: state
-              entity_id: input_select.arnoud_status
-              state: 'Net Thuis'
-            - condition: state
-              entity_id: input_select.arnoud_status
-              state: 'Thuis'
+        - condition: template
+          value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:
-      - service_template: >
-          {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-            script.woonkamer_lights_fadein_circ
-          {% else %}
-            script.woonkamer_lights_fadein
-          {% endif %}
-        data_template:
-          brightness_pct: >
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                {{ state_attr('switch.circadian_lighting_circadian_lighting', 'brightness') | int }}
-              {% else %}
-                50
-              {% endif %}
-#     - service: switch.turn_on
-#       entity_id: switch.0x8418260000105782_switch
+      - service: script.woonkamer_lights_fadein
 
-# - alias: 'kerstboom aan'
-#   id: '72409384614820941' 
-#   hide_entity: true
-#   trigger:
-#     - at: '08:00'
-#       platform: time
-#   condition:
-#     condition: or
-#     conditions:
-#       - condition: state
-#         entity_id: input_select.arnoud_status
-#         state: 'Net Thuis'
-#       - condition: state
-#         entity_id: input_select.arnoud_status
-#         state: 'Thuis'
-#        
-#   action:
-#     - service: switch.turn_on
-#       entity_id: switch.0x8418260000105782_switch
-#
+  - alias: 'Lights on bad weather'
+    id: '5312689562015890236985290'
+    trigger:
+      - platform: numeric_state
+        entity_id: sun.sun
+        value_template: "{{ state.attributes.elevation }}"
+        below: 0
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: light.woonkamer
+          state: 'off'
+        - condition: template
+          value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
+        # measurement newer then 30 minutes
+        - condition: template
+          value_template: "{{as_timestamp(strptime(state_attr('sensor.berkhout_condition', 'Measured'),'%a %b %d %H:%M:%S %Y'))+1800 > as_timestamp(now())}}"
+        # sky not clear
+        - condition: template
+          value_template: "{{ not is_state('sensor.berkhout_condition', 'clear') }}"
+    action:
+      - service: script.woonkamer_lights_fadein
+
+
+
   - alias: 'Lights on thuiskomst'
     id: '5480797213460891' 
     trigger:
@@ -64,101 +50,45 @@ automation:
         entity_id: input_select.arnoud_status
         to: 'Net Thuis'
     condition:
-      condition: and
+      condition: or
       conditions:
-        - condition: numeric_state
-          entity_id: sun.sun
-          value_template: "{{ state.attributes.elevation }}"
-          below: 3.5
-        - condition: state
-          entity_id: light.woonkamer
-          state: 'off'
+        - condition: and
+          conditions:
+            - condition: numeric_state
+              entity_id: sun.sun
+              value_template: "{{ state.attributes.elevation }}"
+              below: 3.5
+            - condition: state
+              entity_id: light.woonkamer
+              state: 'off'
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: light.woonkamer
+              state: 'off'
+            - condition: numeric_state
+              entity_id: sun.sun
+              value_template: "{{ state.attributes.elevation }}"
+              below: 0
+            # measurement newer then 30 minutes
+            - condition: template
+              value_template: "{{as_timestamp(strptime(state_attr('sensor.berkhout_condition', 'Measured'),'%a %b %d %H:%M:%S %Y'))+1800 > as_timestamp(now())}}"
+            # sky not clear
+            - condition: template
+              value_template: "{{ not is_state('sensor.berkhout_condition', 'clear') }}"
     action:
-      - service_template: >
-          {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-            script.woonkamer_lights_circ
-          {% else %}
-            script.woonkamer_lights
-          {% endif %}
-        data_template:
-          brightness_pct: >
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                {{ state_attr('switch.circadian_lighting_circadian_lighting', 'brightness') | int }}
-              {% else %}
-                50
-              {% endif %}
-#      - service: switch.turn_on
-#        entity_id: switch.0x8418260000105782_switch
+      - service: script.woonkamer_lights
 
-  - alias: 'sunrise lights off'
-    id: '47893265301237' 
-    trigger: 
-      platform: sun
-      event: sunrise
-      offset: '00:20:00'
-    action:
-      - service: light.turn_off
-        entity_id: group.lampen
 
-  - alias: 'lights off weekdays'
-    id: '1528912303194'
-    trigger:
-      - platform: template
-        value_template: >
-          {% if states('sensor.wakeuplight_time') == None %}
-            False
-          {% else %}
-            {{(as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) - (6*3600+900))| timestamp_custom('%D %H:%M') == now().strftime('%D %H:%M')}}
-          {% endif %}
-    action:
-      - service: light.turn_off
-        data_template:
-          transition: > 
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                0
-              {% else %}
-                900
-              {% endif %}
-          entity_id: group.lampen
-#      - service: switch.turn_off
-#        entity_id: switch.0x8418260000105782_switch
-
-  - alias: 'lights off weekenddays'
-    id: '1528912303472'
-    trigger:
-      - at: '23:59'
-        platform: time
-    condition:
-      condition: time
-      weekday:
-        - fri
-        - sat
-    action:
-      - service: light.turn_off
-        data_template:
-          transition: > 
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                0
-              {% else %}
-                900
-              {% endif %}
-          entity_id: group.lampen
-#      - service: switch.turn_off
-#        entity_id: switch.0x8418260000105782_switch
 script:
   woonkamer_lights_fadein:
     sequence:
       - alias: staande lamp
         service: light.turn_on
-        data_template:
+        data:
           entity_id: light.staande_lamp
           brightness_pct: 1
-          kelvin: >
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                {{ state_attr('sensor.circadian_values', 'colortemp') | int }}
-              {% else %}
-                3000
-              {% endif %}
+          kelvin: 3000
       - alias: strip
         service: light.turn_on
         data:
@@ -169,24 +99,14 @@ script:
           brightness_pct: 1
       - alias: staande lamp
         service: light.turn_on
-        data_template:
+        data:
           entity_id: light.staande_lamp
           transition: 300
-          brightness_pct: >
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                {{ state_attr('switch.circadian_lighting_circadian_lighting', 'brightness') | int }}
-              {% else %}
-                50
-              {% endif %}
-          kelvin: >
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                {{ state_attr('sensor.circadian_values', 'colortemp') | int }}
-              {% else %}
-                3000
-              {% endif %}
+          brightness_pct: 50
+          kelvin: 3000
       - alias: strip
         service: light.turn_on
-        data_template:
+        data:
           entity_id: light.hue_lightstrip_plus_1
           transition: 300
           xy_color:
@@ -197,21 +117,11 @@ script:
     sequence:
       - alias: staande lamp
         service: light.turn_on
-        data_template:
+        data:
           entity_id: light.staande_lamp
           transition: 2
-          brightness_pct: >
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                {{ state_attr('switch.circadian_lighting_circadian_lighting', 'brightness') | int }}
-              {% else %}
-                50
-              {% endif %}
-          kelvin: >
-              {% if is_state('switch.circadian_lighting_circadian_lighting', 'on') %}
-                {{ state_attr('sensor.circadian_values', 'colortemp') | int }}
-              {% else %}
-                3000
-              {% endif %}
+          brightness_pct: 50
+          kelvin: 3000
       - alias: strip
         service: light.turn_on
         data:
@@ -221,29 +131,3 @@ script:
           - 0.3388
           - 0.1332
           brightness_pct: 30
-  woonkamer_lights_fadein_circ:
-    sequence:
-      - alias: turn circ_lighting off
-        service: switch.turn_off
-        entity_id: switch.circadian_lighting_circadian_lighting
-      - alias: run normal script
-        service: script.woonkamer_lights_fadein
-      - alias: wait 330
-        delay:
-          minutes: 5
-      - alias: turn circ_lighting on
-        service: switch.turn_on
-        entity_id: switch.circadian_lighting_circadian_lighting
-  woonkamer_lights_circ:
-    sequence:
-      - alias: turn circ_lighting off
-        service: switch.turn_off
-        entity_id: switch.circadian_lighting_circadian_lighting
-      - alias: run normal script
-        service: script.woonkamer_lights
-      - alias: wait 330
-        delay:
-          minutes: 5
-      - alias: turn circ_lighting on
-        service: switch.turn_on
-        entity_id: switch.circadian_lighting_circadian_lighting

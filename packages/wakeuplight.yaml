@@ -29,15 +29,6 @@ sensor:
           {% endif %}
           
 script:
-  wakeup_light_circ: 
-    sequence:
-      - service: switch.turn_off
-        entity_id: switch.circadian_lighting_circadian_lighting
-      - service: script.wakeup_light
-      - delay:
-          minutes: 10
-      - service: switch.turn_on
-        entity_id: switch.circadian_lighting_circadian_lighting
   wakeup_light:
     sequence:
       - service: light.turn_on
@@ -189,12 +180,7 @@ automation:
 #              entity_id: sensor.prox_home_dir_of_travel
 #              state: 'stationary'
     action:
-      service_template: >
-        {% if is_state('switch.circadian_lighting_circadian_lighting', 'off') %}
-          script.wakeup_light
-        {% else %}
-          script.wakeup_light_circ
-        {% endif %}
+      service: script.wakeup_light
     
   - alias: 'Manual wakeup light'
     id: '6583925910238569382012'

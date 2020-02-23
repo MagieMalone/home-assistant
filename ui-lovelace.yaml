@@ -20,7 +20,8 @@ resources:
     type: module
   - url: /community_plugin/spotify-card/spotify-card.js
     type: module
-    
+  - url: /community_plugin/lovelace-thermostat-card/main.js
+    type: module
 views:
     # View tab title.
   - title: Home
@@ -441,8 +442,7 @@ views:
             title: Circadian / Sun
             entities:
               - sun.sun
-              - sensor.circadian_values
-              - switch.circadian_lighting_circadian_lighting
+              - input_select.sun
           - type: entities
             id: lights_scripts
             title: Scripts
@@ -450,8 +450,6 @@ views:
             entities:
               - script.woonkamer_lights
               - script.woonkamer_lights_fadein
-              - script.woonkamer_lights_fadein_circ
-              - automation.lights_on
           - type: entities
             id: lights_level_input
             title: Motion sensor light level input
@@ -472,6 +470,13 @@ views:
           - calendar.astrokalender
           - calendar.f1_calendar_2018
           - calendar.holidays_in_netherlands
+      - type: entities
+        id: cal_workday
+        title: Workday
+        show_header_toggle: false 
+        entities:
+          - binary_sensor.workday_sensor
+          - binary_sensor.workday1d
       - type: entities
         id: cal_verjaardagen
         title: Verjaardagen
@@ -641,6 +646,7 @@ views:
               - sensor.berkhout_symbol
               - sensor.de_bilt_symbol
               - sensor.schiphol_symbol
+
       - type: vertical-stack
         cards:
         - type: horizontal-stack
@@ -814,6 +820,10 @@ views:
     id: heating
     icon: mdi:thermostat
     cards:
+      - type: custom:thermostat-card
+        entity: climate.toon_thermostat
+        title: Toon
+        ambient_temperature: sensor.0x00158d00036c1ba4_temperature
       - type: entities
         id: heating_toon
         title: Toon
@@ -878,22 +888,24 @@ views:
            name: Oneplus3-gps
          - entity: device_tracker.oneplus3_lan_foto_album_com
            name: Oneplus3-wifi
-         - group.arnoud
          - input_select.arnoud_status
          - sensor.arnoud_status
-         - automation.mark_person_as_away
-         - automation.mark_person_as_home
-         - automation.mark_person_as_just_arrived
-         - automation.mark_person_as_just_left
          - sensor.prox_home_dir_of_travel
+         - input_boolean.guests_boolean
+         - input_select.house_mode
       - type: history-graph
         id: entities_graph
         title: history
+        hours_to_show: 48
         entities: 
           - person.arnoud
           - device_tracker.oneplus3_lan_foto_album_com
           - device_tracker.4dd0404d
+          - device_tracker.oneplus_a3003
+          - device_tracker.unknown
+          - device_tracker.369ab83aade93883
           - sensor.prox_home_dir_of_travel
+          - input_select.house_mode
   - title: Zigbee2mqtt
     cards:
       - type: entities

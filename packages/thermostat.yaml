@@ -57,21 +57,22 @@ automation:
           state: 'True'
         - condition: or
           conditions:
-            - condition: time
-              after: '15:00:00'
-              before: '21:00:00' 
-              weekday:
-                - mon
-                - tue
-                - wed
-                - thu
-                - fri
-            - condition: time
-              after: '09:00:00'
-              before: '22:00:00'
-              weekday:
-                - sat
-                - sun
+            - condition: and
+              conditions:
+                - condition: time
+                  after: '10:00:00'
+                  before: '21:00:00' 
+                - condition: state
+                  entity_id: 'binary_sensor.workday_sensor'
+                  state: 'on'
+            - condition: and
+              conditions:
+                - condition: time
+                  after: '09:00:00'
+                  before: '22:00:00'
+                - condition: state
+                  entity_id: 'binary_sensor.workday_sensor'
+                  state: 'off'
     action:
       alias: 'zet kachel aan'
       service: climate.set_preset_mode
@@ -84,13 +85,9 @@ automation:
       platform: time
       at: '21:30:00'
     condition:
-      condition: time
-      weekday:
-        - sun
-        - mon
-        - tue
-        - wed
-        - thu
+      condition: state
+      entity_id: 'binary_sensor.workday1d'
+      state: 'on'
     action:
       alias: 'zet kachel uit'
       service: climate.set_preset_mode
@@ -103,10 +100,9 @@ automation:
       platform: time
       at: '23:00:00'
     condition:
-      condition: time
-      weekday:
-        - fri
-        - sat
+      condition: state
+      entity_id: 'binary_sensor.workday1d'
+      state: 'off'
     action:
       alias: 'zet kachel uit'
       service: climate.set_preset_mode
@@ -124,14 +120,9 @@ automation:
         - condition: state
           entity_id: sensor.thermostat_condition
           state: 'True'
-        - condition: or
-          conditions:
-            - condition: state
-              entity_id: input_select.arnoud_status
-              state: 'Net Thuis'
-            - condition: state
-              entity_id: input_select.arnoud_status
-              state: 'Thuis'
+        - condition: template
+          value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
+
     action:
       alias: 'zet kachel aan'
       service: climate.set_preset_mode
@@ -155,14 +146,8 @@ automation:
         - condition: state
           entity_id: sensor.thermostat_condition
           state: 'True'
-        - condition: or
-          conditions:
-            - condition: state
-              entity_id: input_select.arnoud_status
-              state: 'Net Thuis'
-            - condition: state
-              entity_id: input_select.arnoud_status
-              state: 'Thuis'
+        - condition: template
+          value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:
       alias: 'zet kachel aan'
       service: climate.set_preset_mode
@@ -175,11 +160,11 @@ automation:
       - platform: numeric_state
         entity_id: sensor.0x00158d00031e31ac_temperature
         above: 20
+      - platform: template
+        value_template: "{{ now().strftime('%D %H:%M') < (as_timestamp(states('sensor.calc_leave_time')) | timestamp_custom('%D %H:%M', 1)) }}"
     condition:
         condition: and
         conditions:
-          - condition: template
-            value_template: "{{ now().strftime('%D %H:%M') < (as_timestamp(states('sensor.calc_leave_time')) | timestamp_custom('%D %H:%M', 1)) }}"
           - condition: state
             entity_id: sensor.heating_preset_mode
             state: 'comfort'
@@ -250,21 +235,22 @@ automation:
           state: 'True'
         - condition: or
           conditions:
-            - condition: time
-              after: '15:00:00'
-              before: '21:00:00' 
-              weekday:
-                - mon
-                - tue
-                - wed
-                - thu
-                - fri
-            - condition: time
-              after: '09:00:00'
-              before: '22:00:00'
-              weekday:
-                - sat
-                - sun
+            - condition: and
+              conditions:
+                - condition: time
+                  after: '15:00:00'
+                  before: '21:00:00' 
+                - condition: state
+                  entity_id: 'binary_sensor.workday_sensor'
+                  state: 'on'
+            - condition: and
+              conditions:
+                - condition: time
+                  after: '09:00:00'
+                  before: '22:00:00'
+                - condition: state
+                  entity_id: 'binary_sensor.workday_sensor'
+                  state: 'off'
     action:
       alias: 'zet kachel aan'
       service: climate.set_preset_mode
@@ -297,9 +283,9 @@ automation:
               state: 'comfort'
     action:
       alias: 'zet kachel uit'
-      service: climate.set_operation_mode
+      service: climate.set_preset_mode
       data:
-        entity_id: climate.set_preset_mode
+        entity_id: climate.toon_thermostat
         preset_mode: away
   - alias: 'test new condition'
     id: '578094357868690285602'

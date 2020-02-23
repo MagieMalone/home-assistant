@@ -2,13 +2,9 @@ automation:
   - alias: 'turn off espressomaker when away'
     id: '678328023792301'
     trigger:
-      - platform: state
-        entity_id: input_select.arnoud_status
-        to: 'Weg'
+      - platform: template
+        value_template: "{{ is_state('input_select.house_mode', 'weg') }}"
     action:
-#      - service: switch.turn_off
-#        data:
-#          entity_id: switch.espressomaker
       - service: switch.turn_off
         data:
           entity_id: switch.0x7cb03eaa0a02be43_switch
@@ -19,9 +15,6 @@ automation:
       platform: time
     condition: []
     action:
-#      - service: switch.turn_off
-#        data:
-#          entity_id: switch.espressomaker
       - service: switch.turn_off
         data:
           entity_id: switch.0x7cb03eaa0a02be43_switch
@@ -31,18 +24,9 @@ automation:
     - at: ' 07:00:00' 
       platform: time
     condition:
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: 'Net Thuis'
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: 'Thuis'
+      - condition: template
+        value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:
-#      - service: switch.turn_on
-#        data:
-#          entity_id: switch.espressomaker 
       - service: switch.turn_on
         data:
           entity_id: switch.0x7cb03eaa0a02be43_switch
@@ -61,18 +45,9 @@ automation:
       - condition: time
         after: '17:30:00'
         before: '20:00:00'
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: 'Net Thuis'
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: 'Thuis'
+      - condition: template
+        value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:
-#      - service: switch.turn_on
-#        data:
-#          entity_id: switch.espressomaker 
       - service: switch.turn_on
         data:
           entity_id: switch.0x7cb03eaa0a02be43_switch

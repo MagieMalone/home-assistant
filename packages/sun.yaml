@@ -1,0 +1,76 @@
+# Track the sun
+sun:
+
+input_select:
+  sun:
+    name: Sun
+    options:
+      - Nautical Twilight
+      - Civil Twilight
+      - Astronomical Twilight
+      - Astronomical Night
+      - Day
+automation:
+  - alias: 'change sun input-select to Civil twilight'
+    id: '4123640981203846398246230'
+    trigger:
+      platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: 0
+      above: -6
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.sun
+          option: Civil Twilight
+  - alias: 'change sun input-select to Nautical twilight'
+    id: '5213750890823516089612035'
+    trigger:
+      platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -6
+      above: -12
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.sun
+          option: Nautical Twilight
+  - alias: 'change sun input-select to Astronomical twilight'
+    id: '352685008321468093260148'
+    trigger:
+      platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -12
+      above: -18
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.sun
+          option: Astronomical Twilight
+  - alias: 'change sun input-select to Astronomical Night'
+    id: '4614908633412089056302164'
+    trigger:
+      platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -18
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.sun
+          option: Astronomical Night
+  - alias: 'change sun input-select to Day'
+    id: '8326453830123460986134'
+    trigger:
+      platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      above: 0
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.sun
+          option: Day

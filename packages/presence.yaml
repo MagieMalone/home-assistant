@@ -1,6 +1,4 @@
-group:
-  arnoud:
-    entities: device_tracker.4dd0404d, device_tracker.oneplus3_lan_foto_album_com
+
 input_select:
   arnoud_status:
     name: Arnoud
@@ -16,6 +14,18 @@ input_select:
       - Net Thuis
       - Net Weg
       - Weg
+  house_mode:
+    name: House
+    options:
+      - weg
+      - overdag
+      - avond
+      - nacht
+input_boolean:
+  guests_boolean:
+    name: Guests in the house
+
+
 device_tracker:
 #  - platform: gpslogger
 #  - platform: bluetooth_tracker
@@ -30,12 +40,24 @@ sensor:
       prox_home_dir_of_travel:
          value_template: '{{state_attr("proximity.home","dir_of_travel")}}'
          friendly_name: 'Direction of travel to/from home'
+
+binary_sensor:
+  - platform: workday
+    country: NL
+  - platform: workday
+    name: workday1d
+    country: NL
+    days_offset: 1
+    
 proximity:
   home:
     ignored_zones:
       - Ymke
     devices:
-      - device_tracker.4dd0404d
+#      - device_tracker.4dd0404d
+      - device_tracker.unknown
+      - device_tracker.oneplus_a3003
+#      - device_tracker.369ab83aade93883
     unit_of_measurement: km
     tolerance: 50
 automation:
@@ -43,20 +65,20 @@ automation:
     id: '548327489170419324086'
     trigger:
       - platform: state
-        entity_id: group.arnoud
+        entity_id: person.arnoud
         from: 'not_home'
         to: 'home'
     action:
       - service: input_select.select_option
         data_template:
           entity_id: >
-            {% if trigger.entity_id == 'group.arnoud' %}
+            {% if trigger.entity_id == 'person.arnoud' %}
               input_select.arnoud_status
             {% else %}
               input_select.helen_status_dropdown
             {% endif %}
           option: >
-            {% if trigger.entity_id == 'group.arnoud' %}
+            {% if trigger.entity_id == 'person.arnoud' %}
               {% if states('input_select.arnoud_status') == 'Net Weg' %}
                 Thuis
               {% else %}
@@ -95,14 +117,14 @@ automation:
     id: '578344801378074356'
     trigger:
       - platform: state
-        entity_id: group.arnoud
+        entity_id: person.arnoud
         from: 'home'
         to: 'not_home'
     action:
       - service: input_select.select_option
         data_template:
           entity_id: >
-            {% if trigger.entity_id == 'group.arnoud' %}
+            {% if trigger.entity_id == 'person.arnoud' %}
               input_select.arnoud_status
             {% else %}
               input_select.helen_status_dropdown
@@ -126,3 +148,165 @@ automation:
               input_select.helen_status_dropdown
             {% endif %}
           option: Weg
+  - alias: 'Change house status to based on arrivals overdag'
+    id: '75459129706321598603251'
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Thuis'
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Thuis'
+      - platform: state
+        entity_id: input_boolean.guests_boolean
+        to: 'on'
+    condition:
+      - condition: time
+        after: '06:59:59'
+        before: '18:00:00'
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.house_mode
+          option: overdag
+  - alias: 'Change house status to based on arrivals avond'
+    id: '5326893463098403681434090'
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Thuis'
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Thuis'
+      - platform: state
+        entity_id: input_boolean.guests_boolean
+        to: 'on'
+    condition:
+      - condition: time
+        after: '17:59:59'
+        before: '23:00:00'
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.house_mode
+          option: avond
+  - alias: 'Change house status to based on arrivals nacht'
+    id: '1235860893562908320956290'
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Thuis'
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Thuis'
+      - platform: state
+        entity_id: input_boolean.guests_boolean
+        to: 'on'
+    condition:
+      - condition: time
+        after: '22:59:59'
+        before: '07:00:00'
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.house_mode
+          option: nacht
+  - alias: 'Change house status based on departures '
+    id: '87321586059601239856032180'
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Weg'
+      - platform: state
+        entity_id: input_boolean.guests_boolean
+        to: 'off'
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_select.arnoud_status
+          state: 'Weg'
+        - condition: state
+          entity_id: input_boolean.guests_boolean
+          state: 'off'
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.house_mode
+          option: weg
+
+  - alias: 'change house status based on time overdag'
+    id: '85238096912308956305821'
+    trigger:
+      - platform: time
+        at: '07:00:00'
+    condition:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: 'Thuis'
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: 'Net Thuis'
+          - condition: state
+            entity_id: input_boolean.guests_boolean
+            state: 'on'
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.house_mode
+          option: overdag
+  - alias: 'change house status based on time avond'
+    id: '412364890860498246083469'
+    trigger:
+      - platform: time
+        at: '18:00:00'
+    condition:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: 'Thuis'
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: 'Net Thuis'
+          - condition: state
+            entity_id: input_boolean.guests_boolean
+            state: 'on'
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.house_mode
+          option: avond
+
+
+  - alias: 'change house status based on time nacht'
+    id: '32896325290865329852064586'
+    trigger:
+      - platform: time
+        at: '00:00:00'
+      - platform: template
+        value_template: >
+          {% if states('sensor.wakeuplight_time') == None %}
+            False
+          {% else %}
+            {{(as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) - (6*3600))| timestamp_custom('%D %H:%M') == now().strftime('%D %H:%M')}}
+          {% endif %}
+    condition:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: 'Thuis'
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: 'Net Thuis'
+          - condition: state
+            entity_id: input_boolean.guests_boolean
+            state: 'on'
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.house_mode
+          option: nacht

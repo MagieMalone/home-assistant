@@ -64,4 +64,14 @@ automation:
       entity_id: binary_sensor.front_door_ding
       to: 'on'
     action:
-      service: script.flash_lights
+      - service: script.flash_lights
+      - service: script.start_media
+        data:
+          entity_id: media_player.speakers
+          media_content_id: https://foto-album.duckdns.org:8123/local/audio/Door-bell-sound-ding-dong.mp3
+          media_content_type: music
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data:
+          message: 'Er is iemand aan de deur'
+          language: 'nl'
