@@ -1,27 +1,9 @@
-title: My Awesome Home
+title: YAML
 # Optional background for all views. Check https://developer.mozilla.org/en-US/docs/Web/CSS/background for more examples.
 background: center / cover no-repeat url("/background.png") fixed
 # Exclude entities from "Unused entities" view
 excluded_entities:
-resources:
-  - url: /community_plugin/weather-card/weather-card.js
-    type: module
-  - url: /community_plugin/mini-graph-card/mini-graph-card-bundle.js
-    type: module
-  - url: /community_plugin/lovelace-card-templater/lovelace-card-templater.js
-    type: js
-  - url: /community_plugin/lovelace-card-tools/card-tools.js
-    type: js
-  - url: /community_plugin/lovelace-slider-entity-row/slider-entity-row.js
-    type: module
-  - url: /community_plugin/zigbee2mqtt-networkmap/zigbee2mqtt-networkmap.js
-    type: module
-  - url: /community_plugin/calendar-card/calendar-card.js
-    type: module
-  - url: /community_plugin/spotify-card/spotify-card.js
-    type: module
-  - url: /community_plugin/lovelace-thermostat-card/main.js
-    type: module
+
 views:
     # View tab title.
   - title: Home

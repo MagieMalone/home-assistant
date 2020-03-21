@@ -2,11 +2,11 @@ group:
   sk_spot:
     entities: light.sk_spot_1, light.sk_spot_2
   switch-wk:
-    entities: light.onoff_plug_1, light.onoff_plug_2, light.onoff_plug_3
+    entities:  switch.media_la_switch, switch.media_ra_switch, switch.media_v_switch
   lampen:
     entities: light.computer, light.eettafel, light.hal, light.trap_hal, light.hue_lightstrip_plus_1, light.overloop, light.slaapkamer, light.staande_lamp, light.sk_spot_1, light.sk_spot_2, light.keuken_1, light.keuken_2, light.keuken_3
   motion_sensors:
-    entities: binary_sensor.motion_sensor_158d0002b5d42f, binary_sensor.motion_sensor_158d0002b7eda4, binary_sensor.motion_sensor_158d0002b8586b
+    entities: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
 
 
 
