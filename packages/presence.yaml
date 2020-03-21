@@ -24,7 +24,17 @@ input_select:
 input_boolean:
   guests_boolean:
     name: Guests in the house
-
+input_number:
+  boven:
+    name: Number of people upstairs
+    min: 0
+    max: 100
+    step: 1
+timer:
+  pres_onder:
+    duration: 10
+  pres_boven:
+    duration: 10
 
 device_tracker:
 #  - platform: gpslogger
@@ -310,3 +320,59 @@ automation:
         data:
           entity_id: input_select.house_mode
           option: nacht
+  - alias: 'start timer onder'
+    id: '356327853029820318965028920685154378'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.0x00158d0002b8586b_occupancy
+        from: 'off'
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: timer.pres_boven
+        state: 'idle'
+    action:
+      service: timer.start
+      entity_id: timer.pres_onder
+  - alias: 'start timer boven'
+    id: '1543643890623846098563210984563204'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
+        from: 'off'
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: timer.pres_onder
+        state: 'idle'
+    action:
+      service: timer.start
+      entity_id: timer.pres_boven
+  - alias: 'add person upstairs'
+    id: '1523568906821436098640982364093284690'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
+        from: 'off'
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: timer.pres_onder
+        state: 'active'
+    action:
+      service: input_number.increment
+      entity_id: input_number.boven
+  - alias: 'remove person upstairs'
+    id: '4365738072398065239846340124'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.0x00158d0002b8586b_occupancy
+        from: 'off'
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: timer.pres_boven
+        state: 'active'
+    action:
+      service: input_number.decrement
+      entity_id: input_number.boven

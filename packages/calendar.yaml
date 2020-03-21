@@ -2,6 +2,9 @@ google:
   client_id: 836630737755-pr91j52c6n1700mvlsu5tn3tn4maoel6.apps.googleusercontent.com
   client_secret: !secret google_cal_apikey
 
+input_boolean:
+  f1_announcements:
+    name: announce F1 races
 camera:
   - platform: generic
     name: Destination
@@ -116,6 +119,15 @@ sensor:
       cal_contacts_message:  
         value_template: '{{state_attr("calendar.contacts", "message")}}'
         friendly_name: 'Contacts:' 
+      cal_title_f1:
+        value_template: '{{ state_attr("calendar.2019_fia_formula_one_world_championship_race_calendar", "message") }}'
+        friendly_name: 'Title'
+      cal_start_time_f1:
+        value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% set time = state_attr("calendar.2019_fia_formula_one_world_championship_race_calendar", "start_time") + tz %}
+          {{as_timestamp(time)|timestamp_local}}
+
 automation:
   - alias: 'vertrek melding'
     id: '567812438901831653879'
@@ -127,6 +139,9 @@ automation:
       value_template: >
         {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
         {{ now().strftime("%D %H:%M") == ( (as_timestamp(states("sensor.calc_leave_time") + tz ) - 300 )| timestamp_custom("%D %H:%M", 1)) }}
+    - condition: template
+      value_template: '{{(states("sensor.calc_travel_time")|int)>120}}'
+
     action:
       - service: script.both_speakers
         data_template:
@@ -158,12 +173,15 @@ automation:
     - condition: template
       value_template: >
         {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-        {% if state_attr('calendar.f1_calendar_2018', 'start_time') == None %}
+        {% if state_attr('calendar.2019_fia_formula_one_world_championship_race_calendar', 'start_time') == None %}
           False
         {% else %}
-          {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr("calendar.f1_calendar_2018", "start_time") + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
+          {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr("calendar.2019_fia_formula_one_world_championship_race_calendar", "start_time") + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
         {% endif %}
+    - condition: state
+      entity_id: input_boolean.f1_announcements
+      state: 'on'
     action:
       - service: script.both_speakers
         data_template:
-          tekst: 'De {{state_attr("calendar.f1_calendar_2018", "message")}} begint over tien minuten '
+          tekst: 'De {{state_attr("calendar.2019_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten '

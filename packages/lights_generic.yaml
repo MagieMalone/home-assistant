@@ -248,6 +248,10 @@ automation:
       - platform: state
         entity_id: input_select.house_mode
         to: 'overdag'
+    condition: 
+      condition: state
+      entity_id: group.lampen
+      state: 'on'
     action:
       - service: script.update_lights_brightness
         data:
@@ -259,6 +263,10 @@ automation:
       - platform: state
         entity_id: input_select.house_mode
         to: 'avond'
+    condition: 
+      condition: state
+      entity_id: group.lampen
+      state: 'on'
     action:
       - service: script.update_lights_brightness
         data:
@@ -270,6 +278,10 @@ automation:
       - platform: state
         entity_id: input_select.house_mode
         to: 'nacht'
+    condition: 
+      condition: state
+      entity_id: group.lampen
+      state: 'on'
     action:
       - service: script.update_lights_brightness
         data:

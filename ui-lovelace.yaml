@@ -470,6 +470,16 @@ views:
           - calendar.astrokalender
           - calendar.f1_calendar_2018
           - calendar.holidays_in_netherlands
+          - calendar.2019_fia_formula_one_world_championship_race_calendar
+      - type: entities
+        titel: F1
+        id: cal_f1
+        show_header_toggle: false 
+        entities:
+          - sensor.cal_title_f1
+          - entity: sensor.cal_start_time_f1
+            name: Start time
+          - input_boolean.f1_announcements
       - type: entities
         id: cal_workday
         title: Workday
@@ -854,6 +864,21 @@ views:
           green: 10
           yellow: 20
           red: 22
+      - type: custom:mini-graph-card
+        name: Temperature
+        hours_to_show: 48
+        points_per_hour: 60
+        hour24: True
+        font_size_header: 18
+        line_width: 2
+        entities:
+          - entity: sensor.0x00158d00036c1ba4_temperature
+            name: Woonkamer
+          - entity: sensor.heating_set_temperature
+            name: set point
+            show_fill: false
+        show:
+          labels: true
   - title: ISS
     id: iss
     cards:
@@ -884,10 +909,12 @@ views:
       - type: entities
         id: entities_all
         entities:
-         - entity: device_tracker.4dd0404d
+         - entity: device_tracker.369ab83aade93883
            name: Oneplus3-gps
          - entity: device_tracker.oneplus3_lan_foto_album_com
            name: Oneplus3-wifi
+         - entity: device_tracker.oneplus_a3003
+           name: Oneplus3-HA
          - input_select.arnoud_status
          - sensor.arnoud_status
          - sensor.prox_home_dir_of_travel
@@ -900,12 +927,14 @@ views:
         entities: 
           - person.arnoud
           - device_tracker.oneplus3_lan_foto_album_com
-          - device_tracker.4dd0404d
           - device_tracker.oneplus_a3003
-          - device_tracker.unknown
           - device_tracker.369ab83aade93883
           - sensor.prox_home_dir_of_travel
           - input_select.house_mode
+      - type: entities
+        id: entities_boven
+        entities:
+          - input_number.boven
   - title: Zigbee2mqtt
     cards:
       - type: entities
