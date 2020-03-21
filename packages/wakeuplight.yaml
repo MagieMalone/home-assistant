@@ -162,7 +162,7 @@ automation:
         - condition: template
           value_template: >
             {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-            {{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time')+tz ) - ((states('input_number.wul_time_before_leave') |int ) * 60))| timestamp_custom('%D %H:%M', 1)) }}
+            {{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time_alarm')+tz ) - ((states('input_number.wul_time_before_leave') |int ) * 60))| timestamp_custom('%D %H:%M', 1)) }}
 #        - condition: time
 #          before: '10:00:00'
         - condition: state
