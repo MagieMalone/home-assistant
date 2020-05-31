@@ -15,6 +15,7 @@ homeassistant:
   packages: !include_dir_named packages
   whitelist_external_dirs:
     - /tmp
+  external_url: https://foto-album.duckdns.org:8123
 
 # Show links to resources in log and frontend
 #introduction:
@@ -64,7 +65,7 @@ http:
 #  ssl_certificate: /home/homeassistant/dehydrated/certs/foto-album.duckdns.org/fullchain.pem
 #  ssl_key: /home/homeassistant/dehydrated/certs/foto-album.duckdns.org/privkey.pem
 #  base_url: foto-album.duckdns.org:8123
-  base_url: https://foto-album.duckdns.org:8123
+#  base_url: https://foto-album.duckdns.org:8123
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
 
@@ -135,7 +136,7 @@ recorder:
 
 
 influxdb:
-  host: 192.168.1.6
+  host: 192.168.3.6
   port: 8086
   username: !secret influxdb_user
   password: !secret influxdb_password
@@ -166,7 +167,7 @@ influxdb:
 tts:
   - platform: google_translate
     service_name: google_say
-
+    base_url: https://foto-album.duckdns.org:8123
 
 
 notify:

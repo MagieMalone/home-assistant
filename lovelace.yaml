@@ -450,9 +450,9 @@ views:
         entities:
           - calendar.abuurmangmailcom
           - calendar.astrokalender
-          - calendar.f1_calendar_2018
+          - calendar.f1_calendar_2019
           - calendar.holidays_in_netherlands
-          - calendar.2019_fia_formula_one_world_championship_race_calendar
+          - calendar.2020_fia_formula_one_world_championship_race_calendar
       - type: entities
         titel: F1
         id: cal_f1
@@ -897,6 +897,8 @@ views:
            name: Oneplus3-wifi
          - entity: device_tracker.oneplus_a3003
            name: Oneplus3-HA
+         - entity: device_tracker.wdd1770871j017950
+           name: sz-436-p
          - input_select.arnoud_status
          - sensor.arnoud_status
          - sensor.prox_home_dir_of_travel
@@ -960,7 +962,8 @@ views:
           - zone.mediamonks
           - zone.routz
           - zone.ymke
-          - device_tracker.4dd0404d
           - sensor.ambulance
           - sensor.brandweer
           - sensor.trauma_heli
+          - device_tracker.369ab83aade93883
+          - device_tracker.wdd1770871j017950
