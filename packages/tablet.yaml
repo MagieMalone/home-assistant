@@ -16,3 +16,4 @@ automation:
     action:
       - service: switch.turn_off
         entity_id: switch.0x8418260000105782_switch
+
