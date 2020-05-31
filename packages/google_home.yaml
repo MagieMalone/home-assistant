@@ -12,7 +12,7 @@
 google_assistant:
   project_id: moonlit-helper-211706
 #  api_key: !secret google_apikey
-  service_account: !include 27024-2f07ec3df416.json
+  service_account: !include 27024-e0aec8e9f7d0.json
 #  expose_by_default: false
 #  exposed_domains:
 #    - group

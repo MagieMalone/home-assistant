@@ -4,13 +4,13 @@
 #  - host: 192.168.1.194
 #  - host: 192.168.1.132
 #  - host: 192.168.1.239
-media_player:
+#media_player:
 #  - platform: samsungtv
 #    host: 192.168.3.222
 #    mac: 90:F1:AA:2A:59:50
-  - platform: songpal
-    name: soundbar
-    endpoint: http://192.168.3.152:10000/sony
+#  - platform: songpal
+#    name: soundbar
+#    endpoint: http://192.168.3.152:10000/sony
 
 input_select:
   cast_devices:

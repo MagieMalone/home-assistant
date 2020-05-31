@@ -7,8 +7,10 @@ group:
     entities: light.computer, light.eettafel, light.hal, light.trap_hal, light.hue_lightstrip_plus_1, light.overloop, light.slaapkamer, light.staande_lamp, light.sk_spot_1, light.sk_spot_2, light.keuken_1, light.keuken_2, light.keuken_3
   motion_sensors:
     entities: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
-
-
+  woonkamer:
+    entities: light.hue_lightstrip_plus_1, light.staande_lamp
+  keuken:
+    entities: light.keuken_1, light.keuken_2, light.keuken_3
 
 
 
@@ -21,12 +23,12 @@ input_number:
     unit_of_measurement: lx
 
 
-binary_sensor:
+#binary_sensor:
 # custom hue component
-  - platform: huesensor
-remote:
+#  - platform: huesensor
+#remote:
 #custom hue component
-  - platform: huesensor
+#  - platform: hueremote
 #light:
 #  - platform: rflink
 #    automatic_add: true

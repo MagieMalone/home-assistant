@@ -168,3 +168,40 @@ sensor:
               mdi:lock-open
             {% endif %}
         friendly_name: Deur rechtsachter slot
+
+      sz_436_p_windowstatusrearright:
+        value_template: >
+            {%if is_state_attr("binary_sensor.sz_436_p_windows_closed", "windowstatusrearright", "CLOSED") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        friendly_name: Raam rechtsachter open
+        icon_template: 'mdi:car-door'
+      sz_436_p_windowstatusfrontright:
+        value_template: >
+            {%if is_state_attr("binary_sensor.sz_436_p_windows_closed", "windowstatusfrontright", "CLOSED") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        friendly_name: Raam rechtsvoor open
+        icon_template: 'mdi:car-door'
+      sz_436_p_windowstatusrearleft:
+        value_template: >
+            {%if is_state_attr("binary_sensor.sz_436_p_windows_closed", "windowstatusrearleft", "CLOSED") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        friendly_name: Raam linksachter open
+        icon_template: 'mdi:car-door'
+      sz_436_p_windowstatusfrontleft:
+        value_template: >
+            {%if is_state_attr("binary_sensor.sz_436_p_windows_closed", "windowstatusfrontleft", "CLOSED") %}
+              false
+            {% else %}
+              true
+            {% endif %}
+        friendly_name: Raam linksvoor open
+        icon_template: 'mdi:car-door'

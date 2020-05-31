@@ -10,7 +10,7 @@ automation:
       condition: and
       conditions:
         - condition: state
-          entity_id: light.woonkamer
+          entity_id: group.woonkamer
           state: 'off'
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
@@ -28,7 +28,7 @@ automation:
       condition: and
       conditions:
         - condition: state
-          entity_id: light.woonkamer
+          entity_id: group.woonkamer
           state: 'off'
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
@@ -59,12 +59,12 @@ automation:
               value_template: "{{ state.attributes.elevation }}"
               below: 3.5
             - condition: state
-              entity_id: light.woonkamer
+              entity_id: group.woonkamer
               state: 'off'
         - condition: and
           conditions:
             - condition: state
-              entity_id: light.woonkamer
+              entity_id: group.woonkamer
               state: 'off'
             - condition: numeric_state
               entity_id: sun.sun
