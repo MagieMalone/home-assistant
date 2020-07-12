@@ -6,6 +6,8 @@
 !config_generator/
 !python_scripts/
 !*.yaml
+!*.py
+!*.j2
 !.gitignore
 *.conf
 *.txt
