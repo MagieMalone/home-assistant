@@ -45,7 +45,7 @@ automation:
       from: 'off'
       to: 'on'
     condition:
-      - condition: and
+      - condition: or
         conditions:
           - condition: state
             entity_id: input_select.arnoud_status

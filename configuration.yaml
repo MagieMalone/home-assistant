@@ -96,6 +96,7 @@ config:
 # enable the person component
 person:
 system_health:
+python_script:
 
 # Enables support for tracking state changes over time
 history:
@@ -183,6 +184,12 @@ notify:
     api_key: !secret pushover_api
     user_key: !secret pushover_user
 
+sensor:
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /
+        
 
 #sensor: !include sensors.yaml
 zone: !include zones.yaml

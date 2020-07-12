@@ -41,10 +41,10 @@ device_tracker:
 #  - platform: bluetooth_tracker
 #    new_device_defaults:
 #      track_new_devices: false
-  - platform: tplink_router
-    host: 192.168.3.1
-    username: !secret tplink_user
-    password: !secret tplink_password
+#  - platform: tplink_router
+#    host: 192.168.3.1
+#    username: !secret tplink_user
+#    password: !secret tplink_password
     
 sensor:
   - platform: template

@@ -61,17 +61,21 @@ automation:
       - platform: state
         entity_id: sensor.chromecast_devices
     action:
-      - service: input_select.set_options
-        data_template:
-          entity_id: input_select.cast_devices
-          options: >-
-            {%- set devices = state_attr('sensor.chromecast_devices', 'devices')  %}
-            {%- set ns= namespace(list = []) %}
-            {%- for device in devices %}
-              {%- set ns.list = ns.list + [device.name] %}
-            {%- endfor %}
-            {{- ns.list}}
-            
+      - service: python_script.set_list_from_sensor
+        data:
+          sensor: 'sensor.chromecast_devices'
+          input_select: 'input_select.cast_devices'
+#      - service: input_select.set_options
+#        data_template:
+#          entity_id: input_select.cast_devices
+#          options: >-
+#            {%- set devices = state_attr('sensor.chromecast_devices', 'devices')  %}
+#            {%- set ns= namespace(list = []) %}
+#            {%- for device in devices %}
+#              {%- set ns.list = ns.list + [device.name] %}
+#            {%- endfor %}
+#            {{- ns.list}}
+#            
 #sensor:
 #  - platform: plex
 #    host: 192.168.1.3

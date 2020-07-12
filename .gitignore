@@ -4,6 +4,7 @@
 !automations/
 !automations/mqttswitches/
 !config_generator/
+!python_scripts/
 !*.yaml
 !.gitignore
 *.conf

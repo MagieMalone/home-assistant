@@ -1,0 +1,25 @@
+sensor:
+  - platform: template
+    sensors:
+      edgeos_interface_eth0_in_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Received)')|float}}"
+      edgeos_interface_eth0_out_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Sent)')|float}}"
+      edgeos_external_addresses: 
+        value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','addresses')}}"
+      edgeos_device_docker_in_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_device_docker','KBytes/ps (Received)')|float}}"
+      edgeos_device_docker_out_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_device_docker','KBytes/ps (Sent)')|float}}"
+      edgeos_device_hassio_in_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_device_hassio','KBytes/ps (Received)')|float}}"
+      edgeos_device_hassio_out_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_device_hassio','KBytes/ps (Sent)')|float}}"
+      edgeos_device_hassbian_in_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_device_hassbian','KBytes/ps (Received)')|float}}"
+      edgeos_device_hassbian_out_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_device_hassbian','KBytes/ps (Sent)')|float}}"
+      edgeos_device_synology415play_in_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_device_synology415play','KBytes/ps (Received)')|float}}"
+      edgeos_device_synology415play_out_kbps:
+        value_template: "{{state_attr('binary_sensor.edgeos_device_synology415play','KBytes/ps (Sent)')|float}}"
