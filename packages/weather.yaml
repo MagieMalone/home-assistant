@@ -53,6 +53,21 @@ sensor:
     monitored_conditions:
       - symbol
       - pressure
+  - platform: statistics
+    entity_id: sensor.0x00158d00031e0aff_temperature
+    max_age:
+      hours: 24
+    sampling_size: 1000
+    precision: 1
+    name: 0x00158d00031e0aff_temperature_stats
+  - platform: template
+    sensors:
+        buiten_temp_min:
+          value_template: '{{ state_attr("sensor.0x00158d00031e0aff_temperature_stats", "min_value") |float }}'
+          friendly_name: 'Minimum buiten temperatuur'
+        buiten_temp_max:
+          value_template: '{{ state_attr("sensor.0x00158d00031e0aff_temperature_stats", "max_value") |float }}'
+          friendly_name: 'Minimum buiten temperatuur'
 automation:
   - alias: 'kopieer forecast naar input_number'
     id: '8749832079108927490821'
@@ -64,5 +79,90 @@ automation:
         data_template:
           entity_id: input_number.berkhout_temperatuur_0d
           value: '{{ states("sensor.berkhout_temperature_1d") }}'
-        
-      
+  - alias: 'alert zolder ramen dicht'
+    trigger:
+      platform: template
+      value_template: "{{ ([states('sensor.0x00158d000315e79c_temperature'), states('sensor.0x00158d00031632ed_temperature')]|min|float -1) < (states('sensor.0x00158d00031e0aff_temperature')|float)}} "
+    action:
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data:
+          message: 'Tijd om de ramen op zolder dicht te doen'
+          language: 'nl'
+      - service: automation.turn_on
+        entity_id: automation.alert_zolder_ramen_open
+      - service: automation.turn_off
+        entity_id: automation.alert_zolder_ramen_dicht  
+  - alias: 'alert verdieping ramen dicht'
+    trigger:
+      platform: template
+      value_template: "{{ ([states('sensor.0x00158d00031e0bf7_temperature'), states('sensor.0x00158d00031e318f_temperature'), states('sensor.0x00158d00031e31ac_temperature')]|min|float -1) < (states('sensor.0x00158d00031e0aff_temperature')|float)}} "
+    action:
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data:
+          message: 'Tijd om de ramen op de eerste verdieping dicht te doen'
+          language: 'nl'
+      - service: automation.turn_on
+        entity_id: automation.alert_verdieping_ramen_open
+      - service: automation.turn_off
+        entity_id: automation.alert_verdieping_ramen_dicht
+  
+  - alias: 'alert beneden ramen dicht'
+    trigger:
+      platform: template
+      value_template: "{{ (states('sensor.0x00158d00036c1ba4_temperature')|float -1) < (states('sensor.0x00158d00031e0aff_temperature')|float)}} "
+    action:
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data:
+          message: 'Tijd om de ramen beneden dicht te doen'
+          language: 'nl'
+      - service: automation.turn_on
+        entity_id: automation.alert_beneden_ramen_open
+      - service: automation.turn_off
+        entity_id: automation.alert_beneden_ramen_dicht
+
+  - alias: 'alert zolder ramen open'
+    trigger:
+      platform: template
+      value_template: "{{ ([states('sensor.0x00158d000315e79c_temperature'), states('sensor.0x00158d00031632ed_temperature')]|min|float -1) > (states('sensor.0x00158d00031e0aff_temperature')|float)}} "
+    action:
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data:
+          message: 'Tijd om de ramen op zolder open te doen'
+          language: 'nl'
+      - service: automation.turn_on
+        entity_id: automation.alert_zolder_ramen_dicht
+      - service: automation.turn_off
+        entity_id: automation.alert_zolder_ramen_open
+ 
+  - alias: 'alert verdieping ramen open'
+    trigger:
+      platform: template
+      value_template: "{{ ([states('sensor.0x00158d00031e0bf7_temperature'), states('sensor.0x00158d00031e318f_temperature'), states('sensor.0x00158d00031e31ac_temperature')]|min|float -1) > (states('sensor.0x00158d00031e0aff_temperature')|float)}} "
+    action:
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data:
+          message: 'Tijd om de ramen op de eerste verdieping open te doen'
+          language: 'nl'
+      - service: automation.turn_on
+        entity_id: automation.alert_verdieping_ramen_dicht
+      - service: automation.turn_off
+        entity_id: automation.alert_verdieping_ramen_open
+  - alias: 'alert beneden ramen open'
+    trigger:
+      platform: template
+      value_template: "{{ (states('sensor.0x00158d00036c1ba4_temperature')|float -1) > (states('sensor.0x00158d00031e0aff_temperature')|float)}} "
+    action:
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data:
+          message: 'Tijd om de ramen beneden open te doen'
+          language: 'nl'
+      - service: automation.turn_on
+        entity_id: automation.alert_beneden_ramen_dicht
+      - service: automation.turn_off
+        entity_id: automation.alert_beneden_ramen_open

@@ -181,7 +181,38 @@ automation:
     - condition: state
       entity_id: input_boolean.f1_announcements
       state: 'on'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: input_select.arnoud_status
+          state: 'Thuis'
+        - condition: state
+          entity_id: input_select.arnoud_status
+          state: 'Net Thuis'
+#    action:
+#      - service: script.both_speakers
+#        data_template:
+#          tekst: 'De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")|striptags}} begint over tien minuten '
     action:
-      - service: script.both_speakers
-        data_template:
-          tekst: 'De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten '
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data_template: 
+          message: >
+            De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten 
+          cache: false
+          language: 'nl'
+      - service: homeassistant.turn_on
+        entity_id: light.media_group
+
+
+
+script:
+  test_f1_announce:
+    sequence:
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data_template: 
+          message: >
+            De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten 
+          cache: false
+          language: 'nl'
