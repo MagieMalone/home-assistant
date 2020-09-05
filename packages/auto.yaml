@@ -1,9 +1,9 @@
-mercedesmeapi:
-  username: !secret mb_username
-  password: !secret mb_password
-  pin: !secret mb_pin
-  country_code: NL               # two digts country code
-  accept_lang: en_NL             # four digits country code
+#mercedesmeapi:
+#  username: !secret mb_username
+#  password: !secret mb_password
+#  pin: !secret mb_pin
+#  country_code: NL               # two digts country code
+#  accept_lang: en_NL             # four digits country code
 #  save_car_details: true         # save a json to the HA config directory with the features and states, please use this for debug only 
 camera: 
   - platform: generic

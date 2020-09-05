@@ -25,7 +25,7 @@
     kelvin: 2000
     brightness_pct: 33
   left: 
-    entity: 'light.sk_spot_1, light.sk_spot_2'
+    entity: 'light.sk_duo_spot_1, light.sk_duo_spot_2'
     kelvin: 5000
     brightness_pct: 100
 - switchname: '0x00158d0002b4a1cf'

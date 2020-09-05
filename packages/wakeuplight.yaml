@@ -34,7 +34,7 @@ script:
       - service: light.turn_on
         data:
           entity_id: light.slaapkamer
-          brightness_pct: 1
+          brightness: 1
           xy_color:
           - 0.64
           - 0.33
@@ -46,95 +46,43 @@ script:
           xy_color:
           - 0.442
           - 0.447
+      - alias: volume
+        service: media_player.volume_set
+        data:
+          entity_id: media_player.slaapkamer_speaker
+          volume_level: '0'
       - alias: mediaplayer_setmedia
         service: media_player.play_media
         data:
           entity_id: media_player.slaapkamer_speaker
           media_content_id: 'https://streaming.radio.co/s5c5da6a36/listen'
           media_content_type: audio/mp4
-      - alias: mediaplayer_play_pause     
-        service: media_player.media_play
-        data:
-          entity_id: media_player.slaapkamer_speaker
-      - alias: mediaplayer_play_pause     
-        service: media_player.media_play
-        data:
-          entity_id: media_player.slaapkamer_speaker
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.05'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.1'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.15'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.2'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.25'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.3'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.35'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.4'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.45'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '0.5'
-      - delay:
-          minutes: 1
-      - alias: volume
-        service: media_player.volume_set
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          volume_level: '1.0'
+      - alias: fix playing
+        repeat:
+          while:
+            - condition: not
+              conditions:
+                - condition: state
+                  entity_id: media_player.slaapkamer_speaker
+                  state: 'playing'
+          sequence:
+            - alias: mediaplayer_play
+              service: media_player.media_play
+              data: 
+                entity_id: media_player.slaapkamer_speaker
+      - alias: repeat
+        repeat:
+          sequence:
+            - service: media_player.volume_set
+              data_template:
+                entity_id: media_player.slaapkamer_speaker
+                volume_level: "{{state_attr('media_player.slaapkamer_speaker', 'volume_level')|float +0.05}}"
+            - delay:
+                seconds: 30
+          until:
+            condition: template
+            value_template: "{{(state_attr('media_player.slaapkamer_speaker', 'volume_level')|float) > 0.95 }}"
+
       - delay: 
           minutes: 1
       - alias: opstaan!

@@ -1,6 +1,13 @@
 # Track the sun
 sun:
 
+sensor:
+  - platform: template
+    sensors:
+      sun_azimuth:
+        value_template: "{{state_attr('sun.sun', 'azimuth')|float}}"
+      sun_elevation:
+        value_template: "{{state_attr('sun.sun', 'elevation')|float}}"
 input_select:
   sun:
     name: Sun

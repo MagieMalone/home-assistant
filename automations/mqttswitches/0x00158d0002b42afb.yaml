@@ -22,13 +22,13 @@
       to: 'left'
   action:
     service_template: >
-      {% if is_state('light.sk_spot_1', 'off') %}
+      {% if is_state('light.sk_duo_spot_1', 'off') %}
         script.turn_on_light
       {% else %}
         script.turn_off_light
       {% endif %}
     data:
-      light_entities: light.sk_spot_1, light.sk_spot_2
+      light_entities: light.sk_duo_spot_1, light.sk_duo_spot_2
       kelvin: 5000
       brightness_pct: 100
 
@@ -45,7 +45,7 @@
         script.turn_off_light
       {% endif %}
     data:
-        light_entities: light.sk_spot_1, light.sk_spot_2, light.slaapkamer
+        light_entities: light.sk_duo_spot_1, light.sk_duo_spot_2, light.slaapkamer
 
 - alias: 'button long_click slaapkamer  right on '
   trigger:
@@ -77,7 +77,7 @@
   action:
     - service: script.dim_light
       data:
-        light_entity: light.sk_spot_1, light.sk_spot_2
+        light_entity: light.sk_duo_spot_1, light.sk_duo_spot_2
 
 - alias: 'button long_click slaapkamer  left off'
   trigger:
@@ -122,9 +122,9 @@
       entity_id: switch.circadian_lighting_circadian_lighting
     - service: script.turn_on_light
       data_template:
-        light_entities: light.sk_spot_1, light.sk_spot_2
+        light_entities: light.sk_duo_spot_1, light.sk_duo_spot_2
         kelvin: >
-            {% set current = state_attr('light.sk_spot_1', 'color_temp') |int %}
+            {% set current = state_attr('light.sk_duo_spot_1', 'color_temp') |int %}
             {% if current <= 200  %} 
               3000
             {% elif current <= 350  %}

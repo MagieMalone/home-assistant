@@ -62,6 +62,9 @@ automation:
         - condition: state
           entity_id: sensor.thermostat_condition
           state: 'True'
+        - condition: state
+          entity_id: group.windows_kachel
+          state: 'off'
         - condition: or
           conditions:
             - condition: and
@@ -133,6 +136,9 @@ automation:
         - condition: state
           entity_id: sensor.thermostat_condition
           state: 'True'
+        - condition: state
+          entity_id: group.windows_kachel
+          state: 'off'
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
 
@@ -161,6 +167,9 @@ automation:
         - condition: state
           entity_id: sensor.thermostat_condition
           state: 'True'
+        - condition: state
+          entity_id: group.windows_kachel
+          state: 'off'
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:
@@ -187,6 +196,45 @@ automation:
             state: 'comfort'
           - condition: time
             before: '09:00:00' 
+    action:
+      - service: timer.start
+        entity_id: timer.toon_automation
+      - alias: 'zet kachel uit'
+        service: climate.set_preset_mode
+        data:
+          entity_id: climate.toon_thermostat
+          preset_mode: away
+  - id: '087f8cd0-2dad-47d1-8b00-a97f84c7ecec'
+    alias: 'kachel aan als ramen dicht gaan'
+    trigger:
+      - platform: state
+        entity_id: group.windows_kachel
+        from: 'on'
+        to: 'off'
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: sensor.thermostat_condition
+          state: 'True'
+        - condition: time
+          after: '09:00:00'
+          before: '21:00:00'
+    action:
+      - service: timer.start
+        entity_id: timer.toon_automation
+      - alias: 'zet kachel aan'
+        service: climate.set_preset_mode
+        data:
+          entity_id: climate.toon_thermostat
+          preset_mode: home
+  - id: '5ee881ea-2b42-4580-a8d7-3d5416c187d6'
+    alias: 'kachel uit als ramen open gaan'
+    trigger:
+      - platform: state
+        entity_id: group.windows_kachel
+        from: 'off'
+        to: 'on'
     action:
       - service: timer.start
         entity_id: timer.toon_automation
@@ -310,20 +358,20 @@ automation:
         data:
           entity_id: climate.toon_thermostat
           preset_mode: away
-  - alias: 'test new condition'
-    id: '578094357868690285602'
-    trigger: 
-      platform: state
-      entity_id: sensor.thermostat_condition
-    action:
-      service: notify.pushover
-      data_template:
-        title: 'test condition'
-        message: >
-         state: {{states('sensor.thermostat_condition')}}
-         buiten: {{(states('sensor.temperatuur_buiten')  )|float}}
-         woonkamer: {{(states('sensor.temperatuur_woonkamer') ) | float}}
-         forecast: {{(states('input_number.berkhout_temperatuur_0d')) |float}}
+#  - alias: 'test new condition'
+#    id: '578094357868690285602'
+#    trigger: 
+#      platform: state
+#      entity_id: sensor.thermostat_condition
+#    action:
+#      service: notify.pushover
+#      data_template:
+#        title: 'test condition'
+#        message: >
+#         state: {{states('sensor.thermostat_condition')}}
+#         buiten: {{(states('sensor.temperatuur_buiten')  )|float}}
+#         woonkamer: {{(states('sensor.temperatuur_woonkamer') ) | float}}
+#         forecast: {{(states('input_number.berkhout_temperatuur_0d')) |float}}
          
 ########################
 ##

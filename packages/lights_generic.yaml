@@ -1,6 +1,6 @@
 group:
   sk_spot:
-    entities: light.sk_spot_1, light.sk_spot_2
+    entities: light.sk_duo_spot_1, light.sk_duo_spot_2
   switch-wk:
     entities:  switch.media_la_switch, switch.media_ra_switch, switch.media_v_switch
   lampen:
@@ -57,10 +57,10 @@ script:
         example: 'light.overloop'
       kelvin:
         description: 'color temp in kelvin'
-        example: 5000
+        example: '5000'
       brightness_pct:
         description: 'brightness in %'
-        example: 75
+        example: '75'
     sequence:
       - service: light.turn_on
         data_template:
@@ -172,7 +172,7 @@ script:
     fields:
       brightness_pct:
         description: 'brightness in %'
-        example: 75
+        example: '75'
     sequence:
       - service: light.turn_on
         data_template:
@@ -232,7 +232,7 @@ automation:
   - alias: 'lights off weekenddays'
     id: '1528912303472'
     trigger:
-      - at: '23:59'
+      - at: '23:59:59'
         platform: time
     condition:
       condition: state

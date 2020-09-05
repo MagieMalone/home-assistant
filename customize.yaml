@@ -12,3 +12,21 @@ sensor.tp_link_amps:
   icon: mdi:power-plug
 device_tracker.4dd0404d:
   friendly_name: Oneplus3-gps
+binary_sensor.0x00158d00040e3366_contact:
+  device_class: window
+binary_sensor.0x00158d00052b235c_contact:
+  device_class: window
+binary_sensor.0x00158d00040e32de_contact:
+  device_class: window
+binary_sensor.0x00158d000522a155_contact:
+  device_class: window
+binary_sensor.0x00158d0005278e2c_contact:
+  device_class: window
+binary_sensor.0x00158d00045067d1_contact:
+  device_class: window
+binary_sensor.0x00158d00052b224e_contact:
+  device_class: window
+binary_sensor.0x00158d00046113b0_contact:
+  device_class: window
+binary_sensor.0x00158d0005304ae1_contact:
+  device_class: window
