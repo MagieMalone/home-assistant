@@ -21,7 +21,6 @@ sensor:
   - platform: template
     sensors:
       last_ring:
-        entity_id: sensor.front_door_last_ding
         value_template: >-
           {% set today = now().day | int %}
           {% set ring_date = (((as_timestamp(state_attr('sensor.front_door_last_ding','created_at'))) | timestamp_custom("%d")) | int) %}
@@ -39,7 +38,6 @@ sensor:
           {% set time = as_timestamp(state_attr('sensor.front_door_last_ding','created_at')) | timestamp_custom("%H:%M")%}
           {{[day,time]|join(" at ")}}
       last_motion:
-        entity_id: sensor.front_door_last_motion
         value_template: >-
           {% set today = now().day | int %}
           {% set ring_date = (((as_timestamp(state_attr('sensor.front_door_last_motion','created_at'))) | timestamp_custom("%d")) | int) %}

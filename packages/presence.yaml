@@ -36,7 +36,7 @@ timer:
   pres_boven:
     duration: 10
 
-device_tracker:
+#device_tracker:
 #  - platform: gpslogger
 #  - platform: bluetooth_tracker
 #    new_device_defaults:
@@ -71,8 +71,8 @@ proximity:
     devices:
 #      - device_tracker.4dd0404d
 #      - device_tracker.unknown
-      - device_tracker.oneplus_a3003
-      - device_tracker.369ab83aade93883
+      - device_tracker.kb2003
+      - device_tracker.467cfa38bbada1bf
       - device_tracker.wdd1770871j017950
     unit_of_measurement: km
     tolerance: 50

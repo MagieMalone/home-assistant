@@ -30,3 +30,51 @@ binary_sensor.0x00158d00046113b0_contact:
   device_class: window
 binary_sensor.0x00158d0005304ae1_contact:
   device_class: window
+sensor.buiten_temp_max:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.badkamer_temp_max:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.bijkeuken_temp_max:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.slaapkamer_temp_max:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.studeerkamer_temp_max:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.woonkamer_temp_max:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.zolder_achter_temp_max:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.zolder_voor_temp_max:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.buiten_temp_min:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.badkamer_temp_min:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.bijkeuken_temp_min:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.slaapkamer_temp_min:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.studeerkamer_temp_min:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.woonkamer_temp_min:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.zolder_achter_temp_min:
+  device_class: temperature
+  unit_of_measurement: °C
+sensor.zolder_voor_temp_min:
+  device_class: temperature
+  unit_of_measurement: °C

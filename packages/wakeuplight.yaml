@@ -19,7 +19,6 @@ sensor:
   - platform: template
     sensors:
       wakeuplight_time:
-        entity_id: sensor.calc_leave_time_alarm
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
           {% if states("sensor.calc_leave_time_alarm") == "unknown" %}
@@ -51,12 +50,7 @@ script:
         data:
           entity_id: media_player.slaapkamer_speaker
           volume_level: '0'
-      - alias: mediaplayer_setmedia
-        service: media_player.play_media
-        data:
-          entity_id: media_player.slaapkamer_speaker
-          media_content_id: 'https://streaming.radio.co/s5c5da6a36/listen'
-          media_content_type: audio/mp4
+
       - alias: fix playing
         repeat:
           while:
@@ -66,10 +60,18 @@ script:
                   entity_id: media_player.slaapkamer_speaker
                   state: 'playing'
           sequence:
+            - alias: mediaplayer_setmedia
+              service: media_player.play_media
+              data:
+                entity_id: media_player.slaapkamer_speaker
+                media_content_id: 'https://streaming.radio.co/s5c5da6a36/listen'
+                media_content_type: audio/mp4
             - alias: mediaplayer_play
               service: media_player.media_play
               data: 
                 entity_id: media_player.slaapkamer_speaker
+            - delay:
+                seconds: 5
       - alias: repeat
         repeat:
           sequence:

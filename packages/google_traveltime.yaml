@@ -20,7 +20,7 @@ sensor:
   - platform: google_travel_time
     scan_interval: 900
     api_key: !secret google_apikey
-    origin: device_tracker.369ab83aade93883
+    origin: device_tracker.467cfa38bbada1bf
     destination: sensor.cal_location
     name: google_travel_time_driving
   - platform: google_travel_time

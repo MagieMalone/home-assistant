@@ -1,28 +1,13 @@
   - name: Home
     latitude: 52.694816
     longitude: 5.202913
-    radius: 17
+    radius: 35
     icon: mdi:account
   - name: ING
     latitude: 52.303535
     longitude: 4.952909
     radius: 200
     icon: mdi:worker
-  - name: Mediamonks
-    latitude: 52.226544
-    longitude: 5.179022
-    radius: 200
-    icon: mdi:worker
-  - name: Routz
-    latitude: 52.335258
-    longitude: 4.967440
-    radius: 100
-    icon: mdi:worker
-  - name: Ymke
-    latitude: 52.697678
-    longitude: 5.197215
-    radius: 25
-    icon: mdi:account
   - name: Home2
     latitude: 52.698277
     longitude: 5.205083

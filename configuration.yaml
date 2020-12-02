@@ -114,7 +114,10 @@ logbook:
     entities:
       - automation.set_input_select_cast_devices_based_on_sensor_chromecast_devices
       - input_select.cast_devices
-
+    entity_globs:
+      - sensor.diskstation_*
+      - sensor.edgeos_*
+      - sensor.sun_*
 
 
 

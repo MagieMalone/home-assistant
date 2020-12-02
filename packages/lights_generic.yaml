@@ -359,23 +359,26 @@ automation:
       entity_id: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
       from: 'on'
       to: 'off'
+    variables:
+      light_id: >
+          {% if trigger.entity_id == 'binary_sensor.0x00158d0002b5d42f_occupancy' %}
+          light.hal
+          {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b8586b_occupancy' %}
+          light.trap_hal
+          {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b7eda4_occupancy' %}
+          light.overloop
+          {% else %}
+          light.computer
+          {% endif %}
     condition:
-      condition: state
-      entity_id: input_boolean.cleaningmode
-      state: 'off'
+      - condition: state
+        entity_id: input_boolean.cleaningmode
+        state: 'off'
+      - "{{is_state(light_id,'on')}}"
     action:
       service: light.turn_off
-      data_template:
-        entity_id: >
-            {% if trigger.entity_id == 'binary_sensor.0x00158d0002b5d42f_occupancy' %}
-            light.hal
-            {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b8586b_occupancy' %}
-            light.trap_hal
-            {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b7eda4_occupancy' %}
-            light.overloop
-            {% else %}
-            light.computer
-            {% endif %}
+      data:
+        entity_id: "{{ light_id}}"
         transition: 5
 
 
