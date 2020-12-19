@@ -5,7 +5,9 @@
 !automations/mqttswitches/
 !config_generator/
 !python_scripts/
-!blueprints/automation/myown
+!blueprints/
+!blueprints/automation/
+!blueprints/automation/myown/
 !*.yaml
 !*.py
 !*.j2

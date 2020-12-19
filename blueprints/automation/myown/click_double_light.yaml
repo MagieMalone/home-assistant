@@ -1,0 +1,60 @@
+blueprint:
+  name: Button Doubleclick Light
+  description: Change color temperature when button is doubleclicked
+  domain: automation
+  input:
+    switch_entity:
+      name: Switch Sensor
+      selector:
+        entity:
+          domain: sensor
+          integration: mqtt       
+    light_target:
+      name: Light
+      selector:
+        target:
+          entity:
+            domain: light
+    side:
+      name: side
+      description: left_double or right_double
+      default: 'left_double'
+
+
+# If motion is detected within the delay,
+# we restart the script.
+mode: restart
+max_exceeded: silent
+
+variables:
+  light_target: !input light_target
+  start_mired: '{{ state_attr(light_target, ''min_mireds'') |int }}'
+  end_mired: '{{ state_attr(light_target, ''max_mireds'') |int }}'
+  step: '{{(end_mired  - start_mired )/4 |int }}'
+  current_mired: >
+    {%if state_attr(light_target, ''color_temp'') == None %}
+      {{start_mired - step}}
+    {% else %}t
+      {{ state_attr(light_target, ''color_temp'') |int }}
+    {% endif %}
+  new_mired: >
+    {% if (end_mired - 10 ) < current_mired %}
+      {{ start_mired }}
+    {% else %}
+      {{current_mired + step}}
+    {% endif %}
+
+condition: []
+
+trigger:
+    - platform: state
+      entity_id: !input light_target
+      to: !input side
+
+action:
+  - service: light.turn_on
+    target: !input light_target
+    data:
+      transition:  2
+      color_tempo: "{{ new_mired }}"
+
