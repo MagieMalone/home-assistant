@@ -1,11 +1,40 @@
-- id: '1575027986105'
-  alias: New Automation
+- id: '1608366491394'
+  alias: Motion-activated Light Hal
   description: ''
-  trigger:
-  - entity_id: input_select.arnoud_status
-    from: Weg
-    platform: state
-    to: Thuis
-  condition: []
-  action:
-  - scene: scene.film
+  use_blueprint:
+    path: homeassistant/motion_light_lightlevel.yaml
+    input:
+      motion_entity: binary_sensor.0x00158d0002b5d42f_occupancy
+      light_target:
+        entity_id: light.hal
+      threshold_input: input_number.lightlevel
+- id: '1608367209684'
+  alias: Motion-activated Light Overloop
+  description: ''
+  use_blueprint:
+    path: myown/motion_light_lightlevel.yaml
+    input:
+      motion_entity: binary_sensor.0x00158d0002b7eda4_occupancy
+      light_target:
+        light_target:
+          area_id: 429b2622d7794b9c90eb5d414ca9cb53
+- id: '1608367480003'
+  alias: Motion-activated Light Traphal
+  description: ''
+  use_blueprint:
+    path: myown/motion_light_lightlevel.yaml
+    input:
+      motion_entity: binary_sensor.0x00158d0002b8586b_occupancy
+      light_target:
+        light_target:
+          area_id: 429b2622d7794b9c90eb5d414ca9cb53
+- id: '1608371740136'
+  alias: Button Doubleclick Light computer
+  description: ''
+  use_blueprint:
+    path: myown/click_double_light.yaml
+    input:
+      switch_entity: sensor.0x00158d0002b42afb_click
+      light_target:
+        entity_id: light.computer
+      side: left_double

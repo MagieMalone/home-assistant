@@ -4,13 +4,15 @@ group:
   switch-wk:
     entities:  switch.media_la_switch, switch.media_ra_switch, switch.media_v_switch
   lampen:
-    entities: light.computer, light.eettafel, light.hal, light.trap_hal, light.hue_lightstrip_plus_1, light.overloop, light.slaapkamer, light.staande_lamp, light.sk_spot_1, light.sk_spot_2, light.keuken_1, light.keuken_2, light.keuken_3
+    entities: light.computer, light.hue_color_pendant_down_1, light.hue_color_pendant_up_1, light.hal, light.trap_hal, light.hue_lightstrip_plus_1, light.overloop, light.slaapkamer, light.staande_lamp, light.sk_spot_1, light.sk_spot_2, light.keuken_1, light.keuken_2, light.keuken_3
   motion_sensors:
     entities: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
   woonkamer:
     entities: light.hue_lightstrip_plus_1, light.staande_lamp
   keuken:
     entities: light.keuken_1, light.keuken_2, light.keuken_3
+  eetkamer:
+    entities: light.hue_color_pendant_down_1, light.hue_color_pendant_up_1
 
 
 
@@ -200,8 +202,8 @@ automation:
         entity_id: input_select.arnoud_status
         to: 'Net Weg'
     action:
-      - service: light.turn_off
-        entity_id: group.lampen
+      - service: homeassistant.turn_off
+        entity_id: group.lampen, switch.tplink_b0_4e_26_6b_a1_f5
 
   - alias: 'sunrise lights off'
     id: '47893265301237' 
@@ -288,98 +290,126 @@ automation:
       - service: script.update_lights_brightness
         data:
           brightness_pct: 1
-
-          
+####
+# Tijdelijk totdat schakelaars klaart zijn
+###
+  - id: '1608366491394'
+    alias: Motion-activated Light Hal
+    description: ''
+    use_blueprint:
+      path: myown/motion_light_lightlevel.yaml
+      input:
+        motion_entity: binary_sensor.0x00158d0002b5d42f_occupancy
+        light_target:
+          entity_id: light.hal
+        threshold_input: input_number.lightlevel
+  - id: '1608367209684'
+    alias: Motion-activated Light Overloop
+    description: ''
+    use_blueprint:
+      path: myown/motion_light_lightlevel.yaml
+      input:
+        motion_entity: binary_sensor.0x00158d0002b7eda4_occupancy
+        light_target:
+          area_id: 429b2622d7794b9c90eb5d414ca9cb53
+        threshold_input: input_number.lightlevel
+  - id: '1608367480003'
+    alias: Motion-activated Light Traphal
+    description: ''
+    use_blueprint:
+      path: myown/motion_light_lightlevel.yaml
+      input:
+        motion_entity: binary_sensor.0x00158d0002b8586b_occupancy
+        light_target:
+          area_id: 429b2622d7794b9c90eb5d414ca9cb53
+        threshold_input: input_number.lightlevel
 
 
 #######################################        
 #       Motion sensors on             #
 #######################################
-  - alias: 'motion sensor mqtt overloop'
-    id: '467606384609869894109134'
-    trigger: 
-      platform: state
-      entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
-      from: 'off'
-      to: 'on'  
-    condition:
-      - condition: template
-        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float)}}"
-      - condition: state
-        entity_id: input_boolean.cleaningmode
-        state: 'off'
-    action:
-      - service: script.turn_on_light
-        data:
-          light_entities: light.overloop
-  - alias: 'motion sensor mqtt traphal'
-    id: '47808636478871347896'
-    trigger: 
-      platform: state
-      entity_id: binary_sensor.0x00158d0002b8586b_occupancy
-      from: 'off'
-      to: 'on'  
-    condition:
-      - condition: template
-        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float) }}"
-      - condition: state
-        entity_id: input_boolean.cleaningmode
-        state: 'off'
-    action:
-      - service: script.turn_on_light
-        data:
-          light_entities: light.trap_hal
-  - alias: 'motion sensor mqtt hal'
-    id: '567327632089382383432489065'
-    trigger: 
-      platform: state
-      entity_id: binary_sensor.0x00158d0002b5d42f_occupancy
-      from: 'off'
-      to: 'on'  
-    condition:
-      - condition: template
-        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float)}}"
-      - condition: state
-        entity_id: input_boolean.cleaningmode
-        state: 'off'
-    action:
-      - service: script.turn_on_light
-        data:
-          light_entities: light.hal
-
+#  - alias: 'motion sensor mqtt overloop'
+#    id: '467606384609869894109134'
+#    trigger: 
+#      platform: state
+#      entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
+#      from: 'off'
+#      to: 'on'  
+#    condition:
+#      - condition: template
+#        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float)}}"
+#      - condition: state
+#        entity_id: input_boolean.cleaningmode
+#        state: 'off'
+#    action:
+#      - service: script.turn_on_light
+#        data:
+#          light_entities: light.overloop
+#  - alias: 'motion sensor mqtt traphal'
+#    id: '47808636478871347896'
+#    trigger: 
+#      platform: state
+#      entity_id: binary_sensor.0x00158d0002b8586b_occupancy
+#      from: 'off'
+#      to: 'on'  
+#    condition:
+#      - condition: template
+#        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float) }}"
+#      - condition: state
+#        entity_id: input_boolean.cleaningmode
+#        state: 'off'
+#    action:
+#      - service: script.turn_on_light
+#        data:
+#          light_entities: light.trap_hal
+#  - alias: 'motion sensor mqtt hal'
+#    id: '567327632089382383432489065'
+#    trigger: 
+#      platform: state
+#      entity_id: binary_sensor.0x00158d0002b5d42f_occupancy
+#      from: 'off'
+#      to: 'on'  
+#    condition:
+#      - condition: template
+#        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float)}}"
+#      - condition: state
+#        entity_id: input_boolean.cleaningmode
+#        state: 'off'
+#    action:
+#      - service: script.turn_on_light
+#        data:
+#          light_entities: light.hal
+#
 #######################################        
 #       Motion sensors off            #
 #######################################
-
-
-  - alias: 'motion sensor light off'
-    id: '432174083284601304'
-    trigger: 
-      platform: state
-      entity_id: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
-      from: 'on'
-      to: 'off'
-    variables:
-      light_id: >
-          {% if trigger.entity_id == 'binary_sensor.0x00158d0002b5d42f_occupancy' %}
-          light.hal
-          {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b8586b_occupancy' %}
-          light.trap_hal
-          {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b7eda4_occupancy' %}
-          light.overloop
-          {% else %}
-          light.computer
-          {% endif %}
-    condition:
-      - condition: state
-        entity_id: input_boolean.cleaningmode
-        state: 'off'
-      - "{{is_state(light_id,'on')}}"
-    action:
-      service: light.turn_off
-      data:
-        entity_id: "{{ light_id}}"
-        transition: 5
-
-
-
+#
+#
+#  - alias: 'motion sensor light off'
+#    id: '432174083284601304'
+#    trigger: 
+#      platform: state
+#      entity_id: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
+#      from: 'on'
+#      to: 'off'
+#    variables:
+#      light_id: >
+#          {% if trigger.entity_id == 'binary_sensor.0x00158d0002b5d42f_occupancy' %}
+#          light.hal
+#          {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b8586b_occupancy' %}
+#          light.trap_hal
+#          {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b7eda4_occupancy' %}
+#          light.overloop
+#          {% else %}
+#          light.computer
+#          {% endif %}
+#    condition:
+#      - condition: state
+#        entity_id: input_boolean.cleaningmode
+#        state: 'off'
+#      - "{{is_state(light_id,'on')}}"
+#    action:
+#      service: light.turn_off
+#      data:
+#        entity_id: "{{ light_id}}"
+#        transition: 5

@@ -1,0 +1,18 @@
+automation:
+  - alias: 'christmastree_on'
+    id: '463978603210480982734'
+    trigger:
+      - platform: time
+        at: "06:30:00"
+    action:
+      - service: homeassistant.turn_on
+        entity_id: switch.tplink_b0_4e_26_6b_a1_f5
+  - alias: 'christmastree_on_arrival'
+    id: '548079754760590897024850891' 
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Net Thuis'
+    action:
+      - service: homeassistant.turn_on
+        entity_id: switch.tplink_b0_4e_26_6b_a1_f5

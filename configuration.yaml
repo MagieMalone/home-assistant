@@ -1,24 +1,12 @@
+default_config:
 homeassistant:
-  # Name of the location where Home Assistant is running
-  name: Home
-  # Location required to calculate the time the sun rises and sets
-  latitude: 52.6949
-  longitude: 5.2030
-  # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 1
-  # metric for Metric, imperial for Imperial
-  unit_system: metric
-  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  time_zone: Europe/Amsterdam
   # Customization file
   customize: !include customize.yaml
   packages: !include_dir_named packages
   allowlist_external_dirs:
     - /tmp
-  external_url: https://foto-album.duckdns.org:8123
 
-# Show links to resources in log and frontend
-#introduction:
+
 
 #logger
 logger:
@@ -38,64 +26,20 @@ logger:
 #    custom_components.mercedesmeapi.OAuth: debug
 #
 
-
-
-# https://github.com/thomasloven/hass-browser_mod
-#browser_mod:
-#  devices:
-#    95612154-b42299e6:
-#      name: Desktop
-#    ee15c3f5 b0c15c44:
-#      name: Oneplus3
-
-lovelace:
-  mode: storage
-  dashboards:
-    lovelace-old:
-      mode: yaml
-      title: YAML
-      filename: lovelace.yaml
-      icon: mdi:script
-      show_in_sidebar: true
 http:
-  # Secrets are defined in the file secrets.yaml
-  # api_password: !secret http_password
-  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-  # base_url: example.duckdns.org:8123
-#  ssl_certificate: /home/homeassistant/dehydrated/certs/foto-album.duckdns.org/fullchain.pem
-#  ssl_key: /home/homeassistant/dehydrated/certs/foto-album.duckdns.org/privkey.pem
-#  base_url: foto-album.duckdns.org:8123
-#  base_url: https://foto-album.duckdns.org:8123
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
 
-# Checks for available updates
-# Note: This component will send some information about your system to
-# the developers to assist with development of Home Assistant.
-# For more information, please see:
-# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
-updater:
-  # Optional, allows Home Assistant developers to focus on popular components.
-  # include_used_components: true
-
 # Discover some devices automatically
 discovery:
-zeroconf:
-ssdp:
-cloud:
-mobile_app:
-# Enables a map showing the location of tracked devices
-map:
+
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
-# Enables the frontend
+
+  # Enables the frontend
 frontend:
   themes: !include_dir_merge_named themes
-## Enables configuration UI
-config:
-# enable the person component
-person:
-system_health:
+
 python_script:
 
 # Enables support for tracking state changes over time
@@ -119,9 +63,6 @@ logbook:
       - sensor.edgeos_*
       - sensor.sun_*
 
-
-
-
 recorder:
 #  db_url: !secret db_url
   exclude:
@@ -135,9 +76,6 @@ recorder:
       - sensor.time
       - proximity.home2
       - sensor.iss
-
-
-
 
 influxdb:
   host: 192.168.3.6
@@ -177,8 +115,6 @@ tts:
 notify:
   - platform: html5
     name: webbrowser
-#    gcm_api_key: !secret google_firebase_key
-#    gcm_sender_id: 836630737755
     vapid_pub_key: !secret google_vapid_pub_key
     vapid_prv_key: !secret google_vapid_prv_key
     vapid_email: !secret google_vapid_email
@@ -194,9 +130,9 @@ sensor:
         arg: /
         
 
-#sensor: !include sensors.yaml
+
 zone: !include zones.yaml
-#group: !include groups.yaml
+group: !include groups.yaml
 automation: !include_dir_merge_list automations/
 script: !include scripts.yaml
 scene: !include scenes.yaml

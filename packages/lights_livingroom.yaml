@@ -97,6 +97,20 @@ script:
           - 0.3388
           - 0.1332
           brightness_pct: 1
+      - alias: pendant_up
+        service: light.turn_on
+        data:
+          entity_id: light.hue_color_pendant_up_1
+          xy_color:
+          - 0.324
+          - 0.154
+          brightness_pct: 1 
+      - alias: pendant_down
+        service: light.turn_on
+        data:
+          entity_id: light.hue_color_pendant_down_1
+          color_temp: 449
+          brightness_pct: 1 
       - alias: staande lamp
         service: light.turn_on
         data:
@@ -113,6 +127,22 @@ script:
           - 0.3388
           - 0.1332
           brightness_pct: 30
+      - alias: pendant_up
+        service: light.turn_on
+        data:
+          entity_id: light.hue_color_pendant_up_1
+          xy_color:
+          - 0.324
+          - 0.154
+          brightness_pct: 50
+          transition: 300 
+      - alias: pendant_down
+        service: light.turn_on
+        data:
+          entity_id: light.hue_color_pendant_down_1
+          color_temp: 449
+          brightness_pct: 50 
+          transition: 300
   woonkamer_lights:
     sequence:
       - alias: staande lamp
@@ -131,3 +161,19 @@ script:
           - 0.3388
           - 0.1332
           brightness_pct: 30
+      - alias: pendant_up
+        service: light.turn_on
+        data:
+          entity_id: light.hue_color_pendant_up_1
+          xy_color:
+          - 0.324
+          - 0.154
+          brightness_pct: 50
+          transition: 300 
+      - alias: pendant_down
+        service: light.turn_on
+        data:
+          entity_id: light.hue_color_pendant_down_1
+          color_temp: 449
+          brightness_pct: 50 
+          transition: 30
