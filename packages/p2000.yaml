@@ -20,3 +20,53 @@ sensor:
     regios: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
     radius: 30000
     contains: "GRIP"
+  - platform: template
+    sensors:
+      p2000_last:
+        friendly_name: "p2000 last seen"
+        value_template: >
+          {% if state_attr('sensor.ambulance', 'time') == None %} 
+            {% set ambulance = 0 %}
+          {% else %}
+           {% set ambulance = as_timestamp(state_attr('sensor.ambulance', 'time')) %}
+          {% endif %}
+          {% if state_attr('sensor.brandweer', 'time') == None %}
+            {% set brandweer = 0 %}
+          {% else %}
+            {% set brandweer = as_timestamp(state_attr('sensor.brandweer', 'time')) %}
+          {% endif %}
+          {% if state_attr('sensor.trauma_heli', 'time') == None %}
+            {% set heli = 0 %}
+          {% else %}
+            {% set heli = as_timestamp(state_attr('sensor.trauma_heli', 'time')) %}
+          {% endif %}
+          {% if (ambulance >  brandweer) and (ambulance > heli ) %}
+            {{states('sensor.ambulance')}}
+          {% elif (brandweer > heli) %}
+            {{states('sensor.brandweer')}}
+          {% else %}
+            {{states('trauma_heli')}}
+          {% endif %}
+        icon_template: >
+          {% if state_attr('sensor.ambulance', 'time') == None %} 
+            {% set ambulance = 0 %}
+          {% else %}
+           {% set ambulance = as_timestamp(state_attr('sensor.ambulance', 'time')) %}
+          {% endif %}
+          {% if state_attr('sensor.brandweer', 'time') == None %}
+            {% set brandweer = 0 %}
+          {% else %}
+            {% set brandweer = as_timestamp(state_attr('sensor.brandweer', 'time')) %}
+          {% endif %}
+          {% if state_attr('sensor.trauma_heli', 'time') == None %}
+            {% set heli = 0 %}
+          {% else %}
+            {% set heli = as_timestamp(state_attr('sensor.trauma_heli', 'time')) %}
+          {% endif %}
+          {% if (ambulance >  brandweer) and (ambulance > heli ) %}
+            {{mdi:ambulance)}}
+          {% elif (brandweer > heli) %}
+            {{mdi:fire-truck)}}
+          {% else %}
+            {{mdi:helicopter}}
+          {% endif %}
