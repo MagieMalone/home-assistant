@@ -64,9 +64,9 @@ sensor:
             {% set heli = as_timestamp(state_attr('sensor.trauma_heli', 'time')) %}
           {% endif %}
           {% if (ambulance >  brandweer) and (ambulance > heli ) %}
-            {{mdi:ambulance)}}
+            {{'mdi:ambulance'}}
           {% elif (brandweer > heli) %}
-            {{mdi:fire-truck)}}
+            {{'mdi:fire-truck'}}
           {% else %}
-            {{mdi:helicopter}}
+            {{'mdi:helicopter'}}
           {% endif %}
