@@ -28,7 +28,7 @@ sensor:
           {% if state_attr('sensor.ambulance', 'time') == None %} 
             {% set ambulance = 0 %}
           {% else %}
-           {% set ambulance = as_timestamp(state_attr('sensor.ambulance', 'time')) %}
+            {% set ambulance = as_timestamp(state_attr('sensor.ambulance', 'time')) %}
           {% endif %}
           {% if state_attr('sensor.brandweer', 'time') == None %}
             {% set brandweer = 0 %}
@@ -51,7 +51,7 @@ sensor:
           {% if state_attr('sensor.ambulance', 'time') == None %} 
             {% set ambulance = 0 %}
           {% else %}
-           {% set ambulance = as_timestamp(state_attr('sensor.ambulance', 'time')) %}
+            {% set ambulance = as_timestamp(state_attr('sensor.ambulance', 'time')) %}
           {% endif %}
           {% if state_attr('sensor.brandweer', 'time') == None %}
             {% set brandweer = 0 %}
