@@ -10,10 +10,12 @@ automation:
       condition: and
       conditions:
         - condition: state
-          entity_id: group.woonkamer
+          entity_id: light.woonkamer
           state: 'off'
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
+        - condition: time
+          after: '12:00:00'
     action:
       - service: script.woonkamer_lights_fadein
 
@@ -28,7 +30,7 @@ automation:
       condition: and
       conditions:
         - condition: state
-          entity_id: group.woonkamer
+          entity_id: light.woonkamer
           state: 'off'
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
@@ -49,6 +51,9 @@ automation:
       - platform: state
         entity_id: input_select.arnoud_status
         to: 'Net Thuis'
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Thuis'
     condition:
       condition: or
       conditions:
@@ -59,17 +64,17 @@ automation:
               value_template: "{{ state.attributes.elevation }}"
               below: 3.5
             - condition: state
-              entity_id: group.woonkamer
+              entity_id: light.woonkamer
               state: 'off'
         - condition: and
           conditions:
             - condition: state
-              entity_id: group.woonkamer
+              entity_id: light.woonkamer
               state: 'off'
             - condition: numeric_state
               entity_id: sun.sun
               value_template: "{{ state.attributes.elevation }}"
-              below: 0
+              below: 7
             # measurement newer then 30 minutes
             - condition: template
               value_template: "{{as_timestamp(strptime(state_attr('sensor.berkhout_condition', 'Measured'),'%a %b %d %H:%M:%S %Y'))+1800 > as_timestamp(now())}}"

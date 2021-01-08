@@ -7,7 +7,7 @@ nacht:
       data:
         transition: 10
     - service: light.turn_on
-      entity_id: light.slaapkamer, light.sk_spot_1, light.sk_spot_2
+      entity_id: light.slaapkamer
     - service: switch.turn_off
       entity_id: switch.0x8418260000105782_switch, switch.tplink_b0_4e_26_6b_a1_f5
     - delay:

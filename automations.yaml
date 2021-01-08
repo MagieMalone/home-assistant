@@ -2,39 +2,109 @@
   alias: Motion-activated Light Hal
   description: ''
   use_blueprint:
-    path: homeassistant/motion_light_lightlevel.yaml
+    path: myown/motion_light_lightlevel.yaml
     input:
       motion_entity: binary_sensor.0x00158d0002b5d42f_occupancy
       light_target:
         entity_id: light.hal
       threshold_input: input_number.lightlevel
-- id: '1608367209684'
-  alias: Motion-activated Light Overloop
-  description: ''
-  use_blueprint:
-    path: myown/motion_light_lightlevel.yaml
-    input:
-      motion_entity: binary_sensor.0x00158d0002b7eda4_occupancy
-      light_target:
-        light_target:
-          area_id: 429b2622d7794b9c90eb5d414ca9cb53
-- id: '1608367480003'
-  alias: Motion-activated Light Traphal
+- id: '1608456934898'
+  alias: Motion-activated Light Lightlevel traphal
   description: ''
   use_blueprint:
     path: myown/motion_light_lightlevel.yaml
     input:
       motion_entity: binary_sensor.0x00158d0002b8586b_occupancy
       light_target:
-        light_target:
-          area_id: 429b2622d7794b9c90eb5d414ca9cb53
-- id: '1608371740136'
-  alias: Button Doubleclick Light computer
+        area_id: 429b2622d7794b9c90eb5d414ca9cb53
+      threshold_input: input_number.lightlevel
+- id: '1608456965094'
+  alias: Motion-activated Light Lightlevel overloop
   description: ''
   use_blueprint:
-    path: myown/click_double_light.yaml
+    path: myown/motion_light_lightlevel.yaml
     input:
-      switch_entity: sensor.0x00158d0002b42afb_click
+      motion_entity: binary_sensor.0x00158d0002b7eda4_occupancy
       light_target:
-        entity_id: light.computer
-      side: left_double
+        area_id: 429b2622d7794b9c90eb5d414ca9cb53
+      threshold_input: input_number.lightlevel
+- id: '1608714195345'
+  alias: aqara studeerkamer
+  description: ''
+  use_blueprint:
+    path: myown/aqara_doubleswitch_action_light.yaml
+    input:
+      switch_entity: sensor.studeerkamer_action
+      light_entity_left: light.computer
+      light_entity_right: light.computer
+      light_entity_both: light.computer
+      mode_selector: input_select.house_mode
+- id: '1608714470902'
+  alias: aqara woonkamer
+  description: ''
+  use_blueprint:
+    path: myown/aqara_doubleswitch_action_light.yaml
+    input:
+      switch_entity: sensor.switch_woonkamer_action
+      light_entity_left: light.hue_lightstrip_plus_1
+      light_entity_right: light.staande_lamp
+      light_entity_both: light.woonkamer
+      mode_selector: input_select.house_mode
+- id: '1608714589824'
+  alias: aqara slaapkamer
+  description: ''
+  use_blueprint:
+    path: myown/aqara_doubleswitch_action_light.yaml
+    input:
+      switch_entity: sensor.slaapkamer_action
+      light_entity_left: light.sk_spot
+      light_entity_right: light.sk_ceiling
+      light_entity_both: light.slaapkamer
+      mode_selector: input_select.house_mode
+- id: '1608714672968'
+  alias: aqara keuken
+  description: ''
+  use_blueprint:
+    path: myown/aqara_doubleswitch_action_light.yaml
+    input:
+      switch_entity: sensor.keuken_action
+      light_entity_left: light.eetkamer
+      light_entity_right: light.keuken
+      light_entity_both: light.eetkamer, light.keuken
+      mode_selector: input_select.house_mode
+- id: '1609411507048'
+  alias: Mute mediaplayer when calling.
+  description: ''
+  use_blueprint:
+    path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
+    input:
+      phone_state: sensor.kb2003_telefoon_status
+      person: person.arnoud
+      media_player: media_player.speakers
+- id: '1609411549751'
+  alias: Mute mediaplayer when calling.
+  description: ''
+  use_blueprint:
+    path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
+    input:
+      phone_state: sensor.kb2003_telefoon_status
+      person: person.arnoud
+      media_player: media_player.huiskamer_tv
+- id: '1609411592013'
+  alias: Mute mediaplayer when calling.
+  description: ''
+  use_blueprint:
+    path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
+    input:
+      phone_state: sensor.kb2003_telefoon_status
+      person: person.arnoud
+      media_player: media_player.ht_nt5
+- id: '1609411612257'
+  alias: Mute mediaplayer when calling.
+  description: ''
+  use_blueprint:
+    path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
+    input:
+      phone_state: sensor.kb2003_telefoon_status
+      person: person.arnoud
+      media_player: media_player.huiskamer_speaker

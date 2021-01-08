@@ -146,7 +146,7 @@ automation:
         data_template:
           tekst: 'Alarm! Alarm! Alarm! indringer in huis! '
       - service: light.turn_on
-        entity_id: light.computer, light.eettafel, light.hal, light.slaapkamer, light.staande_lamp
+        entity_id: light.computer, light.eettafel, light.hal, light.sk_ceiling, light.staande_lamp
         data:
           color_name: white
           brightness_pct: 100

@@ -32,14 +32,14 @@ script:
     sequence:
       - service: light.turn_on
         data:
-          entity_id: light.slaapkamer
+          entity_id: light.sk_ceiling
           brightness: 1
           xy_color:
           - 0.64
           - 0.33
       - service: light.turn_on
         data:
-          entity_id: light.slaapkamer
+          entity_id: light.sk_ceiling
           transition: 600
           brightness_pct: 100
           xy_color:

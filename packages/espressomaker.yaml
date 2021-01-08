@@ -21,7 +21,7 @@ automation:
   - alias: 'Turn on espresso  maker'
     id: '1529161700562'
     trigger:
-    - at: '07:00:00' 
+    - at: '07:30:00' 
       platform: time
     condition:
       - condition: template
@@ -35,7 +35,7 @@ automation:
     id: '1529161701532'
     trigger:
       - platform: time
-        at: '17:30:00' 
+        at: '19:00:00' 
       - platform: state
         entity_id: input_select.arnoud_status
         to: 'Net Thuis'
@@ -43,8 +43,8 @@ automation:
      condition: and
      conditions:
       - condition: time
-        after: '17:30:00'
-        before: '20:00:00'
+        after: '19:00:00'
+        before: '20:30:00'
       - condition: template
         value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:

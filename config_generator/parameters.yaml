@@ -19,7 +19,7 @@
 - switchname: '0x00158d0002b42afb'
   room: 'slaapkamer'
   right: 
-    entity: 'light.slaapkamer'
+    entity: 'light.sk_ceiling'
     kelvin: 2000
     brightness_pct: 33
   left: 

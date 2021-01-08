@@ -13,6 +13,9 @@ automation:
       - platform: state
         entity_id: input_select.arnoud_status
         to: 'Net Thuis'
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: 'Thuis'
     action:
       - service: homeassistant.turn_on
         entity_id: switch.tplink_b0_4e_26_6b_a1_f5

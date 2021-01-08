@@ -1,18 +1,82 @@
+light:
+  - platform: group
+    name: sk_spot
+    entities:
+      - light.sk_duo_spot_1
+      - light.sk_duo_spot_2
+  - platform: group
+    name: keuken
+    entities:
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+  - platform: group
+    name: woonkamer
+    entities:
+      - light.hue_lightstrip_plus_1
+      - light.staande_lamp
+  - platform: group
+    name: eetkamer
+    entities:
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
+  - platform: group
+    name: zolder_en_trap
+    entities:
+      - light.overloop
+      - light.trap_hal
+      - light.reserve
+  - platform: group
+    name: slaapkamer
+    entities:
+      - light.sk_ceiling
+      - light.sk_duo_spot_1
+      - light.sk_duo_spot_2
+  - platform: group
+    name: color
+    entities:
+      - light.hue_lightstrip_plus_1
+      - light.staande_lamp
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
+      - light.computer
+      - light.hal
+      - light.reserve
+      - light.sk_ceiling
+  - platform: group
+    name: whites
+    entities:
+      - light.sk_duo_spot_1
+      - light.sk_duo_spot_2
+      - light.overloop
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+      - light.trap_hal
+  - platform: group
+    name: lampen
+    entities:
+      - light.hue_lightstrip_plus_1
+      - light.staande_lamp
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
+      - light.computer
+      - light.hal
+      - light.reserve
+      - light.sk_ceiling
+      - light.sk_duo_spot_1
+      - light.sk_duo_spot_2
+      - light.overloop
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+      - light.trap_hal
 group:
-  sk_spot:
-    entities: light.sk_duo_spot_1, light.sk_duo_spot_2
   switch-wk:
     entities:  switch.media_la_switch, switch.media_ra_switch, switch.media_v_switch
-  lampen:
-    entities: light.computer, light.hue_color_pendant_down_1, light.hue_color_pendant_up_1, light.hal, light.trap_hal, light.hue_lightstrip_plus_1, light.overloop, light.slaapkamer, light.staande_lamp, light.sk_spot_1, light.sk_spot_2, light.keuken_1, light.keuken_2, light.keuken_3
   motion_sensors:
     entities: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
-  woonkamer:
-    entities: light.hue_lightstrip_plus_1, light.staande_lamp
-  keuken:
-    entities: light.keuken_1, light.keuken_2, light.keuken_3
-  eetkamer:
-    entities: light.hue_color_pendant_down_1, light.hue_color_pendant_up_1
+
 
 
 
@@ -37,139 +101,57 @@ input_number:
 script:
   flash_lights:
     sequence:
-      - service: light.turn_on
-        data_template:
-          entity_id: >
+      - variables: 
+          light_entities: >
             {% for device in dict(states.light|groupby("state"))["on"] %}
-              {%- if device.entity_id |regex_match('.*onoff')  %}
-              {%- else %}
-                {%- if loop.first %}{% else %}, {% endif %}
-                {{- device.entity_id | lower }}
-              {%- endif %}
-                {%- if loop.last %}{% endif %}
-            {%-  endfor  %}
-          flash: long
+            {%- if device.entity_id |regex_match('.*onoff')  %}
+            {%- else %}
+              {%- if loop.first %}{% else %}, {% endif %}
+              {{- device.entity_id | lower }}
+            {%- endif %}
+              {%- if loop.last %}{% endif %}
+            {%-  endfor  %}  
+      - choose:
+          - conditions:
+            - "{{ light_entities == '' }}"
+            sequence:
+              - service: light.turn_on
+                data:
+                  entity_id: light.hue_lightstrip_plus_1, light.hal
+              - variables:
+                  light_hal: "{{state_attr('light.hal', 'brightness')|int}}"
+                  light_lightstrip: "{{state_attr('light.hue_lightstrip_plus_1', 'brightness')|int}}"
+              - service: light.turn_on
+                data:
+                  entity_id: light.hue_lightstrip_plus_1, light.hal
+                  brightness: 100
+              - service: light.turn_on
+                data:
+                  entity_id: light.hue_lightstrip_plus_1, light.hal
+                  flash: long
+              - delay: 5
+              - service: light.turn_on
+                data:
+                  entity_id: light.hue_lightstrip_plus_1
+                  brightness: "{{light_lightstrip}}"
+              - service: light.turn_on
+                data:
+                  entity_id: light.hal
+                  brightness: "{{light_hal}}"
+              - service: light.turn_off
+                data:
+                  entity_id: light.hue_lightstrip_plus_1, light.hal
+        default:
+#          - service: notify.webbrowser
+#            data:
+#              title: debug
+#              message: "{{light_entities}}"
+          -  service: light.turn_on
+             data:
+                entity_id: "{{light_entities}}"
+                flash: long
 
 
-
-  turn_on_light:
-    fields:
-      light_entities:
-        description: 'Light entity_ids'
-        example: 'light.overloop'
-      kelvin:
-        description: 'color temp in kelvin'
-        example: '5000'
-      brightness_pct:
-        description: 'brightness in %'
-        example: '75'
-    sequence:
-      - service: light.turn_on
-        data_template:
-          entity_id: "{{light_entities}}"
-          transition:  5
-          brightness_pct: >
-            {% if is_state('input_select.house_mode', 'overdag') %}
-              75
-            {% elif is_state('input_select.house_mode', 'avond') %}
-              50
-            {% elif is_state('input_select.house_mode', 'nacht') %}
-              1
-            {% else %}
-              {% if brightness_pct %}
-                {{brightness_pct}}
-              {% else %}
-                100
-              {% endif %}
-            {% endif %}
-          kelvin: >
-            {% if kelvin %}
-              {{kelvin | int}}
-            {% else %}
-              3000
-            {% endif %}
-
-  turn_on_colorlight:
-    fields:
-      light_entities:
-        description: 'Light entity_ids'
-        example: 'light.overloop'
-      xy_color:
-        description: 'xy color pair'
-        example: '[0.5, 0.5]'
-      
-    sequence:
-#      - service: notify.pushover
-#        data_template:
-#          message: >
-#              entity: "{{light_entities}}"
-#              xy_color:  "{{xy_color}}"
-#              0: "{{xy_color[0]|float}}"
-#              1: "{{xy_color[1]|float}}"
-      - service: light.turn_on
-        data_template:
-          entity_id: "{{light_entities}}"
-          transition: 5
-          brightness_pct: >
-            {% if brightness_pct %}
-              {{brightness_pct}}
-            {% else %}
-              30
-            {% endif %}
-          xy_color: >
-            {% if xy_color %}
-              [ {{xy_color[0]|float}}, {{xy_color[1]|float}}]
-            {% else %}
-              [0.5, 0.5]
-            {% endif %}
-
-
-  turn_off_light:
-    fields:
-      light_entities:
-        description: 'Light entity_ids'
-        example: 'light.overloop'
-    sequence:
-      - service: light.turn_off
-        data_template:
-          entity_id: "{{light_entities}}"
-          transition: 5
-
-  dim_light:
-    fields:
-      light_entity:
-        description: 'Light entity_id'
-        example: 'light.overloop'
-    sequence:
-      - service: homeassistant.turn_on
-        data_template:
-          entity_id: "{{light_entity}}"
-          transition: 1
-          brightness: >
-            {% set brightness = state_attr(light_entity, 'brightness') %}
-            {%if brightness == None %}
-              31
-            {% else %}
-              {% if brightness < 224 %}
-                {{( brightness+32)|min(255)}}
-              {% else %}
-                31
-              {% endif %}
-            {% endif %}
-      - service: script.dim_light_loop
-        data_template:
-          light_entity: "{{light_entity}}"
-
-  dim_light_loop:
-    fields:
-      light_entity:
-        description: 'Light entity_id'
-        example: 'light.overloop'
-    sequence:
-      - delay: '00:00:01'
-      - service: script.dim_light
-        data_template:
-          light_entity: "{{light_entity}}"
   update_lights_brightness:
     fields:
       brightness_pct:
@@ -203,7 +185,7 @@ automation:
         to: 'Net Weg'
     action:
       - service: homeassistant.turn_off
-        entity_id: group.lampen, switch.tplink_b0_4e_26_6b_a1_f5
+        entity_id: light.lampen, switch.tplink_b0_4e_26_6b_a1_f5
 
   - alias: 'sunrise lights off'
     id: '47893265301237' 
@@ -213,7 +195,7 @@ automation:
       offset: '00:20:00'
     action:
       - service: light.turn_off
-        entity_id: group.lampen
+        entity_id: light.lampen
 
   - alias: 'lights off weekdays'
     id: '1528912303194'
@@ -229,7 +211,7 @@ automation:
       - service: light.turn_off
         data:
           transition: 900 
-          entity_id: group.lampen
+          entity_id: light.lampen
 
   - alias: 'lights off weekenddays'
     id: '1528912303472'
@@ -244,7 +226,7 @@ automation:
       - service: light.turn_off
         data:
           transition: 900
-          entity_id: group.lampen
+          entity_id: light.lampen
 
   - alias: 'dim lights in day'
     id: '54618293609860132486029'
@@ -254,7 +236,7 @@ automation:
         to: 'overdag'
     condition: 
       condition: state
-      entity_id: group.lampen
+      entity_id: light.lampen
       state: 'on'
     action:
       - service: script.update_lights_brightness
@@ -269,7 +251,7 @@ automation:
         to: 'avond'
     condition: 
       condition: state
-      entity_id: group.lampen
+      entity_id: light.lampen
       state: 'on'
     action:
       - service: script.update_lights_brightness
@@ -284,132 +266,11 @@ automation:
         to: 'nacht'
     condition: 
       condition: state
-      entity_id: group.lampen
+      entity_id: light.lampen
       state: 'on'
     action:
       - service: script.update_lights_brightness
         data:
           brightness_pct: 1
-####
-# Tijdelijk totdat schakelaars klaart zijn
-###
-  - id: '1608366491394'
-    alias: Motion-activated Light Hal
-    description: ''
-    use_blueprint:
-      path: myown/motion_light_lightlevel.yaml
-      input:
-        motion_entity: binary_sensor.0x00158d0002b5d42f_occupancy
-        light_target:
-          entity_id: light.hal
-        threshold_input: input_number.lightlevel
-  - id: '1608367209684'
-    alias: Motion-activated Light Overloop
-    description: ''
-    use_blueprint:
-      path: myown/motion_light_lightlevel.yaml
-      input:
-        motion_entity: binary_sensor.0x00158d0002b7eda4_occupancy
-        light_target:
-          area_id: 429b2622d7794b9c90eb5d414ca9cb53
-        threshold_input: input_number.lightlevel
-  - id: '1608367480003'
-    alias: Motion-activated Light Traphal
-    description: ''
-    use_blueprint:
-      path: myown/motion_light_lightlevel.yaml
-      input:
-        motion_entity: binary_sensor.0x00158d0002b8586b_occupancy
-        light_target:
-          area_id: 429b2622d7794b9c90eb5d414ca9cb53
-        threshold_input: input_number.lightlevel
 
 
-#######################################        
-#       Motion sensors on             #
-#######################################
-#  - alias: 'motion sensor mqtt overloop'
-#    id: '467606384609869894109134'
-#    trigger: 
-#      platform: state
-#      entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
-#      from: 'off'
-#      to: 'on'  
-#    condition:
-#      - condition: template
-#        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float)}}"
-#      - condition: state
-#        entity_id: input_boolean.cleaningmode
-#        state: 'off'
-#    action:
-#      - service: script.turn_on_light
-#        data:
-#          light_entities: light.overloop
-#  - alias: 'motion sensor mqtt traphal'
-#    id: '47808636478871347896'
-#    trigger: 
-#      platform: state
-#      entity_id: binary_sensor.0x00158d0002b8586b_occupancy
-#      from: 'off'
-#      to: 'on'  
-#    condition:
-#      - condition: template
-#        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float) }}"
-#      - condition: state
-#        entity_id: input_boolean.cleaningmode
-#        state: 'off'
-#    action:
-#      - service: script.turn_on_light
-#        data:
-#          light_entities: light.trap_hal
-#  - alias: 'motion sensor mqtt hal'
-#    id: '567327632089382383432489065'
-#    trigger: 
-#      platform: state
-#      entity_id: binary_sensor.0x00158d0002b5d42f_occupancy
-#      from: 'off'
-#      to: 'on'  
-#    condition:
-#      - condition: template
-#        value_template: "{{(state_attr(trigger.entity_id, 'illuminance') |float)< (states('input_number.lightlevel')|float)}}"
-#      - condition: state
-#        entity_id: input_boolean.cleaningmode
-#        state: 'off'
-#    action:
-#      - service: script.turn_on_light
-#        data:
-#          light_entities: light.hal
-#
-#######################################        
-#       Motion sensors off            #
-#######################################
-#
-#
-#  - alias: 'motion sensor light off'
-#    id: '432174083284601304'
-#    trigger: 
-#      platform: state
-#      entity_id: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
-#      from: 'on'
-#      to: 'off'
-#    variables:
-#      light_id: >
-#          {% if trigger.entity_id == 'binary_sensor.0x00158d0002b5d42f_occupancy' %}
-#          light.hal
-#          {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b8586b_occupancy' %}
-#          light.trap_hal
-#          {% elif trigger.entity_id == 'binary_sensor.0x00158d0002b7eda4_occupancy' %}
-#          light.overloop
-#          {% else %}
-#          light.computer
-#          {% endif %}
-#    condition:
-#      - condition: state
-#        entity_id: input_boolean.cleaningmode
-#        state: 'off'
-#      - "{{is_state(light_id,'on')}}"
-#    action:
-#      service: light.turn_off
-#      data:
-#        entity_id: "{{ light_id}}"
-#        transition: 5

@@ -1,0 +1,83 @@
+blueprint:
+  name: Button long click Light debug
+  description: dim  light when button is long clicked
+  domain: automation
+  input:
+    switch_entity:
+      name: Switch Sensor
+      selector:
+        entity:
+          domain: sensor
+          integration: mqtt       
+    light_entity:
+      name: Light
+      selector:
+        entity:
+          domain: light
+    side:
+      name: side
+      description: right_long, left_long or both_long
+      default: 'left_long'
+    boolean_entity:
+      name: boolean
+      selector:
+        entity:
+          domain: input_boolean
+          
+mode: single
+max_exceeded: silent
+
+variables:
+  light_entity: !input light_entity
+  side: !input side
+  switch_entity: !input switch_entity
+#  boolean_entity: "{{ light_entity |replace('light.','input_boolean.')}}"
+  boolean_entity: !input boolean_entity
+condition: []
+
+trigger:
+    - platform: state
+      entity_id: !input switch_entity
+      to: !input side
+
+action:
+  - service: input_boolean.turn_on
+    entity_id: !input boolean_entity
+#    entity_id: "{{ boolean_entity }}"
+  - service: notify.webbrowser
+    data:
+      title: debug
+      message: "{{ side , light_entity , state_attr(light_entity, 'brightness') , switch_entity , states(switch_entity), boolean_entity}}"
+  - alias: repeat while button is held
+    repeat:
+      sequence:
+        - choose:
+          - conditions: 
+            - condition: template
+              value_template: '{{ (state_attr(light_entity, ''brightness'') |int) > 245 }}'
+            sequence:
+              - service: light.turn_on
+                data:
+                  brightness: 1
+                  entity_id: !input light_entity
+          default:
+            - service: light.turn_on
+              data:
+                brightness_step_pct: 5
+                entity_id: !input light_entity
+        - service: notify.webbrowser
+          data:
+            title: debug
+            message: "{{ light_entity , state_attr(light_entity, 'brightness'), state_attr(switch_entity, 'action') }}"
+        - delay:
+            milliseconds: 500
+      until:
+        - condition: or
+          conditions:
+            - condition: state
+              entity_id: !input switch_entity
+#              entity_id: "{{ boolean_entity }}"
+              state: None
+              attribute: action
+            - condition: template
+              value_template: "{{ repeat.index > 25 }}"

@@ -78,3 +78,19 @@ sensor.zolder_achter_temp_min:
 sensor.zolder_voor_temp_min:
   device_class: temperature
   unit_of_measurement: °C
+binary_sensor.edgeos_device_docker:
+  friendly_name: Docker
+binary_sensor.edgeos_device_esxi:
+  friendly_name: Esxi
+binary_sensor.edgeos_device_hassbian:
+  friendly_name: Hassbian
+binary_sensor.edgeos_device_hassio:
+  friendly_name: Hassio
+binary_sensor.edgeos_device_prosafegs105:
+  friendly_name: Prosafegs105
+binary_sensor.edgeos_device_prosafegs108:
+  friendly_name: Prosafegs108
+binary_sensor.edgeos_device_synology415play:
+  friendly_name: Synology415play
+binary_sensor.edgeos_device_tplink:
+  friendly_name: Tplink

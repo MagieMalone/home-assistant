@@ -1,0 +1,151 @@
+blueprint:
+  name: aqara double switch to control Light
+  description: perform actions on light when button is clicked
+  domain: automation
+  input:
+    switch_entity:
+      name: Switch action Sensor
+      description: aqara mqtt action sensor, don't use the click sensor for the switch.
+      selector:
+        entity:
+          domain: sensor
+          integration: mqtt       
+    light_entity_left:
+      name: Light left
+      selector:
+        entity:
+          domain: light
+    light_entity_right:
+      name: Light right
+      selector:
+        entity:
+          domain: light
+    light_entity_both:
+      name: Light both
+      selector:
+        entity:
+          domain: light
+    mode_selector:
+      name: time of day
+      description: input select that determines time of day, values are overdag, avond & nacht
+      selector:
+        entity:
+          domain: input_select
+
+mode: single
+max_exceeded: silent
+
+variables:
+  mode_selector: !input mode_selector
+  brightness: >
+    {% if is_state( mode_selector , 'overdag') %}
+      191
+    {% elif is_state( mode_selector , 'avond') %}
+      128
+    {% elif is_state( mode_selector , 'nacht') %}
+      1
+    {% else %}
+      255
+    {% endif %}
+
+condition: []
+
+trigger:
+  - platform: state
+    entity_id: !input switch_entity
+action:
+  - variables:
+      command: "{{ trigger.to_state.state }}"
+  - choose:
+    - conditions:
+        - "{{ command == 'single_left' }}"
+      sequence:
+        - service: light.toggle
+          entity_id: !input light_entity_left
+          data:
+            transition:  2
+            brightness: "{{ brightness }}"
+    - conditions:
+        - "{{ command == 'single_right' }}"
+      sequence:
+        - service: light.toggle
+          entity_id: !input light_entity_right
+          data:
+            transition:  2
+            brightness: "{{ brightness }}"
+    - conditions:
+        - "{{ command == 'single_both' }}"
+      sequence:
+        - service: light.toggle
+          entity_id: !input light_entity_both
+          data:
+            transition:  2
+            brightness: "{{ brightness }}"
+    - conditions:
+        - "{{ command == 'double_left' }}"
+      sequence:
+        - variables:
+            light_entity: !input light_entity_left
+            start_mired: '{{ state_attr(light_entity , ''min_mireds'') |int }}'
+            end_mired: '{{ state_attr(light_entity , ''max_mireds'') |int }}'
+            step: '{{ ((end_mired - start_mired )/4 )| int }}'
+            current_mired: '{{ state_attr(light_entity, ''color_temp'') }}'
+        - choose:
+          - conditions:
+            - condition: template
+              value_template: "{{  current_mired == None }}"
+            sequence:
+              - service: light.turn_on
+                data:
+                  entity_id: !input light_entity_left
+                  transition: 2
+                  color_temp: "{{ start_mired }}"
+          - conditions:
+            - condition: template
+              value_template: "{{ ( current_mired |int + step) > end_mired }}"
+            sequence:
+              - service: light.turn_on
+                data:
+                  entity_id: !input light_entity_left
+                  transition: 2
+                  color_temp: "{{ start_mired }}"
+          default:
+            - service: light.turn_on
+              data:
+                entity_id: !input light_entity_left
+                transition:  2
+                color_temp: "{{ state_attr(light_entity, 'color_temp') |int + step }}"
+    - conditions:
+        - "{{ command == 'double_right' }}"
+      sequence:
+        - variables:
+            light_entity: !input light_entity_right
+            start_mired: '{{ state_attr(light_entity , ''min_mireds'') |int }}'
+            end_mired: '{{ state_attr(light_entity , ''max_mireds'') |int }}'
+            step: '{{ ((end_mired - start_mired )/4 )| int }}'
+            current_mired: '{{ state_attr(light_entity, ''color_temp'') }}'
+        - choose:
+          - conditions:
+            - condition: template
+              value_template: "{{  current_mired == None }}"
+            sequence:
+              - service: light.turn_on
+                data:
+                  entity_id: !input light_entity_right
+                  transition: 2
+                  color_temp: "{{ start_mired }}"
+          - conditions:
+            - condition: template
+              value_template: "{{ ( current_mired |int + step) > end_mired }}"
+            sequence:
+              - service: light.turn_on
+                data:
+                  entity_id: !input light_entity_right
+                  transition: 2
+                  color_temp: "{{ start_mired }}"
+          default:
+            - service: light.turn_on
+              data:
+                entity_id: !input light_entity_right
+                transition:  2
+                color_temp: "{{ state_attr(light_entity, 'color_temp') |int + step }}"

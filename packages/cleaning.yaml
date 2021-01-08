@@ -40,13 +40,13 @@ script:
   cleaningmode_on:
     sequence:
       - service: light.turn_on
-        entity_id: light.computer, light.eettafel, light.hal, light.slaapkamer, light.staande_lamp
+        entity_id: light.computer, light.hal, light.sk_ceiling, light.staande_lamp, light.eetkamer
         data:
           color_name: white
           brightness_pct: 100
           transition: 15
       - service: light.turn_on
-        entity_id: light.keuken, light.trap_hal, light.overloop, light.sk_spot_1, light.sk_spot_2
+        entity_id: light.keuken, light.trap_hal, light.overloop, light.sk_spot
         data:
           color_temp: 153
           brightness_pct: 100
@@ -54,12 +54,10 @@ script:
   cleaningmode_off:
     sequence:
       - service: light.turn_on
-        entity_id: light.computer, light.eettafel, light.hal, light.slaapkamer, light.staande_lamp, light.keuken, light.trap_hal, light.overloop
+        entity_id: light.computer, light.hal, light.sk_ceiling, light.staande_lamp, light.eetkamer, light.keuken, light.trap_hal, light.overloop, light.sk_spot
         data:
           color_temp: 153
           brightness_pct: 50
           transition: 15
       - service: light.turn_off
-        entity_id: light.computer, light.eettafel, light.hal, light.slaapkamer, light.staande_lamp
-      - service: light.turn_off
-        entity_id: light.keuken, light.trap_hal, light.overloop, light.sk_spot_1, light.sk_spot_2
+        entity_id: light.computer, light.hal, light.sk_ceiling, light.staande_lamp, light.eetkamer, light.keuken, light.trap_hal, light.overloop, light.sk_spot

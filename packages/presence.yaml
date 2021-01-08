@@ -73,7 +73,7 @@ proximity:
 #      - device_tracker.unknown
       - device_tracker.kb2003
       - device_tracker.467cfa38bbada1bf
-      - device_tracker.wdd1770871j017950
+      - device_tracker.sz_436_p_device_tracker
     unit_of_measurement: km
     tolerance: 50
 automation:

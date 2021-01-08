@@ -24,7 +24,7 @@ logger:
 #    custom_components.mercedesmeapi.sensor: info
 #    custom_components.mercedesmeapi.apicontroller: debug
 #    custom_components.mercedesmeapi.OAuth: debug
-#
+    homeassistant.components.tplink: debug
 
 http:
   ssl_certificate: /ssl/fullchain.pem
@@ -133,6 +133,7 @@ sensor:
 
 zone: !include zones.yaml
 group: !include groups.yaml
-automation: !include_dir_merge_list automations/
+#automation: !include_dir_merge_list automations/
+automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
