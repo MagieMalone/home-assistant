@@ -111,7 +111,7 @@ automation:
               {%- if d_class != 'window' and d_class != 'motion' and d_class != 'door'%}
                 {%- if loop.first %}{%set ns.first =true %}{% endif %}
               {%- else %}
-                {%- if loop.first or ns.first  %}{% else %}, {% endif %}
+                {%- if loop.first or ns.first  %}{% set ns.first =false%}{% else %}, {% endif %}
                 {{ sensor.name | lower }}
               {%- endif %}
               {%- if loop.last %}{% endif %}

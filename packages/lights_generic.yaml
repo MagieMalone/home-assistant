@@ -103,14 +103,16 @@ script:
     sequence:
       - variables: 
           light_entities: >
+            {%- set ns = namespace(first=false) %}
             {% for device in dict(states.light|groupby("state"))["on"] %}
-            {%- if device.entity_id |regex_match('.*onoff')  %}
-            {%- else %}
-              {%- if loop.first %}{% else %}, {% endif %}
-              {{- device.entity_id | lower }}
-            {%- endif %}
+              {%- if state_attr(device.entity_id , 'entity_id') != None  %}
+                {%- if loop.first %}{%set ns.first =true %}{% endif %}
+              {%- else %}
+                {%- if loop.first or ns.first  %}{%set ns.first =false%}{% else %},{% endif %}
+                {{- device.entity_id | lower }}
+              {%- endif %}
               {%- if loop.last %}{% endif %}
-            {%-  endfor  %}  
+            {%-  endfor  %}
       - choose:
           - conditions:
             - "{{ light_entities == '' }}"
@@ -142,14 +144,10 @@ script:
                 data:
                   entity_id: light.hue_lightstrip_plus_1, light.hal
         default:
-#          - service: notify.webbrowser
-#            data:
-#              title: debug
-#              message: "{{light_entities}}"
-          -  service: light.turn_on
-             data:
-                entity_id: "{{light_entities}}"
-                flash: long
+          - service: light.turn_on
+            data:
+              entity_id: "{{light_entities}}"
+              flash: long
 
 
   update_lights_brightness:
@@ -161,10 +159,12 @@ script:
       - service: light.turn_on
         data_template:
           entity_id: >
+            {%- set ns = namespace(first=false) %}
             {% for device in dict(states.light|groupby("state"))["on"] %}
-              {%- if device.entity_id |regex_match('.*onoff')  %}
+              {%- if state_attr(device.entity_id , 'entity_id') != None  %}
+                {%- if loop.first %}{%set ns.first =true %}{% endif %}
               {%- else %}
-                {%- if loop.first %}{% else %}, {% endif %}
+                {%- if loop.first or ns.first  %}{%set ns.first =false%}{% else %},{% endif %}
                 {{- device.entity_id | lower }}
               {%- endif %}
                 {%- if loop.last %}{% endif %}

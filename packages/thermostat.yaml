@@ -9,8 +9,7 @@ input_select:
       - home
       - comfort
       - away
-    initial: away
-    icon: mdi:flame
+    icon: mdi:fire
 
 input_number:
   thermostat_set_point:
@@ -26,7 +25,7 @@ sensor:
     sensors:
       heating_set_temperature:
         value_template: '{{state_attr("climate.toon_thermostat", "temperature") | float }}'
-      heating_preset_mode: 
+      heating_preset_mode:
         value_template: '{{state_attr("climate.toon_thermostat", "preset_mode")}}'
       toon_action:
         value_template: '{{state_attr("climate.toon_thermostat", "hvac_action")}}'
@@ -41,117 +40,117 @@ sensor:
           {% else %}
             {{(( states('sensor.0x00158d00031e0aff_temperature')  )|float) < (( states('sensor.0x00158d00036c1ba4_temperature') ) | float) and (states('sensor.0x00158d00031e0aff_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
           {% endif %}
-          
+
 timer:
   toon_automation:
     name: Time remaining
     duration: 120
 automation:
-  - alias: 'kachel aan bij thuiskomst'
-    id: '48794350603208'
+  - alias: "kachel aan bij thuiskomst"
+    id: "48794350603208"
     trigger:
-#      - platform: numeric_state
-#        entity_id: sensor.phone_to_home
-#        below: 15
+      #      - platform: numeric_state
+      #        entity_id: sensor.phone_to_home
+      #        below: 15
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Net Thuis'
+        to: "Net Thuis"
     condition:
       condition: and
       conditions:
         - condition: state
           entity_id: sensor.thermostat_condition
-          state: 'True'
+          state: "True"
         - condition: state
           entity_id: group.windows_kachel
-          state: 'off'
+          state: "off"
         - condition: or
           conditions:
             - condition: and
               conditions:
                 - condition: time
-                  after: '10:00:00'
-                  before: '21:00:00' 
+                  after: "10:00:00"
+                  before: "21:00:00"
                 - condition: state
-                  entity_id: 'binary_sensor.workday_sensor'
-                  state: 'on'
+                  entity_id: "binary_sensor.workday_sensor"
+                  state: "on"
             - condition: and
               conditions:
                 - condition: time
-                  after: '09:00:00'
-                  before: '22:00:00'
+                  after: "09:00:00"
+                  before: "22:00:00"
                 - condition: state
-                  entity_id: 'binary_sensor.workday_sensor'
-                  state: 'off'
+                  entity_id: "binary_sensor.workday_sensor"
+                  state: "off"
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel aan'
+      - alias: "zet kachel aan"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: home
-  - alias: 'kachel uit'
-    id: '3487932089739032'
+  - alias: "kachel uit"
+    id: "3487932089739032"
     trigger:
       platform: time
-      at: '21:30:00'
+      at: "21:30:00"
     condition:
       condition: state
-      entity_id: 'binary_sensor.workday1d'
-      state: 'on'
+      entity_id: "binary_sensor.workday1d"
+      state: "on"
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel uit'
+      - alias: "zet kachel uit"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: sleep
-  - alias: 'kachel uit weekend'
-    id: '899328673478992'
+  - alias: "kachel uit weekend"
+    id: "899328673478992"
     trigger:
       platform: time
-      at: '23:00:00'
+      at: "23:00:00"
     condition:
       condition: state
-      entity_id: 'binary_sensor.workday1d'
-      state: 'off'
+      entity_id: "binary_sensor.workday1d"
+      state: "off"
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel uit'
+      - alias: "zet kachel uit"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: sleep
-  - alias: 'kachel aan op tijd'
-    id: '487943503783603208'
+  - alias: "kachel aan op tijd"
+    id: "487943503783603208"
     trigger:
       - platform: time
-        at: '09:00:00' 
+        at: "09:00:00"
     condition:
       condition: and
       conditions:
         - condition: state
           entity_id: sensor.thermostat_condition
-          state: 'True'
+          state: "True"
         - condition: state
           entity_id: group.windows_kachel
-          state: 'off'
+          state: "off"
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
 
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel aan'
+      - alias: "zet kachel aan"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: home
-  - alias: 'kachel aan smorgens voor vertrek'
-    id: '34567384890732300888734'
+  - alias: "kachel aan smorgens voor vertrek"
+    id: "34567384890732300888734"
     trigger:
       platform: time_pattern
       seconds: 00
@@ -166,101 +165,87 @@ automation:
           below: 20
         - condition: state
           entity_id: sensor.thermostat_condition
-          state: 'True'
+          state: "True"
         - condition: state
           entity_id: group.windows_kachel
-          state: 'off'
+          state: "off"
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel aan'
+      - alias: "zet kachel aan"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: comfort
-  - alias: 'Zet kachel uit smorgens zodra badkamer warm is'
-    id: '83746345875808312346030'
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.0x00158d00031e31ac_temperature
-        above: 20
-      - platform: template
-        value_template: "{{ now().strftime('%D %H:%M') < (as_timestamp(states('sensor.calc_leave_time')) | timestamp_custom('%D %H:%M', 1)) }}"
-    condition:
-        condition: and
-        conditions:
-          - condition: state
-            entity_id: sensor.heating_preset_mode
-            state: 'comfort'
-          - condition: time
-            before: '09:00:00' 
-    action:
-      - service: timer.start
-        entity_id: timer.toon_automation
-      - alias: 'zet kachel uit'
+      - wait_for_trigger:
+          platform: numeric_state
+          entity_id: sensor.0x00158d00031e31ac_temperature
+          above: 20
+        timeout: "00:30:00"
+      - alias: "zet kachel uit"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: away
-  - id: '087f8cd0-2dad-47d1-8b00-a97f84c7ecec'
-    alias: 'kachel aan als ramen dicht gaan'
+  - id: "087f8cd0-2dad-47d1-8b00-a97f84c7ecec"
+    alias: "kachel aan als ramen dicht gaan"
     trigger:
       - platform: state
         entity_id: group.windows_kachel
-        from: 'on'
-        to: 'off'
+        from: "on"
+        to: "off"
     condition:
       condition: and
       conditions:
         - condition: state
           entity_id: sensor.thermostat_condition
-          state: 'True'
+          state: "True"
         - condition: time
-          after: '09:00:00'
-          before: '21:00:00'
+          after: "09:00:00"
+          before: "21:00:00"
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel aan'
+      - alias: "zet kachel aan"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: home
-  - id: '5ee881ea-2b42-4580-a8d7-3d5416c187d6'
-    alias: 'kachel uit als ramen open gaan'
+  - id: "5ee881ea-2b42-4580-a8d7-3d5416c187d6"
+    alias: "kachel uit als ramen open gaan"
     trigger:
       - platform: state
         entity_id: group.windows_kachel
-        from: 'off'
-        to: 'on'
+        from: "off"
+        to: "on"
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel uit'
+      - alias: "zet kachel uit"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: away
-#  - alias: 'kachel uit bij vertrek'
-#    id: '87532892385670923'
-#    trigger:
-#      - platform: state
-#        entity_id: input_select.arnoud_status
-#        to: 'Weg'
-#    action:
-#      - service: climate.set_preset_mode
-#        data:
-#          entity_id: climate.toon_thermostat
-#          preset_mode: away
-########################
-##
-## testing new model
-##
-########################
-  - alias: 'alerting on proximity'
-    id: '58708495628290562435806'
+  #  - alias: 'kachel uit bij vertrek'
+  #    id: '87532892385670923'
+  #    trigger:
+  #      - platform: state
+  #        entity_id: input_select.arnoud_status
+  #        to: 'Weg'
+  #    action:
+  #      - service: climate.set_preset_mode
+  #        data:
+  #          entity_id: climate.toon_thermostat
+  #          preset_mode: away
+  ########################
+  ##
+  ## testing new model
+  ##
+  ########################
+  - alias: "alerting on proximity"
+    id: "58708495628290562435806"
     trigger:
       - platform: numeric_state
         entity_id: proximity.home
@@ -271,120 +256,234 @@ automation:
     action:
       service: notify.pushover
       data_template:
-        title: 'proximity testing'
+        title: "proximity testing"
         message: "GPS is {{states('proximity.home')}}km ver weg en heeft status {{state_attr('proximity.home', 'dir_of_travel')}}  en kachel staat in stand {{states('sensor.heating_preset_mode')}} en condition is {{states('sensor.thermostat_condition')}}"
-  - alias: 'proximity based kachel aan'
-    id: '36142780901230468498301'
-    trigger: 
+  - alias: "proximity based kachel aan"
+    id: "36142780901230468498301"
+    trigger:
       - platform: numeric_state
         entity_id: proximity.home
         below: 25
-#      - platform: template
-#        value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'towards')}}"  
+    #      - platform: template
+    #        value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'towards')}}"
     condition:
       condition: and
       conditions:
         - condition: template
           value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'towards')}}"
-#        - condition: numeric_state
-#          entity_id: proximity.home
-#          below: 25
+        #        - condition: numeric_state
+        #          entity_id: proximity.home
+        #          below: 25
         - condition: or
           conditions:
             - condition: state
               entity_id: sensor.heating_preset_mode
-              state: 'sleep'
+              state: "sleep"
             - condition: state
               entity_id: sensor.heating_preset_mode
-              state: 'away'
+              state: "away"
         - condition: state
           entity_id: sensor.thermostat_condition
-          state: 'True'
+          state: "True"
         - condition: or
           conditions:
             - condition: and
               conditions:
                 - condition: time
-                  after: '15:00:00'
-                  before: '21:00:00' 
+                  after: "15:00:00"
+                  before: "21:00:00"
                 - condition: state
-                  entity_id: 'binary_sensor.workday_sensor'
-                  state: 'on'
+                  entity_id: "binary_sensor.workday_sensor"
+                  state: "on"
             - condition: and
               conditions:
                 - condition: time
-                  after: '09:00:00'
-                  before: '22:00:00'
+                  after: "09:00:00"
+                  before: "22:00:00"
                 - condition: state
-                  entity_id: 'binary_sensor.workday_sensor'
-                  state: 'off'
+                  entity_id: "binary_sensor.workday_sensor"
+                  state: "off"
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel aan'
+      - alias: "zet kachel aan"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: home
-  - alias: 'proximity based kachel uit'
-    id: '65781233029308062315'
-    trigger: 
+  - alias: "proximity based kachel uit"
+    id: "65781233029308062315"
+    trigger:
       - platform: numeric_state
         entity_id: proximity.home
         above: 11.8
-#      - platform: template
-#        value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'away_from')}}"
+    #      - platform: template
+    #        value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'away_from')}}"
     condition:
       condition: and
       conditions:
         - condition: template
           value_template: "{{is_state_attr('proximity.home', 'dir_of_travel', 'away_from')}}"
-#        - condition: numeric_state
-#          entity_id: proximity.home
-#          above: 11.8
+        #        - condition: numeric_state
+        #          entity_id: proximity.home
+        #          above: 11.8
         - condition: or
           conditions:
             - condition: state
               entity_id: sensor.heating_preset_mode
-              state: 'home'
+              state: "home"
             - condition: state
               entity_id: sensor.heating_preset_mode
-              state: 'comfort'
+              state: "comfort"
     action:
       - service: timer.start
         entity_id: timer.toon_automation
-      - alias: 'zet kachel uit'
+      - alias: "zet kachel uit"
         service: climate.set_preset_mode
         data:
           entity_id: climate.toon_thermostat
           preset_mode: away
-#  - alias: 'test new condition'
-#    id: '578094357868690285602'
-#    trigger: 
-#      platform: state
-#      entity_id: sensor.thermostat_condition
-#    action:
-#      service: notify.pushover
-#      data_template:
-#        title: 'test condition'
-#        message: >
-#         state: {{states('sensor.thermostat_condition')}}
-#         buiten: {{(states('sensor.temperatuur_buiten')  )|float}}
-#         woonkamer: {{(states('sensor.temperatuur_woonkamer') ) | float}}
-#         forecast: {{(states('input_number.berkhout_temperatuur_0d')) |float}}
-         
-########################
-##
-## keep state between Toon and inputs 
-##
-########################
+  - alias: "kachel nieuw"
+    id: "432578090243508970892435"
+    trigger:
+      - platform: state
+        entity_id: input_select.arnoud_status
+        to: "Net Thuis"
+      - platform: numeric_state
+        entity_id: proximity.home
+        above: 11.8
+      - platform: numeric_state
+        entity_id: proximity.home
+        below: 25
+      - platform: state
+        entity_id: group.windows_kachel
+        from: "off"
+        to: "on"
+      - platform: state
+        entity_id: group.windows_kachel
+        from: "on"
+        to: "off"
+      - platform: time
+        at: "09:00:00"
+      - platform: time
+        at: "23:00:00"
+      - platform: time
+        at: "21:30:00"
+    condition: []
+    action:
+      - choose:
+          - conditions:
+              - condition: and
+                conditions:
+                  - condition: template
+                    value_template: "{{trigger.entity_id == 'proximity.home'}}"
+                  - condition: template
+                    value_template: "{{trigger.to_state > trigger.above}}"
+            sequence:
+              - service: timer.start
+                entity_id: timer.toon_automation
+              - alias: "zet kachel uit"
+                service: climate.set_preset_mode
+                data:
+                  entity_id: climate.toon_thermostat
+                  preset_mode: away
+          - conditions:
+              - condition: and
+                conditions:
+                  - condition: state
+                    entity_id: sensor.thermostat_condition
+                    state: "True"
+                  - condition: state
+                    entity_id: group.windows_kachel
+                    state: "off"
+                  - condition: or
+                    conditions:
+                      - condition: and
+                        conditions:
+                          - condition: time
+                            after: "08:59:59"
+                            before: "21:00:00"
+                          - condition: state
+                            entity_id: "binary_sensor.workday_sensor"
+                            state: "on"
+                      - condition: and
+                        conditions:
+                          - condition: time
+                            after: "08:59:59"
+                            before: "22:00:00"
+                          - condition: state
+                            entity_id: "binary_sensor.workday_sensor"
+                            state: "off"
+                  - condition: or
+                    conditions:
+                      - condition: state
+                        entity_id: input_select.arnoud_status
+                        state: "Thuis"
+                      - condition: state
+                        entity_id: input_select.arnoud_status
+                        state: "Net Thuis"
+                      - condition: template
+                        value_template: "{{trigger.entity_id == 'proximity.home'}}"
+            sequence:
+              - service: timer.start
+                entity_id: timer.toon_automation
+              - alias: "zet kachel aan"
+                service: climate.set_preset_mode
+                data:
+                  entity_id: climate.toon_thermostat
+                  preset_mode: home
+          - conditions:
+              - condition: and
+                conditions:
+                  - condition: state
+                    entity_id: "binary_sensor.workday1d"
+                    state: "on"
+                  - condition: time
+                    after: " 21:29:59"
+            sequence:
+              - service: timer.start
+                entity_id: timer.toon_automation
+              - alias: "zet kachel uit"
+                service: climate.set_preset_mode
+                data:
+                  entity_id: climate.toon_thermostat
+                  preset_mode: away
+        default:
+          - service: timer.start
+            entity_id: timer.toon_automation
+          - alias: "zet kachel uit"
+            service: climate.set_preset_mode
+            data:
+              entity_id: climate.toon_thermostat
+              preset_mode: away
 
-  - alias: 'zet heating input select based on toon output'
-    id: '32847030987420324'
-    trigger: 
+  #  - alias: 'test new condition'
+  #    id: '578094357868690285602'
+  #    trigger:
+  #      platform: state
+  #      entity_id: sensor.thermostat_condition
+  #    action:
+  #      service: notify.pushover
+  #      data_template:
+  #        title: 'test condition'
+  #        message: >
+  #         state: {{states('sensor.thermostat_condition')}}
+  #         buiten: {{(states('sensor.temperatuur_buiten')  )|float}}
+  #         woonkamer: {{(states('sensor.temperatuur_woonkamer') ) | float}}
+  #         forecast: {{(states('input_number.berkhout_temperatuur_0d')) |float}}
+
+  ########################
+  ##
+  ## keep state between Toon and inputs
+  ##
+  ########################
+
+  - alias: "zet heating input select based on toon output"
+    id: "32847030987420324"
+    trigger:
       platform: state
       entity_id: sensor.heating_preset_mode
-    condition: 
+    condition:
       condition: or
       conditions:
         - condition: state
@@ -404,8 +503,8 @@ automation:
       data_template:
         entity_id: input_select.heating
         option: "{{states('sensor.heating_preset_mode')}}"
-  - alias: 'zet toon based on heating input select'
-    id: '3098476890309834039342'
+  - alias: "zet toon based on heating input select"
+    id: "3098476890309834039342"
     trigger:
       platform: state
       entity_id: input_select.heating
@@ -418,8 +517,8 @@ automation:
       data_template:
         entity_id: climate.toon_thermostat
         preset_mode: "{{states('input_select.heating')}}"
-  - alias: 'zet toon thermostaat based on input value'
-    id: '98487940987349821'
+  - alias: "zet toon thermostaat based on input value"
+    id: "98487940987349821"
     trigger:
       platform: state
       entity_id: input_number.thermostat_set_point
@@ -436,8 +535,8 @@ automation:
       data_template:
         entity_id: climate.toon_thermostat
         temperature: "{{states('input_number.thermostat_set_point')}}"
-  - alias: 'zet thermostaat input value based on toon'
-    id: '230983248701908743'
+  - alias: "zet thermostaat input value based on toon"
+    id: "230983248701908743"
     trigger:
       platform: state
       entity_id: sensor.heating_set_temperature
@@ -446,4 +545,3 @@ automation:
       data_template:
         entity_id: input_number.thermostat_set_point
         value: "{{ states('sensor.heating_set_temperature') }}"
-
