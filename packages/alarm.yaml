@@ -1,25 +1,25 @@
 group:
   windows:
-    entities: 
-        - binary_sensor.0x00158d00040e32de_contact
-        - binary_sensor.0x00158d00046113b0_contact
-        - binary_sensor.0x00158d000522a155_contact
-        - binary_sensor.0x00158d0005278e2c_contact
-        - binary_sensor.0x00158d0005278e3c_contact
-        - binary_sensor.0x00158d00052b224e_contact
-        - binary_sensor.0x00158d00052b235c_contact
-        - binary_sensor.0x00158d0005304ae1_contact
-        - binary_sensor.0x00158d00040e3366_contact
-        - binary_sensor.0x00158d00045067d1_contact
+    entities:
+      - binary_sensor.0x00158d00040e32de_contact
+      - binary_sensor.0x00158d00046113b0_contact
+      - binary_sensor.0x00158d000522a155_contact
+      - binary_sensor.0x00158d0005278e2c_contact
+      - binary_sensor.0x00158d0005278e3c_contact
+      - binary_sensor.0x00158d00052b224e_contact
+      - binary_sensor.0x00158d00052b235c_contact
+      - binary_sensor.0x00158d0005304ae1_contact
+      - binary_sensor.0x00158d00040e3366_contact
+      - binary_sensor.0x00158d00045067d1_contact
   windows_kachel:
-    entities: 
+    entities:
       - binary_sensor.0x00158d000522a155_contact
       - binary_sensor.0x00158d0005278e2c_contact
       - binary_sensor.0x00158d0005278e3c_contact
       - binary_sensor.0x00158d00040e3366_contact
       - binary_sensor.0x00158d00045067d1_contact
       - binary_sensor.0x00158d00040e32de_contact
-  doors: 
+  doors:
     entities:
       - binary_sensor.0x00158d000289ec2d_contact
       - binary_sensor.0x00158d0005278e3c_contact
@@ -32,68 +32,68 @@ input_text:
     name: Last Alarm trigger sensor
     max: 255
 automation:
-  - alias: 'leave home immidiate'
-    id: '438709184787098346'
+  - alias: "leave home immidiate"
+    id: "438709184787098346"
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Net Weg'
+        to: "Net Weg"
     action:
       - service: alarm_control_panel.alarm_arm_away
         entity_id: alarm_control_panel.ha_alarm
-  - alias: 'return home immidiate '
-    id: '43246809632049861384906'
-    trigger: 
+  - alias: "return home immidiate "
+    id: "43246809632049861384906"
+    trigger:
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Net Thuis'
+        to: "Net Thuis"
     action:
       - service: alarm_control_panel.alarm_disarm
         data:
           entity_id: alarm_control_panel.ha_alarm
           code: !secret alarm_code
-  - alias: 'return home delayed'
-    id: '892340910348790'
-    trigger: 
+  - alias: "return home delayed"
+    id: "892340910348790"
+    trigger:
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Thuis'
+        to: "Thuis"
     action:
       - service: alarm_control_panel.alarm_disarm
         data:
           entity_id: alarm_control_panel.ha_alarm
           code: !secret alarm_code
-  - alias: 'deur open en niet thuis'
-    id: '3567312503718013980'
+  - alias: "deur open en niet thuis"
+    id: "3567312503718013980"
     trigger:
       platform: state
       entity_id: binary_sensor.0x00158d000289e817_contact, binary_sensor.0x00158d000289ec2d_contact
-      from: 'off'
-      to: 'on'
+      from: "off"
+      to: "on"
     condition:
       - condition: or
         conditions:
           - condition: state
             entity_id: input_select.arnoud_status
-            state: 'Net Weg'
+            state: "Net Weg"
           - condition: state
             entity_id: input_select.arnoud_status
-            state: 'Weg'
+            state: "Weg"
     action:
       service: notify.pushover
       data_template:
         message: "De {{states[trigger.to_state.domain][trigger.to_state.object_id].name}} is open"
-        title: 'Deur alarm'
+        title: "Deur alarm"
         data:
           priority: 1
-  
-  - alias: 'trigger alarm based on door & motion sensors if armed away'
-    id: '521368393280359863'
-    trigger: 
+
+  - alias: "trigger alarm based on door & motion sensors if armed away"
+    id: "521368393280359863"
+    trigger:
       platform: state
       entity_id: binary_sensor.0x00158d000289e817_contact, binary_sensor.0x00158d000289ec2d_contact, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy, binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d00040e3366_contact, binary_sensor.0x00158d0005278e2c_contact, binary_sensor.0x00158d00040e32de_contact, binary_sensor.0x00158d000522a155_contact, binary_sensor.0x00158d0005304ae1_contact, binary_sensor.0x00158d00052b224e_contact, binary_sensor.0x00158d00046113b0_contact, binary_sensor.0x00158d00045067d1_contact, binary_sensor.0x00158d0005278e3c_contact, binary_sensor.0x00158d00052b235c_contact
-      from: 'off'
-      to: 'on'
+      from: "off"
+      to: "on"
     condition:
       - condition: state
         entity_id: alarm_control_panel.ha_alarm
@@ -104,28 +104,28 @@ automation:
       - service: input_text.set_value
         data_template:
           entity_id: input_text.last_alarm_trigger_reason
-          value: >
-            {%- set ns = namespace(first=false) %}
-            {%- for sensor in dict(states.binary_sensor|groupby('state'))['on'] %}
-              {%- set d_class = sensor.attributes.device_class %}
-              {%- if d_class != 'window' and d_class != 'motion' and d_class != 'door'%}
-                {%- if loop.first %}{%set ns.first =true %}{% endif %}
-              {%- else %}
-                {%- if loop.first or ns.first  %}{% set ns.first =false%}{% else %}, {% endif %}
-                {{ sensor.name | lower }}
-              {%- endif %}
-              {%- if loop.last %}{% endif %}
-            {%-  endfor  %}
-  - alias: 'Send notification when alarm triggered'
-    id: '462313490860234890'
+          value: " {{states.binary_sensor|rejectattr('state' , 'eq' , 'off')|selectattr('attributes.device_class', 'in' , ['window','motion','door'])|map(attribute='name')|list}}"
+  #            {%- set ns = namespace(first=false) %}
+  #            {%- for sensor in dict(states.binary_sensor|groupby('state'))['on'] %}
+  #              {%- set d_class = sensor.attributes.device_class %}
+  #              {%- if d_class != 'window' and d_class != 'motion' and d_class != 'door'%}
+  #                {%- if loop.first %}{%set ns.first =true %}{% endif %}
+  #              {%- else %}
+  #                {%- if loop.first or ns.first  %}{% set ns.first =false%}{% else %}, {% endif %}
+  #                {{ sensor.name | lower }}
+  #              {%- endif %}
+  #              {%- if loop.last %}{% endif %}
+  #            {%-  endfor  %}
+  - alias: "Send notification when alarm triggered"
+    id: "462313490860234890"
     trigger:
       - platform: state
         entity_id: alarm_control_panel.ha_alarm
-        to: 'triggered'
+        to: "triggered"
     action:
       - service: notify.pushover
         data_template:
-          title: 'ALARM'
+          title: "ALARM"
           message: "ALARM! The alarm has been triggered by {{states('input_text.last_alarm_trigger_reason')}}"
           data:
             priority: 1
@@ -134,17 +134,17 @@ automation:
           command: more-info
           entity_id: alarm_control_panel.ha_alarm
 
-  - alias: 'Sound alarm if  trigger remains for 2 minutes'
-    id: '7680218940823460'
+  - alias: "Sound alarm if  trigger remains for 2 minutes"
+    id: "7680218940823460"
     trigger:
       - platform: state
         entity_id: alarm_control_panel.ha_alarm
-        to: 'triggered'
-        for: '00:01:55'
+        to: "triggered"
+        for: "00:01:55"
     action:
       - service: script.both_speakers
         data_template:
-          tekst: 'Alarm! Alarm! Alarm! indringer in huis! '
+          tekst: "Alarm! Alarm! Alarm! indringer in huis! "
       - service: light.turn_on
         entity_id: light.computer, light.eettafel, light.hal, light.sk_ceiling, light.staande_lamp
         data:
@@ -156,4 +156,3 @@ automation:
           color_temp: 153
           brightness_pct: 100
       - service: script.flash_lights
-

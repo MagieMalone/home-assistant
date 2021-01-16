@@ -22,43 +22,43 @@ input_text:
     name: cast selection backup restore
 
 automation:
-  - alias: 'Turn off mediacenter when leaving'
-    id: '1528971801050'
+  - alias: "Turn off mediacenter when leaving"
+    id: "1528971801050"
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Weg'
+        to: "Weg"
     action:
       - service: homeassistant.turn_off
         entity_id: light.media_group
-  - alias: 'Turn on mediacenter'
-    id: '543216798041047810'
+  - alias: "Turn on mediacenter"
+    id: "543216798041047810"
     trigger:
       - platform: time
-        at: '16:00:00' 
+        at: "16:00:00"
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Net Thuis'
+        to: "Net Thuis"
     condition:
-     condition: and
-     conditions:
-      - condition: time
-        after: '16:00:00'
-        before: '23:59:59'
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: 'Net Thuis'
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: 'Thuis'
+      condition: and
+      conditions:
+        - condition: time
+          after: "16:00:00"
+          before: "23:59:59"
+        - condition: or
+          conditions:
+            - condition: state
+              entity_id: input_select.arnoud_status
+              state: "Net Thuis"
+            - condition: state
+              entity_id: input_select.arnoud_status
+              state: "Thuis"
     action:
       - service: homeassistant.turn_on
         entity_id: light.media_group
 
-  - alias: 'set input select cast devices based on sensor chromecast devices'
-    id: '87582340659086321048961824360'
+  - alias: "set input select cast devices based on sensor chromecast devices"
+    id: "87582340659086321048961824360"
     trigger:
       - platform: state
         entity_id: sensor.chromecast_devices
@@ -67,25 +67,20 @@ automation:
         data_template:
           entity_id: input_text.cast_selection
           value: "{{ states('input_select.cast_devices') }}"
-      - service: python_script.set_list_from_sensor
-        data:
-          sensor: 'sensor.chromecast_devices'
-          input_select: 'input_select.cast_devices'
+      #      - service: python_script.set_list_from_sensor
+      #        data:
+      #          sensor: 'sensor.chromecast_devices'
+      #          input_select: 'input_select.cast_devices'
+      - service: input_select.set_options
+        data_template:
+          entity_id: input_select.cast_devices
+          options: "{{states.sensor.chromecast_devices.attributes.devices |map(attribute='name')|list}}"
       - service: input_select.select_option
         data_template:
           entity_id: input_select.cast_devices
           option: "{{ states('input_text.cast_selection') }}"
-#      - service: input_select.set_options
-#        data_template:
-#          entity_id: input_select.cast_devices
-#          options: >-
-#            {%- set devices = state_attr('sensor.chromecast_devices', 'devices')  %}
-#            {%- set ns= namespace(list = []) %}
-#            {%- for device in devices %}
-#              {%- set ns.list = ns.list + [device.name] %}
-#            {%- endfor %}
-#            {{- ns.list}}
-#            
+
+#
 #sensor:
 #  - platform: plex
 #    host: 192.168.1.3
@@ -95,16 +90,16 @@ automation:
 #
 script:
   start_media:
-    alias: 'Start media'
+    alias: "Start media"
     fields:
       media_content_id:
-        description: 'Media content id'
-        example: 'https://foto-album.duckdns.org:8123/local/audio/Door-bell-sound-ding-dong.mp3'
+        description: "Media content id"
+        example: "https://foto-album.duckdns.org:8123/local/audio/Door-bell-sound-ding-dong.mp3"
       media_content_type:
-        description: 'The type of the content to play. Must be one of image, music, tvshow, video, episode, channel or playlist	'
+        description: "The type of the content to play. Must be one of image, music, tvshow, video, episode, channel or playlist	"
       entity_id:
-        description: 'Name(s) of entities to seek media on'
-        example: 'media_player.living_room_chromecast'
+        description: "Name(s) of entities to seek media on"
+        example: "media_player.living_room_chromecast"
     sequence:
       - service: media_player.volume_mute
         data_template:
@@ -113,8 +108,8 @@ script:
       - service: media_player.play_media
         data_template:
           entity_id: "{{entity_id}}"
-          media_content_id: 'https://foto-album.duckdns.org:8123/local/audio/silence_64kb.mp3'
-          media_content_type: 'music'
+          media_content_id: "https://foto-album.duckdns.org:8123/local/audio/silence_64kb.mp3"
+          media_content_type: "music"
       - service: media_player.volume_mute
         data_template:
           entity_id: "{{entity_id}}"

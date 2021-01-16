@@ -1,65 +1,65 @@
-camera: 
+camera:
   - platform: generic
     name: mercedes
     still_image_url: "https://europe.starconnect-ce.i.daimler.com/iris/iris?COSY-EU-100-1713d0VXq5SFqtyO35PobzIDieWql9TQw2Mpxikzmxxom7ssM0uBjBHB2Z0iD%25W%25kiWm7G3PdhKHhdf%25v8%257EyLibUlYa4ul2rHg3wpn8P9BmaxXIAtH1JQ7h8wOkiFiZbm4T4FIhdIg9Q%25AMPDky5IeWmoWosdhMdMZkzNwzn0uoiGmxhH1Jh4Y8wO%25CUiZbyzn4FIYcHg9QrXMPDknJteWmoCfsdhFqkUf%259RLGEyDA60lYW5pB2rd4yApnfsO5uoRiXC3Mx4BzNT1gT7j6wjIKVSZVOvqtFHvLRc98GaxXDAawtsd5c3cUfCXyaWm7nYCdhKo7oyzNT5fA7j6CrqKVSzAyvqt7ihLRcdUmaxXfuhH1JE9%258wOlGLiZbVA54FIq7Cg9QRagPDkx5deWm1CQsdhQqXUf%25kwlGEymQh0lYh3%25B2rNH8ApnjpY5uoVPaC3MqegzNTRPe7vzAIkb1OsdhkLCUf%25QfJdm7jp80lYp89QCtjcUfOnCXGELGXJ0la4hOB2iRcUYn3xXGjEWmsdh4dhUf%25gRmbm7jFQo33M4nQ7NTgoqgj6PMRWVSeTfKqts6e1RcUSvKxXGtLK1J0caJwOBi2HZbA4q0FI5Qul9QCkQHDkzmkZWm7hSFdhK%25xKf%25vy1REyLYCPlYarzd2rH01Lpn8Blm7jDC0lwXRheC6ocBXwM18Y2YaBrymuuMOCbngrbA4IOcDcayaj%251ZNmV%25pTug8ASbWzANq&&IMGT=A27&POV=BE320,PZM"
-    
+
 sensor:
   - platform: template
     sensors:
       car_tire_pressure_rear_left:
         friendly_name: Tire pressure Rear Left
-        value_template: '{{ states.binary_sensor.sz_436_p_tire_warning.attributes.tirepressureRearLeft }}'
+        value_template: '{{ state_attr("binary_sensor.sz_436_p_tire_warning", "tirepressureRearLeft" )}}'
       car_tire_pressure_rear_right:
         friendly_name: Tire pressure Rear Right
-        value_template: '{{ states.binary_sensor.sz_436_p_tire_warning.attributes.tirepressureRearRight }}'
+        value_template: '{{ state_attr("binary_sensor.sz_436_p_tire_warning", "tirepressureRearRight" )}}'
       car_tire_pressure_front_left:
         friendly_name: Tire pressure Front Left
-        value_template: '{{ states.binary_sensor.sz_436_p_tire_warning.attributes.tirepressureFrontLeft }}'
+        value_template: '{{ state_attr("binary_sensor.sz_436_p_tire_warning", "tirepressureFrontLeft" )}}'
       car_tire_pressure_front_right:
         friendly_name: Tire pressure Front Right
-        value_template: '{{ states.binary_sensor.sz_436_p_tire_warning.attributes.tirepressureFrontRight }}'
+        value_template: '{{ state_attr("binary_sensor.sz_436_p_tire_warning", "tirepressureFrontRight" )}}'
       sz_436_p_park_brake_wear:
         value_template: >
-            {{ state_attr("binary_sensor.sz_436_p_park_brake_status", "preWarningBrakeLiningWear") }}
+          {{ state_attr("binary_sensor.sz_436_p_park_brake_status", "preWarningBrakeLiningWear") }}
         friendly_name: Rem slijtage indicator
       sz_436_p_ecoscoreaccel:
         value_template: >
-            {{ state_attr("sensor.sz_436_p_odometer", "ecoscoreaccel") | float }}
-        unit_of_measurement: '%'
+          {{ state_attr("sensor.sz_436_p_odometer", "ecoscoreaccel") | float }}
+        unit_of_measurement: "%"
         friendly_name: Eco score Acceleratie
       sz_436_p_ecoscorefreewhl:
         value_template: >
-            {{ state_attr("sensor.sz_436_p_odometer", "ecoscorefreewhl") | float }}
-        unit_of_measurement: '%'
+          {{ state_attr("sensor.sz_436_p_odometer", "ecoscorefreewhl") | float }}
+        unit_of_measurement: "%"
         friendly_name: Eco score uitrijden
       sz_436_p_ecoscoreconst:
         value_template: >
-            {{ state_attr("sensor.sz_436_p_odometer", "ecoscoreconst") | float }}
-        unit_of_measurement: '%'
+          {{ state_attr("sensor.sz_436_p_odometer", "ecoscoreconst") | float }}
+        unit_of_measurement: "%"
         friendly_name: Eco score constant
       sz_436_p_liquidconsumptionstart:
         value_template: >
-            {{ state_attr("sensor.sz_436_p_odometer", "liquidconsumptionreset") | float }}
-        unit_of_measurement: 'l/100 Km'
+          {{ state_attr("sensor.sz_436_p_odometer", "liquidconsumptionreset") | float }}
+        unit_of_measurement: "l/100 Km"
         friendly_name: Laatste rit verbruik
       sz_436_p_averagespeedstart:
         value_template: >
-            {{ state_attr("sensor.sz_436_p_odometer", "averageSpeedStart") | float }}
-        unit_of_measurement: 'Km/h'
+          {{ state_attr("sensor.sz_436_p_odometer", "averageSpeedStart") | float }}
+        unit_of_measurement: "Km/h"
         friendly_name: Laatste rit gemiddelde snelheid
       sz_436_p_distancestart:
         value_template: >
-            {{ state_attr("sensor.sz_436_p_odometer", "distanceStart") | float }}
-        unit_of_measurement: 'Km'
+          {{ state_attr("sensor.sz_436_p_odometer", "distanceStart") | float }}
+        unit_of_measurement: "Km"
         friendly_name: Laatste rit afstand
       sz_436_p_drivenytimestart:
         value_template: >
-            {{ state_attr("sensor.sz_436_p_odometer", "drivenTimeStart") }}
+          {{ state_attr("sensor.sz_436_p_odometer", "drivenTimeStart") }}
         friendly_name: Laatste rit tijd
       sz_436_p_rangeliquid:
         value_template: >
-            {{ state_attr("sensor.sz_436_p_odometer", "rangeliquid") | float }}
-        unit_of_measurement: 'Km'
+          {{ state_attr("sensor.sz_436_p_odometer", "rangeliquid") | float }}
+        unit_of_measurement: "Km"
         friendly_name: km tot tank leeg
       my_car_lock_status:
         friendly_name: Vergrendelstatus
@@ -85,55 +85,54 @@ sensor:
         friendly_name: servicebeurt
         value_template: >
           {{ state_attr("sensor.sz_436_p_odometer", "serviceintervaldays") | int }}
-## Door status
+      ## Door status
       sz_436_p_door_open_rearleft:
         value_template: >
-            {%if state_attr("sensor.sz_436_p_lock", "doorstatusrearleft") %}
-              false
-            {% else %}
-              true
-            {% endif %}
+          {%if state_attr("sensor.sz_436_p_lock", "doorstatusrearleft") %}
+            false
+          {% else %}
+            true
+          {% endif %}
         friendly_name: Deur linksachter open
-        icon_template: 'mdi:car-door'
+        icon_template: "mdi:car-door"
       sz_436_p_door_open_rearright:
         value_template: >
-            {%if state_attr("sensor.sz_436_p_lock", "doorstatusrearright") %}
-              false
-            {% else %}
-              true
-            {% endif %}
+          {%if state_attr("sensor.sz_436_p_lock", "doorstatusrearright") %}
+            false
+          {% else %}
+            true
+          {% endif %}
         friendly_name: Deur rechtsachter open
-        icon_template: 'mdi:car-door'
+        icon_template: "mdi:car-door"
       sz_436_p_door_open_frontright:
         value_template: >
-            {%if state_attr("sensor.sz_436_p_lock", "doorstatusfrontright") %}
-              false
-            {% else %}
-              true
-            {% endif %}
+          {%if state_attr("sensor.sz_436_p_lock", "doorstatusfrontright") %}
+            false
+          {% else %}
+            true
+          {% endif %}
         friendly_name: Deur rechtsvoor open
-        icon_template: 'mdi:car-door'
+        icon_template: "mdi:car-door"
       sz_436_p_door_open_frontleft:
         value_template: >
-            {%if state_attr("sensor.sz_436_p_lock", "doorstatusfrontleft") %}
-              false
-            {% else %}
-              true
-            {% endif %}
+          {%if state_attr("sensor.sz_436_p_lock", "doorstatusfrontleft") %}
+            false
+          {% else %}
+            true
+          {% endif %}
         friendly_name: Deur linksvoor open
-        icon_template: 'mdi:car-door'
+        icon_template: "mdi:car-door"
       sz_436_p_door_open_deck:
         value_template: >
-            {%if state_attr("sensor.sz_436_p_lock", "decklidstatus") %}
-              false
-            {% else %}
-              true
-            {% endif %}
+          {%if state_attr("sensor.sz_436_p_lock", "decklidstatus") %}
+            false
+          {% else %}
+            true
+          {% endif %}
         friendly_name: achterklep
-        icon_template: 'mdi:car-door'
- 
+        icon_template: "mdi:car-door"
 
-### locks
+      ### locks
       car_lock_front_right:
         friendly_name: Lock Front Right
         value_template: >-
@@ -148,7 +147,7 @@ sensor:
           {% else %} 
             mdi:lock-open-variant-outline
           {% endif %}
-  
+
       car_lock_front_left:
         friendly_name: Lock Front Left
         value_template: >-
@@ -163,7 +162,7 @@ sensor:
           {% else %} 
             mdi:lock-open-variant-outline
           {% endif %}
-  
+
       car_lock_rear_right:
         friendly_name: Lock Rear Right
         value_template: >-
@@ -178,7 +177,7 @@ sensor:
           {% else %} 
             mdi:lock-open-variant-outline
           {% endif %}
-  
+
       car_lock_rear_left:
         friendly_name: Lock Rear Left
         value_template: >-
@@ -193,7 +192,7 @@ sensor:
           {% else %} 
             mdi:lock-open-variant-outline
           {% endif %}
-  
+
       car_lock_trunk:
         friendly_name: Lock trunk
         value_template: >-
@@ -208,7 +207,7 @@ sensor:
           {% else %}
             mdi:lock-open-variant-outline
           {% endif %}
-  
+
       car_lock_hood:
         friendly_name: Lock hood
         value_template: >-
@@ -223,7 +222,7 @@ sensor:
           {% else %}
             mdi:lock-open-variant-outline
           {% endif %}
- ## windows 
+      ## windows
       car_window_front_left:
         friendly_name: Window Front Left
         value_template: >-
@@ -238,7 +237,7 @@ sensor:
           {% else %}
             mdi:window-open
           {% endif %}
-  
+
       car_window_front_right:
         friendly_name: Window Front Right
         value_template: >-
@@ -253,7 +252,7 @@ sensor:
           {% else %}
             mdi:window-open
           {% endif %}
-  
+
       car_window_rear_left:
         friendly_name: Window Rear Left
         value_template: >-
@@ -268,7 +267,7 @@ sensor:
           {% else %}
             mdi:window-open
           {% endif %}
-  
+
       car_window_rear_right:
         friendly_name: Window Rear Right
         value_template: >-
@@ -283,4 +282,3 @@ sensor:
           {% else %}
             mdi:window-open
           {% endif %}
-          
