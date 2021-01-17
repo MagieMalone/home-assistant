@@ -415,7 +415,7 @@ automation:
                   service: notify.webbrowser
                   data:
                     title: debug house status
-                    message: "{{ trigger.to_state ~ ' ' ~ trigger.event }}"
+                    message: "{{ trigger.to_state ~ '  ' ~ trigger.event }}"
         default:
           - service: input_select.select_option
             data:
