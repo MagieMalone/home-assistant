@@ -1,0 +1,24 @@
+input_datetime:
+  gdate:
+    name: test
+    has_date: true
+    has_time: true
+input_number:
+  02_days_to_vacation:
+    min: 0
+    max: 366
+    step: 1
+automation:
+  - id: "1610805320578"
+    alias: 02_Input_Days2
+    description: ""
+    trigger:
+      - platform: state
+        entity_id: input_datetime.gdate
+    condition: []
+    action:
+      - service: input_number.set_value
+        data:
+          value: "{{((as_timestamp(states('input_datetime.gdate')) - as_timestamp(now()))/(3600*24))|round()}}"
+          entity_id: input_number.02_days_to_vacation
+    mode: single
