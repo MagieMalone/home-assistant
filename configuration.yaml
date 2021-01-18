@@ -6,29 +6,29 @@ homeassistant:
   allowlist_external_dirs:
     - /tmp
 
-
-
 #logger
 logger:
   default: error
-  logs: 
+  logs:
     homeassistant.components: warn
-#    homeassistant.components.device_tracker: debug 
-#    homeassistant.components.sensor.buienradar: debug
-#    homeassistant.components.sensor.ring: debug
-#    homeassistant.components.sensor.postnl: debug
-#    homeassistant.components.binary_sensor.ring: debug
-#   homeassistant.components.media_player.spotify: info
-#    homeassistant.components.google_travel_time: debug
-#    custom_components.mercedesmeapi: debug
-#    custom_components.mercedesmeapi.sensor: info
-#    custom_components.mercedesmeapi.apicontroller: debug
-#    custom_components.mercedesmeapi.OAuth: debug
+    #    homeassistant.components.device_tracker: debug
+    #    homeassistant.components.sensor.buienradar: debug
+    #    homeassistant.components.sensor.ring: debug
+    #    homeassistant.components.sensor.postnl: debug
+    #    homeassistant.components.binary_sensor.ring: debug
+    #   homeassistant.components.media_player.spotify: info
+    #    homeassistant.components.google_travel_time: debug
+    #    custom_components.mercedesmeapi: debug
+    #    custom_components.mercedesmeapi.sensor: info
+    #    custom_components.mercedesmeapi.apicontroller: debug
+    #    custom_components.mercedesmeapi.OAuth: debug
     homeassistant.components.tplink: debug
 
 http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
 
 # Discover some devices automatically
 discovery:
@@ -64,7 +64,7 @@ logbook:
       - sensor.sun_*
 
 recorder:
-#  db_url: !secret db_url
+  #  db_url: !secret db_url
   exclude:
     domains:
       - updater
@@ -104,13 +104,12 @@ influxdb:
       override_measurement: temperature
     "sensor.*battery":
       override_measurement: battery
-  
+
 # Text to speech
 tts:
   - platform: google_translate
     service_name: google_say
     base_url: https://foto-album.duckdns.org:8123
-
 
 notify:
   - platform: html5
@@ -128,8 +127,6 @@ sensor:
     resources:
       - type: disk_use_percent
         arg: /
-        
-
 
 zone: !include zones.yaml
 group: !include groups.yaml

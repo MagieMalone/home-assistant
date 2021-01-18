@@ -379,6 +379,10 @@ automation:
                             after: sunrise
                             before: sunset
                     sequence:
+                      - event: house_status
+                        event_data:
+                          name: house-status
+                          message: "status set to overdag by {{trigger.platform }}:{{trigger.entity_id}} to {{trigger.to_state}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -394,6 +398,10 @@ automation:
                           - condition: sun
                             before: sunrise
                     sequence:
+                      - event: house_status
+                        event_data:
+                          name: house-status
+                          message: "status set to nacht by {{trigger.platform }}:{{trigger.entity_id}} to {{trigger.to_state}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -406,6 +414,10 @@ automation:
                           - condition: sun
                             after: sunset
                     sequence:
+                      - event: house_status
+                        event_data:
+                          name: house-status
+                          message: "status set to avond by {{trigger.platform }}:{{trigger.entity_id}} to {{trigger.to_state}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
