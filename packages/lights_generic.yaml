@@ -73,12 +73,9 @@ light:
       - light.trap_hal
 group:
   switch-wk:
-    entities:  switch.media_la_switch, switch.media_ra_switch, switch.media_v_switch
+    entities: switch.media_la_switch, switch.media_ra_switch, switch.media_v_switch
   motion_sensors:
     entities: binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy
-
-
-
 
 input_number:
   lightlevel:
@@ -87,7 +84,6 @@ input_number:
     max: 200
     step: 5
     unit_of_measurement: lx
-
 
 #binary_sensor:
 # custom hue component
@@ -101,21 +97,11 @@ input_number:
 script:
   flash_lights:
     sequence:
-      - variables: 
-          light_entities: >
-            {%- set ns = namespace(first=false) %}
-            {% for device in dict(states.light|groupby("state"))["on"] %}
-              {%- if state_attr(device.entity_id , 'entity_id') != None  %}
-                {%- if loop.first %}{%set ns.first =true %}{% endif %}
-              {%- else %}
-                {%- if loop.first or ns.first  %}{%set ns.first =false%}{% else %},{% endif %}
-                {{- device.entity_id | lower }}
-              {%- endif %}
-              {%- if loop.last %}{% endif %}
-            {%-  endfor  %}
+      - variables:
+          light_entities: "{{states.light|rejectattr('state', 'eq', 'off')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}} "
       - choose:
           - conditions:
-            - "{{ light_entities == '' }}"
+              - "{{ light_entities == '' }}"
             sequence:
               - service: light.turn_on
                 data:
@@ -149,26 +135,15 @@ script:
               entity_id: "{{light_entities}}"
               flash: long
 
-
   update_lights_brightness:
     fields:
       brightness_pct:
-        description: 'brightness in %'
-        example: '75'
+        description: "brightness in %"
+        example: "75"
     sequence:
       - service: light.turn_on
         data_template:
-          entity_id: >
-            {%- set ns = namespace(first=false) %}
-            {% for device in dict(states.light|groupby("state"))["on"] %}
-              {%- if state_attr(device.entity_id , 'entity_id') != None  %}
-                {%- if loop.first %}{%set ns.first =true %}{% endif %}
-              {%- else %}
-                {%- if loop.first or ns.first  %}{%set ns.first =false%}{% else %},{% endif %}
-                {{- device.entity_id | lower }}
-              {%- endif %}
-                {%- if loop.last %}{% endif %}
-            {%-  endfor  %}
+          entity_id: "{{states.light|rejectattr('state', 'eq', 'off')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}} "
           brightness_pct: >
             {% if brightness_pct %}
               {{brightness_pct}}
@@ -177,28 +152,28 @@ script:
             {% endif %}
           transition: 60
 automation:
-  - alias: 'lights off when leaving'
-    id: '782368093283658209'
+  - alias: "lights off when leaving"
+    id: "782368093283658209"
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Net Weg'
+        to: "Net Weg"
     action:
       - service: homeassistant.turn_off
         entity_id: light.lampen, switch.tplink_b0_4e_26_6b_a1_f5
 
-  - alias: 'sunrise lights off'
-    id: '47893265301237' 
-    trigger: 
+  - alias: "sunrise lights off"
+    id: "47893265301237"
+    trigger:
       platform: sun
       event: sunrise
-      offset: '00:20:00'
+      offset: "00:20:00"
     action:
       - service: light.turn_off
         entity_id: light.lampen
 
-  - alias: 'lights off weekdays'
-    id: '1528912303194'
+  - alias: "lights off weekdays"
+    id: "1528912303194"
     trigger:
       - platform: template
         value_template: >
@@ -210,67 +185,65 @@ automation:
     action:
       - service: light.turn_off
         data:
-          transition: 900 
+          transition: 900
           entity_id: light.lampen
 
-  - alias: 'lights off weekenddays'
-    id: '1528912303472'
+  - alias: "lights off weekenddays"
+    id: "1528912303472"
     trigger:
-      - at: '23:59:59'
+      - at: "23:59:59"
         platform: time
     condition:
       condition: state
-      entity_id: 'binary_sensor.workday1d'
-      state: 'off'
+      entity_id: "binary_sensor.workday1d"
+      state: "off"
     action:
       - service: light.turn_off
         data:
           transition: 900
           entity_id: light.lampen
 
-  - alias: 'dim lights in day'
-    id: '54618293609860132486029'
+  - alias: "dim lights in day"
+    id: "54618293609860132486029"
     trigger:
       - platform: state
         entity_id: input_select.house_mode
-        to: 'overdag'
-    condition: 
+        to: "overdag"
+    condition:
       condition: state
       entity_id: light.lampen
-      state: 'on'
+      state: "on"
     action:
       - service: script.update_lights_brightness
         data:
           brightness_pct: 75
 
-  - alias: 'dim lights in avond'
-    id: '235689056329850982360158'
+  - alias: "dim lights in avond"
+    id: "235689056329850982360158"
     trigger:
       - platform: state
         entity_id: input_select.house_mode
-        to: 'avond'
-    condition: 
+        to: "avond"
+    condition:
       condition: state
       entity_id: light.lampen
-      state: 'on'
+      state: "on"
     action:
       - service: script.update_lights_brightness
         data:
           brightness_pct: 50
 
-  - alias: 'dim lights in nacht'
-    id: '56132890612345689532108'
+  - alias: "dim lights in nacht"
+    id: "56132890612345689532108"
     trigger:
       - platform: state
         entity_id: input_select.house_mode
-        to: 'nacht'
-    condition: 
+        to: "nacht"
+    condition:
       condition: state
       entity_id: light.lampen
-      state: 'on'
+      state: "on"
     action:
       - service: script.update_lights_brightness
         data:
           brightness_pct: 1
-
-
