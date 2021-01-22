@@ -34,6 +34,15 @@ timer:
     duration: 10
   pres_boven:
     duration: 10
+input_datetime:
+  bedtime:
+    name: Input with both date and time
+    has_date: true
+    has_time: true
+  wakeuptime:
+    name: Input with both date and time
+    has_date: true
+    has_time: true
 
 #device_tracker:
 #  - platform: gpslogger
@@ -326,21 +335,10 @@ automation:
     id: "3a35f68a-b0c5-416e-8761-c85d2e62a63b"
     trigger:
       - platform: time
-        at: "00:00:00"
-      - platform: template
-        value_template: >
-          {% if states('sensor.wakeuplight_time') == None %}
-            False
-          {% else %}
-            {{(as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) - (6*3600))| timestamp_custom('%D %H:%M') == now().strftime('%D %H:%M')}}
-          {% endif %}
-      - platform: template
-        value_template: >
-          {% if states('sensor.wakeuplight_time') == None %}
-            False
-          {% else %}
-            {{as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) + 900 | timestamp_custom('%D %H:%M') == now().strftime('%D %H:%M')}}
-          {% endif %}
+        at:
+          - "00:00:01"
+          - input_datetime.bedtime
+          - input_datetime.wakeuptime
       - platform: sun
         event: sunset
         offset: "-00:30:00"
@@ -367,6 +365,10 @@ automation:
                     entity_id: input_boolean.guests_boolean
                     state: "on"
             sequence:
+              - service: notify.pushover
+                data:
+                  title: house-status
+                  message: "house-status at home trigger: {{trigger.platform}}:{{trigger.entity_id}} to {{trigger.to_state.state}} sun: {{trigger.event}} at: {{trigger.now}}"
               - choose:
                   - conditions:
                       - condition: or
@@ -374,15 +376,15 @@ automation:
                           - condition: template
                             value_template: "{{trigger.event == 'sunrise'}}"
                           - condition: template
-                            value_template: "{{strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M') == strptime(trigger.to_state, '%m/%d/%y %H:%M')}}"
+                            value_template: "{{ (trigger.now | timestamp_custom('%Y-%m-%d %H:%M:%S')) == states('input_datetime.wakeuptime') }}"
                           - condition: sun
                             after: sunrise
                             before: sunset
                     sequence:
-                      - event: house_status
-                        event_data:
-                          name: house-status
-                          message: "status set to overdag by {{trigger.platform }}:{{trigger.entity_id}} to {{trigger.to_state}}"
+                      - service: notify.pushover
+                        data:
+                          title: house-status
+                          message: "status set to overdag by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -391,17 +393,14 @@ automation:
                       - condition: or
                         conditions:
                           - condition: template
-                            value_template: >
-                              {{as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) - (6*3600) ==
-                                as_timestamp(strptime(trigger.to_state, '%m/%d/%y %H:%M'))
-                              }}
+                            value_template: "{{ (trigger.now | timestamp_custom('%Y-%m-%d %H:%M:%S')) == states('input_datetime.bedtime') }}"
                           - condition: sun
                             before: sunrise
                     sequence:
-                      - event: house_status
-                        event_data:
-                          name: house-status
-                          message: "status set to nacht by {{trigger.platform }}:{{trigger.entity_id}} to {{trigger.to_state}}"
+                      - service: notify.pushover
+                        data:
+                          title: house-status
+                          message: "status set to nacht by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -414,21 +413,24 @@ automation:
                           - condition: sun
                             after: sunset
                     sequence:
-                      - event: house_status
-                        event_data:
-                          name: house-status
-                          message: "status set to avond by {{trigger.platform }}:{{trigger.entity_id}} to {{trigger.to_state}}"
+                      - service: notify.pushover
+                        data:
+                          title: house-status
+                          message: "status set to avond by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
                           option: avond
-
                 default:
-                  service: notify.webbrowser
-                  data:
-                    title: debug house status
-                    message: "{{ trigger.to_state ~ '  ' ~ trigger.event }}"
+                  - service: notify.pushover
+                    data:
+                      title: house-status
+                      message: "status not set as no conditions match "
         default:
+          - service: notify.pushover
+            data:
+              title: house-status
+              message: "status set to away {{trigger.platform}}:{{trigger.entity_id}} to {{trigger.to_state.state}} sun: {{trigger.event}} at: {{trigger.now}}"
           - service: input_select.select_option
             data:
               entity_id: input_select.house_mode
@@ -490,3 +492,17 @@ automation:
     action:
       service: input_number.decrement
       entity_id: input_number.boven
+  - alias: "set bedtime and wakeuptime input helper"
+    id: "13fa4fc7-4b26-4dad-9985-fa4daf2c1c3d"
+    trigger:
+      platform: state
+      entity_id: sensor.calc_leave_time
+    action:
+      - service: input_datetime.set_datetime
+        entity_id: input_datetime.bedtime
+        data:
+          timestamp: "{{as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) - (6*3600)}}"
+      - service: input_datetime.set_datetime
+        entity_id: input_datetime.wakeuptime
+        data:
+          timestamp: "{{as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) + 900 }}"
