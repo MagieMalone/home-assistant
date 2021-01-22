@@ -1,24 +1,13 @@
-input_datetime:
-  gdate:
-    name: test
-    has_date: true
-    has_time: true
-input_number:
-  02_days_to_vacation:
-    min: 0
-    max: 366
-    step: 1
 automation:
-  - id: "1610805320578"
-    alias: 02_Input_Days2
-    description: ""
+  - alias: "test event"
+    id: "b1244327-cfe9-4b12-b0ca-117d950b9968"
     trigger:
       - platform: state
-        entity_id: input_datetime.gdate
-    condition: []
+        entity_id: input_boolean.guests_boolean
     action:
-      - service: input_number.set_value
-        data:
-          value: "{{((as_timestamp(states('input_datetime.gdate')) - as_timestamp(now()))/(3600*24))|round()}}"
-          entity_id: input_number.02_days_to_vacation
-    mode: single
+      - event: LOGBOOK_ENTRY
+        event_data:
+          name: Paulus
+          message: is waking up
+          entity_id: input_boolean.guests_boolean
+          domain: light

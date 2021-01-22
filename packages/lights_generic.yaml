@@ -168,6 +168,10 @@ automation:
       platform: sun
       event: sunrise
       offset: "00:20:00"
+    condition:
+      - condition: state
+        entity_id: input_boolean.cleaningmode
+        state: "off"
     action:
       - service: light.turn_off
         entity_id: light.lampen

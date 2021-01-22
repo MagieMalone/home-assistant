@@ -10,16 +10,16 @@ camera:
     name: Destination
     still_image_url: https://maps.googleapis.com/maps/api/staticmap?key={{states("sensor.google_api_key")}}&center={{state_attr("calendar.abuurmangmailcom", "location")}}&zoom=17&size=600x300&maptype=roadmap&markers=color:blue%7C{{state_attr("calendar.abuurmangmailcom", "location")}}
     limit_refetch_to_url_change: true
-    
+
 sensor:
   - platform: time_date
     display_options:
-      - 'time'
+      - "time"
   - platform: template
     sensors:
       cal_title:
         value_template: '{{ state_attr("calendar.abuurmangmailcom", "message") | replace("#alarm", "") }}'
-        friendly_name: 'Title'
+        friendly_name: "Title"
       cal_travelmode:
         value_template: >-
           {% if "#ov" in state_attr("calendar.abuurmangmailcom", "message") %}
@@ -41,28 +41,28 @@ sensor:
           {% else %}
             {{ state_attr("calendar.alarm", "location") }}
           {% endif %}
-        friendly_name: 'Location'
+        friendly_name: "Location"
       cal_reminders_name:
         value_template: '{{ state_attr("calendar.reminders", "message") | replace("#reminders", "")}}'
-        friendly_name: 'Title'
+        friendly_name: "Title"
       cal_reminders_date:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
           {% set time = state_attr("calendar.reminders", "start_time") + tz %}
           {{as_timestamp(time)|timestamp_local}}
-        friendly_name: 'Start Time'
+        friendly_name: "Start Time"
       cal_start_time:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
           {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
           {{as_timestamp(time)|timestamp_local}}
-        friendly_name: 'Start Time'
+        friendly_name: "Start Time"
       cal_start_time_unix:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
           {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
           {{as_timestamp(time)}}
-        friendly_name: 'Start Time'
+        friendly_name: "Start Time"
       calc_leave_time:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
@@ -77,8 +77,8 @@ sensor:
             {% else %}
               {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) | timestamp_custom("%Y-%m-%d %H:%M")}}
             {% endif %} 
-          {% endif %} 
-        friendly_name: 'Leave Time'
+          {% endif %}
+        friendly_name: "Leave Time"
       calc_leave_time_unix:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
@@ -93,7 +93,7 @@ sensor:
             {% else %}
               {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) }}
             {% endif %} 
-          {% endif %} 
+          {% endif %}
       calc_leave_time_alarm:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
@@ -108,39 +108,42 @@ sensor:
             {% else %}
               {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) | timestamp_custom("%Y-%m-%d %H:%M")}}
             {% endif %} 
-          {% endif %} 
-        friendly_name: 'Alarm Leave Time'
+          {% endif %}
+        friendly_name: "Alarm Leave Time"
       cal_contacts_start_time:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
           {% set time = state_attr("calendar.contacts", "start_time") + tz %}
           {{as_timestamp(time)|timestamp_custom("%m-%d-%Y")}}
-        friendly_name: 'Datum' 
-      cal_contacts_message:  
+        friendly_name: "Datum"
+      cal_contacts_message:
         value_template: '{{state_attr("calendar.contacts", "message")}}'
-        friendly_name: 'Contacts:' 
+        friendly_name: "Contacts:"
       cal_title_f1:
         value_template: '{{ state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message") }}'
-        friendly_name: 'Title'
+        friendly_name: "Title"
       cal_start_time_f1:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "start_time") + tz %}
-          {{as_timestamp(time)|timestamp_local}}
+          {% if state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') == None %}
+            None
+          {% else %}
+            {{ as_timestamp(state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "start_time") + tz )   | timestamp_local }}
+          {% endif %}
 
 automation:
-  - alias: 'vertrek melding'
-    id: '567812438901831653879'
+  - alias: "vertrek melding"
+    id: "567812438901831653879"
     trigger:
       platform: time_pattern
       seconds: 00
     condition:
-    - condition: template
-      value_template: >
-        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-        {{ now().strftime("%D %H:%M") == ( (as_timestamp(states("sensor.calc_leave_time") + tz ) - 300 )| timestamp_custom("%D %H:%M", 1)) }}
-    - condition: template
-      value_template: '{{(states("sensor.calc_travel_time")|int)>120}}'
+      - condition: template
+        value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {{ now().strftime("%D %H:%M") == ( (as_timestamp(states("sensor.calc_leave_time") + tz ) - 300 )| timestamp_custom("%D %H:%M", 1)) }}
+      - condition: template
+        value_template: '{{(states("sensor.calc_travel_time")|int)>120}}'
 
     action:
       - service: script.both_speakers
@@ -163,56 +166,54 @@ automation:
               Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
             {% endif %}
           cache: false
-          language: 'nl'
-  - alias: 'F1 begin wedstrijd' 
-    id: '3478021346858103290'
+          language: "nl"
+  - alias: "F1 begin wedstrijd"
+    id: "3478021346858103290"
     trigger:
       platform: time_pattern
       seconds: 00
     condition:
-    - condition: template
-      value_template: >
-        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-        {% if state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') == None %}
-          False
-        {% else %}
-          {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "start_time") + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
-        {% endif %}
-    - condition: state
-      entity_id: input_boolean.f1_announcements
-      state: 'on'
-    - condition: or
-      conditions:
-        - condition: state
-          entity_id: input_select.arnoud_status
-          state: 'Thuis'
-        - condition: state
-          entity_id: input_select.arnoud_status
-          state: 'Net Thuis'
-#    action:
-#      - service: script.both_speakers
-#        data_template:
-#          tekst: 'De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")|striptags}} begint over tien minuten '
+      - condition: template
+        value_template: >
+          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+          {% if state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') == None %}
+            False
+          {% else %}
+            {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "start_time") + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
+          {% endif %}
+      - condition: state
+        entity_id: input_boolean.f1_announcements
+        state: "on"
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: "Thuis"
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: "Net Thuis"
+    #    action:
+    #      - service: script.both_speakers
+    #        data_template:
+    #          tekst: 'De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")|striptags}} begint over tien minuten '
     action:
       - service: tts.google_say
         entity_id: media_player.speakers
-        data_template: 
+        data_template:
           message: >
-            De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten 
+            De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten
           cache: false
-          language: 'nl'
+          language: "nl"
       - service: homeassistant.turn_on
         entity_id: light.media_group
-
-
 
 script:
   test_f1_announce:
     sequence:
       - service: tts.google_say
         entity_id: media_player.speakers
-        data_template: 
+        data_template:
           message: >
-            De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten 
+            De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten
           cache: false
-          language: 'nl'
+          language: "nl"

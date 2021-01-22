@@ -148,6 +148,5 @@
   - service: notify.pushover
     data:
       title: room-presence testing
-      message: kb2003 is in {{states('sensor.oneplus_8t_room_presence')}} en afstand
-        is {{state_attr('sensor.oneplus_8t_room_presence','distance')}}
+      message: "kb2003 is in {{states('sensor.oneplus_8t_room_presence')}} en afstand is {{state_attr('sensor.oneplus_8t_room_presence','distance')}}"
   mode: single
