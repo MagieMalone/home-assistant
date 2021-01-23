@@ -23,24 +23,13 @@ input_select:
 input_boolean:
   guests_boolean:
     name: Guests in the house
-input_number:
-  boven:
-    name: Number of people upstairs
-    min: 0
-    max: 100
-    step: 1
-timer:
-  pres_onder:
-    duration: 10
-  pres_boven:
-    duration: 10
 input_datetime:
   bedtime:
-    name: Input with both date and time
+    name: bedtime
     has_date: true
     has_time: true
   wakeuptime:
-    name: Input with both date and time
+    name: wakeuptime
     has_date: true
     has_time: true
 
@@ -170,167 +159,7 @@ automation:
               input_select.helen_status_dropdown
             {% endif %}
           option: Weg
-  - alias: "Change house status to based on arrivals overdag"
-    id: "75459129706321598603251"
-    trigger:
-      - platform: state
-        entity_id: input_select.arnoud_status
-        to: "Net Thuis"
-      - platform: state
-        entity_id: input_select.arnoud_status
-        to: "Thuis"
-      - platform: state
-        entity_id: input_boolean.guests_boolean
-        to: "on"
-    condition:
-      - condition: time
-        after: "06:59:59"
-        before: "18:00:00"
-    action:
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.house_mode
-          option: overdag
-  - alias: "Change house status to based on arrivals avond"
-    id: "5326893463098403681434090"
-    trigger:
-      - platform: state
-        entity_id: input_select.arnoud_status
-        to: "Net Thuis"
-      - platform: state
-        entity_id: input_select.arnoud_status
-        to: "Thuis"
-      - platform: state
-        entity_id: input_boolean.guests_boolean
-        to: "on"
-    condition:
-      - condition: time
-        after: "17:59:59"
-        before: "23:00:00"
-    action:
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.house_mode
-          option: avond
-  - alias: "Change house status to based on arrivals nacht"
-    id: "1235860893562908320956290"
-    trigger:
-      - platform: state
-        entity_id: input_select.arnoud_status
-        to: "Net Thuis"
-      - platform: state
-        entity_id: input_select.arnoud_status
-        to: "Thuis"
-      - platform: state
-        entity_id: input_boolean.guests_boolean
-        to: "on"
-    condition:
-      - condition: time
-        after: "22:59:59"
-        before: "07:00:00"
-    action:
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.house_mode
-          option: nacht
-  - alias: "Change house status based on departures "
-    id: "87321586059601239856032180"
-    trigger:
-      - platform: state
-        entity_id: input_select.arnoud_status
-        to: "Weg"
-      - platform: state
-        entity_id: input_boolean.guests_boolean
-        to: "off"
-    condition:
-      condition: and
-      conditions:
-        - condition: state
-          entity_id: input_select.arnoud_status
-          state: "Weg"
-        - condition: state
-          entity_id: input_boolean.guests_boolean
-          state: "off"
-    action:
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.house_mode
-          option: weg
 
-  - alias: "change house status based on time overdag"
-    id: "85238096912308956305821"
-    trigger:
-      - platform: time
-        at: "07:00:00"
-    condition:
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: "Thuis"
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: "Net Thuis"
-          - condition: state
-            entity_id: input_boolean.guests_boolean
-            state: "on"
-    action:
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.house_mode
-          option: overdag
-  - alias: "change house status based on time avond"
-    id: "412364890860498246083469"
-    trigger:
-      - platform: time
-        at: "18:00:00"
-    condition:
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: "Thuis"
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: "Net Thuis"
-          - condition: state
-            entity_id: input_boolean.guests_boolean
-            state: "on"
-    action:
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.house_mode
-          option: avond
-
-  - alias: "change house status based on time nacht"
-    id: "32896325290865329852064586"
-    trigger:
-      - platform: time
-        at: "00:00:00"
-      - platform: template
-        value_template: >
-          {% if states('sensor.wakeuplight_time') == None %}
-            False
-          {% else %}
-            {{(as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) - (6*3600))| timestamp_custom('%D %H:%M') == now().strftime('%D %H:%M')}}
-          {% endif %}
-    condition:
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: "Thuis"
-          - condition: state
-            entity_id: input_select.arnoud_status
-            state: "Net Thuis"
-          - condition: state
-            entity_id: input_boolean.guests_boolean
-            state: "on"
-    action:
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.house_mode
-          option: nacht
   - alias: "change house status"
     id: "3a35f68a-b0c5-416e-8761-c85d2e62a63b"
     trigger:
@@ -368,18 +197,27 @@ automation:
               - service: notify.pushover
                 data:
                   title: house-status
-                  message: "house-status at home trigger: {{trigger.platform}}:{{trigger.entity_id}} to {{trigger.to_state.state}} sun: {{trigger.event}} at: {{trigger.now}}"
+                  message: "house-status at home trigger: {{trigger}}"
               - choose:
                   - conditions:
                       - condition: or
                         conditions:
                           - condition: template
-                            value_template: "{{trigger.event == 'sunrise'}}"
-                          - condition: template
-                            value_template: "{{ (trigger.now | timestamp_custom('%Y-%m-%d %H:%M:%S')) == states('input_datetime.wakeuptime') }}"
+                            value_template: "{{trigger.event == 'sunset'}}"
                           - condition: sun
-                            after: sunrise
-                            before: sunset
+                            after: sunset
+                    sequence:
+                      - service: notify.pushover
+                        data:
+                          title: house-status
+                          message: "status set to avond by {{trigger.platform}}"
+                      - service: input_select.select_option
+                        data:
+                          entity_id: input_select.house_mode
+                          option: avond
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ (trigger.now | timestamp_custom('%Y-%m-%d %H:%M:%S')) == states('input_datetime.wakeuptime') }}"
                     sequence:
                       - service: notify.pushover
                         data:
@@ -409,18 +247,19 @@ automation:
                       - condition: or
                         conditions:
                           - condition: template
-                            value_template: "{{trigger.event == 'sunset'}}"
+                            value_template: "{{trigger.event == 'sunrise'}}"
                           - condition: sun
-                            after: sunset
+                            after: sunrise
+                            before: sunset
                     sequence:
                       - service: notify.pushover
                         data:
                           title: house-status
-                          message: "status set to avond by {{trigger.platform}}"
+                          message: "status set to overdag by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
-                          option: avond
+                          option: overdag
                 default:
                   - service: notify.pushover
                     data:
@@ -430,68 +269,11 @@ automation:
           - service: notify.pushover
             data:
               title: house-status
-              message: "status set to away {{trigger.platform}}:{{trigger.entity_id}} to {{trigger.to_state.state}} sun: {{trigger.event}} at: {{trigger.now}}"
+              message: "status set to away {{trigger}}"
           - service: input_select.select_option
             data:
               entity_id: input_select.house_mode
               option: weg
-  - alias: "start timer onder"
-    id: "356327853029820318965028920685154378"
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.0x00158d0002b8586b_occupancy
-        from: "off"
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: timer.pres_boven
-        state: "idle"
-    action:
-      service: timer.start
-      entity_id: timer.pres_onder
-  - alias: "start timer boven"
-    id: "1543643890623846098563210984563204"
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
-        from: "off"
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: timer.pres_onder
-        state: "idle"
-    action:
-      service: timer.start
-      entity_id: timer.pres_boven
-
-  - alias: "add person upstairs"
-    id: "1523568906821436098640982364093284690"
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.0x00158d0002b7eda4_occupancy
-        from: "off"
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: timer.pres_onder
-        state: "active"
-    action:
-      service: input_number.increment
-      entity_id: input_number.boven
-  - alias: "remove person upstairs"
-    id: "4365738072398065239846340124"
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.0x00158d0002b8586b_occupancy
-        from: "off"
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: timer.pres_boven
-        state: "active"
-    action:
-      service: input_number.decrement
-      entity_id: input_number.boven
   - alias: "set bedtime and wakeuptime input helper"
     id: "13fa4fc7-4b26-4dad-9985-fa4daf2c1c3d"
     trigger:
