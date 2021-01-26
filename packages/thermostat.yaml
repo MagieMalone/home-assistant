@@ -108,7 +108,7 @@ automation:
                   mode: "away"
           - conditions:
               - condition: template
-                value_template: "{{ (trigger.now | timestamp_custom('%Y-%m-%d %H:%M:%S')) == states('input_datetime.pre_heat_time') }}"
+                value_template: "{{ trigger.entity_id == 'input_datetime.pre_heat_time' }}"
             sequence:
               - alias: "zet kachel aan"
                 service: script.kachel_mode
@@ -212,7 +212,7 @@ automation:
           state: away
     action:
       service: input_select.select_option
-      data_template:
+      data:
         entity_id: input_select.heating
         option: "{{states('sensor.heating_preset_mode')}}"
   - alias: "zet toon based on heating input select"
@@ -226,7 +226,7 @@ automation:
       state: idle
     action:
       service: climate.set_preset_mode
-      data_template:
+      data:
         entity_id: climate.toon_thermostat
         preset_mode: "{{states('input_select.heating')}}"
   - alias: "zet toon thermostaat based on input value"
@@ -244,7 +244,7 @@ automation:
           state: idle
     action:
       service: climate.set_temperature
-      data_template:
+      data:
         entity_id: climate.toon_thermostat
         temperature: "{{states('input_number.thermostat_set_point')}}"
   - alias: "zet thermostaat input value based on toon"
@@ -254,7 +254,7 @@ automation:
       entity_id: sensor.heating_set_temperature
     action:
       service: input_number.set_value
-      data_template:
+      data:
         entity_id: input_number.thermostat_set_point
         value: "{{ states('sensor.heating_set_temperature') }}"
 script:

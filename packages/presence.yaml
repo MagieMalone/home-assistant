@@ -82,7 +82,7 @@ automation:
         to: "home"
     action:
       - service: input_select.select_option
-        data_template:
+        data:
           entity_id: >
             {% if trigger.entity_id == 'person.arnoud' %}
               input_select.arnoud_status
@@ -117,7 +117,7 @@ automation:
         to: "Net Thuis"
     action:
       - service: input_select.select_option
-        data_template:
+        data:
           entity_id: >
             {% if trigger.entity_id == 'input_select.arnoud_status' %}
               input_select.arnoud_status
@@ -133,7 +133,7 @@ automation:
         from: "home"
     action:
       - service: input_select.select_option
-        data_template:
+        data:
           entity_id: >
             {% if trigger.entity_id == 'person.arnoud' %}
               input_select.arnoud_status
@@ -151,7 +151,7 @@ automation:
           minutes: 15
     action:
       - service: input_select.select_option
-        data_template:
+        data:
           entity_id: >
             {% if trigger.entity_id == 'input_select.arnoud_status' %}
               input_select.arnoud_status
@@ -217,7 +217,7 @@ automation:
                           option: avond
                   - conditions:
                       - condition: template
-                        value_template: "{{ (trigger.now | timestamp_custom('%Y-%m-%d %H:%M:%S')) == states('input_datetime.wakeuptime') }}"
+                        value_template: "{{ trigger.entity_id == 'input_datetime.wakeuptime' }}"
                     sequence:
                       - service: notify.pushover
                         data:
@@ -231,7 +231,7 @@ automation:
                       - condition: or
                         conditions:
                           - condition: template
-                            value_template: "{{ (trigger.now | timestamp_custom('%Y-%m-%d %H:%M:%S')) == states('input_datetime.bedtime') }}"
+                            value_template: "{{ trigger.entity_id == 'input_datetime.bedtime' }}"
                           - condition: sun
                             before: sunrise
                     sequence:
