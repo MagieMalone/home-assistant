@@ -142,7 +142,7 @@ script:
         example: "75"
     sequence:
       - service: light.turn_on
-        data_template:
+        data:
           entity_id: "{{states.light|rejectattr('state', 'eq', 'off')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}} "
           brightness_pct: >
             {% if brightness_pct %}

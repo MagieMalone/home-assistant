@@ -9,13 +9,12 @@ camera:
     still_image_url: 'https://maps.googleapis.com/maps/api/staticmap?key={{states("sensor.google_api_key")}}&center={{state_attr("sensor.iss", "latitude")}},{{state_attr("sensor.iss", "longitude")}}&zoom=6&size=600x300&maptype=hybrid&markers=color:blue%7Clabel:ISS%7C{{state_attr("sensor.iss", "latitude")}},{{state_attr("sensor.iss", "longitude")}}'
     limit_refetch_to_url_change: true
 
-
 sensor:
   - platform: rest
     resource: https://api.wheretheiss.at/v1/satellites/25544
     name: iss
     verify_ssl: true
-    value_template: '{{ value_json.timestamp }}' 
+    value_template: "{{ value_json.timestamp }}"
     json_attributes:
       - longitude
       - latitude
@@ -24,29 +23,29 @@ sensor:
     sensors:
       iss_altitude:
         value_template: '{{state_attr("sensor.iss", "altitude") | round | int}}'
-        unit_of_measurement: 'Km'
+        unit_of_measurement: "Km"
       iss_latitude:
-        value_template: '{{state_attr("sensor.iss", "latitude") | float}}' 
-        unit_of_measurement: '°'
+        value_template: '{{state_attr("sensor.iss", "latitude") | float}}'
+        unit_of_measurement: "°"
       iss_longitude:
-        value_template: '{{state_attr("sensor.iss", "longitude") | float}}' 
-        unit_of_measurement: '°'
+        value_template: '{{state_attr("sensor.iss", "longitude") | float}}'
+        unit_of_measurement: "°"
       iss_horizon:
         value_template: '{{(sqrt( (2 * 6371 * state_attr("sensor.iss", "altitude")) + state_attr("sensor.iss", "altitude")**2)  + sqrt( (2 * 6371 * (2/1000))+ (2/1000)**2)) | round | int }}'
-        unit_of_measurement: 'Km'
+        unit_of_measurement: "Km"
       iss_distance:
         value_template: '{{distance(state_attr("sensor.iss", "latitude"), state_attr("sensor.iss", "longitude")) | round | int}}'
-        unit_of_measurement: 'Km'
+        unit_of_measurement: "Km"
       iss_visible:
         value_template: >-
           {%if  state_attr("sun.sun", "elevation")  < -6  and state_attr("sun.sun", "elevation") > -18 %}
             {{ states("sensor.iss_distance") < states("sensor.iss_horizon") }}
           {% else %}
             False   
-          {% endif %} 
+          {% endif %}
 automation:
-  - alias: 'ISS in range'
-    id: '130256743518934101213' 
+  - alias: "ISS in range"
+    id: "130256743518934101213"
     trigger:
       platform: template
       value_template: ' {{states("proximity.home2") < states("sensor.iss_horizon")}}'
@@ -59,9 +58,9 @@ automation:
           value_template: '{{is_state("sensor.iss_visible", "True")}}'
     action:
       service: notify.pushover
-      data_template:
+      data:
         message: 'ISS is nu {{states("proximity.home2")}} Km ver en komt dichterbij'
-        title: 'ISS'
+        title: "ISS"
         data:
           priority: -1
-          url: 'https://foto-album.duckdns.org:8123/lovelace/iss'
+          url: "https://foto-album.duckdns.org:8123/lovelace/iss"

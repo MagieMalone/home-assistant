@@ -11,20 +11,20 @@
 #     track_devices: false
 google_assistant:
   project_id: moonlit-helper-211706
-#  api_key: !secret google_apikey
+  #  api_key: !secret google_apikey
   service_account: !include 27024-e0aec8e9f7d0.json
-#  expose_by_default: false
-#  exposed_domains:
-#    - group
-#    - scene
-#    - script
-#    - switch
-#    - fan
-#    - media_player
-#    - lock
-#    - cover
-#    - climate
-#    - vacuum
+  #  expose_by_default: false
+  #  exposed_domains:
+  #    - group
+  #    - scene
+  #    - script
+  #    - switch
+  #    - fan
+  #    - media_player
+  #    - lock
+  #    - cover
+  #    - climate
+  #    - vacuum
   entity_config:
     input_boolean.wakeuplight_automatic:
       expose: false
@@ -33,24 +33,24 @@ google_assistant:
 script:
   both_speakers:
     sequence:
-#     - service: notify.notify
-#       data_template:
-#         message: '{{ tekst }}'
+      #     - service: notify.notify
+      #       data:
+      #         message: '{{ tekst }}'
       - service: tts.google_say
         entity_id: media_player.huiskamer_speaker
-        data_template:
-          message: '{{ tekst }}'
-          language: 'nl'
+        data:
+          message: "{{ tekst }}"
+          language: "nl"
       - service: tts.google_say
         entity_id: media_player.slaapkamer_speaker
-        data_template:
-          message: '{{ tekst }}'
-          language: 'nl'
+        data:
+          message: "{{ tekst }}"
+          language: "nl"
       - service: tts.google_say
         entity_id: media_player.studeerkamer_speaker
-        data_template:
-          message: '{{ tekst }}'
-          language: 'nl'
+        data:
+          message: "{{ tekst }}"
+          language: "nl"
 #automation:
 #  - alias: 'melding nieuw alarm'
 #    id: '7480949648104893'
@@ -59,8 +59,7 @@ script:
 #        entity_id: sensor.slaapkamer_speaker_alarm, sensor.huiskamer_speaker_alarm, sensor.studeerkamer_speaker_alarm
 #    action:
 #      service: notify.pushover
-#      data_template:
+#      data:
 #        message: "Nieuw alarm gezet om {{as_timestamp(states(trigger.entity_id )) | timestamp_local}}"
 #        title: 'Nieuw google home alarm'
 
-          

@@ -111,7 +111,7 @@
     - service: switch.turn_off
       entity_id: switch.circadian_lighting_circadian_lighting
     - service: script.turn_on_light
-      data_template:
+      data:
         light_entities: {{right.entity}}
         kelvin: >
             {{ '{%' }} set current = state_attr('{{rightfirst[0]}}', 'color_temp') |int {{ '%}' }}
@@ -132,7 +132,7 @@
     - service: switch.turn_off
       entity_id: switch.circadian_lighting_circadian_lighting
     - service: script.turn_on_light
-      data_template:
+      data:
         light_entities: {{left.entity}}
         kelvin: >
             {{ '{%' }} set current = state_attr('{{leftfirst[0]}}', 'color_temp') |int {{ '%}' }}

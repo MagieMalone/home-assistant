@@ -147,7 +147,7 @@ automation:
 
     action:
       - service: script.both_speakers
-        data_template:
+        data:
           tekst: >
             {% set reistijd = states("sensor.calc_travel_time") %}
             {%if reistijd=="unknown" %} 
@@ -157,7 +157,7 @@ automation:
             {% endif %}
       - service: tts.google_say
         entity_id: media_player.desktop
-        data_template:
+        data:
           message: >
             {% set reistijd = states("sensor.calc_travel_time") %}
             {%if reistijd=="unknown" %} 
@@ -194,12 +194,12 @@ automation:
             state: "Net Thuis"
     #    action:
     #      - service: script.both_speakers
-    #        data_template:
+    #        data:
     #          tekst: 'De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")|striptags}} begint over tien minuten '
     action:
       - service: tts.google_say
         entity_id: media_player.speakers
-        data_template:
+        data:
           message: >
             De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten
           cache: false
@@ -212,7 +212,7 @@ script:
     sequence:
       - service: tts.google_say
         entity_id: media_player.speakers
-        data_template:
+        data:
           message: >
             De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten
           cache: false

@@ -25,7 +25,7 @@ script:
     alias: Zigbee2mqtt Rename
     sequence:
       service: mqtt.publish
-      data_template:
+      data:
         topic: zigbee2mqtt/bridge/config/rename
         payload_template: >-
           {
@@ -36,7 +36,7 @@ script:
     alias: Zigbee2mqtt Remove
     sequence:
       service: mqtt.publish
-      data_template:
+      data:
         topic: zigbee2mqtt/bridge/config/remove
         payload_template: "{{ states.input_text.zigbee2mqtt_remove.state | string }}"
 

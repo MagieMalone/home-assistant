@@ -81,7 +81,7 @@ automation:
             state: "Weg"
     action:
       service: notify.pushover
-      data_template:
+      data:
         message: "De {{states[trigger.to_state.domain][trigger.to_state.object_id].name}} is open"
         title: "Deur alarm"
         data:
@@ -102,7 +102,7 @@ automation:
       - service: alarm_control_panel.alarm_trigger
         entity_id: alarm_control_panel.ha_alarm
       - service: input_text.set_value
-        data_template:
+        data:
           entity_id: input_text.last_alarm_trigger_reason
           value: " {{states.binary_sensor|rejectattr('state' , 'eq' , 'off')|selectattr('attributes.device_class', 'in' , ['window','motion','door'])|map(attribute='name')|list}}"
   #            {%- set ns = namespace(first=false) %}
@@ -124,7 +124,7 @@ automation:
         to: "triggered"
     action:
       - service: notify.pushover
-        data_template:
+        data:
           title: "ALARM"
           message: "ALARM! The alarm has been triggered by {{states('input_text.last_alarm_trigger_reason')}}"
           data:
@@ -143,7 +143,7 @@ automation:
         for: "00:01:55"
     action:
       - service: script.both_speakers
-        data_template:
+        data:
           tekst: "Alarm! Alarm! Alarm! indringer in huis! "
       - service: light.turn_on
         entity_id: light.computer, light.eettafel, light.hal, light.sk_ceiling, light.staande_lamp

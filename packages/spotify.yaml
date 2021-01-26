@@ -1,10 +1,9 @@
 spotify:
   client_id: !secret spotify_clientid
   client_secret: !secret spotify_secret
-  
-sensor: 
-    - platform: spotcast
 
+sensor:
+  - platform: spotcast
 
 spotcast:
   sp_dc: !secret sp_dc
@@ -12,11 +11,11 @@ spotcast:
 
 script:
   start_playlist:
-    alias: 'Start playlist'
+    alias: "Start playlist"
     fields:
       playlist_id:
-        description: 'Spotify playlist Uri hash'
-        example: '37i9dQZF1DX9u7XXOp0l5L'
+        description: "Spotify playlist Uri hash"
+        example: "37i9dQZF1DX9u7XXOp0l5L"
     sequence:
       - service: media_player.volume_mute
         data:
@@ -24,21 +23,21 @@ script:
           is_volume_muted: true
       - service: spotcast.start
         data:
-          device_name: 'Speakers'
-          uri: 'spotify:track:5V3b2UB9tCAHuqXj2b2EP7'  # track with 1 second of silence 
+          device_name: "Speakers"
+          uri: "spotify:track:5V3b2UB9tCAHuqXj2b2EP7" # track with 1 second of silence
       - service: media_player.volume_mute
         data:
           entity_id: media_player.huiskamer_speaker, media_player.slaapkamer_speaker, media_player.studeerkamer_speaker
           is_volume_muted: false
-      - service: media_player.volume_set  #setting the volume is optional ofcourse
+      - service: media_player.volume_set #setting the volume is optional ofcourse
         data:
           entity_id: media_player.studeerkamer_speaker
           volume_level: 0.15
-      - service: media_player.volume_set  #setting the volume is optional ofcourse
+      - service: media_player.volume_set #setting the volume is optional ofcourse
         data:
           entity_id: media_player.huiskamer_speaker, media_player.slaapkamer_speaker
           volume_level: 0.25
       - service: spotcast.start
-        data_template:
-          device_name: 'Speakers'
+        data:
+          device_name: "Speakers"
           uri: "spotify:playlist:{{ playlist_id }}"

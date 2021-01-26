@@ -64,7 +64,7 @@ automation:
         entity_id: sensor.chromecast_devices
     action:
       - service: input_text.set_value
-        data_template:
+        data:
           entity_id: input_text.cast_selection
           value: "{{ states('input_select.cast_devices') }}"
       #      - service: python_script.set_list_from_sensor
@@ -72,11 +72,11 @@ automation:
       #          sensor: 'sensor.chromecast_devices'
       #          input_select: 'input_select.cast_devices'
       - service: input_select.set_options
-        data_template:
+        data:
           entity_id: input_select.cast_devices
           options: "{{states.sensor.chromecast_devices.attributes.devices |map(attribute='name')|list}}"
       - service: input_select.select_option
-        data_template:
+        data:
           entity_id: input_select.cast_devices
           option: "{{ states('input_text.cast_selection') }}"
 
@@ -102,20 +102,20 @@ script:
         example: "media_player.living_room_chromecast"
     sequence:
       - service: media_player.volume_mute
-        data_template:
+        data:
           entity_id: "{{entity_id}}"
           is_volume_muted: true
       - service: media_player.play_media
-        data_template:
+        data:
           entity_id: "{{entity_id}}"
           media_content_id: "https://foto-album.duckdns.org:8123/local/audio/silence_64kb.mp3"
           media_content_type: "music"
       - service: media_player.volume_mute
-        data_template:
+        data:
           entity_id: "{{entity_id}}"
           is_volume_muted: false
       - service: media_player.play_media
-        data_template:
+        data:
           entity_id: "{{entity_id}}"
           media_content_id: "{{media_content_id}}"
           media_content_type: "{{media_content_type}}"
