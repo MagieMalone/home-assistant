@@ -23,15 +23,6 @@ input_select:
 input_boolean:
   guests_boolean:
     name: Guests in the house
-input_datetime:
-  bedtime:
-    name: bedtime
-    has_date: true
-    has_time: true
-  wakeuptime:
-    name: wakeuptime
-    has_date: true
-    has_time: true
 
 #device_tracker:
 #  - platform: gpslogger
@@ -274,17 +265,3 @@ automation:
             data:
               entity_id: input_select.house_mode
               option: weg
-  - alias: "set bedtime and wakeuptime input helper"
-    id: "13fa4fc7-4b26-4dad-9985-fa4daf2c1c3d"
-    trigger:
-      platform: state
-      entity_id: sensor.calc_leave_time
-    action:
-      - service: input_datetime.set_datetime
-        entity_id: input_datetime.bedtime
-        data:
-          timestamp: "{{as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) - (6*3600)}}"
-      - service: input_datetime.set_datetime
-        entity_id: input_datetime.wakeuptime
-        data:
-          timestamp: "{{as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) + 900 }}"

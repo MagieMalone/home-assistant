@@ -20,11 +20,7 @@ input_number:
     step: 0.5
     unit_of_measurement: °C
     icon: mdi:thermometer
-input_datetime:
-  pre_heat_time:
-    name: Input with both date and time
-    has_date: true
-    has_time: true
+
 sensor:
   - platform: template
     sensors:
@@ -51,16 +47,6 @@ timer:
     name: Time remaining
     duration: 120
 automation:
-  - alias: "set pre-heat-time input helper"
-    id: "4d6474f6-4a53-4c54-ae47-66326ad68133"
-    trigger:
-      platform: state
-      entity_id: sensor.calc_leave_time
-    action:
-      - service: input_datetime.set_datetime
-        entity_id: input_datetime.pre_heat_time
-        data:
-          datetime: "{{(as_timestamp(states('sensor.calc_leave_time')) - 3600 )| timestamp_custom('%Y-%m-%d %H:%M:%S')}}"
   - alias: "kachel nieuw"
     id: "432578090243508970892435"
     trigger:

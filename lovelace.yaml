@@ -5,7 +5,7 @@ background: center / cover no-repeat url("/background.png") fixed
 excluded_entities:
 
 views:
-    # View tab title.
+  # View tab title.
   - title: Home
     icon: mdi:home
     id: Home
@@ -16,7 +16,7 @@ views:
           - type: entities
             title: Ring
             id: home_ring
-            show_header_toggle: false 
+            show_header_toggle: false
             entities:
               - sensor.last_ring
               - sensor.last_motion
@@ -29,7 +29,7 @@ views:
         id: home_swiches
         title: Switches
         entities:
-#          - switch.espressomaker
+          #          - switch.espressomaker
           - entity: light.media_group
             icon: mdi:flash
             name: Plugs woonkamer
@@ -39,28 +39,28 @@ views:
           - entity: switch.0x8418260000105782_switch
             icon: mdi:flash
             name: Tablet lader
-#      - type: conditional
-#        conditions:
-#          - entity: switch.0x8418260000105782_switch
-#            state_not: "unavailable"
-#        card:
-#          type: entities
-#          entities:
-#            - entity: switch.0x8418260000105782_switch
-#              icon: mdi:flash
-#              name: Kerstboom
-#      - type: entities
-#        id: home_misc
-#        title: Misc
-#        show_header_toggle: false 
-#        entities:
-#          - sun.sun
-#          - sensor.home_to_ing
-#          - sensor.phone_to_home
+      #      - type: conditional
+      #        conditions:
+      #          - entity: switch.0x8418260000105782_switch
+      #            state_not: "unavailable"
+      #        card:
+      #          type: entities
+      #          entities:
+      #            - entity: switch.0x8418260000105782_switch
+      #              icon: mdi:flash
+      #              name: Kerstboom
+      #      - type: entities
+      #        id: home_misc
+      #        title: Misc
+      #        show_header_toggle: false
+      #        entities:
+      #          - sun.sun
+      #          - sensor.home_to_ing
+      #          - sensor.phone_to_home
       - type: history-graph
         id: home_weight
         title: Gewicht
-        entities: 
+        entities:
           - sensor.weight
         hours_to_show: 1344
         refresh_interval: 3600
@@ -86,34 +86,34 @@ views:
                 name: Average
             hours_to_show: 168
       - entity: sensor.ambulance
-        icon: 'mdi:ambulance'
+        icon: "mdi:ambulance"
         name: P2000 Ambulance
         type: sensor
       - entity: sensor.brandweer
-        icon: 'mdi:fire-truck'
+        icon: "mdi:fire-truck"
         name: P2000 Brandweer
         type: sensor
       - entity: sensor.trauma_heli
-        icon: 'mdi:helicopter'
+        icon: "mdi:helicopter"
         name: P2000 Trauma-heli
         type: sensor
-#  - title: Pakjes
-#    icon: mdi:package-variant
-#    id: pakjes
-#    cards:
-#      - type: custom:aftership-card
-#        entity: sensor.aftership
-#      - type: custom:postnl-card
-#        delivery: sensor.postnl_delivery
-#        distribution: sensor.postnl_distribution
-#        letters: sensor.postnl_letters
-#        hide:
-#          delivered: false
-#          first_letter: false
-#          header: false
-#        date_format: "DD MMM YYYY"
-#        time_format: "HH:mm"
-#        past_days: 365
+  #  - title: Pakjes
+  #    icon: mdi:package-variant
+  #    id: pakjes
+  #    cards:
+  #      - type: custom:aftership-card
+  #        entity: sensor.aftership
+  #      - type: custom:postnl-card
+  #        delivery: sensor.postnl_delivery
+  #        distribution: sensor.postnl_distribution
+  #        letters: sensor.postnl_letters
+  #        hide:
+  #          delivered: false
+  #          first_letter: false
+  #          header: false
+  #        date_format: "DD MMM YYYY"
+  #        time_format: "HH:mm"
+  #        past_days: 365
   - title: Car
     icon: mdi:car
     id: car
@@ -124,7 +124,7 @@ views:
       - type: entities
         title: Mercedes
         id: car_values
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - binary_sensor.sz_436_p_park_brake_status
           - binary_sensor.sz_436_p_tire_warning
@@ -182,14 +182,14 @@ views:
             entity: media_player.htnt5_95651e1_2
           - type: custom:slider-entity-row
             entity: media_player.ht_nt5_95651e1
-      - type: 'custom:spotify-card'
+      - type: "custom:spotify-card"
         client_id: !secret spotify_clientid
       - type: vertical-stack
         id: media_playbuttons_vstack
         cards:
           - type: horizontal-stack
             id: media_playbuttons_hstack1
-            cards: 
+            cards:
               - type: entity-button
                 name: Play easy on sunday
                 id: mediaplayer_play_1
@@ -212,7 +212,7 @@ views:
                     playlist_id: 37i9dQZF1DX9u7XXOp0l5L
           - type: horizontal-stack
             id: media_playbuttons_hstack2
-            cards: 
+            cards:
               - type: entity-button
                 id: mediaplayer_play_3
                 name: Play your weekly discover
@@ -326,7 +326,7 @@ views:
       - type: entities
         title: Plex
         id: mediaplayer_plex_ent
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - sensor.plex_diskstation
       - type: custom:card-templater
@@ -341,7 +341,6 @@ views:
         entities:
           - sensor.chromecast_devices
 
-          
   - title: Alarm
     icon: mdi:alarm-light
     id: alarm
@@ -349,19 +348,19 @@ views:
       - type: alarm-panel
         id: alarm_panel
         entity: alarm_control_panel.ha_alarm
-        states: 
+        states:
           - arm_home
           - arm_away
           - arm_night
       - type: entities
         id: alarm_entity
         entities:
-        - alarm_control_panel.ha_alarm
-        - binary_sensor.0x00158d000289e817_contact
-        - binary_sensor.0x00158d000289ec2d_contact
-        - binary_sensor.0x00158d0002b7eda4_occupancy
-        - binary_sensor.0x00158d0002b8586b_occupancy
-        - binary_sensor.0x00158d0002b5d42f_occupancy
+          - alarm_control_panel.ha_alarm
+          - binary_sensor.0x00158d000289e817_contact
+          - binary_sensor.0x00158d000289ec2d_contact
+          - binary_sensor.0x00158d0002b7eda4_occupancy
+          - binary_sensor.0x00158d0002b8586b_occupancy
+          - binary_sensor.0x00158d0002b5d42f_occupancy
   - title: Lights
     icon: mdi:lightbulb
     id: lights
@@ -398,7 +397,7 @@ views:
             title: Studeerkamer
             entities:
               - light.computer
-              - sensor.0x00158d0002b4a1cf_click 
+              - sensor.0x00158d0002b4a1cf_click
           - type: entities
             id: lights_overloop
             title: Overloop
@@ -420,7 +419,7 @@ views:
         cards:
           - type: entities
             id: lights_circadian
-            show_header_toggle: false 
+            show_header_toggle: false
             title: Circadian / Sun
             entities:
               - sun.sun
@@ -428,14 +427,14 @@ views:
           - type: entities
             id: lights_scripts
             title: Scripts
-            show_header_toggle: false 
+            show_header_toggle: false
             entities:
               - script.woonkamer_lights
               - script.woonkamer_lights_fadein
           - type: entities
             id: lights_level_input
             title: Motion sensor light level input
-            show_header_toggle: false 
+            show_header_toggle: false
             entities:
               - input_number.lightlevel
               - input_boolean.cleaningmode
@@ -444,9 +443,9 @@ views:
     id: calendar
     cards:
       - type: custom:calendar-card
-#        title: "My Calendar"
+        #        title: "My Calendar"
         progressBar: true
-        ignoreEventsExpression: '#alarm'
+        ignoreEventsExpression: "#alarm"
         entities:
           - calendar.abuurmangmailcom
           - calendar.astrokalender
@@ -456,7 +455,7 @@ views:
       - type: entities
         titel: F1
         id: cal_f1
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - sensor.cal_title_f1
           - entity: sensor.cal_start_time_f1
@@ -465,21 +464,21 @@ views:
       - type: entities
         id: cal_workday
         title: Workday
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - binary_sensor.workday_sensor
           - binary_sensor.workday1d
       - type: entities
         id: cal_verjaardagen
         title: Verjaardagen
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - sensor.cal_contacts_message
           - sensor.cal_contacts_start_time
       - type: entities
         id: cal_reminders
         title: Reminders
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - sensor.cal_reminders_date
           - sensor.cal_reminders_name
@@ -488,7 +487,7 @@ views:
           - type: entities
             id: cal_afspraak
             title: Volgende afspraak
-            show_header_toggle: false 
+            show_header_toggle: false
             entities:
               - sensor.cal_title
               - sensor.cal_start_time
@@ -497,30 +496,29 @@ views:
                 name: Driving time
               - entity: sensor.cal_location
                 name: Location
-#              - entity: sensor.cal_start_time_unix
-#                name: Start time
-#                format: datetime
+          #              - entity: sensor.cal_start_time_unix
+          #                name: Start time
+          #                format: datetime
           - type: picture-entity
             id: cal_afspraak_destination
             entity: camera.destination
-#      - type: conditional
-#        conditions:
-#          - entity: sensor.slaapkamer_speaker_alarm
-#            state_not: "unavailable"
-#        card:
-#          type: entities
-#          id: cal_googlehomesk
-#          title: GoogleHome Slaapkamer Alarm
-#          show_header_toggle: false 
-#          entities: 
-#            - sensor.slaapkamer_speaker_alarm
+      #      - type: conditional
+      #        conditions:
+      #          - entity: sensor.slaapkamer_speaker_alarm
+      #            state_not: "unavailable"
+      #        card:
+      #          type: entities
+      #          id: cal_googlehomesk
+      #          title: GoogleHome Slaapkamer Alarm
+      #          show_header_toggle: false
+      #          entities:
+      #            - sensor.slaapkamer_speaker_alarm
       - type: entities
         id: cal_wakeuplight
         title: Wakeup Light
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - input_number.wul_time_before_leave
-          - sensor.wakeuplight_time
           - sensor.calc_leave_time_alarm
           - entity: sensor.google_travel_time_alarm
             name: Driving time
@@ -532,7 +530,7 @@ views:
   - title: Weer
     icon: mdi:weather-partly-cloudy
     id: weer
-    
+
     cards:
       - type: vertical-stack
         cards:
@@ -568,7 +566,7 @@ views:
               - entity: sensor.0x00158d00031e0bf7_humidity
                 name: Studeerkamer
               - entity: sensor.0x00158d00031e0aff_humidity
-                name: Buiten 
+                name: Buiten
               - entity: sensor.0x00158d00031e318f_humidity
                 name: Slaapkamer
               - entity: sensor.0x00158d00031e0c0a_humidity
@@ -581,13 +579,13 @@ views:
               points: false
               state: false
               labels: true
-      
+
           - type: custom:mini-graph-card
             name: Temperature
             hours_to_show: 24
             points_per_hour: 1
-            hour24: True    
-            font_size_header: 18              
+            hour24: True
+            font_size_header: 18
             entities:
               - entity: sensor.berkhout_temperature
                 name: Berkhout
@@ -598,7 +596,7 @@ views:
               - entity: sensor.0x00158d00031e0bf7_temperature
                 name: Studeerkamer
               - entity: sensor.0x00158d00031e0aff_temperature
-                name: Buiten 
+                name: Buiten
               - entity: sensor.0x00158d00031e318f_temperature
                 name: Slaapkamer
               - entity: sensor.0x00158d00031e0c0a_temperature
@@ -607,7 +605,7 @@ views:
                 name: Zolder voor
               - entity: sensor.0x00158d00031632ed_temperature
                 name: Zolder achter
-                
+
             show:
               points: false
               state: false
@@ -616,8 +614,8 @@ views:
             name: Pressure
             hours_to_show: 168
             points_per_hour: 0.5
-            hour24: True    
-            font_size_header: 18              
+            hour24: True
+            font_size_header: 18
             entities:
               - entity: sensor.schiphol_pressure
                 name: Schiphol
@@ -641,91 +639,91 @@ views:
 
       - type: vertical-stack
         cards:
-        - type: horizontal-stack
-          cards:
-          - type: vertical-stack
+          - type: horizontal-stack
             cards:
-              - type: markdown
-                content: >
-                  ## Temperatuur
-              - type: gauge
-                entity: sensor.0x00158d00031e31ac_temperature
-                name: Badkamer
-                min: -30
-                max: 50
-              - type: gauge
-                entity: sensor.0x00158d00036c1ba4_temperature
-                name: Woonkamer
-                min: -30
-                max: 50
-              - type: gauge
-                entity: sensor.0x00158d00031e0bf7_temperature
-                name: Studeerkamer
-                min: -30
-                max: 50
-              - type: gauge
-                entity: sensor.0x00158d00031e318f_temperature
-                name: Slaapkamer
-                min: -30
-                max: 50
-              - type: gauge
-                entity: sensor.0x00158d00031e0aff_temperature
-                name: Buiten 
-                min: -30
-                max: 50
-              - type: gauge
-                entity: sensor.berkhout_temperature
-                name: Berkhout
-                min: -30
-                max: 50
-              - type: gauge
-                entity: sensor.0x00158d00031e0c0a_temperature
-                name: Bijkeuken
-                min: -30
-                max: 50
-              - type: gauge
-                entity: sensor.0x00158d000315e79c_temperature
-                name: Zolder voor
-                min: -30
-                max: 50
-              - type: gauge
-                entity: sensor.0x00158d00031632ed_temperature
-                name: Zolder achter
-                min: -30
-                max: 50
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: >
+                      ## Temperatuur
+                  - type: gauge
+                    entity: sensor.0x00158d00031e31ac_temperature
+                    name: Badkamer
+                    min: -30
+                    max: 50
+                  - type: gauge
+                    entity: sensor.0x00158d00036c1ba4_temperature
+                    name: Woonkamer
+                    min: -30
+                    max: 50
+                  - type: gauge
+                    entity: sensor.0x00158d00031e0bf7_temperature
+                    name: Studeerkamer
+                    min: -30
+                    max: 50
+                  - type: gauge
+                    entity: sensor.0x00158d00031e318f_temperature
+                    name: Slaapkamer
+                    min: -30
+                    max: 50
+                  - type: gauge
+                    entity: sensor.0x00158d00031e0aff_temperature
+                    name: Buiten
+                    min: -30
+                    max: 50
+                  - type: gauge
+                    entity: sensor.berkhout_temperature
+                    name: Berkhout
+                    min: -30
+                    max: 50
+                  - type: gauge
+                    entity: sensor.0x00158d00031e0c0a_temperature
+                    name: Bijkeuken
+                    min: -30
+                    max: 50
+                  - type: gauge
+                    entity: sensor.0x00158d000315e79c_temperature
+                    name: Zolder voor
+                    min: -30
+                    max: 50
+                  - type: gauge
+                    entity: sensor.0x00158d00031632ed_temperature
+                    name: Zolder achter
+                    min: -30
+                    max: 50
 
-          - type: vertical-stack
-            cards:
-              - type: markdown
-                content: >
-                  ## Luchtvochtigheid
-              - type: gauge
-                entity: sensor.0x00158d00031e31ac_humidity
-                name: Badkamer
-              - type: gauge
-                entity: sensor.0x00158d00036c1ba4_humidity
-                name: Woonkamer
-              - type: gauge
-                entity: sensor.0x00158d00031e0bf7_humidity
-                name: Studeerkamer
-              - type: gauge
-                entity: sensor.0x00158d00031e318f_humidity
-                name: Slaapkamer
-              - type: gauge
-                entity: sensor.0x00158d00031e0aff_humidity
-                name: Buiten 
-              - type: gauge
-                entity: sensor.berkhout_humidity
-                name: Berkhout
-              - type: gauge
-                entity: sensor.0x00158d00031e0c0a_humidity
-                name: Bijkeuken
-              - type: gauge
-                entity: sensor.0x00158d000315e79c_humidity
-                name: Zolder voor
-              - type: gauge
-                entity: sensor.0x00158d00031632ed_humidity
-                name: Zolder achter
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    content: >
+                      ## Luchtvochtigheid
+                  - type: gauge
+                    entity: sensor.0x00158d00031e31ac_humidity
+                    name: Badkamer
+                  - type: gauge
+                    entity: sensor.0x00158d00036c1ba4_humidity
+                    name: Woonkamer
+                  - type: gauge
+                    entity: sensor.0x00158d00031e0bf7_humidity
+                    name: Studeerkamer
+                  - type: gauge
+                    entity: sensor.0x00158d00031e318f_humidity
+                    name: Slaapkamer
+                  - type: gauge
+                    entity: sensor.0x00158d00031e0aff_humidity
+                    name: Buiten
+                  - type: gauge
+                    entity: sensor.berkhout_humidity
+                    name: Berkhout
+                  - type: gauge
+                    entity: sensor.0x00158d00031e0c0a_humidity
+                    name: Bijkeuken
+                  - type: gauge
+                    entity: sensor.0x00158d000315e79c_humidity
+                    name: Zolder voor
+                  - type: gauge
+                    entity: sensor.0x00158d00031632ed_humidity
+                    name: Zolder achter
   - title: test
     panel: false
     cards:
@@ -737,12 +735,11 @@ views:
         id: graf2
         url: http://192.168.1.6:3000/d-solo/Jl7Q1aYWz/home-assistant?orgId=1&panelId=2&theme=light&from=now-196h&to=now&refresh=5m
         aspect_ratio: 65%
-        
+
   - title: Utility
     id: utility
     icon: mdi:power-plug
     cards:
-
       - type: vertical-stack
         cards:
           - type: custom:mini-graph-card
@@ -759,7 +756,7 @@ views:
               - entity: sensor.tp_link_watts
                 name: esspresso
             show:
-#              points: false
+              #              points: false
               extrema: True
           - type: custom:mini-graph-card
             id: utility_avgpowergraph
@@ -773,7 +770,7 @@ views:
               - sensor.average_daily_power_usage
             show:
               graph: bar
-              
+
           - type: custom:mini-graph-card
             id: utility_avggasgraph
             name: Daily Gas usage
@@ -789,13 +786,13 @@ views:
       - type: entities
         id: utility_sensors
         title: Utilities
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - sensor.tp_link_amps
           - sensor.tp_link_kw
           - sensor.tp_link_volts
           - sensor.tp_link_watts
-          - sensor.power_cost_today           
+          - sensor.power_cost_today
           - sensor.power_meter_feed_in_tariff_1
           - sensor.power_meter_feed_in_tariff_2
           - sensor.power_usage_today
@@ -819,7 +816,7 @@ views:
       - type: entities
         id: heating_toon
         title: Toon
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - binary_sensor.boiler_module_connection
           - binary_sensor.toon_holiday_mode
@@ -835,11 +832,11 @@ views:
       - type: gauge
         id: heating_temp_woonkamer
         entity: sensor.0x00158d00036c1ba4_temperature
-        title: 'Temperatuur woonkamer'
+        title: "Temperatuur woonkamer"
       - type: gauge
         id: heating_settemp
         entity: sensor.heating_set_temperature
-        title: 'Thermostaat'
+        title: "Thermostaat"
         min: 10
         max: 30
         severity:
@@ -867,7 +864,7 @@ views:
       - type: entities
         id: iss_sensors
         title: ISS
-        show_header_toggle: false 
+        show_header_toggle: false
         entities:
           - entity: sensor.iss_horizon
             name: ISS's Horizon distance
@@ -891,24 +888,24 @@ views:
       - type: entities
         id: entities_all
         entities:
-         - entity: device_tracker.369ab83aade93883
-           name: Oneplus3-gps
-         - entity: device_tracker.oneplus3_lan_foto_album_com
-           name: Oneplus3-wifi
-         - entity: device_tracker.oneplus_a3003
-           name: Oneplus3-HA
-         - entity: device_tracker.wdd1770871j017950
-           name: sz-436-p
-         - input_select.arnoud_status
-         - sensor.arnoud_status
-         - sensor.prox_home_dir_of_travel
-         - input_boolean.guests_boolean
-         - input_select.house_mode
+          - entity: device_tracker.369ab83aade93883
+            name: Oneplus3-gps
+          - entity: device_tracker.oneplus3_lan_foto_album_com
+            name: Oneplus3-wifi
+          - entity: device_tracker.oneplus_a3003
+            name: Oneplus3-HA
+          - entity: device_tracker.wdd1770871j017950
+            name: sz-436-p
+          - input_select.arnoud_status
+          - sensor.arnoud_status
+          - sensor.prox_home_dir_of_travel
+          - input_boolean.guests_boolean
+          - input_select.house_mode
       - type: history-graph
         id: entities_graph
         title: history
         hours_to_show: 48
-        entities: 
+        entities:
           - person.arnoud
           - device_tracker.oneplus3_lan_foto_album_com
           - device_tracker.oneplus_a3003
@@ -950,7 +947,7 @@ views:
         font_size: 12
         link_width: 2
         height: 750 # height of the card
-  - title: Map  
+  - title: Map
     id: Map
     icon: mdi:map
     panel: true

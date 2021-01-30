@@ -179,13 +179,9 @@ automation:
   - alias: "lights off weekdays"
     id: "1528912303194"
     trigger:
-      - platform: template
-        value_template: >
-          {% if states('sensor.wakeuplight_time') == None %}
-            False
-          {% else %}
-            {{(as_timestamp(strptime(states('sensor.wakeuplight_time'), '%m/%d/%y %H:%M')) - (6*3600+900))| timestamp_custom('%D %H:%M') == now().strftime('%D %H:%M')}}
-          {% endif %}
+      - platform: time
+        at:
+          - input_datetime.bedtime
     action:
       - service: light.turn_off
         data:
