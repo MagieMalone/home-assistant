@@ -194,6 +194,20 @@ automation:
                       - condition: or
                         conditions:
                           - condition: template
+                            value_template: "{{ trigger.entity_id == 'input_datetime.bedtime' }}"
+                    sequence:
+                      - service: notify.pushover
+                        data:
+                          title: house-status
+                          message: "status set to nacht by {{trigger.platform}}"
+                      - service: input_select.select_option
+                        data:
+                          entity_id: input_select.house_mode
+                          option: nacht
+                  - conditions:
+                      - condition: or
+                        conditions:
+                          - condition: template
                             value_template: "{{trigger.event == 'sunset'}}"
                           - condition: sun
                             after: sunset
@@ -219,12 +233,8 @@ automation:
                           entity_id: input_select.house_mode
                           option: overdag
                   - conditions:
-                      - condition: or
-                        conditions:
-                          - condition: template
-                            value_template: "{{ trigger.entity_id == 'input_datetime.bedtime' }}"
-                          - condition: sun
-                            before: sunrise
+                      - condition: sun
+                        before: sunrise
                     sequence:
                       - service: notify.pushover
                         data:

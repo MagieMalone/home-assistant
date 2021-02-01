@@ -116,7 +116,7 @@ sensor:
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
           {% set time = state_attr("calendar.alarm", "start_time") + tz %}
           {% set starttime = as_timestamp(time) %}   
-          {% set duration = state_attr("sensor.rm", "duration") %}
+          {% set duration = state_attr("sensor.google_travel_time_alarm", "duration") %}
           {%if duration == None %}
             {{ starttime  | timestamp_custom("%Y-%m-%d %H:%M") }}
           {% else %}
@@ -228,41 +228,31 @@ automation:
     trigger:
       platform: state
       entity_id: sensor.calc_leave_time_alarm
+    variables:
+      alarm_time: >
+        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
+        {% if states("sensor.calc_leave_time_alarm") == "unknown" %}
+          09:00
+        {% else %}
+          {{as_timestamp(states("sensor.calc_leave_time_alarm")+ tz ) - ((states("input_number.wul_time_before_leave") |int ) * 60) }}
+        {% endif %}
     action:
       - service: input_datetime.set_datetime
         entity_id: input_datetime.wakeuplight_time
         data:
-          timestamp: >
-            {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-            {% if states("sensor.calc_leave_time_alarm") == "unknown" %}
-              09:00
-            {% else %}
-              {{as_timestamp(states("sensor.calc_leave_time_alarm")+ tz ) - ((states("input_number.wul_time_before_leave") |int ) * 60) }}
-            {% endif %}
+          timestamp: "{{alarm_time}}"
       - service: input_datetime.set_datetime
         entity_id: input_datetime.pre_heat_time
         data:
-          timestamp: "{{as_timestamp(states('sensor.calc_leave_time_alarm')) - 3600 }}"
+          timestamp: "{{alarm_time - 1800 }}"
       - service: input_datetime.set_datetime
         entity_id: input_datetime.bedtime
         data:
-          timestamp: >
-            {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-            {% if states("sensor.calc_leave_time_alarm") == "unknown" %}
-              09:00
-            {% else %}
-              {{as_timestamp(states("sensor.calc_leave_time_alarm")+ tz ) - ((states("input_number.wul_time_before_leave") |int ) * 60) - (7*3600+900) }}
-            {% endif %}
+          timestamp: "{{alarm_time - (7*3600+900)}}"
       - service: input_datetime.set_datetime
         entity_id: input_datetime.wakeuptime
         data:
-          timestamp: >
-            {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-            {% if states("sensor.calc_leave_time_alarm") == "unknown" %}
-              09:00
-            {% else %}
-              {{as_timestamp(states("sensor.calc_leave_time_alarm")+ tz ) - ((states("input_number.wul_time_before_leave") |int ) * 60) + 900 }}
-            {% endif %}
+          timestamp: "{{alarm_time +900}}"
 
 script:
   test_f1_announce:

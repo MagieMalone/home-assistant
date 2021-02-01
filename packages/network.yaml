@@ -5,7 +5,7 @@ sensor:
         value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Received)')|float}}"
       edgeos_interface_eth0_out_kbps:
         value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Sent)')|float}}"
-      edgeos_external_addresses: 
+      edgeos_external_addresses:
         value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','addresses')}}"
       edgeos_device_docker_in_kbps:
         value_template: "{{state_attr('binary_sensor.edgeos_device_docker','KBytes/ps (Received)')|float}}"
@@ -23,3 +23,20 @@ sensor:
         value_template: "{{state_attr('binary_sensor.edgeos_device_synology415play','KBytes/ps (Received)')|float}}"
       edgeos_device_synology415play_out_kbps:
         value_template: "{{state_attr('binary_sensor.edgeos_device_synology415play','KBytes/ps (Sent)')|float}}"
+      ha_uptodate:
+        friendly_name_template: >
+          {{state_attr('sensor.supervisor_updates','current_version')}}
+        value_template: >
+          {{state_attr('sensor.supervisor_updates','newest_version') == state_attr('sensor.supervisor_updates','current_version')}}
+        icon_template: >
+          {{ 'mdi:circle-outline' if state_attr('sensor.supervisor_updates','newest_version') !=
+              state_attr('sensor.supervisor_updates','current_version') else 'mdi:check-circle-outline' }}
+        unit_of_measurement: Up to date
+  - platform: command_line
+    name: Supervisor updates
+    command: 'curl http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"addons":[.data.addons[] | select(.version != .installed)]}'''
+    value_template: ""
+    json_attributes:
+      - newest_version
+      - current_version
+      - addons
