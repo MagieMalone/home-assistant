@@ -25,8 +25,11 @@ logger:
     homeassistant.components.tplink: debug
 
 http:
-  ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem
+  #  ssl_certificate: /ssl/fullchain.pem
+  #  ssl_key: /ssl/privkey.pem
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 192.168.20.20
   ip_ban_enabled: true
   login_attempts_threshold: 5
 

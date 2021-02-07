@@ -159,17 +159,25 @@ automation:
           - "00:00:01"
           - input_datetime.bedtime
           - input_datetime.wakeuptime
-      - platform: sun
-        event: sunset
-        offset: "-00:30:00"
-      - platform: sun
-        event: sunrise
-        offset: "00:30:00"
+      #      - platform: sun
+      #        event: sunset
+      #        offset: "-00:30:00"
+      #      - platform: sun
+      #        event: sunrise
+      #        offset: "00:30:00"
       - platform: state
         entity_id: input_select.arnoud_status
         for: "00:05:00"
       - platform: state
         entity_id: input_boolean.guests_boolean
+      - platform: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: 3.5
+      - platform: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        above: 3.5
     action:
       - choose:
           - conditions:
@@ -199,7 +207,7 @@ automation:
                       - service: notify.pushover
                         data:
                           title: house-status
-                          message: "status set to nacht by {{trigger.platform}}"
+                          message: "1 status set to nacht by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -207,6 +215,12 @@ automation:
                   - conditions:
                       - condition: or
                         conditions:
+                          - condition: and
+                            conditions:
+                              - condition: template
+                                value_template: "{{trigger.platform == 'numeric_state'}}"
+                              - condition: template
+                                value_template: "{{trigger.below |default(0) == 3.5 }}"
                           - condition: template
                             value_template: "{{trigger.event == 'sunset'}}"
                           - condition: sun
@@ -215,7 +229,7 @@ automation:
                       - service: notify.pushover
                         data:
                           title: house-status
-                          message: "status set to avond by {{trigger.platform}}"
+                          message: "2 status set to avond by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -227,7 +241,7 @@ automation:
                       - service: notify.pushover
                         data:
                           title: house-status
-                          message: "status set to overdag by {{trigger.platform}}"
+                          message: "3 status set to overdag by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -239,7 +253,7 @@ automation:
                       - service: notify.pushover
                         data:
                           title: house-status
-                          message: "status set to nacht by {{trigger.platform}}"
+                          message: "4 status set to nacht by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -247,6 +261,12 @@ automation:
                   - conditions:
                       - condition: or
                         conditions:
+                          - condition: and
+                            conditions:
+                              - condition: template
+                                value_template: "{{trigger.platform == 'numeric_state'}}"
+                              - condition: template
+                                value_template: "{{trigger.above |default(0) == 3.5 }}"
                           - condition: template
                             value_template: "{{trigger.event == 'sunrise'}}"
                           - condition: sun
@@ -256,7 +276,7 @@ automation:
                       - service: notify.pushover
                         data:
                           title: house-status
-                          message: "status set to overdag by {{trigger.platform}}"
+                          message: "5 status set to overdag by {{trigger.platform}} "
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -265,12 +285,12 @@ automation:
                   - service: notify.pushover
                     data:
                       title: house-status
-                      message: "status not set as no conditions match "
+                      message: "6 status not set as no conditions match "
         default:
           - service: notify.pushover
             data:
               title: house-status
-              message: "status set to away {{trigger}}"
+              message: "7 status set to away {{trigger}}"
           - service: input_select.select_option
             data:
               entity_id: input_select.house_mode

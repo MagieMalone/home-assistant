@@ -1,26 +1,26 @@
 automation:
-  - alias: 'Lights on normal'
-    id: '1528911899317' 
+  - alias: "Lights on normal"
+    id: "1528911899317"
     trigger:
       - platform: numeric_state
         entity_id: sun.sun
-        value_template: "{{ state.attributes.elevation }}"
+        attribute: elevation
         below: 3.5
     condition:
       condition: and
       conditions:
         - condition: state
           entity_id: light.woonkamer
-          state: 'off'
+          state: "off"
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
         - condition: time
-          after: '12:00:00'
+          after: "12:00:00"
     action:
       - service: script.woonkamer_lights_fadein
 
-  - alias: 'Lights on bad weather'
-    id: '5312689562015890236985290'
+  - alias: "Lights on bad weather"
+    id: "5312689562015890236985290"
     trigger:
       - platform: numeric_state
         entity_id: sun.sun
@@ -31,7 +31,7 @@ automation:
       conditions:
         - condition: state
           entity_id: light.woonkamer
-          state: 'off'
+          state: "off"
         - condition: template
           value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
         # measurement newer then 30 minutes
@@ -43,17 +43,15 @@ automation:
     action:
       - service: script.woonkamer_lights_fadein
 
-
-
-  - alias: 'Lights on thuiskomst'
-    id: '5480797213460891' 
+  - alias: "Lights on thuiskomst"
+    id: "5480797213460891"
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Net Thuis'
+        to: "Net Thuis"
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Thuis'
+        to: "Thuis"
     condition:
       condition: or
       conditions:
@@ -65,12 +63,12 @@ automation:
               below: 3.5
             - condition: state
               entity_id: light.woonkamer
-              state: 'off'
+              state: "off"
         - condition: and
           conditions:
             - condition: state
               entity_id: light.woonkamer
-              state: 'off'
+              state: "off"
             - condition: numeric_state
               entity_id: sun.sun
               value_template: "{{ state.attributes.elevation }}"
@@ -83,7 +81,6 @@ automation:
               value_template: "{{ not is_state('sensor.berkhout_condition', 'clear') }}"
     action:
       - service: script.woonkamer_lights
-
 
 script:
   woonkamer_lights_fadein:
@@ -99,23 +96,23 @@ script:
         data:
           entity_id: light.hue_lightstrip_plus_1
           xy_color:
-          - 0.3388
-          - 0.1332
+            - 0.3388
+            - 0.1332
           brightness_pct: 1
       - alias: pendant_up
         service: light.turn_on
         data:
           entity_id: light.hue_color_pendant_up_1
           xy_color:
-          - 0.324
-          - 0.154
-          brightness_pct: 1 
+            - 0.324
+            - 0.154
+          brightness_pct: 1
       - alias: pendant_down
         service: light.turn_on
         data:
           entity_id: light.hue_color_pendant_down_1
           color_temp: 449
-          brightness_pct: 1 
+          brightness_pct: 1
       - alias: staande lamp
         service: light.turn_on
         data:
@@ -129,24 +126,24 @@ script:
           entity_id: light.hue_lightstrip_plus_1
           transition: 300
           xy_color:
-          - 0.3388
-          - 0.1332
+            - 0.3388
+            - 0.1332
           brightness_pct: 30
       - alias: pendant_up
         service: light.turn_on
         data:
           entity_id: light.hue_color_pendant_up_1
           xy_color:
-          - 0.324
-          - 0.154
+            - 0.324
+            - 0.154
           brightness_pct: 50
-          transition: 300 
+          transition: 300
       - alias: pendant_down
         service: light.turn_on
         data:
           entity_id: light.hue_color_pendant_down_1
           color_temp: 449
-          brightness_pct: 50 
+          brightness_pct: 50
           transition: 300
   woonkamer_lights:
     sequence:
@@ -163,22 +160,22 @@ script:
           entity_id: light.hue_lightstrip_plus_1
           transition: 2
           xy_color:
-          - 0.3388
-          - 0.1332
+            - 0.3388
+            - 0.1332
           brightness_pct: 30
       - alias: pendant_up
         service: light.turn_on
         data:
           entity_id: light.hue_color_pendant_up_1
           xy_color:
-          - 0.324
-          - 0.154
+            - 0.324
+            - 0.154
           brightness_pct: 50
-          transition: 300 
+          transition: 300
       - alias: pendant_down
         service: light.turn_on
         data:
           entity_id: light.hue_color_pendant_down_1
           color_temp: 449
-          brightness_pct: 50 
+          brightness_pct: 50
           transition: 30
