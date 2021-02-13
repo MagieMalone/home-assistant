@@ -159,12 +159,6 @@ automation:
           - "00:00:01"
           - input_datetime.bedtime
           - input_datetime.wakeuptime
-      #      - platform: sun
-      #        event: sunset
-      #        offset: "-00:30:00"
-      #      - platform: sun
-      #        event: sunrise
-      #        offset: "00:30:00"
       - platform: state
         entity_id: input_select.arnoud_status
         for: "00:05:00"
@@ -193,10 +187,10 @@ automation:
                     entity_id: input_boolean.guests_boolean
                     state: "on"
             sequence:
-              - service: notify.pushover
-                data:
-                  title: house-status
-                  message: "house-status at home trigger: {{trigger}}"
+              #              - service: notify.pushover
+              #                data:
+              #                  title: house-status
+              #                  message: "house-status at home trigger: {{trigger}}"
               - choose:
                   - conditions:
                       - condition: or
@@ -204,10 +198,10 @@ automation:
                           - condition: template
                             value_template: "{{ trigger.entity_id == 'input_datetime.bedtime' }}"
                     sequence:
-                      - service: notify.pushover
-                        data:
-                          title: house-status
-                          message: "1 status set to nacht by {{trigger.platform}}"
+                      #                      - service: notify.pushover
+                      #                        data:
+                      #                          title: house-status
+                      #                          message: "1 status set to nacht by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -221,15 +215,13 @@ automation:
                                 value_template: "{{trigger.platform == 'numeric_state'}}"
                               - condition: template
                                 value_template: "{{trigger.below |default(0) == 3.5 }}"
-                          - condition: template
-                            value_template: "{{trigger.event == 'sunset'}}"
                           - condition: sun
                             after: sunset
                     sequence:
-                      - service: notify.pushover
-                        data:
-                          title: house-status
-                          message: "2 status set to avond by {{trigger.platform}}"
+                      #                      - service: notify.pushover
+                      #                        data:
+                      #                          title: house-status
+                      #                          message: "2 status set to avond by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -238,10 +230,10 @@ automation:
                       - condition: template
                         value_template: "{{ trigger.entity_id == 'input_datetime.wakeuptime' }}"
                     sequence:
-                      - service: notify.pushover
-                        data:
-                          title: house-status
-                          message: "3 status set to overdag by {{trigger.platform}}"
+                      #                      - service: notify.pushover
+                      #                        data:
+                      #                          title: house-status
+                      #                          message: "3 status set to overdag by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -250,10 +242,10 @@ automation:
                       - condition: sun
                         before: sunrise
                     sequence:
-                      - service: notify.pushover
-                        data:
-                          title: house-status
-                          message: "4 status set to nacht by {{trigger.platform}}"
+                      #                      - service: notify.pushover
+                      #                        data:
+                      #                          title: house-status
+                      #                          message: "4 status set to nacht by {{trigger.platform}}"
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -267,16 +259,14 @@ automation:
                                 value_template: "{{trigger.platform == 'numeric_state'}}"
                               - condition: template
                                 value_template: "{{trigger.above |default(0) == 3.5 }}"
-                          - condition: template
-                            value_template: "{{trigger.event == 'sunrise'}}"
                           - condition: sun
                             after: sunrise
                             before: sunset
                     sequence:
-                      - service: notify.pushover
-                        data:
-                          title: house-status
-                          message: "5 status set to overdag by {{trigger.platform}} "
+                      #                      - service: notify.pushover
+                      #                        data:
+                      #                          title: house-status
+                      #                          message: "5 status set to overdag by {{trigger.platform}} "
                       - service: input_select.select_option
                         data:
                           entity_id: input_select.house_mode
@@ -285,12 +275,12 @@ automation:
                   - service: notify.pushover
                     data:
                       title: house-status
-                      message: "6 status not set as no conditions match "
+                      message: "status not set as no conditions match "
         default:
-          - service: notify.pushover
-            data:
-              title: house-status
-              message: "7 status set to away {{trigger}}"
+          #          - service: notify.pushover
+          #            data:
+          #              title: house-status
+          #              message: "7 status set to away {{trigger}}"
           - service: input_select.select_option
             data:
               entity_id: input_select.house_mode
