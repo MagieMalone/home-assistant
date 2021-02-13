@@ -112,7 +112,7 @@ influxdb:
 tts:
   - platform: google_translate
     service_name: google_say
-    base_url: https://foto-album.duckdns.org:8123
+    base_url: https://foto-album.duckdns.org
 
 notify:
   - platform: html5

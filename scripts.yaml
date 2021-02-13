@@ -16,7 +16,7 @@ nacht:
       entity_id: media_player.huiskamer_speaker
       data:
         message: 'Nighty night'
-        language: 'en-us'
+        language: 'en'
 eten:
   sequence:
     - service: light.turn_on

@@ -63,4 +63,4 @@ automation:
         title: "ISS"
         data:
           priority: -1
-          url: "https://foto-album.duckdns.org:8123/lovelace/iss"
+          url: "https://foto-album.duckdns.org/lovelace/iss"
