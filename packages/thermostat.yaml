@@ -32,14 +32,14 @@ sensor:
         value_template: '{{state_attr("climate.toon_thermostat", "hvac_action")}}'
       thermostat_condition:
         value_template: >
-          {% if is_state('sensor.0x00158d00031e0aff_temperature', 'unknown') %}
+          {% if is_state('sensor.buiten_temperature', 'unknown') %}
             {% if is_state('sensor.0x00158d00036c1ba4_temperature', 'unknown') %}
               {{(states('input_number.berkhout_temperatuur_0d') |float ) <20}}
             {% else %}
-              {{(states('sensor.0x00158d00031e0aff_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+              {{(states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
             {% endif %}
           {% else %}
-            {{(( states('sensor.0x00158d00031e0aff_temperature')  )|float) < (( states('sensor.0x00158d00036c1ba4_temperature') ) | float) and (states('sensor.0x00158d00031e0aff_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+            {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.0x00158d00036c1ba4_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
           {% endif %}
 
 timer:
@@ -102,7 +102,7 @@ automation:
                   mode: "comfort"
               - wait_for_trigger:
                   platform: numeric_state
-                  entity_id: sensor.0x00158d00031e31ac_temperature
+                  entity_id: sensor.badkamer_temperature
                   above: 20
                 timeout: "00:30:00"
               - alias: "zet kachel uit"

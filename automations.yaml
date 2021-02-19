@@ -1,36 +1,36 @@
-- id: '1608366491394'
+- id: "1608366491394"
   alias: Motion-activated Light Hal
-  description: ''
+  description: ""
   use_blueprint:
     path: myown/motion_light_lightlevel.yaml
     input:
-      motion_entity: binary_sensor.0x00158d0002b5d42f_occupancy
+      motion_entity: binary_sensor.hal_occupancy
       light_target:
         entity_id: light.hal
       threshold_input: input_number.lightlevel
-- id: '1608456934898'
+- id: "1608456934898"
   alias: Motion-activated Light Lightlevel traphal
-  description: ''
+  description: ""
   use_blueprint:
     path: myown/motion_light_lightlevel.yaml
     input:
-      motion_entity: binary_sensor.0x00158d0002b8586b_occupancy
+      motion_entity: binary_sensor.traphal_occupancy
       light_target:
         area_id: 429b2622d7794b9c90eb5d414ca9cb53
       threshold_input: input_number.lightlevel
-- id: '1608456965094'
+- id: "1608456965094"
   alias: Motion-activated Light Lightlevel overloop
-  description: ''
+  description: ""
   use_blueprint:
     path: myown/motion_light_lightlevel.yaml
     input:
-      motion_entity: binary_sensor.0x00158d0002b7eda4_occupancy
+      motion_entity: binary_sensor.overloop_occupancy
       light_target:
         area_id: 429b2622d7794b9c90eb5d414ca9cb53
       threshold_input: input_number.lightlevel
-- id: '1608714195345'
+- id: "1608714195345"
   alias: aqara studeerkamer
-  description: ''
+  description: ""
   use_blueprint:
     path: myown/aqara_doubleswitch_action_light.yaml
     input:
@@ -39,9 +39,9 @@
       light_entity_right: light.computer
       light_entity_both: light.computer
       mode_selector: input_select.house_mode
-- id: '1608714470902'
+- id: "1608714470902"
   alias: aqara woonkamer
-  description: ''
+  description: ""
   use_blueprint:
     path: myown/aqara_doubleswitch_action_light.yaml
     input:
@@ -50,9 +50,9 @@
       light_entity_right: light.staande_lamp
       light_entity_both: light.woonkamer
       mode_selector: input_select.house_mode
-- id: '1608714589824'
+- id: "1608714589824"
   alias: aqara slaapkamer
-  description: ''
+  description: ""
   use_blueprint:
     path: myown/aqara_doubleswitch_action_light.yaml
     input:
@@ -61,9 +61,9 @@
       light_entity_right: light.sk_ceiling
       light_entity_both: light.slaapkamer
       mode_selector: input_select.house_mode
-- id: '1608714672968'
+- id: "1608714672968"
   alias: aqara keuken
-  description: ''
+  description: ""
   use_blueprint:
     path: myown/aqara_doubleswitch_action_light.yaml
     input:
@@ -72,81 +72,113 @@
       light_entity_right: light.keuken
       light_entity_both: light.eetkamer, light.keuken
       mode_selector: input_select.house_mode
-- id: '1609411507048'
+- id: "1609411507048"
   alias: Mute mediaplayer when calling.
-  description: ''
+  description: ""
   use_blueprint:
     path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
     input:
       phone_state: sensor.kb2003_telefoon_status
       person: person.arnoud
       media_player: media_player.speakers
-- id: '1609411549751'
+- id: "1609411549751"
   alias: Mute mediaplayer when calling.
-  description: ''
+  description: ""
   use_blueprint:
     path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
     input:
       phone_state: sensor.kb2003_telefoon_status
       person: person.arnoud
       media_player: media_player.huiskamer_tv
-- id: '1609411592013'
+- id: "1609411592013"
   alias: Mute mediaplayer when calling.
-  description: ''
+  description: ""
   use_blueprint:
     path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
     input:
       phone_state: sensor.kb2003_telefoon_status
       person: person.arnoud
       media_player: media_player.ht_nt5
-- id: '1609411612257'
+- id: "1609411612257"
   alias: Mute mediaplayer when calling.
-  description: ''
+  description: ""
   use_blueprint:
     path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
     input:
       phone_state: sensor.kb2003_telefoon_status
       person: person.arnoud
       media_player: media_player.huiskamer_speaker
-- id: '1610275729152'
+- id: "1610275729152"
   alias: Auto-verlaat-parkeerplaats
-  description: ''
+  description: ""
   trigger:
-  - platform: device
-    device_id: 7e3829df257c2775577967545c92c196
-    domain: device_tracker
-    entity_id: device_tracker.sz_436_p_device_tracker
-    type: leaves
-    zone: zone.parking
+    - platform: device
+      device_id: 7e3829df257c2775577967545c92c196
+      domain: device_tracker
+      entity_id: device_tracker.sz_436_p_device_tracker
+      type: leaves
+      zone: zone.parking
   condition:
-  - condition: device
-    device_id: 5783e9f6177e11eb9d775b4d6ed4f183
-    domain: device_tracker
-    entity_id: device_tracker.kb2003
-    type: is_home
+    - condition: device
+      device_id: 5783e9f6177e11eb9d775b4d6ed4f183
+      domain: device_tracker
+      entity_id: device_tracker.kb2003
+      type: is_home
   action:
-  - device_id: 5783e9f6177e11eb9d775b4d6ed4f183
-    domain: mobile_app
-    type: notify
-    message: Auto verlaat de parkeerplaats
-    title: ALARM!
+    - device_id: 5783e9f6177e11eb9d775b4d6ed4f183
+      domain: mobile_app
+      type: notify
+      message: Auto verlaat de parkeerplaats
+      title: ALARM!
   mode: single
-- id: '1610285278747'
+- id: "1610285278747"
   alias: test-room-presence
-  description: ''
+  description: ""
   trigger:
-  - platform: state
-    entity_id: sensor.oneplus_8t_room_presence
-    to: Hal
+    - platform: state
+      entity_id: sensor.oneplus_8t_room_presence
+      to: Hal
   condition:
-  - condition: device
-    device_id: 5783e9f6177e11eb9d775b4d6ed4f183
-    domain: device_tracker
-    entity_id: device_tracker.kb2003
-    type: is_not_home
+    - condition: device
+      device_id: 5783e9f6177e11eb9d775b4d6ed4f183
+      domain: device_tracker
+      entity_id: device_tracker.kb2003
+      type: is_not_home
   action:
-  - service: notify.pushover
-    data:
-      title: room-presence testing
-      message: "kb2003 is in {{states('sensor.oneplus_8t_room_presence')}} en afstand is {{state_attr('sensor.oneplus_8t_room_presence','distance')}}"
+    - service: notify.pushover
+      data:
+        title: room-presence testing
+        message:
+          kb2003 is in {{states('sensor.oneplus_8t_room_presence')}} en afstand
+          is {{state_attr('sensor.oneplus_8t_room_presence','distance')}}
+  mode: single
+- id: "1613559282989"
+  alias: cleaning on
+  description: ""
+  trigger:
+    - device_id: cd07ef1cdd9443419a51e918186dc142
+      domain: hue
+      platform: device
+      type: remote_button_short_release
+      subtype: turn_on
+  condition: []
+  action:
+    - service: input_boolean.turn_on
+      data: {}
+      entity_id: input_boolean.cleaningmode
+  mode: single
+- id: "1613559332357"
+  alias: turn off cleaning
+  description: ""
+  trigger:
+    - device_id: cd07ef1cdd9443419a51e918186dc142
+      domain: hue
+      platform: device
+      type: remote_button_short_release
+      subtype: turn_off
+  condition: []
+  action:
+    - service: input_boolean.turn_off
+      data: {}
+      entity_id: input_boolean.cleaningmode
   mode: single

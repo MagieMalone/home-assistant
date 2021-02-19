@@ -1,53 +1,53 @@
 automation:
-  - alias: 'turn off espressomaker when away'
-    id: '678328023792301'
+  - alias: "turn off espressomaker when away"
+    id: "678328023792301"
     trigger:
       - platform: template
         value_template: "{{ is_state('input_select.house_mode', 'weg') }}"
     action:
       - service: switch.turn_off
         data:
-          entity_id: switch.0x7cb03eaa0a02be43_switch
-  - alias: 'turn off esspresso maker'
-    id: '1529161972987'
+          entity_id: switch.esspresso_switch
+  - alias: "turn off esspresso maker"
+    id: "1529161972987"
     trigger:
-    - at: '21:00:00'
-      platform: time
+      - at: "21:00:00"
+        platform: time
     condition: []
     action:
       - service: switch.turn_off
         data:
-          entity_id: switch.0x7cb03eaa0a02be43_switch
-  - alias: 'Turn on espresso  maker'
-    id: '1529161700562'
+          entity_id: switch.esspresso_switch
+  - alias: "Turn on espresso  maker"
+    id: "1529161700562"
     trigger:
-    - at: '07:30:00' 
-      platform: time
+      - at: "07:30:00"
+        platform: time
     condition:
       - condition: template
         value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:
       - service: switch.turn_on
         data:
-          entity_id: switch.0x7cb03eaa0a02be43_switch
+          entity_id: switch.esspresso_switch
 
-  - alias: 'Turn on espresso maker (afternoon)'
-    id: '1529161701532'
+  - alias: "Turn on espresso maker (afternoon)"
+    id: "1529161701532"
     trigger:
       - platform: time
-        at: '19:00:00' 
+        at: "19:00:00"
       - platform: state
         entity_id: input_select.arnoud_status
-        to: 'Net Thuis'
+        to: "Net Thuis"
     condition:
-     condition: and
-     conditions:
-      - condition: time
-        after: '19:00:00'
-        before: '20:30:00'
-      - condition: template
-        value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
+      condition: and
+      conditions:
+        - condition: time
+          after: "19:00:00"
+          before: "20:30:00"
+        - condition: template
+          value_template: "{{ not is_state('input_select.house_mode', 'weg') }}"
     action:
       - service: switch.turn_on
         data:
-          entity_id: switch.0x7cb03eaa0a02be43_switch
+          entity_id: switch.esspresso_switch

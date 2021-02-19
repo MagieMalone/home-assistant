@@ -33,7 +33,7 @@ views:
           - entity: light.media_group
             icon: mdi:flash
             name: Plugs woonkamer
-          - entity: switch.0x7cb03eaa0a02be43_switch
+          - entity: switch.esspresso_switch
             icon: mdi:flash
             name: Plug esspresso
           - entity: switch.0x8418260000105782_switch
@@ -356,11 +356,11 @@ views:
         id: alarm_entity
         entities:
           - alarm_control_panel.ha_alarm
-          - binary_sensor.0x00158d000289e817_contact
-          - binary_sensor.0x00158d000289ec2d_contact
-          - binary_sensor.0x00158d0002b7eda4_occupancy
-          - binary_sensor.0x00158d0002b8586b_occupancy
-          - binary_sensor.0x00158d0002b5d42f_occupancy
+          - binary_sensor.bijkeuken_deur_contact
+          - binary_sensor.voordeur_contact
+          - binary_sensor.overloop_occupancy
+          - binary_sensor.traphal_occupancy
+          - binary_sensor.hal_occupancy
   - title: Lights
     icon: mdi:lightbulb
     id: lights
@@ -388,7 +388,7 @@ views:
             title: Hal
             entities:
               - light.hal
-              - binary_sensor.0x00158d0002b5d42f_occupancy
+              - binary_sensor.hal_occupancy
               - sensor.0x00158d0002b5d42f_illuminance
       - type: vertical-stack
         cards:
@@ -404,8 +404,8 @@ views:
             entities:
               - light.overloop
               - light.trap_hal
-              - binary_sensor.0x00158d0002b7eda4_occupancy
-              - binary_sensor.0x00158d0002b8586b_occupancy
+              - binary_sensor.overloop_occupancy
+              - binary_sensor.traphal_occupancy
               - sensor.0x00158d0002b7eda4_illuminance
               - sensor.0x00158d0002b8586b_illuminance
           - type: entities
@@ -559,21 +559,21 @@ views:
             entities:
               - entity: sensor.berkhout_humidity
                 name: Berkhout
-              - entity: sensor.0x00158d00031e31ac_humidity
+              - entity: sensor.badkamer_humidity
                 name: Badkamer
               - entity: sensor.0x00158d00036c1ba4_humidity
                 name: Woonkamer
-              - entity: sensor.0x00158d00031e0bf7_humidity
+              - entity: sensor.studeerkamer_humidity
                 name: Studeerkamer
-              - entity: sensor.0x00158d00031e0aff_humidity
+              - entity: sensor.buiten_humidity
                 name: Buiten
-              - entity: sensor.0x00158d00031e318f_humidity
+              - entity: sensor.buiten_humidity
                 name: Slaapkamer
               - entity: sensor.0x00158d00031e0c0a_humidity
                 name: Bijkeuken
-              - entity: sensor.0x00158d000315e79c_humidity
+              - entity: sensor.zolder_voor_humidity
                 name: Zolder voor
-              - entity: sensor.0x00158d00031632ed_humidity
+              - entity: sensor.zolder_achter_humidity
                 name: Zolder achter
             show:
               points: false
@@ -589,21 +589,21 @@ views:
             entities:
               - entity: sensor.berkhout_temperature
                 name: Berkhout
-              - entity: sensor.0x00158d00031e31ac_temperature
+              - entity: sensor.badkamer_temperature
                 name: Badkamer
               - entity: sensor.0x00158d00036c1ba4_temperature
                 name: Woonkamer
-              - entity: sensor.0x00158d00031e0bf7_temperature
+              - entity: sensor.studeerkamer_temperature
                 name: Studeerkamer
-              - entity: sensor.0x00158d00031e0aff_temperature
+              - entity: sensor.buiten_temperature
                 name: Buiten
-              - entity: sensor.0x00158d00031e318f_temperature
+              - entity: sensor.buiten_temperature
                 name: Slaapkamer
               - entity: sensor.0x00158d00031e0c0a_temperature
                 name: Bijkeuken
-              - entity: sensor.0x00158d000315e79c_temperature
+              - entity: sensor.zolder_voor_temperature
                 name: Zolder voor
-              - entity: sensor.0x00158d00031632ed_temperature
+              - entity: sensor.zolder_achter_temperature
                 name: Zolder achter
 
             show:
@@ -647,7 +647,7 @@ views:
                     content: >
                       ## Temperatuur
                   - type: gauge
-                    entity: sensor.0x00158d00031e31ac_temperature
+                    entity: sensor.badkamer_temperature
                     name: Badkamer
                     min: -30
                     max: 50
@@ -657,17 +657,17 @@ views:
                     min: -30
                     max: 50
                   - type: gauge
-                    entity: sensor.0x00158d00031e0bf7_temperature
+                    entity: sensor.studeerkamer_temperature
                     name: Studeerkamer
                     min: -30
                     max: 50
                   - type: gauge
-                    entity: sensor.0x00158d00031e318f_temperature
+                    entity: sensor.buiten_temperature
                     name: Slaapkamer
                     min: -30
                     max: 50
                   - type: gauge
-                    entity: sensor.0x00158d00031e0aff_temperature
+                    entity: sensor.buiten_temperature
                     name: Buiten
                     min: -30
                     max: 50
@@ -682,12 +682,12 @@ views:
                     min: -30
                     max: 50
                   - type: gauge
-                    entity: sensor.0x00158d000315e79c_temperature
+                    entity: sensor.zolder_voor_temperature
                     name: Zolder voor
                     min: -30
                     max: 50
                   - type: gauge
-                    entity: sensor.0x00158d00031632ed_temperature
+                    entity: sensor.zolder_achter_temperature
                     name: Zolder achter
                     min: -30
                     max: 50
@@ -698,19 +698,19 @@ views:
                     content: >
                       ## Luchtvochtigheid
                   - type: gauge
-                    entity: sensor.0x00158d00031e31ac_humidity
+                    entity: sensor.badkamer_humidity
                     name: Badkamer
                   - type: gauge
                     entity: sensor.0x00158d00036c1ba4_humidity
                     name: Woonkamer
                   - type: gauge
-                    entity: sensor.0x00158d00031e0bf7_humidity
+                    entity: sensor.studeerkamer_humidity
                     name: Studeerkamer
                   - type: gauge
-                    entity: sensor.0x00158d00031e318f_humidity
+                    entity: sensor.buiten_humidity
                     name: Slaapkamer
                   - type: gauge
-                    entity: sensor.0x00158d00031e0aff_humidity
+                    entity: sensor.buiten_humidity
                     name: Buiten
                   - type: gauge
                     entity: sensor.berkhout_humidity
@@ -719,10 +719,10 @@ views:
                     entity: sensor.0x00158d00031e0c0a_humidity
                     name: Bijkeuken
                   - type: gauge
-                    entity: sensor.0x00158d000315e79c_humidity
+                    entity: sensor.zolder_voor_humidity
                     name: Zolder voor
                   - type: gauge
-                    entity: sensor.0x00158d00031632ed_humidity
+                    entity: sensor.zolder_achter_humidity
                     name: Zolder achter
   - title: test
     panel: false
@@ -825,7 +825,7 @@ views:
           - input_select.heating
           - input_number.thermostat_set_point
           - type: divider
-          - sensor.0x00158d00031e0aff_temperature
+          - sensor.buiten_temperature
           - sensor.0x00158d00036c1ba4_temperature
           - input_number.berkhout_temperatuur_0d
           - sensor.thermostat_condition
@@ -894,8 +894,7 @@ views:
             name: Oneplus3-wifi
           - entity: device_tracker.oneplus_a3003
             name: Oneplus3-HA
-          - entity: device_tracker.wdd1770871j017950
-            name: sz-436-p
+
           - input_select.arnoud_status
           - sensor.arnoud_status
           - sensor.prox_home_dir_of_travel
@@ -963,4 +962,3 @@ views:
           - sensor.brandweer
           - sensor.trauma_heli
           - device_tracker.369ab83aade93883
-          - device_tracker.wdd1770871j017950

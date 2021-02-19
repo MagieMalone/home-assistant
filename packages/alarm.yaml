@@ -1,29 +1,29 @@
 group:
   windows:
     entities:
-      - binary_sensor.0x00158d00040e32de_contact
+      - binary_sensor.slaapkamer_links_contact
       - binary_sensor.0x00158d00046113b0_contact
-      - binary_sensor.0x00158d000522a155_contact
-      - binary_sensor.0x00158d0005278e2c_contact
-      - binary_sensor.0x00158d0005278e3c_contact
-      - binary_sensor.0x00158d00052b224e_contact
+      - binary_sensor.slaapkamer_rechts_contact
+      - binary_sensor.studeerkamer_raam_contact
+      - binary_sensor.woonkamer_tuindeur_contact
+      - binary_sensor.zolder_achter_links_contact
       - binary_sensor.0x00158d00052b235c_contact
-      - binary_sensor.0x00158d0005304ae1_contact
-      - binary_sensor.0x00158d00040e3366_contact
-      - binary_sensor.0x00158d00045067d1_contact
+      - binary_sensor.zolder_overloop_contact
+      - binary_sensor.badkamer_raam_contact
+      - binary_sensor.woonkamer_raam_contact
   windows_kachel:
     entities:
-      - binary_sensor.0x00158d000522a155_contact
-      - binary_sensor.0x00158d0005278e2c_contact
-      - binary_sensor.0x00158d0005278e3c_contact
-      - binary_sensor.0x00158d00040e3366_contact
-      - binary_sensor.0x00158d00045067d1_contact
-      - binary_sensor.0x00158d00040e32de_contact
+      - binary_sensor.slaapkamer_rechts_contact
+      - binary_sensor.studeerkamer_raam_contact
+      - binary_sensor.woonkamer_tuindeur_contact
+      - binary_sensor.badkamer_raam_contact
+      - binary_sensor.woonkamer_raam_contact
+      - binary_sensor.slaapkamer_links_contact
   doors:
     entities:
-      - binary_sensor.0x00158d000289ec2d_contact
-      - binary_sensor.0x00158d0005278e3c_contact
-      - binary_sensor.0x00158d000289e817_contact
+      - binary_sensor.voordeur_contact
+      - binary_sensor.woonkamer_tuindeur_contact
+      - binary_sensor.bijkeuken_deur_contact
 alarm_control_panel:
   - platform: manual
     code_template: !secret alarm_code_template
@@ -67,7 +67,7 @@ automation:
     id: "3567312503718013980"
     trigger:
       platform: state
-      entity_id: binary_sensor.0x00158d000289e817_contact, binary_sensor.0x00158d000289ec2d_contact
+      entity_id: binary_sensor.bijkeuken_deur_contact, binary_sensor.voordeur_contact
       from: "off"
       to: "on"
     condition:
@@ -91,7 +91,7 @@ automation:
     id: "521368393280359863"
     trigger:
       platform: state
-      entity_id: binary_sensor.0x00158d000289e817_contact, binary_sensor.0x00158d000289ec2d_contact, binary_sensor.0x00158d0002b7eda4_occupancy, binary_sensor.0x00158d0002b8586b_occupancy, binary_sensor.0x00158d0002b5d42f_occupancy, binary_sensor.0x00158d00040e3366_contact, binary_sensor.0x00158d0005278e2c_contact, binary_sensor.0x00158d00040e32de_contact, binary_sensor.0x00158d000522a155_contact, binary_sensor.0x00158d0005304ae1_contact, binary_sensor.0x00158d00052b224e_contact, binary_sensor.0x00158d00046113b0_contact, binary_sensor.0x00158d00045067d1_contact, binary_sensor.0x00158d0005278e3c_contact, binary_sensor.0x00158d00052b235c_contact
+      entity_id: binary_sensor.bijkeuken_deur_contact, binary_sensor.voordeur_contact, binary_sensor.overloop_occupancy, binary_sensor.traphal_occupancy, binary_sensor.hal_occupancy, binary_sensor.badkamer_raam_contact, binary_sensor.studeerkamer_raam_contact, binary_sensor.slaapkamer_links_contact, binary_sensor.slaapkamer_rechts_contact, binary_sensor.zolder_overloop_contact, binary_sensor.zolder_achter_links_contact, binary_sensor.0x00158d00046113b0_contact, binary_sensor.woonkamer_raam_contact, binary_sensor.woonkamer_tuindeur_contact, binary_sensor.0x00158d00052b235c_contact
       from: "off"
       to: "on"
     condition:
