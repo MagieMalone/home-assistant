@@ -9,14 +9,14 @@ nacht:
     - service: light.turn_on
       entity_id: light.slaapkamer
     - service: switch.turn_off
-      entity_id: switch.0x8418260000105782_switch, switch.tplink_b0_4e_26_6b_a1_f5
+      entity_id: switch.tablet_lader, switch.tplink_b0_4e_26_6b_a1_f5
     - delay:
         seconds: 5
     - service: tts.google_say
       entity_id: media_player.huiskamer_speaker
       data:
-        message: 'Nighty night'
-        language: 'en'
+        message: "Nighty night"
+        language: "en"
 eten:
   sequence:
     - service: light.turn_on
@@ -29,8 +29,8 @@ eten:
     - service: tts.google_say
       entity_id: media_player.huiskamer_speaker
       data:
-        message: 'Eet smakelijk'
-        language: 'nl'
+        message: "Eet smakelijk"
+        language: "nl"
 koken:
   sequence:
     - service: light.turn_on
@@ -50,7 +50,7 @@ tv:
       entity_id: light.hue_lightstrip_plus_1
       data:
         brightness: 85
-        xy_color: 
+        xy_color:
           - 0.3388
           - 0.1332
         transition: 10
@@ -65,5 +65,5 @@ tv:
     - service: tts.google_say
       entity_id: media_player.huiskamer_speaker
       data:
-        message: 'Veel plezier'
-        language: 'nl'
+        message: "Veel plezier"
+        language: "nl"

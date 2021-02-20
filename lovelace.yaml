@@ -36,17 +36,17 @@ views:
           - entity: switch.esspresso
             icon: mdi:flash
             name: Plug esspresso
-          - entity: switch.0x8418260000105782_switch
+          - entity: switch.tablet_lader
             icon: mdi:flash
             name: Tablet lader
       #      - type: conditional
       #        conditions:
-      #          - entity: switch.0x8418260000105782_switch
+      #          - entity: switch.tablet_lader
       #            state_not: "unavailable"
       #        card:
       #          type: entities
       #          entities:
-      #            - entity: switch.0x8418260000105782_switch
+      #            - entity: switch.tablet_lader
       #              icon: mdi:flash
       #              name: Kerstboom
       #      - type: entities

@@ -1,20 +1,20 @@
 automation:
-  - alias: 'Laad tablet'
-    id: '54263098623458560' 
+  - alias: "Laad tablet"
+    id: "54263098623458560"
     trigger:
       platform: numeric_state
       entity_id: sensor.scarlet_battery_level
-      below: 40 
+      below: 40
     action:
       - service: switch.turn_on
-        entity_id: switch.0x8418260000105782_switch
+        entity_id: switch.tablet_lader
 
-  - alias: 'Tablet lader uit'
-    id: '57802395701892350865743010983' 
+  - alias: "Tablet lader uit"
+    id: "57802395701892350865743010983"
     trigger:
       platform: numeric_state
       entity_id: sensor.scarlet_battery_level
       above: 90
     action:
       - service: switch.turn_off
-        entity_id: switch.0x8418260000105782_switch
+        entity_id: switch.tablet_lader

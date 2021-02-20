@@ -7,3 +7,5 @@ automation:
     condition: []
     action:
       service: python_script.batterywarning
+      data:
+        threshold: 25
