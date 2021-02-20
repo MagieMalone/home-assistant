@@ -7,7 +7,7 @@ automation:
     action:
       - service: switch.turn_off
         data:
-          entity_id: switch.esspresso_switch
+          entity_id: switch.esspresso
   - alias: "turn off esspresso maker"
     id: "1529161972987"
     trigger:
@@ -17,7 +17,7 @@ automation:
     action:
       - service: switch.turn_off
         data:
-          entity_id: switch.esspresso_switch
+          entity_id: switch.esspresso
   - alias: "Turn on espresso  maker"
     id: "1529161700562"
     trigger:
@@ -29,7 +29,7 @@ automation:
     action:
       - service: switch.turn_on
         data:
-          entity_id: switch.esspresso_switch
+          entity_id: switch.esspresso
 
   - alias: "Turn on espresso maker (afternoon)"
     id: "1529161701532"
@@ -50,4 +50,4 @@ automation:
     action:
       - service: switch.turn_on
         data:
-          entity_id: switch.esspresso_switch
+          entity_id: switch.esspresso

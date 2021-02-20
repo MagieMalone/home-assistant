@@ -33,7 +33,7 @@ views:
           - entity: light.media_group
             icon: mdi:flash
             name: Plugs woonkamer
-          - entity: switch.esspresso_switch
+          - entity: switch.esspresso
             icon: mdi:flash
             name: Plug esspresso
           - entity: switch.0x8418260000105782_switch
