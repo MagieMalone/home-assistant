@@ -33,13 +33,13 @@ sensor:
       thermostat_condition:
         value_template: >
           {% if is_state('sensor.buiten_temperature', 'unknown') %}
-            {% if is_state('sensor.0x00158d00036c1ba4_temperature', 'unknown') %}
+            {% if is_state('sensor.woonkamer_temperature', 'unknown') %}
               {{(states('input_number.berkhout_temperatuur_0d') |float ) <20}}
             {% else %}
               {{(states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
             {% endif %}
           {% else %}
-            {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.0x00158d00036c1ba4_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+            {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
           {% endif %}
 
 timer:
@@ -77,6 +77,8 @@ automation:
           - "23:00:00"
           - "21:30:00"
           - input_datetime.pre_heat_time
+      - platform: state
+        entity_id: sensor.thermostat_condition
     condition: []
     action:
       - choose:

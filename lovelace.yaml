@@ -561,7 +561,7 @@ views:
                 name: Berkhout
               - entity: sensor.badkamer_humidity
                 name: Badkamer
-              - entity: sensor.0x00158d00036c1ba4_humidity
+              - entity: sensor.woonkamer_humidity
                 name: Woonkamer
               - entity: sensor.studeerkamer_humidity
                 name: Studeerkamer
@@ -591,7 +591,7 @@ views:
                 name: Berkhout
               - entity: sensor.badkamer_temperature
                 name: Badkamer
-              - entity: sensor.0x00158d00036c1ba4_temperature
+              - entity: sensor.woonkamer_temperature
                 name: Woonkamer
               - entity: sensor.studeerkamer_temperature
                 name: Studeerkamer
@@ -619,7 +619,7 @@ views:
             entities:
               - entity: sensor.schiphol_pressure
                 name: Schiphol
-              - entity: sensor.0x00158d00036c1ba4_pressure
+              - entity: sensor.woonkamer_pressure
                 name: Woonkamer
             show:
               points: false
@@ -652,7 +652,7 @@ views:
                     min: -30
                     max: 50
                   - type: gauge
-                    entity: sensor.0x00158d00036c1ba4_temperature
+                    entity: sensor.woonkamer_temperature
                     name: Woonkamer
                     min: -30
                     max: 50
@@ -701,7 +701,7 @@ views:
                     entity: sensor.badkamer_humidity
                     name: Badkamer
                   - type: gauge
-                    entity: sensor.0x00158d00036c1ba4_humidity
+                    entity: sensor.woonkamer_humidity
                     name: Woonkamer
                   - type: gauge
                     entity: sensor.studeerkamer_humidity
@@ -812,7 +812,7 @@ views:
       - type: custom:thermostat-card
         entity: climate.toon_thermostat
         title: Toon
-        ambient_temperature: sensor.0x00158d00036c1ba4_temperature
+        ambient_temperature: sensor.woonkamer_temperature
       - type: entities
         id: heating_toon
         title: Toon
@@ -826,12 +826,12 @@ views:
           - input_number.thermostat_set_point
           - type: divider
           - sensor.buiten_temperature
-          - sensor.0x00158d00036c1ba4_temperature
+          - sensor.woonkamer_temperature
           - input_number.berkhout_temperatuur_0d
           - sensor.thermostat_condition
       - type: gauge
         id: heating_temp_woonkamer
-        entity: sensor.0x00158d00036c1ba4_temperature
+        entity: sensor.woonkamer_temperature
         title: "Temperatuur woonkamer"
       - type: gauge
         id: heating_settemp
@@ -851,7 +851,7 @@ views:
         font_size_header: 18
         line_width: 2
         entities:
-          - entity: sensor.0x00158d00036c1ba4_temperature
+          - entity: sensor.woonkamer_temperature
             name: Woonkamer
           - entity: sensor.heating_set_temperature
             name: set point

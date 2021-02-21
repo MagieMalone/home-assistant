@@ -58,56 +58,56 @@ sensor:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: 0x00158d00031e0aff_temperature_stats
+    name: buiten_temperature_stats
   - platform: statistics
     entity_id: sensor.zolder_voor_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: 0x00158d000315e79c_temperature_stats
+    name: zolder_voor_temperature_stats
   - platform: statistics
     entity_id: sensor.zolder_achter_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: 0x00158d00031632ed_temperature_stats
+    name: zolder_achter_temperature_stats
   - platform: statistics
     entity_id: sensor.studeerkamer_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: 0x00158d00031e0bf7_temperature_stats
+    name: studeerkamer_temperature_stats
   - platform: statistics
     entity_id: sensor.buiten_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: 0x00158d00031e318f_temperature_stats
+    name: slaapkamer_temperature_stats
   - platform: statistics
     entity_id: sensor.badkamer_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: 0x00158d00031e31ac_temperature_stats
+    name: badkamer_temperature_stats
   - platform: statistics
-    entity_id: sensor.0x00158d00036c1ba4_temperature
+    entity_id: sensor.woonkamer_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: 0x00158d00036c1ba4_temperature_stats
+    name: woonkamer_temperature_stats
   - platform: statistics
-    entity_id: sensor.0x00158d00031e0c0a_temperature
+    entity_id: sensor.bijkeuken_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: 0x00158d00031e0c0a_temperature_stats
+    name: bijkeuken_temperature_stats
   - platform: template
     sensors:
       buiten_temp_min:
@@ -147,16 +147,16 @@ sensor:
         value_template: '{{ state_attr("sensor.badkamer_temperature_stats", "max_value") |float }}'
         friendly_name: "Maximum temperatuur badkamer"
       woonkamer_temp_min:
-        value_template: '{{ state_attr("sensor.0x00158d00036c1ba4_temperature_stats", "min_value") |float }}'
+        value_template: '{{ state_attr("sensor.woonkamer_temperature_stats", "min_value") |float }}'
         friendly_name: "Minimum temperatuur woonkamer"
       woonkamer_temp_max:
-        value_template: '{{ state_attr("sensor.0x00158d00036c1ba4_temperature_stats", "max_value") |float }}'
+        value_template: '{{ state_attr("sensor.woonkamer_temperature_stats", "max_value") |float }}'
         friendly_name: "Maximum temperatuur woonkamer"
       bijkeuken_temp_min:
-        value_template: '{{ state_attr("sensor.0x00158d00031e0c0a_temperature_stats", "min_value") |float }}'
+        value_template: '{{ state_attr("sensor.bijkeuken_temperature_stats", "min_value") |float }}'
         friendly_name: "Minimum temperatuur bijkeuken"
       bijkeuken_temp_max:
-        value_template: '{{ state_attr("sensor.0x00158d00031e0c0a_temperature_stats", "max_value") |float }}'
+        value_template: '{{ state_attr("sensor.bijkeuken_temperature_stats", "max_value") |float }}'
         friendly_name: "Maximum temperatuur bijkeuken"
 
 automation:
@@ -202,7 +202,7 @@ automation:
   - alias: "alert beneden ramen dicht"
     trigger:
       platform: template
-      value_template: "{{ (states('sensor.0x00158d00036c1ba4_temperature')|float -1) < (states('sensor.buiten_temperature')|float)}} "
+      value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) < (states('sensor.buiten_temperature')|float)}} "
     action:
       - service: tts.google_say
         entity_id: media_player.speakers
@@ -246,7 +246,7 @@ automation:
   - alias: "alert beneden ramen open"
     trigger:
       platform: template
-      value_template: "{{ (states('sensor.0x00158d00036c1ba4_temperature')|float -1) > (states('sensor.buiten_temperature')|float)}} "
+      value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) > (states('sensor.buiten_temperature')|float)}} "
     action:
       - service: tts.google_say
         entity_id: media_player.speakers

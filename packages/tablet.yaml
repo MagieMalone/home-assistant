@@ -1,5 +1,5 @@
 automation:
-  - alias: "Laad tablet"
+  - alias: "tablet lader aan"
     id: "54263098623458560"
     trigger:
       platform: numeric_state
