@@ -67,6 +67,7 @@ automation:
         entity_id: group.windows_kachel
         from: "off"
         to: "on"
+        for: "00:05:00"
       - platform: state
         entity_id: group.windows_kachel
         from: "on"

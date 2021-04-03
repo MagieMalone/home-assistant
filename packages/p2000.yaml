@@ -11,7 +11,7 @@ sensor:
     radius: 1000
   - platform: p2000
     name: Trauma-heli
-    regios: 8,13,17,2
+    regios: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
     radius: 15000
     capcodes: 120901,923993,1420059,923995,320908
   - platform: p2000
