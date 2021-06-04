@@ -5,30 +5,30 @@ sensor:
 #    api_key: !secret google_apikey
 #    origin: device_tracker.4dd0404d
 #    destination: zone.home
-  - platform: google_travel_time
-    scan_interval: 600
-    name: Home to ING
-    api_key: !secret google_apikey
-    origin: zone.home
-    destination: zone.ING
-  - platform: google_travel_time
-    scan_interval: 600
-    name: ING to Home
-    api_key: !secret google_apikey
-    origin: zone.ING
-    destination: zone.home 
-  - platform: google_travel_time
-    scan_interval: 900
-    api_key: !secret google_apikey
-    origin: device_tracker.467cfa38bbada1bf
-    destination: sensor.cal_location
-    name: google_travel_time_driving
-  - platform: google_travel_time
-    scan_interval: 900
-    api_key: !secret google_apikey
-    origin: zone.home
-    destination: sensor.cal_location_alarm
-    name: google_travel_time_alarm
+#  - platform: google_travel_time
+#    scan_interval: 600
+#    name: Home to ING
+#    api_key: !secret google_apikey
+#    origin: zone.home
+#    destination: zone.ING
+#  - platform: google_travel_time
+#    scan_interval: 600
+#    name: ING to Home
+#    api_key: !secret google_apikey
+#    origin: zone.ING
+#    destination: zone.home 
+#  - platform: google_travel_time
+#    scan_interval: 900
+#    api_key: !secret google_apikey
+#    origin: device_tracker.467cfa38bbada1bf
+#    destination: sensor.cal_location
+#    name: google_travel_time_driving
+#  - platform: google_travel_time
+#    scan_interval: 900
+#    api_key: !secret google_apikey
+#    origin: zone.home
+#    destination: sensor.cal_location_alarm
+#    name: google_travel_time_alarm
     
   - platform: statistics
     entity_id: sensor.ing_to_home

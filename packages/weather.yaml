@@ -1,11 +1,11 @@
-camera:
+#camera:
   #  - platform: generic
   #    name: buienradar
   #    still_image_url:  https://api.buienradar.nl/image/1.0/RadarMapNL?w=500&h=512
   #  - platform: generic
   #    still_image_url:  http://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADAR_loop.gif
-  - platform: buienradar
-    name: buienradar
+#  - platform: buienradar
+#    name: buienradar
 input_number:
   berkhout_temperatuur_0d:
     name: Berkhout temparatuur forcast vandaag
@@ -15,43 +15,43 @@ input_number:
     mode: box
     icon: mdi:thermometer
 
-weather:
-  - platform: buienradar
-    name: "Berkhout"
-    latitude: 52.65
-    longitude: 4.98
+#weather:
+#  - platform: buienradar
+#    name: "Berkhout"
+#    latitude: 52.65
+#    longitude: 4.98
 sensor:
-  - platform: buienradar
-    name: "Berkhout"
-    latitude: 52.65
-    longitude: 4.98
-    timeframe: 30
-    monitored_conditions:
-      - symbol
-      - humidity
-      - temperature
-      - windspeed
-      - conditiondetailed
-      - condition
-      - conditioncode
-      - visibility
-      - irradiance
-      - windazimuth
-      - precipitation_forecast_total
-      - temperature_1d
-  - platform: buienradar
-    name: "de Bilt"
-    latitude: 52.10
-    longitude: 5.18
-    monitored_conditions:
-      - symbol
-  - platform: buienradar
-    name: "Schiphol"
-    latitude: 52.30
-    longitude: 4.77
-    monitored_conditions:
-      - symbol
-      - pressure
+#  - platform: buienradar
+#    name: "Berkhout"
+#    latitude: 52.65
+#    longitude: 4.98
+#    timeframe: 30
+#    monitored_conditions:
+#      - symbol
+#      - humidity
+#      - temperature
+#      - windspeed
+#      - conditiondetailed
+#      - condition
+#      - conditioncode
+#      - visibility
+#      - irradiance
+#      - windazimuth
+#      - precipitation_forecast_total
+#      - temperature_1d
+#  - platform: buienradar
+#    name: "de Bilt"
+#    latitude: 52.10
+#    longitude: 5.18
+#    monitored_conditions:
+#      - symbol
+#  - platform: buienradar
+#    name: "Schiphol"
+#    latitude: 52.30
+#    longitude: 4.77
+#    monitored_conditions:
+#      - symbol
+#      - pressure
   - platform: statistics
     entity_id: sensor.buiten_temperature
     max_age:
