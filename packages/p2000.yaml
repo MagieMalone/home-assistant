@@ -2,20 +2,27 @@ sensor:
   - platform: p2000
     name: Brandweer
     regios: 10
-    disciplines: 1
+    disciplines: Brandweerdiensten
     radius: 7500
   - platform: p2000
     name: Ambulance
     regios: 10
-    disciplines: 2
+    disciplines: Ambulancediensten
     radius: 1000
   - platform: p2000
-    name: Trauma-heli
-    regios: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
-    capcodes: 120901,923993,1420059,923995,320908
+    name: LL1
+    capcodes: 0120901
+  - platform: p2000
+    name: LL2
+    capcodes: 1420059
+  - platform: p2000
+    name: LL3
+    capcodes: 0923993
+  - platform: p2000
+    name: LL4
+    capcodes: 0320908
   - platform: p2000
     name: grip
-    regios: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
     radius: 30000
     contains: "GRIP"
   - platform: template
@@ -23,48 +30,79 @@ sensor:
       p2000_last:
         friendly_name: "p2000 last seen"
         value_template: >
-          {% if state_attr('sensor.ambulance', 'time') == None %} 
-            {% set ambulance = 0 %}
-          {% else %}
-            {% set ambulance = as_timestamp(state_attr('sensor.ambulance', 'time')) %}
-          {% endif %}
-          {% if state_attr('sensor.brandweer', 'time') == None %}
-            {% set brandweer = 0 %}
-          {% else %}
-            {% set brandweer = as_timestamp(state_attr('sensor.brandweer', 'time')) %}
-          {% endif %}
-          {% if state_attr('sensor.trauma_heli', 'time') == None %}
-            {% set heli = 0 %}
-          {% else %}
-            {% set heli = as_timestamp(state_attr('sensor.trauma_heli', 'time')) %}
-          {% endif %}
-          {% if (ambulance >  brandweer) and (ambulance > heli ) %}
-            {{states('sensor.ambulance')}}
-          {% elif (brandweer > heli) %}
-            {{states('sensor.brandweer')}}
-          {% else %}
-            {{states('trauma_heli')}}
-          {% endif %}
+          {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+          {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+          {{ (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|map(attribute='state')|first}}
         icon_template: >
-          {% if state_attr('sensor.ambulance', 'time') == None %} 
-            {% set ambulance = 0 %}
-          {% else %}
-            {% set ambulance = as_timestamp(state_attr('sensor.ambulance', 'time')) %}
-          {% endif %}
-          {% if state_attr('sensor.brandweer', 'time') == None %}
-            {% set brandweer = 0 %}
-          {% else %}
-            {% set brandweer = as_timestamp(state_attr('sensor.brandweer', 'time')) %}
-          {% endif %}
-          {% if state_attr('sensor.trauma_heli', 'time') == None %}
-            {% set heli = 0 %}
-          {% else %}
-            {% set heli = as_timestamp(state_attr('sensor.trauma_heli', 'time')) %}
-          {% endif %}
-          {% if (ambulance >  brandweer) and (ambulance > heli ) %}
+          {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+          {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+          {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|map(attribute='entity_id')|first %}
+          {% if entity == "sensor.ambulance"%}
             {{'mdi:ambulance'}}
-          {% elif (brandweer > heli) %}
+          {% elif entity == "sensor.brandweer"%}
             {{'mdi:fire-truck'}}
+          {% elif entity == "sensor.grip"%}
+            {{'mdi:alarm-light'}}
           {% else %}
             {{'mdi:helicopter'}}
           {% endif %}
+proximity:
+  lifeliner:
+    devices:
+      - sensor.ll1
+      - sensor.ll2
+      - sensor.ll3
+      - sensor.ll4
+    unit_of_measurement: km
+automation:
+  - id: 789d0d2c-4ee0-41af-999d-c6f5a9f28c85
+    alias: Lifeliners_announce
+    trigger:
+      - platform: numeric_state
+        entity_id: proximity.lifeliner
+        below: 15
+    condition:
+      - condition: and
+        conditions:
+          - condition: or
+            conditions:
+              - condition: and
+                conditions:
+                  - alias: "werkdag"
+                    condition: time
+                    after: "06:30:00"
+                    before: "22:00:00"
+                  - alias: "workday"
+                    condition: state
+                    entity_id: binary_sensor.workday_sensor
+                    state: "on"
+              - condition: and
+                conditions:
+                  - alias: "vrijedag"
+                    condition: time
+                    after: "09:00:00"
+                    before: "22:00:00"
+                  - alias: "workday"
+                    condition: state
+                    entity_id: binary_sensor.workday_sensor
+                    state: "off"
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: input_select.arnoud_status
+                state: "Thuis"
+              - condition: state
+                entity_id: input_select.arnoud_status
+    action:
+      - service: tts.google_say
+        entity_id: media_player.speakers
+        data:
+          message: >
+            {% set map = {'LL1':'Lifeliner1','LL2':'Lifeliner2','LL3':'Lifeliner3','LL4':'Lifeliner4'} %}
+            {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
+            {% set sensor = 'sensor.' ~ nearest %}
+            {% set ll_state = states(sensor)| regex_replace(find='^A[0-9] ', replace='', ignorecase=False) |regex_replace(find='\(DIA(|\=(ja|nee))\) ', replace='', ignorecase=False) |regex_replace(find='^[0-9]+ ', replace='', ignorecase=False) | regex_replace(find='(rit.+|[0-9]{5} .+)', replace='', ignorecase=true) %}
+            de {{map.get(nearest, 'unknown')}} is onderweg naar {{ll_state}}
+
+          cache: false
+          language: "nl"

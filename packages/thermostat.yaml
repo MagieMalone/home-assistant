@@ -96,8 +96,13 @@ automation:
                 data:
                   mode: "away"
           - conditions:
-              - condition: template
-                value_template: "{{ trigger.entity_id == 'input_datetime.pre_heat_time' }}"
+              - condition: and
+                conditions:
+                  - condition: template
+                    value_template: "{{ trigger.entity_id == 'input_datetime.pre_heat_time' }}"
+                  - condition: numeric_state
+                    entity_id: sensor.badkamer_temperature
+                    below: 20
             sequence:
               - alias: "zet kachel aan"
                 service: script.kachel_mode

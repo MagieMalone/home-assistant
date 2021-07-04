@@ -1,3 +1,6 @@
+input_text:
+  here_api:
+    initial: !secret here_api
 sensor:
 #  - platform: google_travel_time
 #    scan_interval: 1800
@@ -29,7 +32,24 @@ sensor:
 #    origin: zone.home
 #    destination: sensor.cal_location_alarm
 #    name: google_travel_time_alarm
-    
+# Example configuration.yaml entry
+
+  - platform: rest
+    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states.sensor.cal_location_alarm.state |urlencode}}&apiKey={{states('input_text.here_api')}}
+    value_template: "{{(value_json['items'][0]['position']['lat']|string ) + ',' + (value_json['items'][0]['position']['lng'] |string)}}"
+    name: "alarm_latlong"
+
+  - platform: here_travel_time
+    api_key: !secret here_api
+    origin_entity_id: zone.home
+    destination_entity_id: sensor.alarm_latlong
+    name: here_travel_time_alarm
+  - platform: here_travel_time
+    api_key: !secret here_api
+    origin_entity_id: zone.home
+    destination_entity_id: sensor.alarm_latlong
+    name: here_travel_time_alarm_bike
+    mode: bicycle
   - platform: statistics
     entity_id: sensor.ing_to_home
     name: ing_to_home_stats

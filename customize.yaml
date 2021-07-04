@@ -94,3 +94,19 @@ binary_sensor.edgeos_device_synology415play:
   friendly_name: Synology415play
 binary_sensor.edgeos_device_tplink:
   friendly_name: Tplink
+input_text.here_api:
+  hidden: true
+sensor.ll1:
+  icon: mdi:helicopter
+sensor.ll2:
+  icon: mdi:helicopter
+sensor.ll3:
+  icon: mdi:helicopter
+sensor.ll4:
+  icon: mdi:helicopter
+sensor.google_rtt:
+  unit_of_measurement: ms
+sensor.edgeos_interface_eth0_in_kbps:
+  unit_of_measurement: kbps
+sensor.edgeos_interface_eth0_out_kbps:
+  unit_of_measurement: kbps

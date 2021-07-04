@@ -1,6 +1,14 @@
+binary_sensor:
+  - platform: ping
+    host: 8.8.8.8
+    name: "google"
+    count: 1
+    scan_interval: 15
 sensor:
   - platform: template
     sensors:
+      google_rtt:
+        value_template: "{{state_attr('binary_sensor.google', 'round_trip_time_avg')|float}}"
       edgeos_interface_eth0_in_kbps:
         value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Received)')|float}}"
       edgeos_interface_eth0_out_kbps:
