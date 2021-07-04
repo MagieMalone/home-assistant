@@ -93,6 +93,7 @@ automation:
                 state: "Thuis"
               - condition: state
                 entity_id: input_select.arnoud_status
+                state: "Net Thuis"
     action:
       - service: tts.google_say
         entity_id: media_player.speakers
