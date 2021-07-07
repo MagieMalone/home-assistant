@@ -102,7 +102,7 @@ automation:
             {% set map = {'LL1':'Lifeliner1','LL2':'Lifeliner2','LL3':'Lifeliner3','LL4':'Lifeliner4'} %}
             {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
             {% set sensor = 'sensor.' ~ nearest %}
-            {% set ll_state = states(sensor)| regex_replace(find='^A[0-9] ', replace='', ignorecase=False) |regex_replace(find='\(DIA(|\=(ja|nee))\) ', replace='', ignorecase=False) |regex_replace(find='^[0-9]+ ', replace='', ignorecase=False) | regex_replace(find='(rit.+|[0-9]{5} .+)', replace='', ignorecase=true) %}
+            {% set ll_state = states(sensor)| regex_replace(find='^A[0-9] ', replace='', ignorecase=False) |regex_replace(find='\(DIA(|\:(ja|nee))\) ', replace='', ignorecase=False) |regex_replace(find='^[0-9]+ ', replace='', ignorecase=False) | regex_replace(find='(rit.+|[0-9]{5} .+)', replace='', ignorecase=true) %}
             de {{map.get(nearest, 'unknown')}} is onderweg naar {{ll_state}}
 
           cache: false

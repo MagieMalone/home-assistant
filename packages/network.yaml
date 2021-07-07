@@ -2,7 +2,7 @@ binary_sensor:
   - platform: ping
     host: 8.8.8.8
     name: "google"
-    count: 1
+    count: 3
     scan_interval: 15
 sensor:
   - platform: template
