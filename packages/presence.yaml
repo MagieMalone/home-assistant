@@ -168,10 +168,12 @@ automation:
         entity_id: sun.sun
         attribute: elevation
         below: 3.5
+        id: "sun_below"
       - platform: numeric_state
         entity_id: sun.sun
         attribute: elevation
         above: 3.5
+        id: "sun_above"
     action:
       - choose:
           - conditions:
@@ -209,12 +211,8 @@ automation:
                   - conditions:
                       - condition: or
                         conditions:
-                          - condition: and
-                            conditions:
-                              - condition: template
-                                value_template: "{{trigger.platform == 'numeric_state'}}"
-                              - condition: template
-                                value_template: "{{trigger.below |default(0) == 3.5 }}"
+                          - condition: trigger
+                            id: "sun_below"
                           - condition: sun
                             after: sunset
                     sequence:
@@ -253,12 +251,8 @@ automation:
                   - conditions:
                       - condition: or
                         conditions:
-                          - condition: and
-                            conditions:
-                              - condition: template
-                                value_template: "{{trigger.platform == 'numeric_state'}}"
-                              - condition: template
-                                value_template: "{{trigger.above |default(0) == 3.5 }}"
+                          - condition: trigger
+                            id: "sun_above"
                           - condition: sun
                             after: sunrise
                             before: sunset

@@ -52,7 +52,6 @@ condition:
 trigger:
   platform: state
   entity_id: !input motion_entity
-  from: "off"
   to: "on"
 
 action:
@@ -64,7 +63,6 @@ action:
   - wait_for_trigger:
       platform: state
       entity_id: !input motion_entity
-      from: "on"
       to: "off"
   - service: light.turn_off
     target: !input light_target

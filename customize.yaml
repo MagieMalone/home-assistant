@@ -110,3 +110,31 @@ sensor.edgeos_interface_eth0_in_kbps:
   unit_of_measurement: kbps
 sensor.edgeos_interface_eth0_out_kbps:
   unit_of_measurement: kbps
+light.hue_color_pendant_up_1:
+  icon: hue:pendant-long-up
+light.hue_color_pendant_down_1:
+  icon: hue:pendant-long
+light.eetkamer:
+  icon: hue:pendant-long
+light.hue_lightstrip_plus_1:
+  icon: hue:lightstrip
+light.keuken_1:
+  icon: hue:bulb-spot
+light.keuken_2:
+  icon: hue:bulb-spot
+light.keuken_3:
+  icon: hue:bulb-spot
+light.sk_spot:
+  icon: hue:double-spot
+light.sk_duo_spot_1:
+  icon: hue:bulb-spot
+light.sk_duo_spot_2:
+  icon: hue:bulb-spot
+light.staande_lamp:
+  icon: hue:floor-shade
+light.hal:
+  icon: hue:ceiling-round
+light.overloop:
+  icon: hue:ceiling-round
+light.trap_hal:
+  icon: hue:ceiling-round

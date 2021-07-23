@@ -172,6 +172,9 @@ automation:
       - condition: state
         entity_id: input_boolean.cleaningmode
         state: "off"
+      - condition: state
+        entity_id: script.wakeup_light
+        state: "off"
     action:
       - service: light.turn_off
         entity_id: light.lampen
