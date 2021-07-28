@@ -2,7 +2,9 @@ sensor:
   - platform: history_stats
     name: arnoud_at_home
     entity_id: device_tracker.467cfa38bbada1bf
-    state: "home"
+    state:
+      - "home"
+      - "parking"
     type: ratio
     duration:
       days: 7

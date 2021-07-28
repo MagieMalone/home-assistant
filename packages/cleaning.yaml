@@ -36,6 +36,61 @@ automation:
     action:
       - service: input_boolean.turn_off
         entity_id: input_boolean.cleaningmode
+  - alias: 'jacqueline-binnen'
+    id: 142c8938-9513-48fe-9345-01f55a7992a9 
+    trigger:
+      - platform: state
+        entity_id: device_tracker.edgeos_jacqueline
+        to: 'home'
+    condition:
+      - condition: time
+        after: "07:30:00"
+        before: "08:30:00"
+        weekday:
+          - "wed"
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: "Weg"
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: "Net Weg"
+    action:
+      - service: alarm_control_panel.alarm_disarm
+        data:
+          entity_id: alarm_control_panel.ha_alarm
+          code: !secret alarm_code
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.cleaningmode
+      - service: tts.google_say
+        entity_id: media_player.huiskamer_speaker
+        data:
+          message: 'Goedemorgen jacqueline'
+          language: 'nl'
+      - delay:
+          seconds: 5
+      - service: spotcast.start
+        data:
+          entity_id: media_player.speakerfancy
+          uri: 'spotify:playlist:37i9dQZF1DXbkk7Hqpo679'
+          shuffle: true
+          start_volume: 40
+          random_song: true
+      - wait_for_trigger:
+          platform: state
+          entity_id: device_tracker.edgeos_jacqueline
+          to: 'away'
+          for: '00:15:00'
+        timeout: "04:00:00"
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.cleaningmode
+      - service: media_player.turn_off
+        target:
+          entity_id: media_player.speakerfancy
+      - service: alarm_control_panel.alarm_arm_away
+        entity_id: alarm_control_panel.ha_alarm
+
 script:
   cleaningmode_on:
     sequence:
