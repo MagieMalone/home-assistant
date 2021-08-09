@@ -64,7 +64,30 @@ proximity:
       - device_tracker.sz_436_p_device_tracker
     unit_of_measurement: km
     tolerance: 50
+
 automation:
+  - alias: 'edwin-binnen'
+    id: c97ea8e3-8a93-4a66-ad8e-54e59c44b01f 
+    trigger:
+      - platform: state
+        entity_id: device_tracker.edgeos_oneplus_nord2_5g_edwin
+        to: 'home'
+    action:
+      - service: alarm_control_panel.alarm_disarm
+        data:
+          entity_id: alarm_control_panel.ha_alarm
+          code: !secret alarm_code
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.guests_boolean
+      - wait_for_trigger:
+          platform: state
+          entity_id: device_tracker.edgeos_oneplus_nord2_5g_edwin
+          to: 'away'
+          for: '00:15:00'
+        timeout: "10:00:00"
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.guests_boolean
+
   - alias: "Mark person as just arrived"
     id: "548327489170419324086"
     trigger:

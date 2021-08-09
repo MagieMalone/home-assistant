@@ -8,6 +8,7 @@
 !blueprints/
 !blueprints/automation/
 !blueprints/automation/myown/
+!esphome/
 !*.yaml
 !*.py
 !*.j2

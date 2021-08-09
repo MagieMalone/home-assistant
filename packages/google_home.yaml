@@ -30,6 +30,21 @@ google_assistant:
       expose: false
     input_boolean.wakeuplight_manual:
       expose: false
+    media_player.slaapkamer_speaker:
+      expose: false
+    media_player.huiskamer_speaker:
+      expose: false
+    media_player.ht_nt5:
+      expose: false
+    media_player.ht_nt5_surround:
+      expose: false
+    media_player.studeerkamer_speaker:
+      expose: false
+    media_player.huiskamer_tv:
+      expose: false
+    media_player.slaapkamer_tv:
+      expose: false
+
 script:
   both_speakers:
     sequence:

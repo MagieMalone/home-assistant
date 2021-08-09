@@ -35,20 +35,46 @@ sensor:
         value_template: >
           {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
           {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-          {{ (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|map(attribute='state')|first}}
+          {{ (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='state')|first}}
         icon_template: >
           {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
           {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-          {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|map(attribute='entity_id')|first %}
+          {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+          {% set dienst = states( entity ) | regex_findall_index(find='^(A|B|P)', index=0, ignorecase=False)|first  %}
           {% if entity == "sensor.ambulance"%}
             {{'mdi:ambulance'}}
           {% elif entity == "sensor.brandweer"%}
             {{'mdi:fire-truck'}}
           {% elif entity == "sensor.grip"%}
             {{'mdi:alarm-light'}}
+          {% elif entity == "sensor.p2000_latest"%}
+            {% if dienst in ['A', 'B'] %}
+              {{'mdi:ambulance'}}
+            {% else %}
+              {{'mdi:fire-truck'}}
+            {% endif %}
           {% else %}
             {{'mdi:helicopter'}}
           {% endif %}
+        attribute_templates:
+          capcode: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% if state_attr(entity, 'capcode') == None  %}
+              {% if state_attr(entity, 'capcodes') == None %}
+                Unknown
+              {% else %}
+                {{state_attr(entity, 'capcodes')}}
+              {% endif %}
+            {% else %}
+              {{state_attr(entity, 'capcode')}}
+            {% endif %}
+
+timer:
+  p2000_announce:
+    duration: "00:01:00"
+
 proximity:
   lifeliner:
     devices:
@@ -57,6 +83,12 @@ proximity:
       - sensor.ll3
       - sensor.ll4
     unit_of_measurement: km
+  ambuymke:
+    zone: ymke_buurt
+    devices:
+      - sensor.ambulance
+      - sensor.brandweer
+    unit_of_measurement: m
 automation:
   - id: 789d0d2c-4ee0-41af-999d-c6f5a9f28c85
     alias: Lifeliners_announce
@@ -100,28 +132,65 @@ automation:
     action:
       - service: script.p2000_announce
         data:
-          my_entity: >
-            {% set map = {'LL1':'Lifeliner1','LL2':'Lifeliner2','LL3':'Lifeliner3','LL4':'Lifeliner4'} %}
+          my_state: >
             {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
             {% set sensor = 'sensor.' ~ nearest %}
-            {{sensor}}
+            {{states(sensor)}}
           heli: >
             {% set map = {'LL1':'Lifeliner1','LL2':'Lifeliner2','LL3':'Lifeliner3','LL4':'Lifeliner4'} %}
             {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
             {{map.get(nearest, 'unknown')}}
-#      - service: tts.google_say
-#        entity_id: media_player.speakers
-#        data:
-#          message: >
-#            {% set map = {'LL1':'Lifeliner1','LL2':'Lifeliner2','LL3':'Lifeliner3','LL4':'Lifeliner4'} %}
-#            {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
-#            {% set sensor = 'sensor.' ~ nearest %}
-#            {% set ll_state = states(sensor)| regex_replace(find='^A[0-9] ', replace='', ignorecase=False) |regex_replace(find='\(DIA(|\((:|=)(ja|nee))\) ', replace='', ignorecase=False) |regex_replace(find='^([0-9]+ )+|^AMBU ([0-9]+ )+', replace='', ignorecase=False) |regex_replace(find='((rit|bon) .+|([0-9]{5} )+)', replace='', ignorecase=true) %}
-#            de {{map.get(nearest, 'unknown')}} is onderweg naar {{ll_state}}
-#          
-#
-#          cache: false
-#          language: "nl"
+
+  - id: bc3a281f-efb8-4308-93d1-3802a1401122
+    alias: ambu_ymke_announce
+    trigger:
+      - platform: numeric_state
+        entity_id: proximity.ambuymke
+        below: 50
+    action:
+      - service: notify.pushover
+        data:
+          message: >
+            {% set nearest = state_attr('proximity.ambuymke', 'nearest') %}
+            {% set my_entity = 'sensor.' ~ nearest %}
+            {% set BR_code ='BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole|afval) ' %}
+            {% set HV_code ='HV (materieel|(weg |spoor |water )(letsel|materieel) |overig ) ' %}
+            {% set DV_code ='DV (aan derden|Brw) ' %}
+            {% set no_code ='(CO-melder|Rookmelder|Liftopsluiting|Ass. (Ambu|Pol)|Reanimatie|(PAC|OMS) 
+            (brandmelding|handmelder)|(Persoon|Voertuig) te water|Wateroverlast|Uitval nutsvoorz.|
+            Persoon te water|Dier (in problemen|op hoogte|te water|in put/kelder)|Stank/hind. lucht|Luid/optisch alarm|Stormschade) ' %}
+            {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
+            {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ bran_reden %}
+            {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
+            {% set brackets ='\([^)]+\) *' %}
+            {% set ambu_string = '^(|( |)AMBU )([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
+            {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
+            {% set mapdienst = {'A':'Ambulance','B':'Ambulance','P':'Brandweer'} %}
+            {% set mapreden = {'BR':'Brand,','HV':'Hulpverlening,', 'DV':'Dienstverlening,'} %}
+            {% set mapast = {'Ass. Ambu ':'Assistentie ambulance','Ass. Pol ':'Assistentie Politie','Stank/hind. lucht ':'Stank of hinderlijke lucht'} %}
+            {% set location1 = states( my_entity )|regex_replace(find=dienstprio, replace='', ignorecase=False) %}
+            {% set location2 = location1 |regex_replace(find=brackets, replace='', ignorecase=False)  %}
+            {% set location3 = location2 |regex_replace(find=ambu_string, replace='', ignorecase=False) %}
+            {% set location4 = location3 |regex_replace(find=br_string, replace='', ignorecase=False) %}
+            {% set location = location4 |regex_replace(find=bon_string, replace='', ignorecase=False) %}
+            {% if location3 is search(br_string, ignorecase=True) %}
+                {% set reden1 = location3 | regex_findall_index(find=bran_reden, index=0, ignorecase=False)|first %}
+                {% if reden1 is search('^(HV|BR|DV)', ignorecase=True) %}
+                  {% set reden2 = reden1 |regex_findall_index(find='^(HV|BR|DV)', index=0, ignorecase=False) %}
+                  {% set reden = mapreden.get(reden2, 'unknown') ~ reden1 |regex_replace(find='^(HV|BR|DV)', replace='', ignorecase=false) %}
+                {% else %}
+                    {% set reden = mapast.get(reden1, reden1)  %}
+                {% endif %}
+            {% endif %}
+            {% set dienst1 = states( my_entity ) | regex_findall_index(find='^(A|B|P)', index=0, ignorecase=False)|first  %}
+            {% set dienst = mapdienst.get(dienst1, 'unknown') %}
+            {% if reden %}
+              De {{dienst}} is onderweg naar {{location}} voor {{reden}}
+            {% else %}
+              De {{dienst}} is onderweg naar {{location}}
+            {% endif %}
+          title: "P2000 Melding Ymke's buurt"
+
   - id: e0473ff9-da96-4466-8d7b-3ec432eb5772
     alias: P2000_announce
     trigger:
@@ -130,7 +199,6 @@ automation:
           - sensor.ambulance
           - sensor.brandweer
           - sensor.grip
-
     condition:
       - condition: and
         conditions:
@@ -167,15 +235,16 @@ automation:
     action:
       - service: script.p2000_announce
         data:
-          my_entity: "{{trigger.entity_id}}"
+          my_state: "{{states(trigger.entity_id)}}"
+
   - id: 36348df1-34fc-4466-99b1-75e2ca91415b
     alias: P2000_announce_latest
+    mode: queued
     initial_state: false
     trigger:
       - platform: state
         entity_id: 
           - sensor.p2000_latest
-
     condition:
       - condition: and
         conditions:
@@ -209,10 +278,19 @@ automation:
               - condition: state
                 entity_id: input_select.arnoud_status
                 state: "Net Thuis"
+          - alias: "State msg should be different"
+            condition: template
+            value_template: "{{  trigger.to_state.state  != trigger.from_state.state  }}"
+          - alias: "geen VWS"
+            condition: template
+            value_template: "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
+          - alias: "geen intrekbericht"
+            condition: template
+            value_template: "{{states('sensor.p2000_latest') is not search('Intrekken Alarm', ignorecase=True)}}"
     action:
       - service: script.p2000_announce
         data:
-          my_entity: "{{trigger.entity_id}}"
+          my_state: "{{states(trigger.entity_id)}}"
 
   - id: c475440e-1301-4a0b-9b14-2ebb14aae027
     alias: Lifeliners_pushover
@@ -238,42 +316,57 @@ automation:
             priority: -1
 script:
   p2000_announce:
+    mode: queued
     fields:
-      my_entity:
-        description: "Entity_id"
-        example: "sensor.p2000_latest"
+      my_state:
+        description: "Entity state"
+        example: "A2 10112 Rit 96886 VWS Hoogkarspel Sluisweg"
       heli:
         description: "heli beschrijving als alternate dienst (optional)"
         example: "Lifeliner 1"
     sequence:
+      # Wait until media player is stopped
+      - service: timer.start
+        entity_id: timer.p2000_announce
+      - alias: "Wait until media player is stopped or timer runs out"
+        wait_template: "{{ is_state('media_player.speakers', 'idle') or is_state('media_player.speakers', 'off') or is_state('timer.p2000_announce', 'idle')}}"
       - service: tts.google_say
         entity_id: media_player.speakers
         data:
           message: >
-            {% set br_reden ='(BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole) |HV (materieel|(weg |spoor |)letsel|overig) |DV (aan derden| Brw) |CO-melder |Liftopsluiting |Ass. (Ambu|Pol) |Reanimatie |(PAC|OMS) (brandmelding|handmelder) |(Persoon|Voertuig) te water |Wateroverlast |Uitval nutsvoorz. |Persoon te water |Dier (in problemen|op hoogte|te water|in put/kelder) |Stank/hind. lucht |Luid/optisch alarm )' %}
-            {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ br_reden %}
+            {% set BR_code ='BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole|afval|gebouw) ' %}
+            {% set HV_code ='HV (materieel|(weg |spoor |water )(letsel|materieel) |overig ) ' %}
+            {% set DV_code ='DV (aan derden|Brw) ' %}
+            {% set no_code ='(CO-melder|Rookmelder|Liftopsluiting|Ass. (Ambu|Pol)|Reanimatie|(PAC|OMS) (brandmelding|handmelder)|(Persoon|Voertuig) te water|Wateroverlast|Uitval nutsvoorz.|Persoon te water|Dier (in problemen|op hoogte|te water|in put/kelder)|Stank/hind. lucht|Luid/optisch alarm|Stormschade) ' %}
+            {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
+            {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ bran_reden %}
             {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
             {% set brackets ='\([^)]+\) *' %}
-            {% set ambu_string = '^(|( |)AMBU )([0-9]{5} )+' %}
+            {% set ambu_string = '^(|( |)AMBU )([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
             {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
             {% set mapdienst = {'A':'Ambulance','B':'Ambulance','P':'Brandweer'} %}
             {% set mapreden = {'BR':'Brand,','HV':'Hulpverlening,', 'DV':'Dienstverlening,'} %}
             {% set mapast = {'Ass. Ambu ':'Assistentie ambulance','Ass. Pol ':'Assistentie Politie','Stank/hind. lucht ':'Stank of hinderlijke lucht'} %}
-            {% set location1 = states( my_entity )|regex_replace(find=dienstprio, replace='', ignorecase=False) %}
+            {% set location1 = my_state |regex_replace(find=dienstprio, replace='', ignorecase=False) %}
             {% set location2 = location1 |regex_replace(find=brackets, replace='', ignorecase=False)  %}
             {% set location3 = location2 |regex_replace(find=ambu_string, replace='', ignorecase=False) %}
             {% set location4 = location3 |regex_replace(find=br_string, replace='', ignorecase=False) %}
             {% set location = location4 |regex_replace(find=bon_string, replace='', ignorecase=False) %}
             {% if location3 is search(br_string, ignorecase=True) %}
-                {% set reden1 = location3 | regex_findall_index(find=br_reden, index=0, ignorecase=False)|first %}
+                {% set reden1 = location3 | regex_findall_index(find=bran_reden, index=0, ignorecase=False)|first %}
                 {% if reden1 is search('^(HV|BR|DV)', ignorecase=True) %}
                   {% set reden2 = reden1 |regex_findall_index(find='^(HV|BR|DV)', index=0, ignorecase=False) %}
                   {% set reden = mapreden.get(reden2, 'unknown') ~ reden1 |regex_replace(find='^(HV|BR|DV)', replace='', ignorecase=false) %}
                 {% else %}
-                    {% set reden = mapast.get(reden1, reden1)  %}
+                  {% set reden2 = '' %}
+                  {% set reden = mapast.get(reden1, reden1)  %}
                 {% endif %}
+            {% else %}
+              {% set reden1 = '' %}
+              {% set reden2 = '' %}
+              {% set reden = '' %}
             {% endif %}
-            {% set dienst1 = states( my_entity ) | regex_findall_index(find='^(A|B|P)', index=0, ignorecase=False)|first  %}
+            {% set dienst1 = my_state | regex_findall_index(find='^(A|B|P)', index=0, ignorecase=False)|first  %}
             {% if heli  %}
               {% set dienst = heli %}
             {% else %}
@@ -286,3 +379,4 @@ script:
             {% endif %}
           cache: false
           language: "nl"
+      - delay: '00:00:02'

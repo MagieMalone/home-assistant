@@ -38,6 +38,11 @@ automation:
       - platform: state
         entity_id: input_select.arnoud_status
         to: "Net Weg"
+    condition:
+    - alias: "no guests in the house"
+      condition: state
+      entity_id: input_boolean.guests_boolean
+      state: "Off"
     action:
       - service: alarm_control_panel.alarm_arm_away
         entity_id: alarm_control_panel.ha_alarm

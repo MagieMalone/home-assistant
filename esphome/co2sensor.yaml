@@ -1,0 +1,68 @@
+esphome:
+  name: co2sensor
+  platform: ESP8266
+  board: nodemcuv2
+
+
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: !secret ota_key
+
+wifi:
+  ssid: "buurman"
+  password: !secret wpa_key
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Co2Sensor Fallback Hotspot"
+    password: !secret fallback_pw
+
+captive_portal: 
+
+
+substitutions:
+  # Modify variables based on your settings
+  hostname: 'esp_co2'
+ 
+
+
+# Enable Web
+web_server:
+  port: 80
+
+# Enable logging
+logger:
+  level: DEBUG
+
+
+
+uart:
+  rx_pin: D5
+  tx_pin: D6
+  baud_rate: 9600
+ 
+switch:
+#  - platform: template
+#    name: "MH-Z19 ABC"
+#    optimistic: true
+#    on_turn_on:
+#      - mhz19.abc_enable: mhz19sensor1
+#    on_turn_off:
+#      - mhz19.abc_disable: mhz19sensor1
+  - platform: restart
+    name: $hostname restart
+    
+sensor:
+  - platform: mhz19
+    co2:
+      name: "MH-Z19 CO2 Value"
+    temperature:
+      name: "MH-Z19 Temperature"
+    update_interval: 60s
+#    id: mhz19sensor1
+binary_sensor:
+  - platform: status
+    name: $hostname status
