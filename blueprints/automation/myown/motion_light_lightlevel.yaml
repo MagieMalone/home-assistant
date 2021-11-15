@@ -43,8 +43,7 @@ variables:
     {% endif %}
 
 condition:
-- condition: template
-  value_template: "{{ light_level < light_threshold  }}"
+- "{{ light_level < light_threshold  }}"
 - condition: state
   entity_id: input_boolean.cleaningmode
   state: 'off'

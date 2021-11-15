@@ -4,7 +4,6 @@ automation:
     trigger:
       - platform: time
         at: "12:00:00"
-    condition: []
     action:
       service: python_script.batterywarning
       data:

@@ -327,7 +327,8 @@ script:
     sequence:
       # Wait until media player is stopped
       - service: timer.start
-        entity_id: timer.p2000_announce
+        target:
+          entity_id: timer.p2000_announce
       - alias: "Wait until media player is stopped or timer runs out"
         wait_template: "{{ is_state('media_player.speakers', 'idle') or is_state('media_player.speakers', 'off') or is_state('timer.p2000_announce', 'idle')}}"
       - service: tts.google_say

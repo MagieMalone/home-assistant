@@ -45,7 +45,8 @@ automation:
       state: "Off"
     action:
       - service: alarm_control_panel.alarm_arm_away
-        entity_id: alarm_control_panel.ha_alarm
+        target:
+          entity_id: alarm_control_panel.ha_alarm
   - alias: "return home immidiate "
     id: "43246809632049861384906"
     trigger:
@@ -54,8 +55,9 @@ automation:
         to: "Net Thuis"
     action:
       - service: alarm_control_panel.alarm_disarm
-        data:
+        target:
           entity_id: alarm_control_panel.ha_alarm
+        data:
           code: !secret alarm_code
   - alias: "return home delayed"
     id: "892340910348790"
@@ -65,14 +67,17 @@ automation:
         to: "Thuis"
     action:
       - service: alarm_control_panel.alarm_disarm
-        data:
+        target:
           entity_id: alarm_control_panel.ha_alarm
+        data:
           code: !secret alarm_code
   - alias: "deur open en niet thuis"
     id: "3567312503718013980"
     trigger:
       platform: state
-      entity_id: binary_sensor.bijkeuken_deur_contact, binary_sensor.voordeur_contact
+      entity_id: 
+        - binary_sensor.bijkeuken_deur_contact
+        - binary_sensor.voordeur_contact
       from: "off"
       to: "on"
     condition:
@@ -85,18 +90,33 @@ automation:
             entity_id: input_select.arnoud_status
             state: "Weg"
     action:
-      service: notify.pushover
-      data:
-        message: "De {{states[trigger.to_state.domain][trigger.to_state.object_id].name}} is open"
-        title: "Deur alarm"
+      - service: notify.pushover
         data:
-          priority: 1
-
+          message: "De {{states[trigger.to_state.domain][trigger.to_state.object_id].name}} is open"
+          title: "Deur alarm"
+          data:
+            priority: 1
+  
   - alias: "trigger alarm based on door & motion sensors if armed away"
     id: "521368393280359863"
     trigger:
       platform: state
-      entity_id: binary_sensor.bijkeuken_deur_contact, binary_sensor.voordeur_contact, binary_sensor.overloop_occupancy, binary_sensor.traphal_occupancy, binary_sensor.hal_occupancy, binary_sensor.badkamer_raam_contact, binary_sensor.studeerkamer_raam_contact, binary_sensor.slaapkamer_links_contact, binary_sensor.slaapkamer_rechts_contact, binary_sensor.zolder_overloop_contact, binary_sensor.zolder_achter_links_contact, binary_sensor.zolder_achter_rechts_contact, binary_sensor.woonkamer_raam_contact, binary_sensor.woonkamer_tuindeur_contact, binary_sensor.bijkeuken_raam_contact
+      entity_id: 
+        - binary_sensor.bijkeuken_deur_contact
+        - binary_sensor.voordeur_contact
+        - binary_sensor.overloop_occupancy
+        - binary_sensor.traphal_occupancy
+        - binary_sensor.hal_occupancy
+        - binary_sensor.badkamer_raam_contact
+        - binary_sensor.studeerkamer_raam_contact
+        - binary_sensor.slaapkamer_links_contact
+        - binary_sensor.slaapkamer_rechts_contact
+        - binary_sensor.zolder_overloop_contact
+        - binary_sensor.zolder_achter_links_contact
+        - binary_sensor.zolder_achter_rechts_contact
+        - binary_sensor.woonkamer_raam_contact
+        - binary_sensor.woonkamer_tuindeur_contact
+        - binary_sensor.bijkeuken_raam_contact
       from: "off"
       to: "on"
     condition:
@@ -105,11 +125,13 @@ automation:
         state: armed_away
     action:
       - service: alarm_control_panel.alarm_trigger
-        entity_id: alarm_control_panel.ha_alarm
+        target:
+          entity_id: alarm_control_panel.ha_alarm
       - service: input_text.set_value
-        data:
+        target:
           entity_id: input_text.last_alarm_trigger_reason
-          value: " {{states.binary_sensor|rejectattr('state' , 'eq' , 'off')|selectattr('attributes.device_class', 'in' , ['window','motion','door'])|map(attribute='name')|list}}"
+        data:
+          value: " {{states.binary_sensor|rejectattr('state' , 'eq' , 'off')|selectattr('attributes.device_class', 'in' , ['window', 'motion', 'door'])|map(attribute='name')|list}}"
   #            {%- set ns = namespace(first=false) %}
   #            {%- for sensor in dict(states.binary_sensor|groupby('state'))['on'] %}
   #              {%- set d_class = sensor.attributes.device_class %}
@@ -151,12 +173,24 @@ automation:
         data:
           tekst: "Alarm! Alarm! Alarm! indringer in huis! "
       - service: light.turn_on
-        entity_id: light.computer, light.eettafel, light.hal, light.sk_ceiling, light.staande_lamp
+        target:
+          entity_id: 
+            - light.computer
+            - light.eettafel
+            - light.hal
+            - light.sk_ceiling
+            - light.staande_lamp
         data:
           color_name: white
           brightness_pct: 100
       - service: light.turn_on
-        entity_id: light.keuken, light.trap_hal, light.overloop, light.sk_duo_spot_1, light.sk_duo_spot_2
+        target:
+          entity_id: 
+            - light.keuken
+            - light.trap_hal
+            - light.overloop
+            - light.sk_duo_spot_1
+            - light.sk_duo_spot_2
         data:
           color_temp: 153
           brightness_pct: 100

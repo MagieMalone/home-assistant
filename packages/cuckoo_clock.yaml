@@ -34,8 +34,9 @@ automation:
           {% endif %}
     action:
       - service: media_player.play_media
-        data:
+        target:
           entity_id: media_player.huiskamer_speaker
+        data:
           media_content_id: >
             {% if now().strftime('%M')|int == 30 %}
             https://raw.githubusercontent.com/CCOSTAN/Home-AssistantConfig/master/config/sounds/cuckoo-clock-01.wav

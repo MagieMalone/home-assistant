@@ -25,7 +25,7 @@ input_datetime:
 camera:
   - platform: generic
     name: Destination
-    still_image_url: https://maps.googleapis.com/maps/api/staticmap?key={{states("sensor.google_api_key")}}&center={{state_attr("calendar.abuurmangmailcom", "location")}}&zoom=17&size=600x300&maptype=roadmap&markers=color:blue%7C{{state_attr("calendar.abuurmangmailcom", "location")}}
+    still_image_url: https://maps.googleapis.com/maps/api/staticmap?key={{states('sensor.google_api_key')}}&center={{state_attr('calendar.abuurmangmailcom', 'location')}}&zoom=17&size=600x300&maptype=roadmap&markers=color:blue%7C{{state_attr('calendar.abuurmangmailcom', 'location')}}
     limit_refetch_to_url_change: true
 
 sensor:
@@ -35,109 +35,109 @@ sensor:
   - platform: template
     sensors:
       cal_title:
-        value_template: '{{ state_attr("calendar.abuurmangmailcom", "message") | replace("#alarm", "") }}'
+        value_template: "{{ state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '') }}"
         friendly_name: "Title"
       cal_travelmode:
         value_template: >-
-          {% if "#ov" in state_attr("calendar.abuurmangmailcom", "message") %}
+          {% if '#ov' in state_attr('calendar.abuurmangmailcom', 'message') %}
             transit
           {% else %}
             driving
           {% endif %}
       cal_location:
         value_template: >
-          {% if is_state_attr("calendar.abuurmangmailcom", "location", "") or is_state_attr("calendar.abuurmangmailcom", "location", "unknown") %}
-            {{state_attr("zone.home", "latitude")}},{{state_attr("zone.home", "longitude")}}
+          {% if is_state_attr('calendar.abuurmangmailcom', 'location', '') or is_state_attr('calendar.abuurmangmailcom', 'location', 'unknown') %}
+            {{state_attr('zone.home', 'latitude')}},{{state_attr('zone.home', 'longitude')}}
           {% else %}
-            {{ state_attr("calendar.abuurmangmailcom", "location") }}
+            {{ state_attr('calendar.abuurmangmailcom', 'location') }}
           {% endif %}
       cal_location_alarm:
         value_template: >
-          {% if is_state_attr("calendar.alarm", "location", "") or is_state_attr("calendar.alarm", "location", "unknown") %}
-            {{state_attr("zone.home", "latitude")}},{{state_attr("zone.home", "longitude")}}
+          {% if is_state_attr('calendar.alarm', 'location', '') or is_state_attr('calendar.alarm', 'location', 'unknown') %}
+            {{state_attr('zone.home', 'latitude')}},{{state_attr('zone.home', 'longitude')}}
           {% else %}
-            {{ state_attr("calendar.alarm", "location") }}
+            {{ state_attr('calendar.alarm', 'location') }}
           {% endif %}
         friendly_name: "Location"
       cal_reminders_name:
-        value_template: '{{ state_attr("calendar.reminders", "message") | replace("#reminders", "")}}'
+        value_template: "{{ state_attr('calendar.reminders', 'message') | replace('#reminders', '')}}"
         friendly_name: "Title"
       cal_reminders_date:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr("calendar.reminders", "start_time") + tz %}
+          {% set time = state_attr('calendar.reminders', 'start_time') + tz %}
           {{as_timestamp(time)|timestamp_local}}
         friendly_name: "Start Time"
       cal_start_time:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
+          {% set time = state_attr('calendar.abuurmangmailcom', 'start_time') + tz %}
           {{as_timestamp(time)|timestamp_local}}
         friendly_name: "Start Time"
       cal_start_time_unix:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
+          {% set time = state_attr('calendar.abuurmangmailcom', 'start_time') + tz %}
           {{as_timestamp(time)}}
         friendly_name: "Start Time"
       calc_leave_time:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
+          {% set time = state_attr('calendar.abuurmangmailcom', 'start_time') + tz %}
           {% set starttime = as_timestamp(time) %}    
-          {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
+          {% set duration = state_attr('sensor.google_travel_time_driving', 'duration') %}
           {%if duration == None %}
-            {{ starttime  | timestamp_custom("%Y-%m-%d %H:%M") }}
+            {{ starttime  | timestamp_custom('%Y-%m-%d %H:%M') }}
           {% else %}
-            {%if duration.split(" ")[2]==Null %}
-              {{ (starttime  - (duration.split(" ")[0]  | int * 60 )) | timestamp_custom("%Y-%m-%d %H:%M") }}
+            {%if duration.split(' ')[2]==Null %}
+              {{ (starttime  - (duration.split(' ')[0]  | int * 60 )) | timestamp_custom('%Y-%m-%d %H:%M') }}
             {% else %}
-              {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) | timestamp_custom("%Y-%m-%d %H:%M")}}
+              {{ (starttime - (duration.split(' ')[0] | int *3600 + duration.split(' ')[2] | int *60 )) | timestamp_custom('%Y-%m-%d %H:%M')}}
             {% endif %} 
           {% endif %}
         friendly_name: "Leave Time"
       calc_leave_time_unix:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr("calendar.abuurmangmailcom", "start_time") + tz %}
+          {% set time = state_attr('calendar.abuurmangmailcom', 'start_time') + tz %}
           {% set starttime = as_timestamp(time) %}    
-          {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
+          {% set duration = state_attr('sensor.google_travel_time_driving', 'duration') %}
           {%if duration == None %}
             {{ starttime }}
           {% else %}
-            {%if duration.split(" ")[2]==Null %}
-              {{ (starttime  - (duration.split(" ")[0]  | int * 60 )) }}
+            {%if duration.split(' ')[2]==Null %}
+              {{ (starttime  - (duration.split(' ')[0]  | int * 60 )) }}
             {% else %}
-              {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) }}
+              {{ (starttime - (duration.split(' ')[0] | int *3600 + duration.split(' ')[2] | int *60 )) }}
             {% endif %} 
           {% endif %}
       calc_leave_time_alarm:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr("calendar.alarm", "start_time") + tz %}
+          {% set time = state_attr('calendar.alarm', 'start_time') + tz %}
           {% set starttime = as_timestamp(time) %}   
-          {% set duration = state_attr("sensor.google_travel_time_alarm", "duration") %}
+          {% set duration = state_attr('sensor.google_travel_time_alarm', 'duration') %}
           {%if duration == None %}
-            {{ starttime  | timestamp_custom("%Y-%m-%d %H:%M") }}
+            {{ starttime  | timestamp_custom('%Y-%m-%d %H:%M') }}
           {% else %}
-            {%if duration.split(" ")[2]==Null %}
-              {{ (starttime  - (duration.split(" ")[0]  | int * 60 )) | timestamp_custom("%Y-%m-%d %H:%M") }}
+            {%if duration.split(' ')[2]==Null %}
+              {{ (starttime  - (duration.split(' ')[0]  | int * 60 )) | timestamp_custom('%Y-%m-%d %H:%M') }}
             {% else %}
-              {{ (starttime - (duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60 )) | timestamp_custom("%Y-%m-%d %H:%M")}}
+              {{ (starttime - (duration.split(' ')[0] | int *3600 + duration.split(' ')[2] | int *60 )) | timestamp_custom('%Y-%m-%d %H:%M')}}
             {% endif %} 
           {% endif %}
         friendly_name: "Alarm Leave Time"
       cal_contacts_start_time:
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr("calendar.contacts", "start_time") + tz %}
-          {{as_timestamp(time)|timestamp_custom("%m-%d-%Y")}}
+          {% set time = state_attr('calendar.contacts', 'start_time') + tz %}
+          {{as_timestamp(time)|timestamp_custom('%m-%d-%Y')}}
         friendly_name: "Datum"
       cal_contacts_message:
-        value_template: '{{state_attr("calendar.contacts", "message")}}'
+        value_template: "{{state_attr('calendar.contacts', 'message')}}"
         friendly_name: "Contacts:"
       cal_title_f1:
-        value_template: '{{ state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message") }}'
+        value_template: "{{ state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message') }}"
         friendly_name: "Title"
       cal_start_time_f1:
         value_template: >
@@ -145,7 +145,7 @@ sensor:
           {% if state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') == None %}
             None
           {% else %}
-            {{ as_timestamp(state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "start_time") + tz )   | timestamp_local }}
+            {{ as_timestamp(state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') + tz )   | timestamp_local }}
           {% endif %}
 
 automation:
@@ -158,26 +158,26 @@ automation:
       - condition: template
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {{ now().strftime("%D %H:%M") == ( (as_timestamp(states("sensor.calc_leave_time") + tz ) - 300 )| timestamp_custom("%D %H:%M", 1)) }}
-      - condition: template
-        value_template: '{{(states("sensor.calc_travel_time")|int)>120}}'
+          {{ now().strftime('%D %H:%M') == ( (as_timestamp(states('sensor.calc_leave_time') + tz ) - 300 )| timestamp_custom('%D %H:%M', 1)) }}
+      - "{{(states('sensor.calc_travel_time')|int)>120}}"
 
     action:
       - service: script.both_speakers
         data:
           tekst: >
-            {% set reistijd = states("sensor.calc_travel_time") %}
-            {%if reistijd=="unknown" %} 
+            {% set reistijd = states('sensor.calc_travel_time') %}
+            {%if reistijd=='unknown' %} 
               Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd is onbekend.
             {% else %}
               Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
             {% endif %}
       - service: tts.google_say
-        entity_id: media_player.desktop
+        target:
+          entity_id: media_player.desktop
         data:
           message: >
-            {% set reistijd = states("sensor.calc_travel_time") %}
-            {%if reistijd=="unknown" %} 
+            {% set reistijd = states('sensor.calc_travel_time') %}
+            {%if reistijd=='unknown' %} 
               Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd is onbekend.
             {% else %}
               Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
@@ -196,7 +196,7 @@ automation:
           {% if state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') == None %}
             False
           {% else %}
-            {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "start_time") + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
+            {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
           {% endif %}
       - condition: state
         entity_id: input_boolean.f1_announcements
@@ -212,45 +212,52 @@ automation:
     #    action:
     #      - service: script.both_speakers
     #        data:
-    #          tekst: 'De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")|striptags}} begint over tien minuten '
+    #          tekst: "De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')|striptags}} begint over tien minuten "
     action:
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
-          message: >
-            De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten
+          message: "De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')}} begint over tien minuten"
           cache: false
           language: "nl"
       - service: homeassistant.turn_on
-        entity_id: light.media_group
+        target:
+          entity_id: light.media_group
   - alias: "set time input helpers"
     id: "4d6474f6-4a53-4c54-ae47-66326ad68133"
     trigger:
-      platform: state
-      entity_id: sensor.calc_leave_time_alarm
+      - platform: state
+        entity_id: sensor.calc_leave_time_alarm
+      - platform: state
+        entity_id: input_number.wul_time_before_leave
     variables:
       alarm_time: >
         {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-        {% if states("sensor.calc_leave_time_alarm") == "unknown" %}
+        {% if states('sensor.calc_leave_time_alarm') == 'unknown' %}
           09:00
         {% else %}
-          {{as_timestamp(states("sensor.calc_leave_time_alarm")+ tz ) - ((states("input_number.wul_time_before_leave") |int ) * 60) }}
+          {{as_timestamp(states('sensor.calc_leave_time_alarm')+ tz ) - ((states('input_number.wul_time_before_leave') |int ) * 60) }}
         {% endif %}
     action:
       - service: input_datetime.set_datetime
-        entity_id: input_datetime.wakeuplight_time
+        target:
+          entity_id: input_datetime.wakeuplight_time
         data:
           timestamp: "{{alarm_time}}"
       - service: input_datetime.set_datetime
-        entity_id: input_datetime.pre_heat_time
+        target:
+          entity_id: input_datetime.pre_heat_time
         data:
           timestamp: "{{alarm_time - 1800 }}"
       - service: input_datetime.set_datetime
-        entity_id: input_datetime.bedtime
+        target:
+          entity_id: input_datetime.bedtime
         data:
           timestamp: "{{alarm_time - (7*3600+900)}}"
       - service: input_datetime.set_datetime
-        entity_id: input_datetime.wakeuptime
+        target:
+          entity_id: input_datetime.wakeuptime
         data:
           timestamp: "{{alarm_time +900}}"
 
@@ -258,9 +265,10 @@ script:
   test_f1_announce:
     sequence:
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
           message: >
-            De {{state_attr("calendar.2020_fia_formula_one_world_championship_race_calendar", "message")}} begint over tien minuten
+            De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')}} begint over tien minuten
           cache: false
           language: "nl"

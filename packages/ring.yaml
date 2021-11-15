@@ -22,38 +22,14 @@ sensor:
     sensors:
       last_ring:
         value_template: >-
-          {% set today = now().day | int %}
-          {% set ring_date = (((as_timestamp(state_attr('sensor.front_door_last_ding','created_at'))) | timestamp_custom("%d")) | int) %}
-          {% if today == ring_date %}
-            {% set day = "Today" %}
-          {% elif (today - 1) == ring_date %}
-            {% set day = "Yesterday" %}
-          {% elif today == 1 and ring_date > 27 %}
-            {% set day = "Yesterday" %}
-          {%elif (today-ring_date)>7 %}
-              {% set day = as_timestamp(state_attr('sensor.front_door_last_ding','created_at')) | timestamp_custom("%x")%}
-          {% else %}
-            {% set day = as_timestamp(state_attr('sensor.front_door_last_ding','created_at')) | timestamp_custom("%A")%}
+          {% if state_attr('sensor.front_door_last_ding','created_at') != None %}
+            {{relative_time(state_attr('sensor.front_door_last_ding','created_at'))   }}
           {% endif %}
-          {% set time = as_timestamp(state_attr('sensor.front_door_last_ding','created_at')) | timestamp_custom("%H:%M")%}
-          {{[day,time]|join(" at ")}}
       last_motion:
         value_template: >-
-          {% set today = now().day | int %}
-          {% set ring_date = (((as_timestamp(state_attr('sensor.front_door_last_motion','created_at'))) | timestamp_custom("%d")) | int) %}
-          {% if today == ring_date %}
-            {% set day = "Today" %}
-          {% elif (today - 1) == ring_date %}
-            {% set day = "Yesterday" %}
-          {% elif today == 1 and ring_date > 27 %}
-            {% set day = "Yesterday" %}
-          {%elif (today-ring_date)>7 %}
-              {% set day = as_timestamp(state_attr('sensor.front_door_last_motion','created_at')) | timestamp_custom("%x")%}
-          {% else %}
-            {% set day = as_timestamp(state_attr('sensor.front_door_last_motion','created_at')) | timestamp_custom("%A")%}
+          {% if state_attr('sensor.front_door_last_motion','created_at') != None %}
+            {{relative_time(state_attr('sensor.front_door_last_motion','created_at')) }}
           {% endif %}
-          {% set time = as_timestamp(state_attr('sensor.front_door_last_motion','created_at')) | timestamp_custom("%H:%M")%}
-          {{[day,time]|join(" at ")}}
 automation:
   - alias: "flash lights with doorbell"
     id: "753125809170657784308"
@@ -80,12 +56,17 @@ automation:
         target:
           entity_id: script.flash_lights
       - service: media_player.volume_set
+        target:
+          entity_id: 
+            - media_player.huiskamer_speaker
+            - media_player.slaapkamer_speaker
+            - media_player.studeerkamer_speaker
         data:
-          entity_id: media_player.huiskamer_speaker, media_player.slaapkamer_speaker, media_player.studeerkamer_speaker
           volume_level: 1
       - service: media_player.play_media
-        data:
+        target:
           entity_id: media_player.speakers
+        data:
           media_content_id: https://foto-album.duckdns.org/local/audio/Door-bell-sound-ding-dong.mp3
           media_content_type: music
           extra:
@@ -93,7 +74,8 @@ automation:
             title: Doorbell
       - delay: "00:00:03"
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
           message: "Er is iemand aan de deur"
           language: "nl"

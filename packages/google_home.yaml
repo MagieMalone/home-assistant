@@ -50,19 +50,22 @@ script:
     sequence:
       #     - service: notify.notify
       #       data:
-      #         message: '{{ tekst }}'
+      #         message: "{{ tekst }}"
       - service: tts.google_say
-        entity_id: media_player.huiskamer_speaker
+        target:
+          entity_id: media_player.huiskamer_speaker
         data:
           message: "{{ tekst }}"
           language: "nl"
       - service: tts.google_say
-        entity_id: media_player.slaapkamer_speaker
+        target:
+          entity_id: media_player.slaapkamer_speaker
         data:
           message: "{{ tekst }}"
           language: "nl"
       - service: tts.google_say
-        entity_id: media_player.studeerkamer_speaker
+        target:
+          entity_id: media_player.studeerkamer_speaker
         data:
           message: "{{ tekst }}"
           language: "nl"

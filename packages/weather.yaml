@@ -111,52 +111,52 @@ sensor:
   - platform: template
     sensors:
       buiten_temp_min:
-        value_template: '{{ state_attr("sensor.buiten_temperature_stats", "min_value") |float }}'
+        value_template: "{{ state_attr('sensor.buiten_temperature_stats', 'min_value') |float(default=0) }}"
         friendly_name: "Minimum buiten temperatuur"
       buiten_temp_max:
-        value_template: '{{ state_attr("sensor.buiten_temperature_stats", "max_value") |float }}'
+        value_template: "{{ state_attr('sensor.buiten_temperature_stats', 'max_value') |float(default=0) }}"
         friendly_name: "Maximum buiten temperatuur"
       zolder_voor_temp_min:
-        value_template: '{{ state_attr("sensor.sensor.zolder_voor_temperature_stats", "min_value") |float }}'
+        value_template: "{{ state_attr('sensor.sensor.zolder_voor_temperature_stats', 'min_value') |float(default=0) }}"
         friendly_name: "Minimum temperatuur zolder voor"
       zolder_voor_temp_max:
-        value_template: '{{ state_attr("sensor.sensor.zolder_voor_temperature_stats", "max_value") |float }}'
+        value_template: "{{ state_attr('sensor.sensor.zolder_voor_temperature_stats', 'max_value') |float(default=0) }}"
         friendly_name: "Maximum temperatuur zolder voor"
       zolder_achter_temp_min:
-        value_template: '{{ state_attr("sensor.zolder_achter_temperature_stats", "min_value") |float }}'
+        value_template: "{{ state_attr('sensor.zolder_achter_temperature_stats', 'min_value') |float(default=0) }}"
         friendly_name: "Minimum temperatuur zolder achter"
       zolder_achter_temp_max:
-        value_template: '{{ state_attr("sensor.zolder_achter_temperature_stats", "max_value") |float }}'
+        value_template: "{{ state_attr('sensor.zolder_achter_temperature_stats', 'max_value') |float(default=0) }}"
         friendly_name: "Maximum temperatuur zolder achter"
       studeerkamer_temp_min:
-        value_template: '{{ state_attr("sensor.studeerkamer_temperature_stats", "min_value") |float }}'
+        value_template: "{{ state_attr('sensor.studeerkamer_temperature_stats', 'min_value') |float(default=0) }}"
         friendly_name: "Minimum temperatuur studeerkamer"
       studeerkamer_temp_max:
-        value_template: '{{ state_attr("sensor.studeerkamer_temperature_stats", "max_value") |float }}'
+        value_template: "{{ state_attr('sensor.studeerkamer_temperature_stats', 'max_value') |float(default=0) }}"
         friendly_name: "Maximum temperatuur studeerkamer"
       slaapkamer_temp_min:
-        value_template: '{{ state_attr("sensor.buiten_temperature_stats", "min_value") |float }}'
+        value_template: "{{ state_attr('sensor.buiten_temperature_stats', 'min_value') |float(default=0) }}"
         friendly_name: "Minimum temperatuur slaapkamer"
       slaapkamer_temp_max:
-        value_template: '{{ state_attr("sensor.buiten_temperature_stats", "max_value") |float }}'
+        value_template: "{{ state_attr('sensor.buiten_temperature_stats', 'max_value') |float(default=0) }}"
         friendly_name: "Maximum temperatuur slaapkamer"
       badkamer_temp_min:
-        value_template: '{{ state_attr("sensor.badkamer_temperature_stats", "min_value") |float }}'
+        value_template: "{{ state_attr('sensor.badkamer_temperature_stats', 'min_value') |float(default=0) }}"
         friendly_name: "Minimum temperatuur badkamer"
       badkamer_temp_max:
-        value_template: '{{ state_attr("sensor.badkamer_temperature_stats", "max_value") |float }}'
+        value_template: "{{ state_attr('sensor.badkamer_temperature_stats', 'max_value') |float(default=0) }}"
         friendly_name: "Maximum temperatuur badkamer"
       woonkamer_temp_min:
-        value_template: '{{ state_attr("sensor.woonkamer_temperature_stats", "min_value") |float }}'
+        value_template: "{{ state_attr('sensor.woonkamer_temperature_stats', 'min_value') |float(default=0) }}"
         friendly_name: "Minimum temperatuur woonkamer"
       woonkamer_temp_max:
-        value_template: '{{ state_attr("sensor.woonkamer_temperature_stats", "max_value") |float }}'
+        value_template: "{{ state_attr('sensor.woonkamer_temperature_stats', 'max_value') |float(default=0) }}"
         friendly_name: "Maximum temperatuur woonkamer"
       bijkeuken_temp_min:
-        value_template: '{{ state_attr("sensor.bijkeuken_temperature_stats", "min_value") |float }}'
+        value_template: "{{ state_attr('sensor.bijkeuken_temperature_stats', 'min_value') |float(default=0) }}"
         friendly_name: "Minimum temperatuur bijkeuken"
       bijkeuken_temp_max:
-        value_template: '{{ state_attr("sensor.bijkeuken_temperature_stats", "max_value") |float }}'
+        value_template: "{{ state_attr('sensor.bijkeuken_temperature_stats', 'max_value') |float(default=0) }}"
         friendly_name: "Maximum temperatuur bijkeuken"
 
 automation:
@@ -167,37 +167,44 @@ automation:
         at: "00:00:01"
     action:
       - service: input_number.set_value
-        data:
+        target:
           entity_id: input_number.berkhout_temperatuur_0d
-          value: '{{ states("sensor.berkhout_temperature_1d") }}'
+        data:
+          value: "{{ states('sensor.berkhout_temperature_1d') }}"
   - alias: "alert zolder ramen dicht"
     trigger:
       platform: template
       value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) < (states('sensor.buiten_temperature')|float)}} "
     action:
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
           message: "Tijd om de ramen op zolder dicht te doen"
           language: "nl"
       - service: automation.turn_on
-        entity_id: automation.alert_zolder_ramen_open
+        target:
+          entity_id: automation.alert_zolder_ramen_open
       - service: automation.turn_off
-        entity_id: automation.alert_zolder_ramen_dicht
+        target:
+          entity_id: automation.alert_zolder_ramen_dicht
   - alias: "alert verdieping ramen dicht"
     trigger:
       platform: template
       value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.buiten_temperature'), states('sensor.badkamer_temperature')]|min|float -1) < (states('sensor.buiten_temperature')|float)}} "
     action:
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
           message: "Tijd om de ramen op de eerste verdieping dicht te doen"
           language: "nl"
       - service: automation.turn_on
-        entity_id: automation.alert_verdieping_ramen_open
+        target:
+          entity_id: automation.alert_verdieping_ramen_open
       - service: automation.turn_off
-        entity_id: automation.alert_verdieping_ramen_dicht
+        target:
+          entity_id: automation.alert_verdieping_ramen_dicht
 
   - alias: "alert beneden ramen dicht"
     trigger:
@@ -205,14 +212,17 @@ automation:
       value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) < (states('sensor.buiten_temperature')|float)}} "
     action:
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
           message: "Tijd om de ramen beneden dicht te doen"
           language: "nl"
       - service: automation.turn_on
-        entity_id: automation.alert_beneden_ramen_open
+        target:
+          entity_id: automation.alert_beneden_ramen_open
       - service: automation.turn_off
-        entity_id: automation.alert_beneden_ramen_dicht
+        target:
+          entity_id: automation.alert_beneden_ramen_dicht
 
   - alias: "alert zolder ramen open"
     trigger:
@@ -220,14 +230,17 @@ automation:
       value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) > (states('sensor.buiten_temperature')|float)}} "
     action:
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
           message: "Tijd om de ramen op zolder open te doen"
           language: "nl"
       - service: automation.turn_on
-        entity_id: automation.alert_zolder_ramen_dicht
+        target:
+          entity_id: automation.alert_zolder_ramen_dicht
       - service: automation.turn_off
-        entity_id: automation.alert_zolder_ramen_open
+        target:
+          entity_id: automation.alert_zolder_ramen_open
 
   - alias: "alert verdieping ramen open"
     trigger:
@@ -235,25 +248,31 @@ automation:
       value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.buiten_temperature'), states('sensor.badkamer_temperature')]|min|float -1) > (states('sensor.buiten_temperature')|float)}} "
     action:
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
           message: "Tijd om de ramen op de eerste verdieping open te doen"
           language: "nl"
       - service: automation.turn_on
-        entity_id: automation.alert_verdieping_ramen_dicht
+        target:
+          entity_id: automation.alert_verdieping_ramen_dicht
       - service: automation.turn_off
-        entity_id: automation.alert_verdieping_ramen_open
+        target:
+          entity_id: automation.alert_verdieping_ramen_open
   - alias: "alert beneden ramen open"
     trigger:
       platform: template
       value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) > (states('sensor.buiten_temperature')|float)}} "
     action:
       - service: tts.google_say
-        entity_id: media_player.speakers
+        target:
+          entity_id: media_player.speakers
         data:
           message: "Tijd om de ramen beneden open te doen"
           language: "nl"
       - service: automation.turn_on
-        entity_id: automation.alert_beneden_ramen_dicht
+        target:
+          entity_id: automation.alert_beneden_ramen_dicht
       - service: automation.turn_off
-        entity_id: automation.alert_beneden_ramen_open
+        target:
+          entity_id: automation.alert_beneden_ramen_open

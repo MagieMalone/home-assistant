@@ -18,24 +18,36 @@ script:
         example: "37i9dQZF1DX9u7XXOp0l5L"
     sequence:
       - service: media_player.volume_mute
+        target:
+          entity_id: 
+            - media_player.huiskamer_speaker
+            - media_player.slaapkamer_speaker
+            - media_player.studeerkamer_speaker
         data:
-          entity_id: media_player.huiskamer_speaker, media_player.slaapkamer_speaker, media_player.studeerkamer_speaker
           is_volume_muted: true
       - service: spotcast.start
         data:
           device_name: "Speakers"
           uri: "spotify:track:5V3b2UB9tCAHuqXj2b2EP7" # track with 1 second of silence
       - service: media_player.volume_mute
+        target:
+          entity_id: 
+            - media_player.huiskamer_speaker
+            - media_player.slaapkamer_speaker
+            - media_player.studeerkamer_speaker
         data:
-          entity_id: media_player.huiskamer_speaker, media_player.slaapkamer_speaker, media_player.studeerkamer_speaker
           is_volume_muted: false
       - service: media_player.volume_set #setting the volume is optional ofcourse
-        data:
+        target:
           entity_id: media_player.studeerkamer_speaker
+        data:
           volume_level: 0.15
       - service: media_player.volume_set #setting the volume is optional ofcourse
+        target:
+          entity_id: 
+            - media_player.huiskamer_speaker
+            - media_player.slaapkamer_speaker
         data:
-          entity_id: media_player.huiskamer_speaker, media_player.slaapkamer_speaker
           volume_level: 0.25
       - service: spotcast.start
         data:

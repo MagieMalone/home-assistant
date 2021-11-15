@@ -48,7 +48,6 @@ variables:
       255
     {% endif %}
 
-condition: []
 
 trigger:
   - platform: state
@@ -61,7 +60,8 @@ action:
         - "{{ command == 'single_left' }}"
       sequence:
         - service: light.toggle
-          entity_id: !input light_entity_left
+          target:
+            entity_id: !input light_entity_left
           data:
             transition:  2
             brightness: "{{ brightness }}"
@@ -69,7 +69,8 @@ action:
         - "{{ command == 'single_right' }}"
       sequence:
         - service: light.toggle
-          entity_id: !input light_entity_right
+          target:
+            entity_id: !input light_entity_right
           data:
             transition:  2
             brightness: "{{ brightness }}"
@@ -77,7 +78,8 @@ action:
         - "{{ command == 'single_both' }}"
       sequence:
         - service: light.toggle
-          entity_id: !input light_entity_both
+          target:
+            entity_id: !input light_entity_both
           data:
             transition:  2
             brightness: "{{ brightness }}"
@@ -86,33 +88,35 @@ action:
       sequence:
         - variables:
             light_entity: !input light_entity_left
-            start_mired: '{{ state_attr(light_entity , ''min_mireds'') |int }}'
-            end_mired: '{{ state_attr(light_entity , ''max_mireds'') |int }}'
-            step: '{{ ((end_mired - start_mired )/4 )| int }}'
-            current_mired: '{{ state_attr(light_entity, ''color_temp'') }}'
+            start_mired: "{{ state_attr(light_entity , 'min_mireds') |int }}"
+            end_mired: "{{ state_attr(light_entity , 'max_mireds') |int }}"
+            step: "{{ ((end_mired - start_mired )/4 )| int }}"
+            current_mired: "{{ state_attr(light_entity, 'color_temp') }}"
         - choose:
           - conditions:
-            - condition: template
-              value_template: "{{  current_mired == None }}"
+            - "{{  current_mired == None }}"
+
             sequence:
               - service: light.turn_on
-                data:
+                target:
                   entity_id: !input light_entity_left
+                data:
                   transition: 2
                   color_temp: "{{ start_mired }}"
           - conditions:
-            - condition: template
-              value_template: "{{ ( current_mired |int + step) > end_mired }}"
+            -  "{{ ( current_mired |int + step) > end_mired }}"
             sequence:
               - service: light.turn_on
-                data:
+                target:
                   entity_id: !input light_entity_left
+                data:
                   transition: 2
                   color_temp: "{{ start_mired }}"
           default:
             - service: light.turn_on
-              data:
+              target:
                 entity_id: !input light_entity_left
+              data:
                 transition:  2
                 color_temp: "{{ state_attr(light_entity, 'color_temp') |int + step }}"
     - conditions:
@@ -120,32 +124,33 @@ action:
       sequence:
         - variables:
             light_entity: !input light_entity_right
-            start_mired: '{{ state_attr(light_entity , ''min_mireds'') |int }}'
-            end_mired: '{{ state_attr(light_entity , ''max_mireds'') |int }}'
-            step: '{{ ((end_mired - start_mired )/4 )| int }}'
-            current_mired: '{{ state_attr(light_entity, ''color_temp'') }}'
+            start_mired: "{{ state_attr(light_entity , 'min_mireds') |int }}"
+            end_mired: "{{ state_attr(light_entity , 'max_mireds') |int }}"
+            step: "{{ ((end_mired - start_mired )/4 )| int }}"
+            current_mired: "{{ state_attr(light_entity, 'color_temp') }}"
         - choose:
           - conditions:
-            - condition: template
-              value_template: "{{  current_mired == None }}"
+            - "{{  current_mired == None }}"
             sequence:
               - service: light.turn_on
-                data:
+                target:
                   entity_id: !input light_entity_right
+                data:
                   transition: 2
                   color_temp: "{{ start_mired }}"
           - conditions:
-            - condition: template
-              value_template: "{{ ( current_mired |int + step) > end_mired }}"
+            - "{{ ( current_mired |int + step) > end_mired }}"
             sequence:
               - service: light.turn_on
-                data:
+                target:
                   entity_id: !input light_entity_right
+                data:
                   transition: 2
                   color_temp: "{{ start_mired }}"
           default:
             - service: light.turn_on
-              data:
+              target:
                 entity_id: !input light_entity_right
+              data:
                 transition:  2
                 color_temp: "{{ state_attr(light_entity, 'color_temp') |int + step }}"

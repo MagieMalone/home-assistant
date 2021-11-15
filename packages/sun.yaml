@@ -29,8 +29,9 @@ automation:
       above: -6
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: input_select.sun
+        data:
           option: Civil Twilight
   - alias: 'change sun input-select to Nautical twilight'
     id: '5213750890823516089612035'
@@ -42,8 +43,9 @@ automation:
       above: -12
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: input_select.sun
+        data:
           option: Nautical Twilight
   - alias: 'change sun input-select to Astronomical twilight'
     id: '352685008321468093260148'
@@ -55,8 +57,9 @@ automation:
       above: -18
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: input_select.sun
+        data:
           option: Astronomical Twilight
   - alias: 'change sun input-select to Astronomical Night'
     id: '4614908633412089056302164'
@@ -67,8 +70,9 @@ automation:
       below: -18
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: input_select.sun
+        data:
           option: Astronomical Night
   - alias: 'change sun input-select to Day'
     id: '8326453830123460986134'
@@ -79,6 +83,7 @@ automation:
       above: 0
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: input_select.sun
+        data:
           option: Day

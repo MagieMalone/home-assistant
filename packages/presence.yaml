@@ -38,10 +38,10 @@ sensor:
   - platform: template
     sensors:
       arnoud_status:
-        value_template: '{{ states("input_select.arnoud_status") }}'
+        value_template: "{{ states('input_select.arnoud_status') }}"
         friendly_name: "Arnoud"
       prox_home_dir_of_travel:
-        value_template: '{{state_attr("proximity.home","dir_of_travel")}}'
+        value_template: "{{state_attr('proximity.home','dir_of_travel')}}"
         friendly_name: "Direction of travel to/from home"
 
 binary_sensor:
@@ -74,19 +74,22 @@ automation:
         to: 'home'
     action:
       - service: alarm_control_panel.alarm_disarm
-        data:
+        target:
           entity_id: alarm_control_panel.ha_alarm
+        data:
           code: !secret alarm_code
       - service: input_boolean.turn_on
-        entity_id: input_boolean.guests_boolean
+        target:
+          entity_id: input_boolean.guests_boolean
       - wait_for_trigger:
           platform: state
           entity_id: device_tracker.edgeos_oneplus_nord2_5g_edwin
-          to: 'away'
+          to: 'not_home'
           for: '00:15:00'
         timeout: "10:00:00"
       - service: input_boolean.turn_off
-        entity_id: input_boolean.guests_boolean
+        target:
+          entity_id: input_boolean.guests_boolean
 
   - alias: "Mark person as just arrived"
     id: "548327489170419324086"
@@ -96,13 +99,14 @@ automation:
         to: "home"
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: >
             {% if trigger.entity_id == 'person.arnoud' %}
               input_select.arnoud_status
             {% else %}
               input_select.helen_status_dropdown
             {% endif %}
+        data:
           option: >
             {% if trigger.entity_id == 'person.arnoud' %}
               {% if states('input_select.arnoud_status') == 'Net Weg' %}
@@ -131,13 +135,14 @@ automation:
         to: "Net Thuis"
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: >
             {% if trigger.entity_id == 'input_select.arnoud_status' %}
               input_select.arnoud_status
             {% else %}
               input_select.helen_status_dropdown
             {% endif %}
+        data:
           option: Thuis
   - alias: "Mark person as just left"
     id: "578344801378074356"
@@ -147,13 +152,14 @@ automation:
         from: "home"
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: >
             {% if trigger.entity_id == 'person.arnoud' %}
               input_select.arnoud_status
             {% else %}
               input_select.helen_status_dropdown
             {% endif %}
+        data:
           option: Net Weg
   - alias: "Mark person as away"
     id: "80941237089760310"
@@ -165,13 +171,14 @@ automation:
           minutes: 15
     action:
       - service: input_select.select_option
-        data:
+        target:
           entity_id: >
             {% if trigger.entity_id == 'input_select.arnoud_status' %}
               input_select.arnoud_status
             {% else %}
               input_select.helen_status_dropdown
             {% endif %}
+        data:
           option: Weg
 
   - alias: "change house status"
@@ -212,25 +219,16 @@ automation:
                     entity_id: input_boolean.guests_boolean
                     state: "on"
             sequence:
-              #              - service: notify.pushover
-              #                data:
-              #                  title: house-status
-              #                  message: "house-status at home trigger: {{trigger}}"
               - choose:
-                  - conditions:
-                      - condition: or
-                        conditions:
-                          - condition: template
-                            value_template: "{{ trigger.entity_id == 'input_datetime.bedtime' }}"
+                  # status set to nacht by bedtime
+                  - conditions: "{{ trigger.entity_id == 'input_datetime.bedtime' }}"
                     sequence:
-                      #                      - service: notify.pushover
-                      #                        data:
-                      #                          title: house-status
-                      #                          message: "1 status set to nacht by {{trigger.platform}}"
                       - service: input_select.select_option
-                        data:
+                        target:
                           entity_id: input_select.house_mode
+                        data:
                           option: nacht
+                  # status set to avond by sun below horizon
                   - conditions:
                       - condition: or
                         conditions:
@@ -239,38 +237,30 @@ automation:
                           - condition: sun
                             after: sunset
                     sequence:
-                      #                      - service: notify.pushover
-                      #                        data:
-                      #                          title: house-status
-                      #                          message: "2 status set to avond by {{trigger.platform}}"
                       - service: input_select.select_option
-                        data:
+                        target:
                           entity_id: input_select.house_mode
+                        data:
                           option: avond
-                  - conditions:
-                      - condition: template
-                        value_template: "{{ trigger.entity_id == 'input_datetime.wakeuptime' }}"
+                  # status set to overdag by wakeuptime
+                  - conditions: "{{ trigger.entity_id == 'input_datetime.wakeuptime' }}"
                     sequence:
-                      #                      - service: notify.pushover
-                      #                        data:
-                      #                          title: house-status
-                      #                          message: "3 status set to overdag by {{trigger.platform}}"
                       - service: input_select.select_option
-                        data:
+                        target:
                           entity_id: input_select.house_mode
+                        data:
                           option: overdag
+                  # status set to nacht by before sunrise
                   - conditions:
                       - condition: sun
                         before: sunrise
                     sequence:
-                      #                      - service: notify.pushover
-                      #                        data:
-                      #                          title: house-status
-                      #                          message: "4 status set to nacht by {{trigger.platform}}"
                       - service: input_select.select_option
-                        data:
+                        target:
                           entity_id: input_select.house_mode
+                        data:
                           option: nacht
+                  # status set to overdag by sunrise
                   - conditions:
                       - condition: or
                         conditions:
@@ -280,13 +270,10 @@ automation:
                             after: sunrise
                             before: sunset
                     sequence:
-                      #                      - service: notify.pushover
-                      #                        data:
-                      #                          title: house-status
-                      #                          message: "5 status set to overdag by {{trigger.platform}} "
                       - service: input_select.select_option
-                        data:
+                        target:
                           entity_id: input_select.house_mode
+                        data:
                           option: overdag
                 default:
                   - service: notify.pushover
@@ -294,11 +281,8 @@ automation:
                       title: house-status
                       message: "status not set as no conditions match "
         default:
-          #          - service: notify.pushover
-          #            data:
-          #              title: house-status
-          #              message: "7 status set to away {{trigger}}"
           - service: input_select.select_option
-            data:
+            target:
               entity_id: input_select.house_mode
+            data:
               option: weg

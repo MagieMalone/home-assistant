@@ -20,15 +20,17 @@ script:
   wakeup_light:
     sequence:
       - service: light.turn_on
-        data:
+        target:
           entity_id: light.sk_ceiling
+        data:
           brightness: 1
           xy_color:
             - 0.64
             - 0.33
       - service: light.turn_on
-        data:
+        target:
           entity_id: light.sk_ceiling
+        data:
           transition: 600
           brightness_pct: 100
           xy_color:
@@ -36,10 +38,10 @@ script:
             - 0.447
       - alias: volume
         service: media_player.volume_set
-        data:
+        target:
           entity_id: media_player.slaapkamer_speaker
+        data:
           volume_level: "0"
-
       - alias: fix playing
         repeat:
           while:
@@ -51,13 +53,14 @@ script:
           sequence:
             - alias: mediaplayer_setmedia
               service: media_player.play_media
-              data:
+              target:
                 entity_id: media_player.slaapkamer_speaker
+              data:
                 media_content_id: "https://streaming.radio.co/s5c5da6a36/listen"
                 media_content_type: audio/mp4
             - alias: mediaplayer_play
               service: media_player.media_play
-              data:
+              target:
                 entity_id: media_player.slaapkamer_speaker
             - delay:
                 seconds: 5
@@ -65,20 +68,20 @@ script:
         repeat:
           sequence:
             - service: media_player.volume_set
-              data:
+              target:
                 entity_id: media_player.slaapkamer_speaker
+              data:
                 volume_level: "{{state_attr('media_player.slaapkamer_speaker', 'volume_level')|float +0.05}}"
             - delay:
                 seconds: 30
-          until:
-            condition: template
-            value_template: "{{(state_attr('media_player.slaapkamer_speaker', 'volume_level')|float) > 0.95 }}"
+          until: "{{(state_attr('media_player.slaapkamer_speaker', 'volume_level')|float) > 0.95 }}"
 
       - delay:
           minutes: 1
       - alias: opstaan!
         service: tts.google_say
-        entity_id: media_player.slaapkamer_speaker
+        target:
+          entity_id: media_player.slaapkamer_speaker
         data:
           message: "Goeie morgen, tijd om op te staan"
           language: "nl"
@@ -86,8 +89,9 @@ script:
           minutes: 1
       - alias: volume
         service: media_player.volume_set
-        data:
+        target:
           entity_id: media_player.slaapkamer_speaker
+        data:
           volume_level: "0.4"
 automation:
   - alias: "wakeup light"
@@ -127,5 +131,5 @@ automation:
         service: script.wakeup_light
       - alias: "turn manual wakeup off"
         service: input_boolean.turn_off
-        data:
+        target:
           entity_id: input_boolean.wakeuplight_manual

@@ -25,11 +25,11 @@ sensor:
   - platform: template
     sensors:
       heating_set_temperature:
-        value_template: '{{state_attr("climate.toon_thermostat", "temperature") | float }}'
+        value_template: "{{state_attr('climate.toon_thermostat', 'temperature') | float }}"
       heating_preset_mode:
-        value_template: '{{state_attr("climate.toon_thermostat", "preset_mode")}}'
+        value_template: "{{state_attr('climate.toon_thermostat', 'preset_mode')}}"
       toon_action:
-        value_template: '{{state_attr("climate.toon_thermostat", "hvac_action")}}'
+        value_template: "{{state_attr('climate.toon_thermostat', 'hvac_action')}}"
       thermostat_condition:
         value_template: >
           {% if is_state('sensor.buiten_temperature', 'unknown') %}
@@ -81,7 +81,6 @@ automation:
           - input_datetime.pre_heat_time
       - platform: state
         entity_id: sensor.thermostat_condition
-    condition: []
     action:
       - choose:
           - conditions:
@@ -95,8 +94,7 @@ automation:
           - conditions:
               - condition: and
                 conditions:
-                  - condition: template
-                    value_template: "{{ trigger.entity_id == 'input_datetime.pre_heat_time' }}"
+                  - "{{ trigger.entity_id == 'input_datetime.pre_heat_time' }}"
                   - condition: numeric_state
                     entity_id: sensor.badkamer_temperature
                     below: 20
@@ -131,7 +129,7 @@ automation:
                             after: "08:59:59"
                             before: "21:00:00"
                           - condition: state
-                            entity_id: "binary_sensor.workday_sensor"
+                            entity_id: binary_sensor.workday_sensor
                             state: "on"
                       - condition: and
                         conditions:
@@ -139,7 +137,7 @@ automation:
                             after: "08:59:59"
                             before: "22:00:00"
                           - condition: state
-                            entity_id: "binary_sensor.workday_sensor"
+                            entity_id: binary_sensor.workday_sensor
                             state: "off"
                   - condition: or
                     conditions:
@@ -149,8 +147,7 @@ automation:
                       - condition: state
                         entity_id: input_select.arnoud_status
                         state: "Net Thuis"
-                      - condition: template
-                        value_template: "{{trigger.entity_id == 'proximity.home'}}"
+                      - "{{trigger.entity_id == 'proximity.home'}}"
             sequence:
               - alias: "zet kachel aan"
                 service: script.kachel_mode
@@ -160,7 +157,7 @@ automation:
               - condition: and
                 conditions:
                   - condition: state
-                    entity_id: "binary_sensor.workday1d"
+                    entity_id: binary_sensor.workday1d
                     state: "on"
                   - condition: time
                     after: "21:29:59"
@@ -202,10 +199,11 @@ automation:
           entity_id: sensor.heating_preset_mode
           state: away
     action:
-      service: input_select.select_option
-      data:
-        entity_id: input_select.heating
-        option: "{{states('sensor.heating_preset_mode')}}"
+      - service: input_select.select_option
+        target:
+          entity_id: input_select.heating
+        data:
+          option: "{{states('sensor.heating_preset_mode')}}"
   - alias: "zet toon based on heating input select"
     id: "3098476890309834039342"
     trigger:
@@ -216,10 +214,11 @@ automation:
       entity_id: timer.toon_automation
       state: idle
     action:
-      service: climate.set_preset_mode
-      data:
-        entity_id: climate.toon_thermostat
-        preset_mode: "{{states('input_select.heating')}}"
+      - service: climate.set_preset_mode
+        target:
+          entity_id: climate.toon_thermostat
+        data:
+          preset_mode: "{{states('input_select.heating')}}"
   - alias: "zet toon thermostaat based on input value"
     id: "98487940987349821"
     trigger:
@@ -228,26 +227,27 @@ automation:
     condition:
       condition: and
       conditions:
-        - condition: template
-          value_template: "{{ ( states('input_number.thermostat_set_point')  ) != ( states('sensor.heating_set_temperature') ) }}"
+        - "{{ ( states('input_number.thermostat_set_point')  ) != ( states('sensor.heating_set_temperature') ) }}"
         - condition: state
           entity_id: timer.toon_automation
           state: idle
     action:
-      service: climate.set_temperature
-      data:
-        entity_id: climate.toon_thermostat
-        temperature: "{{states('input_number.thermostat_set_point')}}"
+      - service: climate.set_temperature
+        target:
+          entity_id: climate.toon_thermostat
+        data:
+          temperature: "{{states('input_number.thermostat_set_point')}}"
   - alias: "zet thermostaat input value based on toon"
     id: "230983248701908743"
     trigger:
       platform: state
       entity_id: sensor.heating_set_temperature
     action:
-      service: input_number.set_value
-      data:
-        entity_id: input_number.thermostat_set_point
-        value: "{{ states('sensor.heating_set_temperature') }}"
+      - service: input_number.set_value
+        target:
+          entity_id: input_number.thermostat_set_point
+        data:
+          value: "{{ states('sensor.heating_set_temperature') }}"
 script:
   kachel_mode:
     fields:
@@ -256,14 +256,16 @@ script:
         example: "away"
     sequence:
       - service: timer.start
-        entity_id: timer.toon_automation
+        target:
+          entity_id: timer.toon_automation
       - repeat:
           sequence:
             - alias: "zet kachel mode"
               service: climate.set_preset_mode
-              data:
+              target:
                 entity_id: climate.toon_thermostat
+              data:
                 preset_mode: "{{ mode }}"
             - delay:
-                seconds: 15
+                seconds: 30
           until: "{{ is_state('sensor.heating_preset_mode', mode ) }}"

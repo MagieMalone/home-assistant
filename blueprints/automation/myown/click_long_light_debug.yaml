@@ -33,7 +33,7 @@ variables:
   switch_entity: !input switch_entity
 #  boolean_entity: "{{ light_entity |replace('light.','input_boolean.')}}"
   boolean_entity: !input boolean_entity
-condition: []
+
 
 trigger:
     - platform: state
@@ -42,7 +42,8 @@ trigger:
 
 action:
   - service: input_boolean.turn_on
-    entity_id: !input boolean_entity
+    target:
+      entity_id: !input boolean_entity
 #    entity_id: "{{ boolean_entity }}"
   - service: notify.webbrowser
     data:
@@ -52,19 +53,19 @@ action:
     repeat:
       sequence:
         - choose:
-          - conditions: 
-            - condition: template
-              value_template: '{{ (state_attr(light_entity, ''brightness'') |int) > 245 }}'
+          - conditions: "{{ (state_attr(light_entity, 'brightness') |int) > 245 }}"
             sequence:
               - service: light.turn_on
+                target:
+                  entity_id: !input light_entity
                 data:
                   brightness: 1
-                  entity_id: !input light_entity
           default:
             - service: light.turn_on
+              target:
+                entity_id: !input light_entity
               data:
                 brightness_step_pct: 5
-                entity_id: !input light_entity
         - service: notify.webbrowser
           data:
             title: debug
@@ -79,5 +80,4 @@ action:
 #              entity_id: "{{ boolean_entity }}"
               state: None
               attribute: action
-            - condition: template
-              value_template: "{{ repeat.index > 25 }}"
+            - "{{ repeat.index > 25 }}"

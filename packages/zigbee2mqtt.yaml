@@ -29,8 +29,8 @@ script:
         topic: zigbee2mqtt/bridge/config/rename
         payload_template: >-
           {
-            "old": "{{ states.input_text.zigbee2mqtt_old_name.state | string }}",
-            "new": "{{ states.input_text.zigbee2mqtt_new_name.state | string }}"
+            "old": "{{ states('input_text.zigbee2mqtt_old_name') | string }}",
+            "new": "{{ states('input_text.zigbee2mqtt_new_name') | string }}"
           }
   zigbee2mqtt_remove:
     alias: Zigbee2mqtt Remove
@@ -38,7 +38,7 @@ script:
       service: mqtt.publish
       data:
         topic: zigbee2mqtt/bridge/config/remove
-        payload_template: "{{ states.input_text.zigbee2mqtt_remove.state | string }}"
+        payload_template: "{{ states('input_text.zigbee2mqtt_remove') | string }}"
 
 # Timer for joining time remaining (120 sec = 2 min)
 timer:
@@ -101,8 +101,9 @@ automation:
       entity_id: switch.zigbee2mqtt_main_join
       to: "on"
     action:
-      service: timer.start
-      entity_id: timer.zigbee_permit_join
+      - service: timer.start
+        target:
+          entity_id: timer.zigbee_permit_join
   # Automation to stop timer when switch turned off and turn off switch when timer finished
   - id: zigbee_join_disabled
     alias: Zigbee Join Disabled
@@ -116,7 +117,8 @@ automation:
         to: "off"
     action:
       - service: timer.cancel
-        data:
+        target:
           entity_id: timer.zigbee_permit_join
       - service: switch.turn_off
-        entity_id: switch.zigbee2mqtt_main_join
+        target:
+          entity_id: switch.zigbee2mqtt_main_join

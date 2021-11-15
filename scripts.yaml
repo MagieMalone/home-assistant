@@ -1,53 +1,88 @@
 nacht:
   sequence:
     - service: homeassistant.turn_off
-      entity_id: light.media_group
+      target:
+        entity_id: light.media_group
     - service: light.turn_off
-      entity_id: light.computer, light.hal, light.hue_lightstrip_plus_1, light.staande_lamp, light.keuken_1, light.keuken_2, light.keuken_3, light.hue_color_pendant_down_1, light.hue_color_pendant_up_1
+      target:
+        entity_id: 
+          - light.computer
+          - light.hal
+          - light.hue_lightstrip_plus_1
+          - light.staande_lamp
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
+          - light.hue_color_pendant_down_1
+          - light.hue_color_pendant_up_1
       data:
         transition: 10
     - service: light.turn_on
-      entity_id: light.slaapkamer
+      target:
+        entity_id: light.slaapkamer
     - service: switch.turn_off
-      entity_id: switch.tablet_lader, switch.tplink_b0_4e_26_6b_a1_f5
+      target:
+        entity_id: switch.tplink_b0_4e_26_6b_a1_f5
     - delay:
         seconds: 5
     - service: tts.google_say
-      entity_id: media_player.huiskamer_speaker
+      target:
+        entity_id: media_player.huiskamer_speaker
       data:
         message: "Nighty night"
         language: "en"
 eten:
   sequence:
     - service: light.turn_on
-      entity_id: light.hue_color_pendant_down_1, light.hue_color_pendant_up_1,light.keuken_1, light.keuken_2, light.keuken_3
+      target:
+        entity_id: 
+          - light.hue_color_pendant_down_1
+          - light.hue_color_pendant_up_1
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
       data:
         brightness: 64
         color_temp: 500
     - delay:
         seconds: 2
     - service: tts.google_say
-      entity_id: media_player.huiskamer_speaker
+      target:
+        entity_id: media_player.huiskamer_speaker
       data:
         message: "Eet smakelijk"
         language: "nl"
 koken:
   sequence:
     - service: light.turn_on
-      entity_id: light.keuken_1, light.keuken_2, light.keuken_3
+      target:
+        entity_id: 
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
       data:
         brightness: 255
         color_temp: 153
 tv:
   sequence:
     - service: homeassistant.turn_on
-      entity_id: light.audiowk
+      target:
+        entity_id: light.audiowk
     - service: light.turn_off
-      entity_id: light.computer, light.hue_color_pendant_down_1, light.hue_color_pendant_up_1, light.hal, light.keuken_1, light.keuken_2, light.keuken_3
+      target:
+        entity_id: 
+          - light.computer
+          - light.hue_color_pendant_down_1
+          - light.hue_color_pendant_up_1
+          - light.hal
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
       data:
         transition: 10
     - service: light.turn_on
-      entity_id: light.hue_lightstrip_plus_1
+      target:
+        entity_id: light.hue_lightstrip_plus_1
       data:
         brightness: 85
         xy_color:
@@ -55,7 +90,8 @@ tv:
           - 0.1332
         transition: 10
     - service: light.turn_on
-      entity_id: light.staande_lamp
+      target:
+        entity_id: light.staande_lamp
       data:
         brightness: 128
         color_temp: 500
@@ -63,7 +99,8 @@ tv:
     - delay:
         seconds: 2
     - service: tts.google_say
-      entity_id: media_player.huiskamer_speaker
+      target:
+        entity_id: media_player.huiskamer_speaker
       data:
         message: "Veel plezier"
         language: "nl"

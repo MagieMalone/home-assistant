@@ -73,9 +73,15 @@ light:
       - light.trap_hal
 group:
   switch-wk:
-    entities: switch.media_la_switch, switch.media_ra_switch, switch.media_v_switch
+    entities: 
+      - switch.media_la_switch
+      - switch.media_ra_switch
+      - switch.media_v_switch
   motion_sensors:
-    entities: binary_sensor.hal_occupancy, binary_sensor.overloop_occupancy, binary_sensor.traphal_occupancy
+    entities: 
+      - binary_sensor.hal_occupancy
+      - binary_sensor.overloop_occupancy
+      - binary_sensor.traphal_occupancy
 
 input_number:
   lightlevel:
@@ -104,35 +110,48 @@ script:
               - "{{ light_entities == '' }}"
             sequence:
               - service: light.turn_on
-                data:
-                  entity_id: light.hue_lightstrip_plus_1, light.hal
+                target:
+                  entity_id: 
+                    - light.hue_lightstrip_plus_1
+                    - light.hal
               - variables:
                   light_hal: "{{state_attr('light.hal', 'brightness')|int}}"
                   light_lightstrip: "{{state_attr('light.hue_lightstrip_plus_1', 'brightness')|int}}"
               - service: light.turn_on
+                target:
+                  entity_id: 
+                    - light.hue_lightstrip_plus_1
+                    - light.hal
                 data:
-                  entity_id: light.hue_lightstrip_plus_1, light.hal
                   brightness: 100
               - service: light.turn_on
+                target:
+                  entity_id: 
+                    - light.hue_lightstrip_plus_1
+                    - light.hal
                 data:
-                  entity_id: light.hue_lightstrip_plus_1, light.hal
                   flash: long
               - delay: 5
               - service: light.turn_on
-                data:
+                target:
                   entity_id: light.hue_lightstrip_plus_1
+                data:
                   brightness: "{{light_lightstrip}}"
               - service: light.turn_on
-                data:
+                target:
                   entity_id: light.hal
+                data:
                   brightness: "{{light_hal}}"
               - service: light.turn_off
-                data:
-                  entity_id: light.hue_lightstrip_plus_1, light.hal
+                target:
+                  entity_id: 
+                    - light.hue_lightstrip_plus_1
+                    - light.hal
         default:
           - service: light.turn_on
-            data:
+            target:
               entity_id: "{{light_entities}}"
+            data:
               flash: long
 
   update_lights_brightness:
@@ -142,8 +161,9 @@ script:
         example: "75"
     sequence:
       - service: light.turn_on
-        data:
+        target:
           entity_id: "{{states.light|rejectattr('state', 'eq', 'off')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}} "
+        data:
           brightness_pct: >
             {% if brightness_pct %}
               {{brightness_pct}}
@@ -160,7 +180,10 @@ automation:
         to: "Net Weg"
     action:
       - service: homeassistant.turn_off
-        entity_id: light.lampen, switch.tplink_b0_4e_26_6b_a1_f5
+        target:
+          entity_id: 
+            - light.lampen
+            - switch.tplink_b0_4e_26_6b_a1_f5
 
   - alias: "sunrise lights off"
     id: "47893265301237"
@@ -177,7 +200,8 @@ automation:
         state: "off"
     action:
       - service: light.turn_off
-        entity_id: light.lampen
+        target:
+          entity_id: light.lampen
 
   - alias: "lights off weekdays"
     id: "1528912303194"
@@ -187,9 +211,10 @@ automation:
           - input_datetime.bedtime
     action:
       - service: light.turn_off
+        target:
+          entity_id: light.lampen
         data:
           transition: 900
-          entity_id: light.lampen
 
   - alias: "lights off weekenddays"
     id: "1528912303472"
@@ -198,13 +223,14 @@ automation:
         platform: time
     condition:
       condition: state
-      entity_id: "binary_sensor.workday1d"
+      entity_id: binary_sensor.workday1d
       state: "off"
     action:
       - service: light.turn_off
+        target:
+          entity_id: light.lampen
         data:
           transition: 900
-          entity_id: light.lampen
 
   - alias: "dim lights in day"
     id: "54618293609860132486029"

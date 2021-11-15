@@ -7,7 +7,8 @@ automation:
       below: 40
     action:
       - service: switch.turn_on
-        entity_id: switch.tablet_lader
+        target:
+          entity_id: switch.tablet_lader
 
   - alias: "Tablet lader uit"
     id: "57802395701892350865743010983"
@@ -17,4 +18,5 @@ automation:
       above: 90
     action:
       - service: switch.turn_off
-        entity_id: switch.tablet_lader
+        target:
+          entity_id: switch.tablet_lader

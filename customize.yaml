@@ -138,3 +138,11 @@ light.overloop:
   icon: hue:ceiling-round
 light.trap_hal:
   icon: hue:ceiling-round
+switch.esspresso:
+  icon: hue:plug-eu
+switch.media_la:
+  icon: hue:plug-eu
+switch.media_ra:
+  icon: hue:plug-eu
+switch.media_v:
+  icon: hue:plug-eu
