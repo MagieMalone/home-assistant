@@ -232,6 +232,7 @@ automation:
               - condition: state
                 entity_id: input_select.arnoud_status
                 state: "Net Thuis"
+          - "{{trigger.to_state is  search('Lutjebroek|Grootebroek|Hoogkarspel', ignorecase=true)}}"
     action:
       - service: script.p2000_announce
         data:
