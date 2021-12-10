@@ -73,12 +73,12 @@ light:
       - light.trap_hal
 group:
   switch-wk:
-    entities: 
+    entities:
       - switch.media_la_switch
       - switch.media_ra_switch
       - switch.media_v_switch
   motion_sensors:
-    entities: 
+    entities:
       - binary_sensor.hal_occupancy
       - binary_sensor.overloop_occupancy
       - binary_sensor.traphal_occupancy
@@ -111,7 +111,7 @@ script:
             sequence:
               - service: light.turn_on
                 target:
-                  entity_id: 
+                  entity_id:
                     - light.hue_lightstrip_plus_1
                     - light.hal
               - variables:
@@ -119,14 +119,14 @@ script:
                   light_lightstrip: "{{state_attr('light.hue_lightstrip_plus_1', 'brightness')|int}}"
               - service: light.turn_on
                 target:
-                  entity_id: 
+                  entity_id:
                     - light.hue_lightstrip_plus_1
                     - light.hal
                 data:
                   brightness: 100
               - service: light.turn_on
                 target:
-                  entity_id: 
+                  entity_id:
                     - light.hue_lightstrip_plus_1
                     - light.hal
                 data:
@@ -144,7 +144,7 @@ script:
                   brightness: "{{light_hal}}"
               - service: light.turn_off
                 target:
-                  entity_id: 
+                  entity_id:
                     - light.hue_lightstrip_plus_1
                     - light.hal
         default:
@@ -153,24 +153,34 @@ script:
               entity_id: "{{light_entities}}"
             data:
               flash: long
-
-  update_lights_brightness:
+  update_lights_attributes:
     fields:
       brightness_pct:
         description: "brightness in %"
         example: "75"
+      transition:
+        description: "transition time in seconds"
+        example: "1"
+      xy_color:
+        description: "color in xy color notation"
+        example: "[0.5, 0.5]"
     sequence:
       - service: light.turn_on
         target:
-          entity_id: "{{states.light|rejectattr('state', 'eq', 'off')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}} "
-        data:
-          brightness_pct: >
-            {% if brightness_pct %}
-              {{brightness_pct}}
-            {% else %}
-              100
-            {% endif %}
-          transition: 60
+          entity_id: "{{states.light|rejectattr('state', 'eq', 'off')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
+        data: >
+          {% if brightness_pct and transition and xy_color %}
+            {% set data = {"brightness_pct":  brightness_pct, "transition": transition, "xy_color": xy_color} %}
+          {% elif brightness_pct and transition %}
+            {% set data = {"brightness_pct":  brightness_pct, "transition": transition} %}
+          {% elif  brightness_pct %}
+            {% set data = {"brightness_pct":  brightness_pct } %}
+          {% else %}
+            {% set data = {"brightness_pct":  100} %}
+          {% endif %}
+          {{ data }}
+
+
 automation:
   - alias: "lights off when leaving"
     id: "782368093283658209"
@@ -181,7 +191,7 @@ automation:
     action:
       - service: homeassistant.turn_off
         target:
-          entity_id: 
+          entity_id:
             - light.lampen
             - switch.tplink_b0_4e_26_6b_a1_f5
 
@@ -206,9 +216,15 @@ automation:
   - alias: "lights off weekdays"
     id: "1528912303194"
     trigger:
-      - platform: time
-        at:
-          - input_datetime.bedtime
+      #- platform: time
+      #  at:
+      #    - input_datetime.bedtime
+      - at: "23:59:59"
+        platform: time
+    condition:
+      condition: state
+      entity_id: binary_sensor.workday1d
+      state: "on"
     action:
       - service: light.turn_off
         target:
@@ -219,11 +235,11 @@ automation:
   - alias: "lights off weekenddays"
     id: "1528912303472"
     trigger:
-      - at: "23:59:59"
+      - at: "01:00:00"
         platform: time
     condition:
       condition: state
-      entity_id: binary_sensor.workday1d
+      entity_id: binary_sensor.workday_sensor
       state: "off"
     action:
       - service: light.turn_off
@@ -243,9 +259,10 @@ automation:
       entity_id: light.lampen
       state: "on"
     action:
-      - service: script.update_lights_brightness
+      - service: script.update_lights_attributes
         data:
           brightness_pct: 75
+          transition: 60
 
   - alias: "dim lights in avond"
     id: "235689056329850982360158"
@@ -258,9 +275,10 @@ automation:
       entity_id: light.lampen
       state: "on"
     action:
-      - service: script.update_lights_brightness
+      - service: script.update_lights_attributes
         data:
           brightness_pct: 50
+          transition: 60
 
   - alias: "dim lights in nacht"
     id: "56132890612345689532108"
@@ -273,6 +291,36 @@ automation:
       entity_id: light.lampen
       state: "on"
     action:
-      - service: script.update_lights_brightness
+      - service: scene.create
         data:
-          brightness_pct: 1
+          scene_id: before
+          snapshot_entities:
+            - light.hue_lightstrip_plus_1
+            - light.staande_lamp
+            - light.hue_color_pendant_down_1
+            - light.hue_color_pendant_up_1
+            - light.computer
+            - light.hal
+            - light.reserve
+            - light.sk_ceiling
+            - light.sk_duo_spot_1
+            - light.sk_duo_spot_2
+            - light.overloop
+            - light.keuken_1
+            - light.keuken_2
+            - light.keuken_3
+            - light.trap_hal
+      - service: script.update_lights_attributes
+        data:
+          brightness_pct: 10
+          transition: 2
+          xy_color:
+            - 0.167
+            - 0.04
+      - delay:
+          seconds: 5
+      - service: scene.turn_on
+        target:
+          entity_id: scene.before
+        data:
+          transition: 2

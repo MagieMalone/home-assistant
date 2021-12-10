@@ -70,6 +70,33 @@ sensor:
             {% else %}
               {{state_attr(entity, 'capcode')}}
             {% endif %}
+#      p2000_latest_location:
+#        friendly_name: "p2000 lastest location"
+#        value_template: >
+#            {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
+#            {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ bran_reden %}
+#            {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
+#            {% set brackets ='\([^)]+\) *' %}
+#            {% set ambu_string = '^(|( |)AMBU )([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
+#            {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
+#
+#            {% set location1 = states('sensor.p2000_latest') |regex_replace(find=dienstprio, replace='', ignorecase=False) %}
+#            {% set location2 = location1 |regex_replace(find=brackets, replace='', ignorecase=False)  %}
+#            {% set location3 = location2 |regex_replace(find=ambu_string, replace='', ignorecase=False) %}
+#            {% set location4 = location3 |regex_replace(find=br_string, replace='', ignorecase=False) %}
+#            {% set location5 = location4 |regex_replace(find='VWS ', replace='', ignorecase=True) %}
+#            {% set location = location5 |regex_replace(find=bon_string, replace='', ignorecase=False) %}
+#            {{location}}
+
+
+#  - platform: rest
+#    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.p2000_latest_location')|urlencode}}&apiKey={{states('input_text.here_api')}}
+#    value_template: "{{(value_json['items'][0]['position']['lat']|string ) + ',' + (value_json['items'][0]['position']['lng'] |string)}}"
+#    name: "p2000_latest_latlong"
+#    json_attributes_path: "$.items[0].position"
+#    json_attributes:
+#      - lat
+#      - lng
 
 timer:
   p2000_announce:
@@ -232,7 +259,9 @@ automation:
               - condition: state
                 entity_id: input_select.arnoud_status
                 state: "Net Thuis"
-          - "{{trigger.to_state is  search('Lutjebroek|Grootebroek|Hoogkarspel', ignorecase=true)}}"
+          - "{{trigger.to_state is search('Lutjebroek|Grootebroek|Hoogkarspel', ignorecase=true)}}"
+          - "{{trigger.to_state is not search('VWS', ignorecase=False)}}"
+          - "{{trigger.to_state is not search('Intrekken Alarm', ignorecase=True)}}"
     action:
       - service: script.p2000_announce
         data:

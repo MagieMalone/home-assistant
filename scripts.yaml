@@ -17,6 +17,11 @@ nacht:
           - light.hue_color_pendant_up_1
       data:
         transition: 10
+    - service: input_select.select_option
+      target:
+        entity_id: input_select.house_mode
+      data:
+        option: nacht
     - service: light.turn_on
       target:
         entity_id: light.slaapkamer
