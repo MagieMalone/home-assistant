@@ -25,7 +25,8 @@ light:
     entities:
       - light.overloop
       - light.trap_hal
-      - light.reserve
+      - light.zoldervoor
+      - light.zolderachter
   - platform: group
     name: slaapkamer
     entities:
@@ -41,7 +42,8 @@ light:
       - light.hue_color_pendant_up_1
       - light.computer
       - light.hal
-      - light.reserve
+      - light.zoldervoor
+      - light.zolderachter
       - light.sk_ceiling
   - platform: group
     name: whites
@@ -62,7 +64,8 @@ light:
       - light.hue_color_pendant_up_1
       - light.computer
       - light.hal
-      - light.reserve
+      - light.zoldervoor
+      - light.zolderachter
       - light.sk_ceiling
       - light.sk_duo_spot_1
       - light.sk_duo_spot_2
@@ -301,7 +304,8 @@ automation:
             - light.hue_color_pendant_up_1
             - light.computer
             - light.hal
-            - light.reserve
+            - light.zoldervoor
+            - light.zolderachter
             - light.sk_ceiling
             - light.sk_duo_spot_1
             - light.sk_duo_spot_2

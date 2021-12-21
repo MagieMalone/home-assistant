@@ -272,7 +272,8 @@
         - light.hue_color_pendant_up_1
         - light.computer
         - light.hal
-        - light.reserve
+        - light.zoldervoor
+        - light.zolderachter
         - light.sk_ceiling
         - light.sk_duo_spot_1
         - light.sk_duo_spot_2
@@ -612,7 +613,8 @@
         - light.hue_color_pendant_up_1
         - light.computer
         - light.hal
-        - light.reserve
+        - light.zoldervoor
+        - light.zolderachter
         - light.sk_ceiling
       friendly_name: color
       icon: mdi:lightbulb-group

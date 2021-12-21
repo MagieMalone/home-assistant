@@ -22,8 +22,8 @@ automation:
     id: '167521365098632509816235'
     trigger: 
       - platform: state
-        entity_id: remote.hue_dimmer_switch_1
-        to: '1_click_up'
+        entity_id: sensor.0x0017880102e1e3b4_action
+        to: 'on-press'
     action:
       - service: input_boolean.turn_on
         target:
@@ -32,8 +32,8 @@ automation:
     id: '87504935709864210938'
     trigger: 
       - platform: state
-        entity_id: remote.hue_dimmer_switch_1
-        to: '4_click_up'
+        entity_id: sensor.0x0017880102e1e3b4_action
+        to: 'off-press'
     action:
       - service: input_boolean.turn_off
         target:
@@ -102,6 +102,49 @@ automation:
 script:
   cleaningmode_on:
     sequence:
+      - service: scene.create
+        data:
+          scene_id: before_cleaning1
+          snapshot_entities:
+            - light.hue_lightstrip_plus_1
+            - light.staande_lamp
+            - light.hue_color_pendant_down_1
+            - light.hue_color_pendant_up_1
+            - light.computer
+            - light.hal
+            - light.zoldervoor
+            - light.zolderachter
+            - light.sk_ceiling
+            - light.sk_duo_spot_1
+            - light.sk_duo_spot_2
+            - light.overloop
+            - light.keuken_1
+            - light.keuken_2
+            - light.keuken_3
+            - light.trap_hal
+      - service: light.turn_on
+        target:
+          entity_id: light.lampen
+      - service: scene.create
+        data:
+          scene_id: before_cleaning2
+          snapshot_entities:
+            - light.hue_lightstrip_plus_1
+            - light.staande_lamp
+            - light.hue_color_pendant_down_1
+            - light.hue_color_pendant_up_1
+            - light.computer
+            - light.hal
+            - light.zoldervoor
+            - light.zolderachter
+            - light.sk_ceiling
+            - light.sk_duo_spot_1
+            - light.sk_duo_spot_2
+            - light.overloop
+            - light.keuken_1
+            - light.keuken_2
+            - light.keuken_3
+            - light.trap_hal
       - service: light.turn_on
         target:
           entity_id: 
@@ -109,7 +152,9 @@ script:
             - light.hal
             - light.sk_ceiling
             - light.staande_lamp
-            - light.eetkamer
+            - light.zoldervoor
+            - light.zolderachter
+            - light.keuken
         data:
           color_name: white
           brightness_pct: 100
@@ -117,41 +162,23 @@ script:
       - service: light.turn_on
         target:
           entity_id: 
-            - light.keuken
             - light.trap_hal
             - light.overloop
             - light.sk_spot
+
         data:
           color_temp: 153
           brightness_pct: 100
           transition: 15
   cleaningmode_off:
     sequence:
-      - service: light.turn_on
+      - service: scene.turn_on
         target:
-          entity_id: 
-            - light.computer
-            - light.hal
-            - light.sk_ceiling
-            - light.staande_lamp
-            - light.eetkamer
-            - light.keuken
-            - light.trap_hal
-            - light.overloop
-            - light.sk_spot
+          entity_id: scene.before_cleaning2
         data:
-          color_temp: 153
-          brightness_pct: 50
-          transition: 15
-      - service: light.turn_off
+          transition: 2
+      - service: scene.turn_on
         target:
-          entity_id: 
-            - light.computer
-            - light.hal
-            - light.sk_ceiling
-            - light.staande_lamp
-            - light.eetkamer
-            - light.keuken
-            - light.trap_hal
-            - light.overloop
-            - light.sk_spot
+          entity_id: scene.before_cleaning1
+        data:
+          transition: 2

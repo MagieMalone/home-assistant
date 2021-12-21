@@ -44,16 +44,7 @@ uart:
   tx_pin: D6
   baud_rate: 9600
  
-switch:
-#  - platform: template
-#    name: "MH-Z19 ABC"
-#    optimistic: true
-#    on_turn_on:
-#      - mhz19.abc_enable: mhz19sensor1
-#    on_turn_off:
-#      - mhz19.abc_disable: mhz19sensor1
-  - platform: restart
-    name: $hostname restart
+
     
 sensor:
   - platform: mhz19
@@ -62,7 +53,17 @@ sensor:
     temperature:
       name: "MH-Z19 Temperature"
     update_interval: 60s
-#    id: mhz19sensor1
+    id: mhz19sensor1
 binary_sensor:
   - platform: status
     name: $hostname status
+switch:
+  - platform: template
+    name: "MH-Z19 ABC"
+    optimistic: true
+#    on_turn_on:
+#      - mhz19.abc_enable: mhz19sensor1
+#    on_turn_off:
+#      - mhz19.abc_disable: mhz19sensor1
+  - platform: restart
+    name: $hostname restart
