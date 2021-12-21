@@ -151,31 +151,3 @@
       message: kb2003 is in {{states('sensor.oneplus_8t_room_presence')}} en afstand
         is {{state_attr('sensor.oneplus_8t_room_presence','distance')}}
   mode: single
-- id: '1613559282989'
-  alias: cleaning on
-  description: ''
-  trigger:
-  - device_id: cd07ef1cdd9443419a51e918186dc142
-    domain: hue
-    platform: device
-    type: remote_button_short_release
-    subtype: turn_on
-  action:
-  - service: input_boolean.turn_on
-    target:
-      entity_id: input_boolean.cleaningmode
-  mode: single
-- id: '1613559332357'
-  alias: turn off cleaning
-  description: ''
-  trigger:
-  - device_id: cd07ef1cdd9443419a51e918186dc142
-    domain: hue
-    platform: device
-    type: remote_button_short_release
-    subtype: turn_off
-  action:
-  - service: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.cleaningmode
-  mode: single
