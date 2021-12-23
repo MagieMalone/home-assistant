@@ -1,9 +1,9 @@
 #camera:
-  #  - platform: generic
-  #    name: buienradar
-  #    still_image_url:  https://api.buienradar.nl/image/1.0/RadarMapNL?w=500&h=512
-  #  - platform: generic
-  #    still_image_url:  http://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADAR_loop.gif
+#  - platform: generic
+#    name: buienradar
+#    still_image_url:  https://api.buienradar.nl/image/1.0/RadarMapNL?w=500&h=512
+#  - platform: generic
+#    still_image_url:  http://cdn.knmi.nl/knmi/map/page/weer/actueel-weer/neerslagradar/WWWRADAR_loop.gif
 #  - platform: buienradar
 #    name: buienradar
 input_number:
@@ -21,37 +21,37 @@ input_number:
 #    latitude: 52.65
 #    longitude: 4.98
 sensor:
-#  - platform: buienradar
-#    name: "Berkhout"
-#    latitude: 52.65
-#    longitude: 4.98
-#    timeframe: 30
-#    monitored_conditions:
-#      - symbol
-#      - humidity
-#      - temperature
-#      - windspeed
-#      - conditiondetailed
-#      - condition
-#      - conditioncode
-#      - visibility
-#      - irradiance
-#      - windazimuth
-#      - precipitation_forecast_total
-#      - temperature_1d
-#  - platform: buienradar
-#    name: "de Bilt"
-#    latitude: 52.10
-#    longitude: 5.18
-#    monitored_conditions:
-#      - symbol
-#  - platform: buienradar
-#    name: "Schiphol"
-#    latitude: 52.30
-#    longitude: 4.77
-#    monitored_conditions:
-#      - symbol
-#      - pressure
+  #  - platform: buienradar
+  #    name: "Berkhout"
+  #    latitude: 52.65
+  #    longitude: 4.98
+  #    timeframe: 30
+  #    monitored_conditions:
+  #      - symbol
+  #      - humidity
+  #      - temperature
+  #      - windspeed
+  #      - conditiondetailed
+  #      - condition
+  #      - conditioncode
+  #      - visibility
+  #      - irradiance
+  #      - windazimuth
+  #      - precipitation_forecast_total
+  #      - temperature_1d
+  #  - platform: buienradar
+  #    name: "de Bilt"
+  #    latitude: 52.10
+  #    longitude: 5.18
+  #    monitored_conditions:
+  #      - symbol
+  #  - platform: buienradar
+  #    name: "Schiphol"
+  #    latitude: 52.30
+  #    longitude: 4.77
+  #    monitored_conditions:
+  #      - symbol
+  #      - pressure
   - platform: statistics
     entity_id: sensor.buiten_temperature
     max_age:
@@ -59,7 +59,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: buiten_temp_min
-    state_characteristic: min
+    state_characteristic: value_min
   - platform: statistics
     entity_id: sensor.buiten_temperature
     max_age:
@@ -67,7 +67,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: buiten_temp_max
-    state_characteristic: max
+    state_characteristic: value_max
   - platform: statistics
     entity_id: sensor.zolder_voor_temperature
     max_age:
@@ -75,7 +75,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: zolder_voor_temp_min
-    state_characteristic: min
+    state_characteristic: value_min
   - platform: statistics
     entity_id: sensor.zolder_voor_temperature
     max_age:
@@ -83,7 +83,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: zolder_voor_temp_max
-    state_characteristic: max
+    state_characteristic: value_max
   - platform: statistics
     entity_id: sensor.zolder_achter_temperature
     max_age:
@@ -91,7 +91,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: zolder_achter_temp_min
-    state_characteristic: min
+    state_characteristic: value_min
   - platform: statistics
     entity_id: sensor.zolder_achter_temperature
     max_age:
@@ -99,7 +99,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: zolder_achter_temp_max
-    state_characteristic: max
+    state_characteristic: value_max
   - platform: statistics
     entity_id: sensor.studeerkamer_temperature
     max_age:
@@ -107,7 +107,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: studeerkamer_temp_min
-    state_characteristic: min
+    state_characteristic: value_min
   - platform: statistics
     entity_id: sensor.studeerkamer_temperature
     max_age:
@@ -115,7 +115,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: studeerkamer_temp_max
-    state_characteristic: max
+    state_characteristic: value_max
   - platform: statistics
     entity_id: sensor.slaapkamer_temperature
     max_age:
@@ -123,7 +123,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: slaapkamer_temp_min
-    state_characteristic: min
+    state_characteristic: value_min
   - platform: statistics
     entity_id: sensor.slaapkamer_temperature
     max_age:
@@ -131,7 +131,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: slaapkamer_temp_max
-    state_characteristic: max
+    state_characteristic: value_max
   - platform: statistics
     entity_id: sensor.badkamer_temperature
     max_age:
@@ -139,7 +139,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: badkamer_temp_min
-    state_characteristic: min
+    state_characteristic: value_min
   - platform: statistics
     entity_id: sensor.badkamer_temperature
     max_age:
@@ -147,7 +147,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: badkamer_temp_max
-    state_characteristic: max
+    state_characteristic: value_max
   - platform: statistics
     entity_id: sensor.woonkamer_temperature
     max_age:
@@ -155,7 +155,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: woonkamer_temp_min
-    state_characteristic: min
+    state_characteristic: value_min
   - platform: statistics
     entity_id: sensor.woonkamer_temperature
     max_age:
@@ -163,7 +163,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: woonkamer_temp_max
-    state_characteristic: max
+    state_characteristic: value_max
   - platform: statistics
     entity_id: sensor.bijkeuken_temperature
     max_age:
@@ -171,7 +171,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: bijkeuken_temp_min
-    state_characteristic: min
+    state_characteristic: value_min
   - platform: statistics
     entity_id: sensor.bijkeuken_temperature
     max_age:
@@ -179,7 +179,7 @@ sensor:
     sampling_size: 500
     precision: 1
     name: bijkeuken_temp_max
-    state_characteristic: max
+    state_characteristic: value_max
 
 automation:
   - alias: "kopieer forecast naar input_number"
