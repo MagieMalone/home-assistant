@@ -58,106 +58,128 @@ sensor:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: buiten_temperature_stats
-  - platform: statistics
-    entity_id: sensor.zolder_voor_temperature
-    max_age:
-      hours: 24
-    sampling_size: 500
-    precision: 1
-    name: zolder_voor_temperature_stats
-  - platform: statistics
-    entity_id: sensor.zolder_achter_temperature
-    max_age:
-      hours: 24
-    sampling_size: 500
-    precision: 1
-    name: zolder_achter_temperature_stats
-  - platform: statistics
-    entity_id: sensor.studeerkamer_temperature
-    max_age:
-      hours: 24
-    sampling_size: 500
-    precision: 1
-    name: studeerkamer_temperature_stats
+    name: buiten_temp_min
+    state_characteristic: min
   - platform: statistics
     entity_id: sensor.buiten_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: slaapkamer_temperature_stats
+    name: buiten_temp_max
+    state_characteristic: max
+  - platform: statistics
+    entity_id: sensor.zolder_voor_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: zolder_voor_temp_min
+    state_characteristic: min
+  - platform: statistics
+    entity_id: sensor.zolder_voor_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: zolder_voor_temp_max
+    state_characteristic: max
+  - platform: statistics
+    entity_id: sensor.zolder_achter_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: zolder_achter_temp_min
+    state_characteristic: min
+  - platform: statistics
+    entity_id: sensor.zolder_achter_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: zolder_achter_temp_max
+    state_characteristic: max
+  - platform: statistics
+    entity_id: sensor.studeerkamer_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: studeerkamer_temp_min
+    state_characteristic: min
+  - platform: statistics
+    entity_id: sensor.studeerkamer_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: studeerkamer_temp_max
+    state_characteristic: max
+  - platform: statistics
+    entity_id: sensor.slaapkamer_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: slaapkamer_temp_min
+    state_characteristic: min
+  - platform: statistics
+    entity_id: sensor.slaapkamer_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: slaapkamer_temp_max
+    state_characteristic: max
   - platform: statistics
     entity_id: sensor.badkamer_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: badkamer_temperature_stats
+    name: badkamer_temp_min
+    state_characteristic: min
+  - platform: statistics
+    entity_id: sensor.badkamer_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: badkamer_temp_max
+    state_characteristic: max
   - platform: statistics
     entity_id: sensor.woonkamer_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: woonkamer_temperature_stats
+    name: woonkamer_temp_min
+    state_characteristic: min
+  - platform: statistics
+    entity_id: sensor.woonkamer_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: woonkamer_temp_max
+    state_characteristic: max
   - platform: statistics
     entity_id: sensor.bijkeuken_temperature
     max_age:
       hours: 24
     sampling_size: 500
     precision: 1
-    name: bijkeuken_temperature_stats
-  - platform: template
-    sensors:
-      buiten_temp_min:
-        value_template: "{{ state_attr('sensor.buiten_temperature_stats', 'min_value') |float(default=0) }}"
-        friendly_name: "Minimum buiten temperatuur"
-      buiten_temp_max:
-        value_template: "{{ state_attr('sensor.buiten_temperature_stats', 'max_value') |float(default=0) }}"
-        friendly_name: "Maximum buiten temperatuur"
-      zolder_voor_temp_min:
-        value_template: "{{ state_attr('sensor.sensor.zolder_voor_temperature_stats', 'min_value') |float(default=0) }}"
-        friendly_name: "Minimum temperatuur zolder voor"
-      zolder_voor_temp_max:
-        value_template: "{{ state_attr('sensor.sensor.zolder_voor_temperature_stats', 'max_value') |float(default=0) }}"
-        friendly_name: "Maximum temperatuur zolder voor"
-      zolder_achter_temp_min:
-        value_template: "{{ state_attr('sensor.zolder_achter_temperature_stats', 'min_value') |float(default=0) }}"
-        friendly_name: "Minimum temperatuur zolder achter"
-      zolder_achter_temp_max:
-        value_template: "{{ state_attr('sensor.zolder_achter_temperature_stats', 'max_value') |float(default=0) }}"
-        friendly_name: "Maximum temperatuur zolder achter"
-      studeerkamer_temp_min:
-        value_template: "{{ state_attr('sensor.studeerkamer_temperature_stats', 'min_value') |float(default=0) }}"
-        friendly_name: "Minimum temperatuur studeerkamer"
-      studeerkamer_temp_max:
-        value_template: "{{ state_attr('sensor.studeerkamer_temperature_stats', 'max_value') |float(default=0) }}"
-        friendly_name: "Maximum temperatuur studeerkamer"
-      slaapkamer_temp_min:
-        value_template: "{{ state_attr('sensor.buiten_temperature_stats', 'min_value') |float(default=0) }}"
-        friendly_name: "Minimum temperatuur slaapkamer"
-      slaapkamer_temp_max:
-        value_template: "{{ state_attr('sensor.buiten_temperature_stats', 'max_value') |float(default=0) }}"
-        friendly_name: "Maximum temperatuur slaapkamer"
-      badkamer_temp_min:
-        value_template: "{{ state_attr('sensor.badkamer_temperature_stats', 'min_value') |float(default=0) }}"
-        friendly_name: "Minimum temperatuur badkamer"
-      badkamer_temp_max:
-        value_template: "{{ state_attr('sensor.badkamer_temperature_stats', 'max_value') |float(default=0) }}"
-        friendly_name: "Maximum temperatuur badkamer"
-      woonkamer_temp_min:
-        value_template: "{{ state_attr('sensor.woonkamer_temperature_stats', 'min_value') |float(default=0) }}"
-        friendly_name: "Minimum temperatuur woonkamer"
-      woonkamer_temp_max:
-        value_template: "{{ state_attr('sensor.woonkamer_temperature_stats', 'max_value') |float(default=0) }}"
-        friendly_name: "Maximum temperatuur woonkamer"
-      bijkeuken_temp_min:
-        value_template: "{{ state_attr('sensor.bijkeuken_temperature_stats', 'min_value') |float(default=0) }}"
-        friendly_name: "Minimum temperatuur bijkeuken"
-      bijkeuken_temp_max:
-        value_template: "{{ state_attr('sensor.bijkeuken_temperature_stats', 'max_value') |float(default=0) }}"
-        friendly_name: "Maximum temperatuur bijkeuken"
+    name: bijkeuken_temp_min
+    state_characteristic: min
+  - platform: statistics
+    entity_id: sensor.bijkeuken_temperature
+    max_age:
+      hours: 24
+    sampling_size: 500
+    precision: 1
+    name: bijkeuken_temp_max
+    state_characteristic: max
 
 automation:
   - alias: "kopieer forecast naar input_number"
