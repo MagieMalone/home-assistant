@@ -52,6 +52,7 @@ variables:
 trigger:
   - platform: state
     entity_id: !input switch_entity
+    to:
 action:
   - variables:
       command: "{{ trigger.to_state.state }}"
@@ -154,3 +155,62 @@ action:
               data:
                 transition:  2
                 color_temp: "{{ state_attr(light_entity, 'color_temp') |int + step }}"
+    - conditions:
+        - "{{ command == 'hold_left' }}"
+      sequence:
+        - variables:
+            light_entity: !input light_entity_left
+        - choose:
+          - conditions: "{{ (state_attr(light_entity, 'brightness') |int) > 245 }}"
+            sequence:
+              - service: light.turn_on
+                target:
+                  entity_id: !input light_entity_left
+                data:
+                  brightness: 1
+          default:
+            - service: light.turn_on
+              target:
+                entity_id: !input light_entity_left
+              data:
+                brightness_step_pct: 10
+    - conditions:
+        - "{{ command == 'hold_right' }}"
+      sequence:
+        - variables:
+            light_entity: !input light_entity_right
+        - choose:
+          - conditions: "{{ (state_attr(light_entity, 'brightness') |int) > 245 }}"
+            sequence:
+              - service: light.turn_on
+                target:
+                  entity_id: !input light_entity_right
+                data:
+                  brightness: 1
+          default:
+            - service: light.turn_on
+              target:
+                entity_id: !input light_entity_right
+              data:
+                brightness_step_pct: 10
+
+    - conditions:
+        - "{{ command == 'hold_both' }}"
+      sequence:
+        - variables:
+            light_entity: !input light_entity_both
+        - choose:
+          - conditions: "{{ (state_attr(light_entity, 'brightness') |int) > 245 }}"
+            sequence:
+              - service: light.turn_on
+                target:
+                  entity_id: !input light_entity_both
+                data:
+                  brightness: 1
+          default:
+            - service: light.turn_on
+              target:
+                entity_id: !input light_entity_both
+              data:
+                brightness_step_pct: 10
+

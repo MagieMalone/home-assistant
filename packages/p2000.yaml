@@ -28,15 +28,23 @@ sensor:
   - platform: p2000
     name: p2000_latest
     regios: 10
-  - platform: template
-    sensors:
-      p2000_last:
-        friendly_name: "p2000 last seen"
-        value_template: >
+#  - platform: rest
+#    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.p2000_latest_location')|urlencode}}&apiKey={{states('input_text.here_api')}}
+#    value_template: "{{(value_json['items'][0]['position']['lat']|string ) + ',' + (value_json['items'][0]['position']['lng'] |string)}}"
+#    name: "p2000_latest_latlong"
+#    json_attributes_path: "$.items[0].position"
+#    json_attributes:
+#      - lat
+#      - lng
+
+template:
+  - sensor:
+      - name: "p2000_last"
+        state: >
           {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
           {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
           {{ (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='state')|first}}
-        icon_template: >
+        icon: >
           {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
           {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
           {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
@@ -56,7 +64,7 @@ sensor:
           {% else %}
             {{'mdi:helicopter'}}
           {% endif %}
-        attribute_templates:
+        attributes:
           capcode: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
@@ -70,33 +78,21 @@ sensor:
             {% else %}
               {{state_attr(entity, 'capcode')}}
             {% endif %}
-#      p2000_latest_location:
-#        friendly_name: "p2000 lastest location"
-#        value_template: >
-#            {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
-#            {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ bran_reden %}
-#            {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
-#            {% set brackets ='\([^)]+\) *' %}
-#            {% set ambu_string = '^(|( |)AMBU )([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
-#            {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
-#
-#            {% set location1 = states('sensor.p2000_latest') |regex_replace(find=dienstprio, replace='', ignorecase=False) %}
-#            {% set location2 = location1 |regex_replace(find=brackets, replace='', ignorecase=False)  %}
-#            {% set location3 = location2 |regex_replace(find=ambu_string, replace='', ignorecase=False) %}
-#            {% set location4 = location3 |regex_replace(find=br_string, replace='', ignorecase=False) %}
-#            {% set location5 = location4 |regex_replace(find='VWS ', replace='', ignorecase=True) %}
-#            {% set location = location5 |regex_replace(find=bon_string, replace='', ignorecase=False) %}
-#            {{location}}
-
-
-#  - platform: rest
-#    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.p2000_latest_location')|urlencode}}&apiKey={{states('input_text.here_api')}}
-#    value_template: "{{(value_json['items'][0]['position']['lat']|string ) + ',' + (value_json['items'][0]['position']['lng'] |string)}}"
-#    name: "p2000_latest_latlong"
-#    json_attributes_path: "$.items[0].position"
-#    json_attributes:
-#      - lat
-#      - lng
+#     - name: "p2000_latest_location"
+#       state: >
+#           {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
+#           {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ bran_reden %}
+#           {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
+#           {% set brackets ='\([^)]+\) *' %}
+#           {% set ambu_string = '^(|( |)AMBU )([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
+#           {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
+#           {% set location1 = states('sensor.p2000_latest') |regex_replace(find=dienstprio, replace='', ignorecase=False) %}
+#           {% set location2 = location1 |regex_replace(find=brackets, replace='', ignorecase=False)  %}
+#           {% set location3 = location2 |regex_replace(find=ambu_string, replace='', ignorecase=False) %}
+#           {% set location4 = location3 |regex_replace(find=br_string, replace='', ignorecase=False) %}
+#           {% set location5 = location4 |regex_replace(find='VWS ', replace='', ignorecase=True) %}
+#           {% set location = location5 |regex_replace(find=bon_string, replace='', ignorecase=False) %}
+#           {{location}}
 
 timer:
   p2000_announce:
@@ -222,7 +218,7 @@ automation:
     alias: P2000_announce
     trigger:
       - platform: state
-        entity_id: 
+        entity_id:
           - sensor.ambulance
           - sensor.brandweer
           - sensor.grip
@@ -273,7 +269,7 @@ automation:
     initial_state: false
     trigger:
       - platform: state
-        entity_id: 
+        entity_id:
           - sensor.p2000_latest
     condition:
       - condition: and
@@ -366,7 +362,7 @@ script:
         data:
           message: >
             {% set BR_code ='BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole|afval|gebouw) ' %}
-            {% set HV_code ='HV (materieel|(weg |spoor |water )(letsel|materieel) |overig ) ' %}
+            {% set HV_code ='HV (materieel|(weg |spoor |water )(letsel|materieel|)|overig) *' %}
             {% set DV_code ='DV (aan derden|Brw) ' %}
             {% set no_code ='(CO-melder|Rookmelder|Liftopsluiting|Ass. (Ambu|Pol)|Reanimatie|(PAC|OMS) (brandmelding|handmelder)|(Persoon|Voertuig) te water|Wateroverlast|Uitval nutsvoorz.|Persoon te water|Dier (in problemen|op hoogte|te water|in put/kelder)|Stank/hind. lucht|Luid/optisch alarm|Stormschade) ' %}
             {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
@@ -410,4 +406,4 @@ script:
             {% endif %}
           cache: false
           language: "nl"
-      - delay: '00:00:02'
+      - delay: "00:00:02"

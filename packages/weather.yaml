@@ -180,6 +180,40 @@ sensor:
     precision: 1
     name: bijkeuken_temp_max
     state_characteristic: value_max
+thermal_comfort:
+    sensor:
+      - name: buiten
+        unique_id: "97515587-8ce6-4cc4-b7a9-56af1c199844"
+        friendly_name: Buiten
+        temperature_sensor: sensor.buiten_temperature
+        humidity_sensor: sensor.buiten_humidity
+      - name: badkamer
+        unique_id: "a621e49c-9b62-464f-b614-9e780b6b1805"
+        temperature_sensor: sensor.badkamer_temperature
+        humidity_sensor: sensor.badkamer_humidity
+        sensor_types:
+          - absolutehumidity
+      - name: bijkeuken
+        unique_id: "590b23c9-4250-4410-b56e-3b1ecf9f2db4"
+        temperature_sensor: sensor.bijkeuken_temperature
+        humidity_sensor: sensor.bijkeuken_humidity
+        sensor_types:
+          - frostrisk
+          - frostpoint
+template:
+  - sensor:
+    - name: windchill
+      state: >
+        {% set V = (states('sensor.berkhout_wind_speed') | float * 0.75)**0.16 %}
+        {% set T = states('sensor.berkhout_temperature') |float %}
+        {{(13.12 + 0.6215*T - 11.37*V + 0.3965*T*V)|round(1)}}
+      device_class: temperature
+      unit_of_measurement: °C
+      icon: mdi:thermometer
+
+
+
+
 
 automation:
   - alias: "kopieer forecast naar input_number"

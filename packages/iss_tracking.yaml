@@ -19,30 +19,32 @@ sensor:
       - longitude
       - latitude
       - altitude
-  - platform: template
-    sensors:
-      iss_altitude:
-        value_template: "{{state_attr('sensor.iss', 'altitude') | round | int}}"
-        unit_of_measurement: "Km"
-      iss_latitude:
-        value_template: "{state_attr('sensor.iss', 'latitude') | float}}"
-        unit_of_measurement: "°"
-      iss_longitude:
-        value_template: "{{state_attr('sensor.iss', 'longitude') | float}}"
-        unit_of_measurement: "°"
-      iss_horizon:
-        value_template: "{{(sqrt( (2 * 6371 * state_attr('sensor.iss', 'altitude')) + state_attr('sensor.iss', 'altitude')**2)  + sqrt( (2 * 6371 * (2/1000))+ (2/1000)**2)) | round | int }}"
-        unit_of_measurement: "Km"
-      iss_distance:
-        value_template: "{{distance(state_attr('sensor.iss', 'latitude'), state_attr('sensor.iss', 'longitude')) | round | int}}"
-        unit_of_measurement: "Km"
-      iss_visible:
-        value_template: >-
-          {%if  state_attr('sun.sun', 'elevation')  < -6  and state_attr('sun.sun', 'elevation') > -18 %}
-            {{ states('sensor.iss_distance') < states('sensor.iss_horizon') }}
-          {% else %}
-            False   
-          {% endif %}
+
+template:
+  - sensor:
+    - name: "iss_altitude"
+      state: "{{state_attr('sensor.iss', 'altitude') | round | int}}"
+      unit_of_measurement: "Km"
+    - name: "iss_latitude"
+      state: "{state_attr('sensor.iss', 'latitude') | float}}"
+      unit_of_measurement: "°"
+    - name: "iss_longitude"
+      state: "{{state_attr('sensor.iss', 'longitude') | float}}"
+      unit_of_measurement: "°"
+    - name: "iss_horizon"
+      state: "{{(sqrt( (2 * 6371 * state_attr('sensor.iss', 'altitude')) + state_attr('sensor.iss', 'altitude')**2)  + sqrt( (2 * 6371 * (2/1000))+ (2/1000)**2)) | round | int }}"
+      unit_of_measurement: "Km"
+    - name: "iss_distance"
+      state: "{{distance(state_attr('sensor.iss', 'latitude'), state_attr('sensor.iss', 'longitude')) | round | int}}"
+      unit_of_measurement: "Km"
+    - name: "iss_visible"
+      state: >-
+        {%if  state_attr('sun.sun', 'elevation')  < -6  and state_attr('sun.sun', 'elevation') > -18 %}
+          {{ states('sensor.iss_distance') < states('sensor.iss_horizon') }}
+        {% else %}
+          False   
+        {% endif %}
+
 automation:
   - alias: "ISS in range"
     id: "130256743518934101213"

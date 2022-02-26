@@ -4,42 +4,40 @@ binary_sensor:
     name: "google"
     count: 3
     scan_interval: 15
+template:
+  - sensor:
+    - name: "google_rtt"
+      state: "{{state_attr('binary_sensor.google', 'round_trip_time_avg')|float}}"
+    - name: "edgeos_interface_eth0_in_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Received)')|float}}"
+    - name: "edgeos_interface_eth0_out_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Sent)')|float}}"
+    - name: "edgeos_external_addresses"
+      state: "{{state_attr('binary_sensor.edgeos_interface_eth0','addresses')}}"
+    - name: "edgeos_device_docker_in_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_device_docker','KBytes/ps (Received)')|float}}"
+    - name: "edgeos_device_docker_out_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_device_docker','KBytes/ps (Sent)')|float}}"
+    - name: "edgeos_device_hassio_in_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_device_hassio','KBytes/ps (Received)')|float}}"
+    - name: "edgeos_device_hassio_out_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_device_hassio','KBytes/ps (Sent)')|float}}"
+    - name: "edgeos_device_hassbian_in_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_device_hassbian','KBytes/ps (Received)')|float}}"
+    - name: "edgeos_device_hassbian_out_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_device_hassbian','KBytes/ps (Sent)')|float}}"
+    - name: "edgeos_device_synology415play_in_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_device_synology415play','KBytes/ps (Received)')|float}}"
+    - name: "edgeos_device_synology415play_out_kbps"
+      state: "{{state_attr('binary_sensor.edgeos_device_synology415play','KBytes/ps (Sent)')|float}}"
+    - name: "ha_uptodate"
+      state: >
+        {{state_attr('sensor.supervisor_updates','newest_version') == state_attr('sensor.supervisor_updates','current_version')}}
+      icon: >
+        {{ 'mdi:circle-outline' if state_attr('sensor.supervisor_updates','newest_version') !=
+            state_attr('sensor.supervisor_updates','current_version') else 'mdi:check-circle-outline' }}
+      unit_of_measurement: Up to date
 sensor:
-  - platform: template
-    sensors:
-      google_rtt:
-        value_template: "{{state_attr('binary_sensor.google', 'round_trip_time_avg')|float}}"
-      edgeos_interface_eth0_in_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Received)')|float}}"
-      edgeos_interface_eth0_out_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','KBytes/ps (Sent)')|float}}"
-      edgeos_external_addresses:
-        value_template: "{{state_attr('binary_sensor.edgeos_interface_eth0','addresses')}}"
-      edgeos_device_docker_in_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_device_docker','KBytes/ps (Received)')|float}}"
-      edgeos_device_docker_out_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_device_docker','KBytes/ps (Sent)')|float}}"
-      edgeos_device_hassio_in_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_device_hassio','KBytes/ps (Received)')|float}}"
-      edgeos_device_hassio_out_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_device_hassio','KBytes/ps (Sent)')|float}}"
-      edgeos_device_hassbian_in_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_device_hassbian','KBytes/ps (Received)')|float}}"
-      edgeos_device_hassbian_out_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_device_hassbian','KBytes/ps (Sent)')|float}}"
-      edgeos_device_synology415play_in_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_device_synology415play','KBytes/ps (Received)')|float}}"
-      edgeos_device_synology415play_out_kbps:
-        value_template: "{{state_attr('binary_sensor.edgeos_device_synology415play','KBytes/ps (Sent)')|float}}"
-      ha_uptodate:
-        friendly_name_template: >
-          {{state_attr('sensor.supervisor_updates','current_version')}}
-        value_template: >
-          {{state_attr('sensor.supervisor_updates','newest_version') == state_attr('sensor.supervisor_updates','current_version')}}
-        icon_template: >
-          {{ 'mdi:circle-outline' if state_attr('sensor.supervisor_updates','newest_version') !=
-              state_attr('sensor.supervisor_updates','current_version') else 'mdi:check-circle-outline' }}
-        unit_of_measurement: Up to date
   - platform: command_line
     name: Supervisor updates
     command: 'curl http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"addons":[.data.addons[] | select(.version != .installed)]}'''

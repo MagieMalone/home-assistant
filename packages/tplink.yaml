@@ -1,15 +1,14 @@
-sensor:
-  - platform: template
-    sensors:
-      tp_link_amps:
-        value_template: "{{ state_attr('switch.espressomaker', 'current_a') | replace(' A', '') | float(default=0) }}"
-        unit_of_measurement: "A"
-      tp_link_watts:
-        value_template: "{{ state_attr('switch.espressomaker', 'current_power_w') | replace(' W', '') | float(default=0) }}"
-        unit_of_measurement: "W"
-      tp_link_kw:
-        value_template: "{{ state_attr('switch.espressomaker', 'today_energy_kwh') | replace(' kW', '') | float(default=0) }}"
-        unit_of_measurement: "kWh"
-      tp_link_volts:
-        value_template: "{{ state_attr('switch.espressomaker', 'voltage') | replace(' V', '') | float(default=230) }}"
-        unit_of_measurement: "V"
+template:
+  - sensor:
+    - name: "tp_link_amps"
+      state: "{{ state_attr('switch.espressomaker', 'current_a') | replace(' A', '') | float(default=0) }}"
+      unit_of_measurement: "A"
+    - name: "tp_link_watts"
+      state: "{{ state_attr('switch.espressomaker', 'current_power_w') | replace(' W', '') | float(default=0) }}"
+      unit_of_measurement: "W"
+    - name: "tp_link_kw"
+      state: "{{ state_attr('switch.espressomaker', 'today_energy_kwh') | replace(' kW', '') | float(default=0) }}"
+      unit_of_measurement: "kWh"
+    - name: "tp_link_volts"
+      state: "{{ state_attr('switch.espressomaker', 'voltage') | replace(' V', '') | float(default=230) }}"
+      unit_of_measurement: "V"

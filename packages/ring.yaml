@@ -10,7 +10,7 @@
 #   - platform: ring
 # ffmpeg:
 
-sensor:
+#sensor:
   #  - platform: ring
   #    monitored_conditions:
   #      - battery
@@ -18,18 +18,20 @@ sensor:
   #      - last_ding
   #      - last_motion
   #      - volume
-  - platform: template
-    sensors:
-      last_ring:
-        value_template: >-
+
+template:
+  - sensor:
+      - name: "last_ring"
+        state: >-
           {% if state_attr('sensor.front_door_last_ding','created_at') != None %}
             {{relative_time(state_attr('sensor.front_door_last_ding','created_at'))   }}
           {% endif %}
-      last_motion:
-        value_template: >-
+      - name: "last_motion"
+        state: >-
           {% if state_attr('sensor.front_door_last_motion','created_at') != None %}
             {{relative_time(state_attr('sensor.front_door_last_motion','created_at')) }}
           {% endif %}
+
 automation:
   - alias: "flash lights with doorbell"
     id: "753125809170657784308"

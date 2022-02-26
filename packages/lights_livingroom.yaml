@@ -73,6 +73,9 @@ automation:
             - "{{as_timestamp(strptime(state_attr('sensor.berkhout_condition', 'Measured'),'%a %b %d %H:%M:%S %Y'))+1800 > as_timestamp(now())}}"
             # sky not clear
             - "{{ not is_state('sensor.berkhout_condition', 'clear') }}"
+            - condition: state
+              entity_id: input_select.house_mode
+              state: "weg"
     action:
       - service: script.woonkamer_lights
 

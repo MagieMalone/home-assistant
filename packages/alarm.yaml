@@ -42,7 +42,7 @@ automation:
     - alias: "no guests in the house"
       condition: state
       entity_id: input_boolean.guests_boolean
-      state: "Off"
+      state: "off"
     action:
       - service: alarm_control_panel.alarm_arm_away
         target:
@@ -104,8 +104,6 @@ automation:
       entity_id: 
         - binary_sensor.bijkeuken_deur_contact
         - binary_sensor.voordeur_contact
-        - binary_sensor.overloop_occupancy
-        - binary_sensor.traphal_occupancy
         - binary_sensor.hal_occupancy
         - binary_sensor.badkamer_raam_contact
         - binary_sensor.studeerkamer_raam_contact

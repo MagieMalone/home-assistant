@@ -21,26 +21,25 @@ input_number:
     unit_of_measurement: °C
     icon: mdi:thermometer
 
-sensor:
-  - platform: template
-    sensors:
-      heating_set_temperature:
-        value_template: "{{state_attr('climate.toon_thermostat', 'temperature') | float }}"
-      heating_preset_mode:
-        value_template: "{{state_attr('climate.toon_thermostat', 'preset_mode')}}"
-      toon_action:
-        value_template: "{{state_attr('climate.toon_thermostat', 'hvac_action')}}"
-      thermostat_condition:
-        value_template: >
-          {% if is_state('sensor.buiten_temperature', 'unknown') %}
-            {% if is_state('sensor.woonkamer_temperature', 'unknown') %}
-              {{(states('input_number.berkhout_temperatuur_0d') |float ) <20}}
-            {% else %}
-              {{(states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
-            {% endif %}
+template:
+  - sensor:
+    - name: "heating_set_temperature"
+      state: "{{state_attr('climate.toon_thermostat', 'temperature') | float }}"
+    - name: "heating_preset_mode"
+      state: "{{state_attr('climate.toon_thermostat', 'preset_mode')}}"
+    - name: "toon_action"
+      state: "{{state_attr('climate.toon_thermostat', 'hvac_action')}}"
+    - name: "thermostat_condition"
+      state: >
+        {% if is_state('sensor.buiten_temperature', 'unknown') %}
+          {% if is_state('sensor.woonkamer_temperature', 'unknown') %}
+            {{(states('input_number.berkhout_temperatuur_0d') |float ) <20}}
           {% else %}
-            {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+            {{(states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
           {% endif %}
+        {% else %}
+          {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+        {% endif %}
 
 timer:
   toon_automation:
@@ -64,11 +63,17 @@ automation:
       - platform: numeric_state
         entity_id: proximity.home
         below: 25
+        id: "proximity_below"
       - platform: state
         entity_id: group.windows_kachel
         from: "off"
         to: "on"
         for: "00:05:00"
+      - platform: state
+        entity_id: person.arnoud
+        from: "Action"
+        for: "00:03:00"
+        id: "leave_action"
       - platform: state
         entity_id: group.windows_kachel
         from: "on"
@@ -78,7 +83,10 @@ automation:
           - "09:00:00"
           - "23:00:00"
           - "21:30:00"
+      - platform: time
+        at:
           - input_datetime.pre_heat_time
+        id: "pre_heat"
       - platform: state
         entity_id: sensor.thermostat_condition
     action:
@@ -94,7 +102,8 @@ automation:
           - conditions:
               - condition: and
                 conditions:
-                  - "{{ trigger.entity_id == 'input_datetime.pre_heat_time' }}"
+                  - condition: trigger
+                    id: "pre_heat"
                   - condition: numeric_state
                     entity_id: sensor.badkamer_temperature
                     below: 20
@@ -147,7 +156,10 @@ automation:
                       - condition: state
                         entity_id: input_select.arnoud_status
                         state: "Net Thuis"
-                      - "{{trigger.entity_id == 'proximity.home'}}"
+                      - condition: trigger
+                        id: "proximity_below"
+                      - condition: trigger
+                        id: "action_leave"
             sequence:
               - alias: "zet kachel aan"
                 service: script.kachel_mode

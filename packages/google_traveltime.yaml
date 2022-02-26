@@ -65,19 +65,20 @@ sensor:
     name: home_to_ing_stats
     sampling_size: 288
     state_characteristic: mean
-  - platform: template
-    sensors:
-      calc_travel_time:
-        value_template: >
-          {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
-          {%if duration == None %}
-            0
+
+template:
+  - sensor:
+    - name: "calc_travel_time"
+      state: >
+        {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
+        {%if duration == None %}
+          0
+        {% else %}
+          {%if duration.split(" ")[2]==Null %}
+            {{ duration.split(" ")[0] | int * 60 }}
           {% else %}
-            {%if duration.split(" ")[2]==Null %}
-              {{ duration.split(" ")[0] | int * 60 }}
-            {% else %}
-              {{ duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60}}
-            {% endif %}
+            {{ duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60}}
           {% endif %}
-      google_api_key:
-        value_template: !secret google_apikey
+        {% endif %}
+    - name: "google_api_key"
+      state: !secret google_apikey

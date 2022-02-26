@@ -34,15 +34,12 @@ input_boolean:
 #    username: !secret tplink_user
 #    password: !secret tplink_password
 
-sensor:
-  - platform: template
-    sensors:
-      arnoud_status:
-        value_template: "{{ states('input_select.arnoud_status') }}"
-        friendly_name: "Arnoud"
-      prox_home_dir_of_travel:
-        value_template: "{{state_attr('proximity.home','dir_of_travel')}}"
-        friendly_name: "Direction of travel to/from home"
+template:
+  - sensor:
+    - name: "arnoud_status"
+      state: "{{ states('input_select.arnoud_status') }}"
+    - name: "prox_home_dir_of_travel"
+      state: "{{state_attr('proximity.home','dir_of_travel')}}"
 
 binary_sensor:
   - platform: workday

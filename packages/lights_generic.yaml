@@ -191,6 +191,8 @@ automation:
       - platform: state
         entity_id: input_select.arnoud_status
         to: "Net Weg"
+        for: 
+          minutes: 3
     action:
       - service: homeassistant.turn_off
         target:
