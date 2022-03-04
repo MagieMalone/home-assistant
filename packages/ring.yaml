@@ -40,48 +40,35 @@ automation:
       entity_id: binary_sensor.front_door_ding
       to: "on"
     action:
-      - service: media_player.turn_on
-        target:
-          entity_id:
-            - media_player.huiskamer_speaker
-            - media_player.slaapkamer_speaker
-            - media_player.studeerkamer_speaker
-      - delay: "00:00:01"
-      - service: scene.create
-        data:
-          scene_id: before
-          snapshot_entities:
-            - media_player.huiskamer_speaker
-            - media_player.slaapkamer_speaker
-            - media_player.studeerkamer_speaker
       - service: script.turn_on
         target:
           entity_id: script.flash_lights
-      - service: media_player.volume_set
-        target:
-          entity_id: 
-            - media_player.huiskamer_speaker
-            - media_player.slaapkamer_speaker
-            - media_player.studeerkamer_speaker
+
+
+      - alias: "Play sound when there is someone at the door"
+        service: script.google_home_resume
         data:
-          volume_level: 1
-      - service: media_player.play_media
-        target:
-          entity_id: media_player.speakers
-        data:
-          media_content_id: https://foto-album.duckdns.org/local/audio/Door-bell-sound-ding-dong.mp3
-          media_content_type: music
-          extra:
-            thumb: "https://brands.home-assistant.io/_/homeassistant/logo.png"
-            title: Doorbell
-      - delay: "00:00:03"
-      - service: tts.google_say
-        target:
-          entity_id: media_player.speakers
-        data:
-          message: "Er is iemand aan de deur"
-          language: "nl"
-      - delay: "00:00:10"
-      - service: scene.turn_on
-        target:
-          entity_id: scene.before
+          action:
+            - service: media_player.volume_set
+              target:
+                entity_id: media_player.speakers
+              data:
+                volume_level: 1
+            - service: media_player.play_media
+              target:
+                entity_id: media_player.speakers
+              data:
+                media_content_type: music
+                media_content_id: "https://foto-album.duckdns.org/local/audio/Door-bell-sound-ding-dong.mp3"
+                extra:
+                  thumb: "https://brands.home-assistant.io/_/homeassistant/logo.png"
+                  title: Doorbell
+            - delay: "00:00:03"
+            - service: tts.google_say
+              target:
+                entity_id: media_player.speakers
+              data:
+                message: "Er is iemand aan de deur"
+                language: "nl"
+            - delay: "00:00:10"
+

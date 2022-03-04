@@ -2,7 +2,7 @@ nacht:
   sequence:
     - service: homeassistant.turn_off
       target:
-        entity_id: light.media_group
+        entity_id: switch.media_group
     - service: light.turn_off
       target:
         entity_id: 

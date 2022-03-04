@@ -6,7 +6,7 @@ proximity:
 camera:
   - platform: generic
     name: iss
-    still_image_url: "https://maps.googleapis.com/maps/api/staticmap?key={{states('sensor.google_api_key')}}&center={{state_attr('sensor.iss', 'latitude')}},{{state_attr('sensor.iss', 'longitude')}}&zoom=6&size=600x300&maptype=hybrid&markers=color:blue%7Clabel:ISS%7C{{state_attr('sensor.iss', 'latitude')}},{{state_attr('sensor.iss', 'longitude')}}"
+    still_image_url: "https://maps.googleapis.com/maps/api/staticmap?key={{states('sensor.google_api_key')}}&center={{state_attr('binary_sensor.iss', 'latitude')}},{{state_attr('binary_sensor.iss', 'longitude')}}&zoom=6&size=600x300&maptype=hybrid&markers=color:blue%7Clabel:ISS%7C{{state_attr('sensor.iss', 'latitude')}},{{state_attr('sensor.iss', 'longitude')}}"
     limit_refetch_to_url_change: true
 
 sensor:
@@ -26,7 +26,7 @@ template:
       state: "{{state_attr('sensor.iss', 'altitude') | round | int}}"
       unit_of_measurement: "Km"
     - name: "iss_latitude"
-      state: "{state_attr('sensor.iss', 'latitude') | float}}"
+      state: "{{state_attr('sensor.iss', 'latitude') | float}}"
       unit_of_measurement: "°"
     - name: "iss_longitude"
       state: "{{state_attr('sensor.iss', 'longitude') | float}}"

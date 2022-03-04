@@ -12,9 +12,3 @@ mqtt:
   will_message:
     topic: 'hass/status'
     payload: 'offline'
-light:
-  - platform: mqtt
-    schema: json
-    name: media_group
-    command_topic: "zigbee2mqtt/media_group/set"
-    state_topic: "zigbee2mqtt/media_group"

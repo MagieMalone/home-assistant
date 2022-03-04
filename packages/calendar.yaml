@@ -151,6 +151,33 @@ automation:
       - "{{(states('sensor.calc_travel_time')|int)>120}}"
 
     action:
+      - alias: "Send TTS using Google Home Resume script"
+        service: script.turn_on
+        target:
+          entity_id: script.google_home_resume
+        data:
+          variables:
+            action:
+              - alias: "Send TTS message"
+                service: tts.google_cloud_say
+                target:
+                  entity_id: media_player.speakers
+                data:
+                  message: >
+                    {% set reistijd = states('sensor.calc_travel_time') %}
+                    {%if reistijd=='unknown' %} 
+                      Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd is onbekend.
+                    {% else %}
+                      Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
+                    {% endif %}
+      - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+        wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+      - alias: "Apply TTS volume"
+        service: media_player.volume_set
+        target:
+          entity_id: media_player.speakers
+        data:
+          volume_level: 0.35
       - service: script.both_speakers
         data:
           tekst: >
@@ -160,19 +187,6 @@ automation:
             {% else %}
               Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
             {% endif %}
-      - service: tts.google_say
-        target:
-          entity_id: media_player.desktop
-        data:
-          message: >
-            {% set reistijd = states('sensor.calc_travel_time') %}
-            {%if reistijd=='unknown' %} 
-              Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd is onbekend.
-            {% else %}
-              Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
-            {% endif %}
-          cache: false
-          language: "nl"
   - alias: "F1 begin wedstrijd"
     id: "3478021346858103290"
     trigger:
@@ -203,16 +217,32 @@ automation:
     #        data:
     #          tekst: "De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')|striptags}} begint over tien minuten "
     action:
-      - service: tts.google_say
+      - alias: "Send TTS using Google Home Resume script"
+        service: script.turn_on
+        target:
+          entity_id: script.google_home_resume
+        data:
+          variables:
+            action:
+              - alias: "Send TTS message"
+                service: tts.google_cloud_say
+                target:
+                  entity_id: media_player.speakers
+                data:
+                  message: "De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')}} begint over tien minuten"
+                  cache: false
+                  language: "nl"
+      - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+        wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+      - alias: "Apply TTS volume"
+        service: media_player.volume_set
         target:
           entity_id: media_player.speakers
         data:
-          message: "De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')}} begint over tien minuten"
-          cache: false
-          language: "nl"
+          volume_level: 0.35
       - service: homeassistant.turn_on
         target:
-          entity_id: light.media_group
+          entity_id: switch.media_group
   - alias: "set time input helpers"
     id: "4d6474f6-4a53-4c54-ae47-66326ad68133"
     trigger:

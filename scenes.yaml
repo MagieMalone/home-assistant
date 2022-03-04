@@ -238,7 +238,7 @@
       icon: mdi:thermostat
       supported_features: 17
       state: heat
-    light.media_group:
+    switch.media_group:
       friendly_name: media_group
       supported_features: 40
       state: "off"
@@ -310,7 +310,7 @@
       state: "off"
       update_available: false
       friendly_name: Esspresso
-    light.media_group:
+    switch.media_group:
       friendly_name: media_group
       supported_features: 40
       state: "off"

@@ -1,3 +1,9 @@
 spotify:
   client_id: !secret spotify_clientid
   client_secret: !secret spotify_secret
+spotcast:
+  sp_dc: !secret sp_dc
+  sp_key: !secret sp_key
+sensor:
+  - platform: spotcast
+    country: NL
