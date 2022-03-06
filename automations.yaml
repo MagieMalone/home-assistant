@@ -72,42 +72,6 @@
       light_entity_right: light.keuken
       light_entity_both: light.eetkamer, light.keuken
       mode_selector: input_select.house_mode
-- id: '1609411507048'
-  alias: Mute mediaplayer when calling.
-  description: ''
-  use_blueprint:
-    path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
-    input:
-      phone_state: sensor.kb2003_telefoon_status
-      person: person.arnoud
-      media_player: media_player.speakers
-- id: '1609411549751'
-  alias: Mute mediaplayer when calling.
-  description: ''
-  use_blueprint:
-    path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
-    input:
-      phone_state: sensor.kb2003_telefoon_status
-      person: person.arnoud
-      media_player: media_player.huiskamer_tv
-- id: '1609411592013'
-  alias: Mute mediaplayer when calling.
-  description: ''
-  use_blueprint:
-    path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
-    input:
-      phone_state: sensor.kb2003_telefoon_status
-      person: person.arnoud
-      media_player: media_player.ht_nt5
-- id: '1609411612257'
-  alias: Mute mediaplayer when calling.
-  description: ''
-  use_blueprint:
-    path: JackPoint/mute-media-player-when-on-phone-only-when-home.yaml
-    input:
-      phone_state: sensor.kb2003_telefoon_status
-      person: person.arnoud
-      media_player: media_player.huiskamer_speaker
 - id: '1610275729152'
   alias: Auto-verlaat-parkeerplaats
   description: ''

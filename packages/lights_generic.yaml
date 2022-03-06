@@ -77,9 +77,9 @@ light:
 group:
   switch-wk:
     entities:
-      - switch.media_la_switch
-      - switch.media_ra_switch
-      - switch.media_v_switch
+      - switch.woonkamer_la
+      - switch.woonkamer_ra
+      - switch.woonkamer_media
   motion_sensors:
     entities:
       - binary_sensor.hal_occupancy

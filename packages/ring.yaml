@@ -43,8 +43,6 @@ automation:
       - service: script.turn_on
         target:
           entity_id: script.flash_lights
-
-
       - alias: "Play sound when there is someone at the door"
         service: script.google_home_resume
         data:
@@ -71,4 +69,3 @@ automation:
                 message: "Er is iemand aan de deur"
                 language: "nl"
             - delay: "00:00:10"
-

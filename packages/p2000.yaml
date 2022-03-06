@@ -366,7 +366,7 @@ script:
           variables:
             action:
               - alias: "Send TTS message"
-                service: tts.google_cloud_say
+                service: tts.google_say
                 target:
                   entity_id: media_player.speakers
                 data:

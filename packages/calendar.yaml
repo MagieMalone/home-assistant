@@ -34,8 +34,6 @@ sensor:
       - "time"
 template:
   - sensor:
-    - name: "cal_title"
-      state: "{{ state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '') }}"
     - name: cal_travelmode
       state: >-
         {% if '#ov' in state_attr('calendar.abuurmangmailcom', 'message') %}
@@ -64,16 +62,6 @@ template:
         {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
         {% set time = state_attr('calendar.reminders', 'start_time') + tz %}
         {{as_timestamp(time)|timestamp_local}}
-    - name: cal_start_time
-      state: >
-        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-        {% set time = state_attr('calendar.abuurmangmailcom', 'start_time') + tz %}
-        {{as_timestamp(time)|timestamp_local}}
-    - name: cal_start_time_unix
-      state: >
-        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-        {% set time = state_attr('calendar.abuurmangmailcom', 'start_time') + tz %}
-        {{as_timestamp(time)}}
     - name: calc_leave_time
       state: >
         {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
@@ -119,23 +107,9 @@ template:
             {{ (starttime - (duration.split(' ')[0] | int *3600 + duration.split(' ')[2] | int *60 )) | timestamp_custom('%Y-%m-%d %H:%M')}}
           {% endif %} 
         {% endif %}
-    - name: cal_contacts_start_time
-      state: >
-        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-        {% set time = state_attr('calendar.contacts', 'start_time') + tz %}
-        {{as_timestamp(time)|timestamp_custom('%m-%d-%Y')}}
-    - name: cal_contacts_message
-      state: "{{state_attr('calendar.contacts', 'message')}}"
-    - name: cal_title_f1
-      state: "{{ state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message') }}"
-    - name: cal_start_time_f1
-      state: >
-        {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-        {% if state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') == None %}
-          None
-        {% else %}
-          {{ as_timestamp(state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') + tz )   | timestamp_local }}
-        {% endif %}
+
+
+
 
 automation:
   - alias: "vertrek melding"
@@ -159,16 +133,16 @@ automation:
           variables:
             action:
               - alias: "Send TTS message"
-                service: tts.google_cloud_say
+                service: tts.google_say
                 target:
                   entity_id: media_player.speakers
                 data:
                   message: >
                     {% set reistijd = states('sensor.calc_travel_time') %}
                     {%if reistijd=='unknown' %} 
-                      Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd is onbekend.
+                      Het is tijd om naar {{state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')}} te gaan. De reistijd is onbekend.
                     {% else %}
-                      Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
+                      Het is tijd om naar {{state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
                     {% endif %}
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
@@ -178,15 +152,7 @@ automation:
           entity_id: media_player.speakers
         data:
           volume_level: 0.35
-      - service: script.both_speakers
-        data:
-          tekst: >
-            {% set reistijd = states('sensor.calc_travel_time') %}
-            {%if reistijd=='unknown' %} 
-              Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd is onbekend.
-            {% else %}
-              Het is tijd om naar {{states('sensor.cal_title')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
-            {% endif %}
+
   - alias: "F1 begin wedstrijd"
     id: "3478021346858103290"
     trigger:
@@ -196,11 +162,12 @@ automation:
       - condition: template
         value_template: >
           {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% if state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') == None %}
+          {% if state_attr('calendar.formula_1_calendar_by_racefans_net', 'start_time') == None %}
             False
           {% else %}
-            {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'start_time') + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
+            {{ now().strftime('%D %H:%M') == ( (as_timestamp(state_attr('calendar.formula_1_calendar_by_racefans_net', 'start_time') + tz )-600)   | timestamp_custom('%D %H:%M', 1)) }}
           {% endif %}
+      - "{{not state_attr('calendar.formula_1_calendar_by_racefans_net','all_day') }}"
       - condition: state
         entity_id: input_boolean.f1_announcements
         state: "on"
@@ -215,7 +182,7 @@ automation:
     #    action:
     #      - service: script.both_speakers
     #        data:
-    #          tekst: "De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')|striptags}} begint over tien minuten "
+    #          tekst: "De {{state_attr('calendar.formula_1_calendar_by_racefans_net', 'message')|striptags}} begint over tien minuten "
     action:
       - alias: "Send TTS using Google Home Resume script"
         service: script.turn_on
@@ -225,11 +192,11 @@ automation:
           variables:
             action:
               - alias: "Send TTS message"
-                service: tts.google_cloud_say
+                service: tts.google_say
                 target:
                   entity_id: media_player.speakers
                 data:
-                  message: "De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')}} begint over tien minuten"
+                  message: "De {{state_attr('calendar.formula_1_calendar_by_racefans_net', 'message')}} begint over tien minuten"
                   cache: false
                   language: "nl"
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
@@ -288,6 +255,6 @@ script:
           entity_id: media_player.speakers
         data:
           message: >
-            De {{state_attr('calendar.2020_fia_formula_one_world_championship_race_calendar', 'message')}} begint over tien minuten
+            De {{state_attr('calendar.formula_1_calendar_by_racefans_net', 'message')}} begint over tien minuten
           cache: false
           language: "nl"
