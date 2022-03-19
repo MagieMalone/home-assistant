@@ -40,6 +40,7 @@ sensor:
 template:
   - sensor:
       - name: "p2000_last"
+        unique_id: "8e9a755b-5522-42ab-980b-2b3e6d641311"
         state: >
           {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
           {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}

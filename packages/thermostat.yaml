@@ -24,12 +24,18 @@ input_number:
 template:
   - sensor:
     - name: "heating_set_temperature"
+      unique_id: "1394c112-73e9-4884-b8a3-6c01ce3e5d85"
       state: "{{state_attr('climate.toon_thermostat', 'temperature') | float }}"
+      device_class: "temperature"
+      unit_of_measurement: "°C"
     - name: "heating_preset_mode"
+      unique_id: "0f64357c-5e9d-4939-aa83-180eee53740d"
       state: "{{state_attr('climate.toon_thermostat', 'preset_mode')}}"
     - name: "toon_action"
+      unique_id: "f35bbc32-e09b-418b-84cf-970d0378bf91"
       state: "{{state_attr('climate.toon_thermostat', 'hvac_action')}}"
     - name: "thermostat_condition"
+      unique_id: "04b4cc23-5941-4fb4-901e-452e0fdb0153"
       state: >
         {% if is_state('sensor.buiten_temperature', 'unknown') %}
           {% if is_state('sensor.woonkamer_temperature', 'unknown') %}

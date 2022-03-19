@@ -27,28 +27,40 @@ sensor:
 template:
   - sensor:
     - name: "iss_altitude"
+      unique_id: "381b9b1d-c09a-4856-9ee1-a525c8891a5e"
       state: "{{state_attr('sensor.iss', 'altitude') | round | int}}"
       unit_of_measurement: "Km"
     - name: "iss_latitude"
+      unique_id: "761348ef-9b85-415d-b983-687f6abe7fa2"
       state: "{{state_attr('sensor.iss', 'latitude') | float}}"
       unit_of_measurement: "°"
     - name: "iss_longitude"
+      unique_id: "668b19c8-b0e8-4ed1-a9da-21894f3885ee"
       state: "{{state_attr('sensor.iss', 'longitude') | float}}"
       unit_of_measurement: "°"
     - name: "iss_horizon"
+      unique_id: "8d6866e6-2cab-47b8-957f-e5ec3a9049f5"
       state: "{{(sqrt( (2 * 6371 * state_attr('sensor.iss', 'altitude')) + state_attr('sensor.iss', 'altitude')**2)  + sqrt( (2 * 6371 * (2/1000))+ (2/1000)**2)) | round | int }}"
       unit_of_measurement: "Km"
     - name: "iss_distance"
+      unique_id: "fe078b48-56ca-409b-9a2c-ad6a2a65106f"
       state: "{{distance(state_attr('sensor.iss', 'latitude'), state_attr('sensor.iss', 'longitude')) | round | int}}"
       unit_of_measurement: "Km"
     - name: "iss_visible"
+      unique_id: "73cb79cd-b244-4772-95af-20eb27ffc06d"
       state: >-
         {%if  state_attr('sun.sun', 'elevation')  < -6  and state_attr('sun.sun', 'elevation') > -18 %}
           {{ (states('sensor.iss_distance')|int) < (states('sensor.iss_horizon')|int) }}
         {% else %}
           False   
         {% endif %}
-
+    - name: "iss_elevation"
+      unique_id: "197c566f-23c0-4ef6-a832-ff97f9ca281c"
+      state: "{{state_attr('sensor.iss_alt_az', 'altitude')|float|round(1)}}"
+      unit_of_measurement: "°"
+    - name: "iss_visibility"
+      unique_id: "cf2acaf1-ddf6-4496-a6b5-3ef83e8328a5"
+      state: "{{state_attr('sensor.iss', 'visibility')}}"
 automation:
   - alias: "ISS in range"
     id: "130256743518934101213"

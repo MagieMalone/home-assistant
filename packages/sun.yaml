@@ -4,8 +4,10 @@ sun:
 template:
   - sensor:
       - name: "sun_azimuth"
+        unique_id: "feac68b2-6d08-4f28-8d01-e93284ec0060"
         state: "{{state_attr('sun.sun', 'azimuth')|float}}"
       - name: "sun_elevation"
+        unique_id: "0b341900-6ec5-4ef2-8042-cbc003ebd04a"
         state: "{{state_attr('sun.sun', 'elevation')|float}}"
 
 sensor:

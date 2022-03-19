@@ -96,7 +96,7 @@ def normalize_vector_diff(b, a):
     # Calculate norm(b-a), where norm divides a vector by its length to produce a unit vector.
     dx = b['x'] - a['x']
     dy = b['y'] - a['y']
-    dz = b['x'] - a['z']
+    dz = b['z'] - a['z']
     dist2 = dx*dx + dy*dy + dz*dz
     if (dist2 == 0):
         return 
@@ -156,7 +156,7 @@ def get_iss_location():
     state = hass.states.get('sensor.iss')
     d['lat'] = state.attributes.get('latitude')
     d['lon'] = state.attributes.get('longitude')
-    d['elv'] = state.attributes.get('altitude')
+    d['elv'] = state.attributes.get('altitude') * 1000
     return d
 
 #a = {'lat': 15.062524741048 , 'lon': 54.029936752092 , 'elv': 420}

@@ -188,3 +188,61 @@ script:
           color_temp: 449
           brightness_pct: 50
           transition: 30
+  woonkamer_lights_fadein_smooth:
+    sequence:
+      - alias: staande lamp
+        service: light.turn_on
+        target:
+          entity_id: light.staande_lamp
+        data:
+          brightness_pct: 1
+          kelvin: 3000
+      - alias: strip
+        service: light.turn_on
+        target:
+          entity_id: light.hue_lightstrip_plus_1
+        data:
+          xy_color:
+            - 0.3388
+            - 0.1332
+          brightness_pct: 1
+      - alias: pendant_up
+        service: light.turn_on
+        target:
+          entity_id: light.hue_color_pendant_up_1
+        data:
+          xy_color:
+            - 0.324
+            - 0.154
+          brightness_pct: 1
+      - alias: pendant_down
+        service: light.turn_on
+        target:
+          entity_id: light.hue_color_pendant_down_1
+        data:
+          color_temp: 449
+          brightness_pct: 1
+      - alias: staande lamp
+        service: python_script.smooth_fader
+        data:
+          entity_id: light.staande_lamp
+          duration: "00:05:00"
+          brightness_end: 128
+      - alias: strip
+        service: python_script.smooth_fader
+        data:
+          entity_id: light.hue_lightstrip_plus_1
+          duration: "00:05:00"
+          brightness_end: 85
+      - alias: pendant_up
+        service: python_script.smooth_fader
+        data:
+          entity_id: light.hue_color_pendant_up_1
+          duration: "00:05:00"
+          brightness_end: 128
+      - alias: pendant_down
+        service: python_script.smooth_fader
+        data:
+          entity_id: light.hue_color_pendant_down_1
+          duration: "00:05:00"
+          brightness_end: 128

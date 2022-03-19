@@ -37,8 +37,10 @@ input_boolean:
 template:
   - sensor:
     - name: "arnoud_status"
+      unique_id: "8ef066b3-0304-4fd2-bda0-282b24a11a8d"
       state: "{{ states('input_select.arnoud_status') }}"
     - name: "prox_home_dir_of_travel"
+      unique_id: "d72f5617-b74d-4f48-a889-e4ae5472fc3d"
       state: "{{state_attr('proximity.home','dir_of_travel')}}"
 
 binary_sensor:
