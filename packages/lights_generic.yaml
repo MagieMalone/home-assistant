@@ -1,26 +1,31 @@
 light:
   - platform: group
+    unique_id: "c5dc244f-d629-4449-b1df-7724f7cf9f93"
     name: sk_spot
     entities:
       - light.sk_duo_spot_1
       - light.sk_duo_spot_2
   - platform: group
+    unique_id: "31369779-f376-442a-9bef-151d46c299b0"
     name: keuken
     entities:
       - light.keuken_1
       - light.keuken_2
       - light.keuken_3
   - platform: group
+    unique_id: "8f812a0b-a791-4712-80ef-330fe600e5e3"
     name: woonkamer
     entities:
       - light.hue_lightstrip_plus_1
       - light.staande_lamp
   - platform: group
+    unique_id: "9a92f8b0-a07c-4e3a-b1ab-f7106caac260"
     name: eetkamer
     entities:
       - light.hue_color_pendant_down_1
       - light.hue_color_pendant_up_1
   - platform: group
+    unique_id: "23310601-9579-47a4-86a4-045ebcd93914"
     name: zolder_en_trap
     entities:
       - light.overloop
@@ -28,12 +33,14 @@ light:
       - light.zoldervoor
       - light.zolderachter
   - platform: group
+    unique_id: "90f9c500-8281-47d4-b840-6b7d949cbe20"
     name: slaapkamer
     entities:
       - light.sk_ceiling
       - light.sk_duo_spot_1
       - light.sk_duo_spot_2
   - platform: group
+    unique_id: "34afeb0e-a49e-4dd2-b3cd-3c4d118b023c"
     name: color
     entities:
       - light.hue_lightstrip_plus_1
@@ -46,6 +53,7 @@ light:
       - light.zolderachter
       - light.sk_ceiling
   - platform: group
+    unique_id: "b99afc0f-ddba-48cd-a8e1-49b7675c0dd0"
     name: whites
     entities:
       - light.sk_duo_spot_1
@@ -56,6 +64,7 @@ light:
       - light.keuken_3
       - light.trap_hal
   - platform: group
+    unique_id: "44895708-5ac6-4f2a-98ea-aee477f7ff66"
     name: lampen
     entities:
       - light.hue_lightstrip_plus_1
