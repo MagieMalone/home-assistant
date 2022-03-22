@@ -167,9 +167,12 @@ automation:
         to: "triggered"
         for: "00:01:55"
     action:
-      - service: script.both_speakers
+      - service: tts.google_say
+        target:
+          entity_id: media_player.speakers
         data:
-          tekst: "Alarm! Alarm! Alarm! indringer in huis! "
+          message: "Alarm! Alarm! Alarm! indringer in huis!"
+          language: "nl"
       - service: light.turn_on
         target:
           entity_id: 

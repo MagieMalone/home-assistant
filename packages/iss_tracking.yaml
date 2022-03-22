@@ -71,50 +71,84 @@ automation:
       above: 5.0
     condition: "{{state_attr('sun.sun', 'elevation')  < -6  and state_attr('sun.sun', 'elevation') > -18}}"
     action:
-      service: notify.pushover
-      data:
-        message: >
-          {% set azimuth = state_attr('sensor.iss_alt_az', 'azimuth')|float %}
-          {% if azimuth > 348.75 or azimuth <= 11.25 %}
-            {% set direction = 'N' %}
-          {% elif azimuth > 11.25 and azimuth <= 33.75 %}
-            {% set direction = 'NNE' %}
-          {% elif azimuth > 33.75 and azimuth <= 56.25 %}
-            {% set direction = 'NE' %}
-          {% elif azimuth > 56.25 and azimuth <= 78.75 %}
-            {% set direction = 'ENE' %}
-          {% elif azimuth > 78.25 and azimuth <= 101.25 %}
-            {% set direction = 'E' %}
-          {% elif azimuth > 101.25 and azimuth <= 123.75 %}
-            {% set direction = 'ESE' %}
-          {% elif azimuth > 123.75 and azimuth <= 146.25 %}
-            {% set direction = 'SE' %}
-          {% elif azimuth > 146.25 and azimuth <= 168.75 %}
-            {% set direction = 'SSE' %}
-          {% elif azimuth > 168.75 and azimuth <= 191.25 %}
-            {% set direction = 'S' %}
-          {% elif azimuth > 191.25 and azimuth <= 213.75 %}
-            {% set direction = 'SSW' %}
-          {% elif azimuth > 213.75 and azimuth <= 236.25 %}
-            {% set direction = 'SW' %}
-          {% elif azimuth > 236.25 and azimuth <= 258.75 %}
-            {% set direction = 'WSW' %}
-          {% elif azimuth > 258.75 and azimuth <= 281.25 %}
-            {% set direction = 'W' %}
-          {% elif azimuth > 281.25 and azimuth <= 303.75 %}
-            {% set direction = 'WNW' %}
-          {% elif azimuth > 303.75 and azimuth <= 326.25 %}
-            {% set direction = 'NW' %}
-          {% elif azimuth > 326.25 and azimuth <= 348.75 %}
-            {% set direction = 'NNW' %}
-          {% else %}
-            {% set direction = '' %}
-          {% endif %}
-          ISS is nu {{state_attr('sensor.iss_alt_az', 'distkm')|int}} Km ver en {{state_attr('sensor.iss_alt_az', 'altitude')|round(1)}} graden boven de horizon in {{direction}} richting 
-        title: "ISS"
+      - variables:
+          iss_direction: >
+            {% set azimuth = state_attr('sensor.iss_alt_az', 'azimuth')|float %}
+            {% if azimuth > 348.75 or azimuth <= 11.25 %}
+              Noordelijke
+            {% elif azimuth > 11.25 and azimuth <= 33.75 %}
+              Noord-noordoostelijke
+            {% elif azimuth > 33.75 and azimuth <= 56.25 %}
+              Noordoostelijke
+            {% elif azimuth > 56.25 and azimuth <= 78.75 %}
+              Oost-Noordoostelijke
+            {% elif azimuth > 78.25 and azimuth <= 101.25 %}
+              Oostelijke
+            {% elif azimuth > 101.25 and azimuth <= 123.75 %}
+              Oost-zuidoostelijke
+            {% elif azimuth > 123.75 and azimuth <= 146.25 %}
+              Zuidoostelijke
+            {% elif azimuth > 146.25 and azimuth <= 168.75 %}
+              Zuid-zuidoostelijke
+            {% elif azimuth > 168.75 and azimuth <= 191.25 %}
+              Zuidelijke
+            {% elif azimuth > 191.25 and azimuth <= 213.75 %}
+              Zuid-zuidwestelijke
+            {% elif azimuth > 213.75 and azimuth <= 236.25 %}
+              Zuidwestelijke
+            {% elif azimuth > 236.25 and azimuth <= 258.75 %}
+              West-Zuidwestelijke
+            {% elif azimuth > 258.75 and azimuth <= 281.25 %}
+              Westelijke
+            {% elif azimuth > 281.25 and azimuth <= 303.75 %}
+              West-Noordwestelijke
+            {% elif azimuth > 303.75 and azimuth <= 326.25 %}
+              Noordwestelijke
+            {% elif azimuth > 326.25 and azimuth <= 348.75 %}
+              Noord-noordwestelijke
+            {% else %}
+              Onbekende
+            {% endif %}
+      - service: notify.pushover
         data:
-          priority: -1
-          url: "https://foto-album.duckdns.org/lovelace/iss"
+          message: "Het ISS is nu {{state_attr('sensor.iss_alt_az', 'distkm')|int}} Km ver en {{state_attr('sensor.iss_alt_az', 'altitude')|round(1)}} graden boven de horizon in {{iss_direction}} richting "
+          title: "ISS"
+          data:
+            priority: 0
+            url: "https://foto-album.duckdns.org/lovelace/iss"
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: person.arnoud
+            state: "home"
+          - alias: "daytime"
+            condition: time
+            after: "08:00:00"
+            before: "22:30:00"
+      - alias: "Send TTS using Google Home Resume script"
+        service: script.turn_on
+        target:
+          entity_id: script.google_home_resume
+        data:
+          variables:
+            action:
+              - alias: "Send TTS message"
+                service: tts.google_say
+                target:
+                  entity_id: media_player.speakers
+                data:
+                  cache: false
+                  language: "nl"
+                  message: "ISS is nu {{state_attr('sensor.iss_alt_az', 'altitude')|round(1)}} graden boven de horizon in {{iss_direction}} richting "
+      - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+        wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+      - alias: "Apply TTS volume"
+        service: media_player.volume_set
+        target:
+          entity_id: media_player.speakers
+        data:
+          volume_level: 0.5
+          
   - alias: "update alt_az sensor"
     id: "6b87ea2d-ff66-4d86-9b9f-123b171e2f99"
     trigger:

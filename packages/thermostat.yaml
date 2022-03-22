@@ -54,6 +54,7 @@ timer:
 automation:
   - alias: "kachel nieuw"
     id: "432578090243508970892435"
+    mode: queued
     trigger:
       - platform: state
         entity_id: input_select.arnoud_status
