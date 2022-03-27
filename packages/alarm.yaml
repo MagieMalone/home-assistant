@@ -197,3 +197,84 @@ automation:
           color_temp: 153
           brightness_pct: 100
       - service: script.flash_lights
+
+
+  - alias:  "turn lights on with smoke alarm"
+    id: "e3f30eef-29a9-43d3-8fae-c63ce23b8ecb"
+    trigger:
+      - platform: state
+        entity_id:
+          - binary_sensor.0x000d6f001624f569_smoke
+          - binary_sensor.0x000d6f001624f85e_smoke
+          - binary_sensor.0x000d6f00162c1bfd_smoke
+        to: "on"
+    condition: []
+    action:
+      - service: notify.pushover
+        data:
+          message: "De {{states[trigger.to_state.domain][trigger.to_state.object_id].name}} detecteerd rook. test: {{state_attr(trigger.entity_id, 'test' )}}"
+          title: "Rook alarm"
+          data:
+            priority: 1
+      - service: scene.create
+        data:
+          scene_id: before_smokealarm
+          snapshot_entities:
+            - light.hue_lightstrip_plus_1
+            - light.staande_lamp
+            - light.hue_color_pendant_down_1
+            - light.hue_color_pendant_up_1
+            - light.computer
+            - light.hal
+            - light.zoldervoor
+            - light.zolderachter
+            - light.sk_ceiling
+            - light.sk_duo_spot_1
+            - light.sk_duo_spot_2
+            - light.overloop
+            - light.keuken_1
+            - light.keuken_2
+            - light.keuken_3
+            - light.trap_hal
+      - service: light.turn_on
+        target:
+          entity_id: 
+            - light.computer
+            - light.hue_color_pendant_down_1
+            - light.hue_color_pendant_up_1
+            - light.hal
+            - light.sk_ceiling
+            - light.staande_lamp
+            - light.keuken_1
+            - light.keuken_2
+            - light.keuken_3
+        data:
+          color_name: white
+          brightness_pct: 100
+      - service: light.turn_on
+        target:
+          entity_id: 
+            - light.trap_hal
+            - light.overloop
+            - light.sk_duo_spot_1
+            - light.sk_duo_spot_2
+        data:
+          color_temp: 153
+          brightness_pct: 100
+  - alias: "Turn lights back to before when smoke alarm clears"
+    id: "7ba56b40-b860-4c89-ab45-6f5306bfa7c1"
+    trigger:
+      - platform: state
+        entity_id:
+          - binary_sensor.0x000d6f001624f569_smoke
+          - binary_sensor.0x000d6f001624f85e_smoke
+          - binary_sensor.0x000d6f00162c1bfd_smoke
+        to: "off"
+        for: 
+          minutes: 5
+    action:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.before_smokealarm
+        data:
+          transition: 2
