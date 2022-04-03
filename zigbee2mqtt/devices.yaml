@@ -32,6 +32,9 @@
   friendly_name: '0x00158d0002b42afb'
 '0x00158d0002b7eda4':
   friendly_name: '0x00158d0002b7eda4'
+  debounce: 0.5
+  filtered_attributes: []
+  optimistic: true
 '0x00158d000315e79c':
   friendly_name: '0x00158d000315e79c'
 '0x00158d0005304ae1':
@@ -42,6 +45,8 @@
   friendly_name: '0x00158d00046113b0'
 '0x00158d0002b8586b':
   friendly_name: '0x00158d0002b8586b'
+  debounce: 0.5
+  optimistic: true
 '0x00158d00045067d1':
   friendly_name: '0x00158d00045067d1'
 '0x00158d00036c1ba4':
@@ -54,6 +59,8 @@
   friendly_name: '0x00158d00031e0c0a'
 '0x00158d0002b5d42f':
   friendly_name: '0x00158d0002b5d42f'
+  debounce: 0.5
+  optimistic: true
 '0x00158d000289ec2d':
   friendly_name: '0x00158d000289ec2d'
 '0x00158d000289e817':

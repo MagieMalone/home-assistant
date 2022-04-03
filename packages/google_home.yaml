@@ -60,8 +60,9 @@ automation:
             - sensor.huiskamer_speaker_timers
             - sensor.studeerkamer_speaker_timers
     action:
-      service: notify.pushover
-      data:
-        message: "Nieuw alarm gezet om {{as_timestamp(states(trigger.entity_id )) | timestamp_local}}"
-        title: 'Nieuw google home alarm'
+      - condition: "{{ states(trigger.entity_id) != 'unavailable' }}"
+      - service: notify.pushover
+        data:
+          message: "Nieuw alarm gezet om {{as_timestamp(states(trigger.entity_id )) | timestamp_local}}"
+          title: 'Nieuw google home alarm'
 
