@@ -3,11 +3,11 @@ proximity:
     devices:
       - sensor.iss
     unit_of_measurement: km
-camera:
-  - platform: generic
-    name: iss
-    still_image_url: "https://maps.googleapis.com/maps/api/staticmap?key={{states('sensor.google_api_key')}}&center={{state_attr('binary_sensor.iss', 'latitude')}},{{state_attr('binary_sensor.iss', 'longitude')}}&zoom=6&size=600x300&maptype=hybrid&markers=color:blue%7Clabel:ISS%7C{{state_attr('sensor.iss', 'latitude')}},{{state_attr('sensor.iss', 'longitude')}}"
-    limit_refetch_to_url_change: true
+#camera:
+#  - platform: generic
+#    name: iss
+#    still_image_url: "{{'https://maps.googleapis.com/maps/api/staticmap?key=' + states('sensor.google_api_key') + '&center=' + state_attr('binary_sensor.iss', 'latitude')|string + ',' + state_attr('binary_sensor.iss', 'longitude')|string + '&zoom=6&size=600x300&maptype=hybrid&markers=color:blue%7Clabel:ISS%7C' + state_attr('sensor.iss', 'latitude')|string + ',' + state_attr('sensor.iss', 'longitude')|string}}"
+#    limit_refetch_to_url_change: true
 
 sensor:
   - platform: rest

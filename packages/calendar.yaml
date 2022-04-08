@@ -22,11 +22,11 @@ input_datetime:
     name: alarmtime
     has_date: true
     has_time: true
-camera:
-  - platform: generic
-    name: Destination
-    still_image_url: https://maps.googleapis.com/maps/api/staticmap?key={{states('sensor.google_api_key')}}&center={{state_attr('calendar.abuurmangmailcom', 'location')}}&zoom=17&size=600x300&maptype=roadmap&markers=color:blue%7C{{state_attr('calendar.abuurmangmailcom', 'location')}}
-    limit_refetch_to_url_change: true
+#camera:
+#  - platform: generic
+#    name: Destination
+#    still_image_url: "{{'https://maps.googleapis.com/maps/api/staticmap?key=' + states('sensor.google_api_key') + '&center=' + state_attr('calendar.abuurmangmailcom', 'location')+ '&zoom=17&size=600x300&maptype=roadmap&markers=color:blue%7C' + state_attr('calendar.abuurmangmailcom', 'location')}}"
+#    limit_refetch_to_url_change: true
 
 sensor:
   - platform: time_date

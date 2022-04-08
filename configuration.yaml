@@ -134,6 +134,8 @@ sensor:
     resources:
       - type: disk_use_percent
         arg: /
+      - type: memory_use_percent
+      - type: processor_use
 
 zone: !include zones.yaml
 group: !include groups.yaml
