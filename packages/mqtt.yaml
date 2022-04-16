@@ -12,3 +12,4 @@
 #  will_message:
 #    topic: 'hass/status'
 #    payload: 'offline'
+#

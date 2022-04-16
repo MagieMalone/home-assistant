@@ -117,9 +117,16 @@ automation:
   - id: 789d0d2c-4ee0-41af-999d-c6f5a9f28c85
     alias: Lifeliners_announce
     trigger:
-      - platform: numeric_state
-        entity_id: proximity.lifeliner
-        below: 15
+#      - platform: numeric_state
+#        entity_id: proximity.lifeliner
+#        below: 15
+      - platform: state
+        entity_id:
+          - sensor.ll1
+          - sensor.ll2
+          - sensor.ll3
+          - sensor.ll4
+        to:
     condition:
       - condition: and
         conditions:
@@ -153,16 +160,21 @@ automation:
               - condition: state
                 entity_id: input_select.arnoud_status
                 state: "Net Thuis"
+          - condition: or
+            conditions:
+              - "{{ (state_attr(trigger.entity_id,'distance')| int <= 15000) and (state_attr(trigger.entity_id,'distance')| int != 0)}}"
+              - condition: template
+                value_template: >-
+                  {% set dist = distance(state_attr(trigger.entity_id, 'latitude'), state_attr(trigger.entity_id, 'longitude'))| round | int %}
+                  {{ dist <= 15 and dist > 0 }}
+
     action:
       - service: script.p2000_announce
         data:
-          my_state: >
-            {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
-            {% set sensor = 'sensor.' ~ nearest %}
-            {{states(sensor)}}
+          my_state: "{{states(trigger.entity_id)}}"
           heli: >
-            {% set map = {'LL1':'Lifeliner1','LL2':'Lifeliner2','LL3':'Lifeliner3','LL4':'Lifeliner4'} %}
-            {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
+            {% set map = {'ll1':'Lifeliner1','ll2':'Lifeliner2','ll3':'Lifeliner3','ll4':'Lifeliner4'} %}
+            {% set nearest = trigger.to_state.object_id %}
             {{map.get(nearest, 'unknown')}}
 
   - id: bc3a281f-efb8-4308-93d1-3802a1401122
@@ -321,23 +333,34 @@ automation:
 
   - id: c475440e-1301-4a0b-9b14-2ebb14aae027
     alias: Lifeliners_pushover
+    mode: queued
     trigger:
+#      - platform: state
+#        entity_id: proximity.lifeliner
       - platform: state
-        entity_id: proximity.lifeliner
+        entity_id:
+          - sensor.ll1
+          - sensor.ll2
+          - sensor.ll3
+          - sensor.ll4
+        to:
     action:
       - service: notify.pushover
         data:
           message: >
-            {% set map = {'LL1':'Lifeliner1','LL2':'Lifeliner2','LL3':'Lifeliner3','LL4':'Lifeliner4'} %}
-            {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
-            {% set sensor = 'sensor.' ~ nearest %}
+            {% set map = {'ll1':'Lifeliner1','ll2':'Lifeliner2','ll3':'Lifeliner3','ll4':'Lifeliner4'} %}
+            {% set nearest = trigger.to_state.object_id %}
+            {% set sensor = trigger.entity_id %}
             {% set ll_state = states(sensor)| regex_replace(find='^A[0-9] ', replace='', ignorecase=False) |regex_replace(find='\(DIA(|(:|=) (ja|nee))\) ', replace='', ignorecase=False) |regex_replace(find='^([0-9]+ )+|^AMBU ([0-9]+ )+', replace='', ignorecase=False) |regex_replace(find='((rit|bon) .+|([0-9]{5} )+)', replace='', ignorecase=true) %}
             Lifeliner: {{map.get(nearest, 'unknown')}}
             state: {{states(sensor)}}
             modified state: {{ll_state}}
+            coords: {{state_attr(sensor,'longitude')}},{{state_attr(sensor,'latitude')}}
+            dist: {{ state_attr(trigger.entity_id,'distance')| int}}
+            dist2: {{ (distance(state_attr(trigger.entity_id, 'latitude'), state_attr(trigger.entity_id, 'longitude')) | round | int)}}
           title: >
-            {% set map = {'LL1':'Lifeliner1','LL2':'Lifeliner2','LL3':'Lifeliner3','LL4':'Lifeliner4'} %}
-            {% set nearest = state_attr('proximity.lifeliner', 'nearest') %}
+            {% set map = {'ll1':'Lifeliner1','ll2':'Lifeliner2','ll3':'Lifeliner3','ll4':'Lifeliner4'} %}
+            {% set nearest = trigger.to_state.object_id %}
             {{map.get(nearest, 'unknown')}}
           data:
             priority: -1
