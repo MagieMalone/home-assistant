@@ -62,8 +62,6 @@ history:
 logbook:
   exclude:
     entities:
-      - automation.set_input_select_cast_devices_based_on_sensor_chromecast_devices
-      - input_select.cast_devices
       - automation.update_alt_az_sensor
     entity_globs:
       - sensor.diskstation_*
@@ -78,8 +76,6 @@ recorder:
       - camera
     entities:
       - sun.sun
-      - sensor.last_boot
-      - sensor.date
       - sensor.time
       - proximity.home2
       - sensor.iss
@@ -96,8 +92,6 @@ influxdb:
       - automation
     entities:
       - sun.sun
-      - sensor.last_boot
-      - sensor.date
       - sensor.time
       - proximity.home2
       - sensor.iss
@@ -136,6 +130,13 @@ sensor:
         arg: /
       - type: memory_use_percent
       - type: processor_use
+
+
+# Example configuration.yaml entry
+gdacs:
+  radius: 172
+  latitude: 52.23677047848721
+  longitude: 5.383300781250001
 
 zone: !include zones.yaml
 group: !include groups.yaml

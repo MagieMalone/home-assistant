@@ -38,6 +38,91 @@ sensor:
 #      - lng
 
 template:
+  - trigger:
+      - platform: event
+        event_type: p2000_ambu
+    sensor:
+      - name: "P2000_last_ambu"
+        unique_id: "e2e66563-ce45-47e5-92e9-f6666d50e50e"
+        state: "{{states('sensor.p2000_latest')}}"
+        icon: "mdi:ambulance"
+        attributes:
+          capcode: >
+            {% if state_attr('sensor.p2000_latest', 'capcode') == None  %}
+              {% if state_attr('sensor.p2000_latest', 'capcodes') == None %}
+                Unknown
+              {% else %}
+                {{state_attr('sensor.p2000_latest', 'capcodes')}}
+              {% endif %}
+            {% else %}
+              state_attr('sensor.p2000_latest', 'capcode')
+            {% endif %}
+          longitude: "{{state_attr(entity, 'longitude')}}"
+          latitude:  "{{state_attr(entity, 'latitude')}}"
+          distance: "{{state_attr(entity, 'distance')}}"
+          regio: "{{state_attr(entity, 'regio')}}"
+          "regio name": "{{state_attr(entity, 'regio name')}}"
+          discipline: "{{state_attr(entity, 'discipline')}}"
+          time: "{{state_attr(entity, 'time')}}"
+          attribution: "{{state_attr(entity, 'attribution')}}"
+          friendly_name: "Last announced P2000 Ambulance"
+  - trigger:
+      - platform: event
+        event_type: p2000_bran
+    sensor:
+      - name: "P2000_last_bran"
+        unique_id: "c32c1e61-b8e4-4bf9-8b97-1d5ce194a980"
+        state: "{{states('sensor.p2000_latest')}}"
+        icon: "mdi:fire-truck"
+        attributes:
+          capcode: >
+            {% if state_attr('sensor.p2000_latest', 'capcode') == None  %}
+              {% if state_attr('sensor.p2000_latest', 'capcodes') == None %}
+                Unknown
+              {% else %}
+                {{state_attr('sensor.p2000_latest', 'capcodes')}}
+              {% endif %}
+            {% else %}
+              state_attr('sensor.p2000_latest', 'capcode')
+            {% endif %}
+          longitude: "{{state_attr(entity, 'longitude')}}"
+          latitude:  "{{state_attr(entity, 'latitude')}}"
+          distance: "{{state_attr(entity, 'distance')}}"
+          regio: "{{state_attr(entity, 'regio')}}"
+          "regio name": "{{state_attr(entity, 'regio name')}}"
+          discipline: "{{state_attr(entity, 'discipline')}}"
+          time: "{{state_attr(entity, 'time')}}"
+          attribution: "{{state_attr(entity, 'attribution')}}"
+          friendly_name: "Last announced P2000 Firetruck"
+  - trigger:
+      - platform: event
+        event_type: p2000_grip
+    sensor:
+      - name: "P2000_last_grip"
+        unique_id: 3a2a46ab-b282-4325-838d-b1fe63871bc6""
+        state: "{{states('sensor.p2000_latest')}}"
+        icon: "mdi:alarm-light"
+        attributes:
+          capcode: >
+            {% if state_attr('sensor.p2000_latest', 'capcode') == None  %}
+              {% if state_attr('sensor.p2000_latest', 'capcodes') == None %}
+                Unknown
+              {% else %}
+                {{state_attr('sensor.p2000_latest', 'capcodes')}}
+              {% endif %}
+            {% else %}
+              state_attr('sensor.p2000_latest', 'capcode')
+            {% endif %}
+          longitude: "{{state_attr(entity, 'longitude')}}"
+          latitude:  "{{state_attr(entity, 'latitude')}}"
+          distance: "{{state_attr(entity, 'distance')}}"
+          regio: "{{state_attr(entity, 'regio')}}"
+          "regio name": "{{state_attr(entity, 'regio name')}}"
+          discipline: "{{state_attr(entity, 'discipline')}}"
+          time: "{{state_attr(entity, 'time')}}"
+          attribution: "{{state_attr(entity, 'attribution')}}"
+          friendly_name: "Last announced P2000 GRIP"
+#         {% set roepnummer = (mod_state | regex_findall_index(find=ambu_string, index=0, ignorecase=False))[4]|trim %}
   - sensor:
       - name: "p2000_last"
         unique_id: "8e9a755b-5522-42ab-980b-2b3e6d641311"
@@ -49,22 +134,27 @@ template:
           {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
           {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
           {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
-          {% set dienst = states( entity ) | regex_findall_index(find='^(A|B|P)', index=0, ignorecase=False)|first  %}
-          {% if entity == "sensor.ambulance"%}
-            {{'mdi:ambulance'}}
-          {% elif entity == "sensor.brandweer"%}
-            {{'mdi:fire-truck'}}
-          {% elif entity == "sensor.grip"%}
-            {{'mdi:alarm-light'}}
-          {% elif entity == "sensor.p2000_latest"%}
-            {% if dienst in ['A', 'B'] %}
+          {% set ambu_string = '^(A|B|P |Prio |)([0-9]|) (( |)AMBU |)([0-9]{5} |[0-9]{2}mc[0-9]{3} |)' %}
+          {% set brackets ='\([^)]+\) *' %}
+          {% set mod_state = states(entity)| regex_replace(find=brackets, replace='', ignorecase=False) %}
+          {% set roepnummer = mod_state | regex_findall_index(find=ambu_string, index=0, ignorecase=False)|last|trim %}
+          {%- if entity == "sensor.p2000_latest"%}
+            {%- if states('sensor.p2000_latest') is search('GRIP', ignorecase=true) %}
+              {{'mdi:alarm-light'}}
+            {%- elif is_state_attr(entity,'discipline','Ambulancediensten') %}
               {{'mdi:ambulance'}}
-            {% else %}
+            {%- elif is_state_attr(entity,'discipline','Brandweerdiensten') %}
               {{'mdi:fire-truck'}}
-            {% endif %}
-          {% else %}
-            {{'mdi:helicopter'}}
-          {% endif %}
+            {% else %}
+              {{'mdi:help'}}
+            {%- endif %}
+          {%- else %}
+            {%- if roepnummer in ['13991','17992', ''] %}
+              {{'mdi:helicopter'}}
+            {%- else %}
+              {{'mdi:ambulance'}}
+            {%- endif %}
+          {%- endif %}
         attributes:
           capcode: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
@@ -79,6 +169,89 @@ template:
             {% else %}
               {{state_attr(entity, 'capcode')}}
             {% endif %}
+          longitude: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'longitude') == None  %}
+              0
+            {%- else %}
+              {{state_attr(entity, 'longitude')}}
+            {% endif %}
+          latitude: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'latitude') == None  %}
+              0
+            {%- else %}
+              {{state_attr(entity, 'latitude')}}
+            {% endif %}
+          distance: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'distance') == None  %}
+              0
+            {%- else %}
+              {{state_attr(entity, 'distance')}}
+            {% endif %}
+          regio: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'regio') == None  %}
+              0
+            {%- else %}
+              {{state_attr(entity, 'regio')}}
+            {% endif %}
+          "regio name": >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'regio name') == None  %}
+              ""
+            {%- else %}
+              {{state_attr(entity, 'regio name')}}
+            {% endif %}
+          discipline: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'discipline') == None  %}
+              0
+            {%- else %}
+              {{state_attr(entity, 'discipline')}}
+            {% endif %}
+          time: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'time') == None  %}
+              {{now()}}
+            {%- else %}
+              {{state_attr(entity, 'time')}}
+            {% endif %}
+          attribution: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'attribution') == None  %}
+              Unknown
+            {%- else %}
+              {{state_attr(entity, 'attribution')}}
+            {% endif %}
+          friendly_name: >
+            {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
+            {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {%- if state_attr(entity, 'friendly_name') == None  %}
+              Unknown
+            {%- else %}
+              {{state_attr(entity, 'friendly_name')}}
+            {% endif %}
+
+
 #     - name: "p2000_latest_location"
 #       state: >
 #           {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
@@ -99,20 +272,7 @@ timer:
   p2000_announce:
     duration: "00:01:00"
 
-proximity:
-  lifeliner:
-    devices:
-      - sensor.ll1
-      - sensor.ll2
-      - sensor.ll3
-      - sensor.ll4
-    unit_of_measurement: km
-  ambuymke:
-    zone: ymke_buurt
-    devices:
-      - sensor.ambulance
-      - sensor.brandweer
-    unit_of_measurement: m
+
 automation:
   - id: 789d0d2c-4ee0-41af-999d-c6f5a9f28c85
     alias: Lifeliners_announce
@@ -177,64 +337,13 @@ automation:
             {% set nearest = trigger.to_state.object_id %}
             {{map.get(nearest, 'unknown')}}
 
-  - id: bc3a281f-efb8-4308-93d1-3802a1401122
-    alias: ambu_ymke_announce
-    trigger:
-      - platform: numeric_state
-        entity_id: proximity.ambuymke
-        below: 50
-    action:
-      - service: notify.pushover
-        data:
-          message: >
-            {% set nearest = state_attr('proximity.ambuymke', 'nearest') %}
-            {% set my_entity = 'sensor.' ~ nearest %}
-            {% set BR_code ='BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole|afval) ' %}
-            {% set HV_code ='HV (materieel|(weg |spoor |water )(letsel|materieel) |overig ) ' %}
-            {% set DV_code ='DV (aan derden|Brw) ' %}
-            {% set no_code ='(CO-melder|Rookmelder|Liftopsluiting|Ass. (Ambu|Pol)|Reanimatie|(PAC|OMS) 
-            (brandmelding|handmelder)|(Persoon|Voertuig) te water|Wateroverlast|Uitval nutsvoorz.|
-            Persoon te water|Dier (in problemen|op hoogte|te water|in put/kelder)|Stank/hind. lucht|Luid/optisch alarm|Stormschade) ' %}
-            {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
-            {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ bran_reden %}
-            {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
-            {% set brackets ='\([^)]+\) *' %}
-            {% set ambu_string = '^(|( |)AMBU )([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
-            {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
-            {% set mapdienst = {'A':'Ambulance','B':'Ambulance','P':'Brandweer'} %}
-            {% set mapreden = {'BR':'Brand,','HV':'Hulpverlening,', 'DV':'Dienstverlening,'} %}
-            {% set mapast = {'Ass. Ambu ':'Assistentie ambulance','Ass. Pol ':'Assistentie Politie','Stank/hind. lucht ':'Stank of hinderlijke lucht'} %}
-            {% set location1 = states( my_entity )|regex_replace(find=dienstprio, replace='', ignorecase=False) %}
-            {% set location2 = location1 |regex_replace(find=brackets, replace='', ignorecase=False)  %}
-            {% set location3 = location2 |regex_replace(find=ambu_string, replace='', ignorecase=False) %}
-            {% set location4 = location3 |regex_replace(find=br_string, replace='', ignorecase=False) %}
-            {% set location = location4 |regex_replace(find=bon_string, replace='', ignorecase=False) %}
-            {% if location3 is search(br_string, ignorecase=True) %}
-                {% set reden1 = location3 | regex_findall_index(find=bran_reden, index=0, ignorecase=False)|first %}
-                {% if reden1 is search('^(HV|BR|DV)', ignorecase=True) %}
-                  {% set reden2 = reden1 |regex_findall_index(find='^(HV|BR|DV)', index=0, ignorecase=False) %}
-                  {% set reden = mapreden.get(reden2, 'unknown') ~ reden1 |regex_replace(find='^(HV|BR|DV)', replace='', ignorecase=false) %}
-                {% else %}
-                    {% set reden = mapast.get(reden1, reden1)  %}
-                {% endif %}
-            {% endif %}
-            {% set dienst1 = states( my_entity ) | regex_findall_index(find='^(A|B|P)', index=0, ignorecase=False)|first  %}
-            {% set dienst = mapdienst.get(dienst1, 'unknown') %}
-            {% if reden %}
-              De {{dienst}} is onderweg naar {{location}} voor {{reden}}
-            {% else %}
-              De {{dienst}} is onderweg naar {{location}}
-            {% endif %}
-          title: "P2000 Melding Ymke's buurt"
 
   - id: e0473ff9-da96-4466-8d7b-3ec432eb5772
     alias: P2000_announce
     trigger:
       - platform: state
-        entity_id:
-          - sensor.ambulance
-          - sensor.brandweer
-          - sensor.grip
+        entity_id: sensor.p2000_latest
+        to:
     condition:
       - condition: and
         conditions:
@@ -268,13 +377,76 @@ automation:
               - condition: state
                 entity_id: input_select.arnoud_status
                 state: "Net Thuis"
-          - "{{trigger.to_state is search('Lutjebroek|Grootebroek|Hoogkarspel', ignorecase=true)}}"
-          - "{{trigger.to_state is not search('VWS', ignorecase=False)}}"
-          - "{{trigger.to_state is not search('Intrekken Alarm', ignorecase=True)}}"
+          - condition: or
+            conditions:
+              - condition: and
+                conditions:
+                  - condition: or
+                    conditions:
+                      - condition: and
+                        conditions:
+                          - condition: state
+                            entity_id: sensor.p2000_latest
+                            attribute: discipline
+                            state: "Brandweerdiensten"
+                          - condition: numeric_state
+                            entity_id: sensor.p2000_latest
+                            attribute: distance
+                            above: 0.1
+                            below: 7500
+                      - condition: and
+                        conditions:
+                          - condition: state
+                            entity_id: sensor.p2000_latest
+                            attribute: discipline
+                            state: "Ambulancediensten"
+                          - condition: numeric_state
+                            entity_id: sensor.p2000_latest
+                            attribute: distance
+                            above: 0.1
+                            below: 1000
+                      - condition: and
+                        conditions:
+                          - condition: state
+                            entity_id: sensor.p2000_latest
+                            attribute: discipline
+                            state: "Politiediensten"
+                          - condition: numeric_state
+                            entity_id: sensor.p2000_latest
+                            attribute: distance
+                            above: 0.1
+                            below: 3000
+                      - condition: template
+                        value_template: >-
+                          {% set dist = distance(state_attr('sensor.p2000_latest' , 'latitude'), state_attr('sensor.p2000_latest', 'longitude'), states.zone.ymke_buurt)|float %}
+                          {{ dist <= 0.1 and dist > 0 }}
+#                  - "{{states('sensor.p2000_latest') is search('Lutjebroek|Grootebroek|Hoogkarspel', ignorecase=true)}}"
+                  - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
+                  - "{{states('sensor.p2000_latest' ) is not search('Intrekken Alarm', ignorecase=True)}}"
+              - condition: and
+                conditions:
+                  - "{{states('sensor.p2000_latest') is search('GRIP', ignorecase=true)}}"
+#                  - "{{(state_attr('sensor.p2000_latest','distance')| int <= 30000) and (state_attr('sensor.p2000_latest','distance')| int != 0)}}"
+                  - condition: numeric_state
+                    entity_id: sensor.p2000_latest
+                    attribute: distance
+                    above: 0.1
+                    below: 15000
+
     action:
       - service: script.p2000_announce
         data:
-          my_state: "{{states(trigger.entity_id)}}"
+          my_state: "{{states('sensor.p2000_latest')}}"
+      - event: >-
+          {%- if states('sensor.p2000_latest') is search('GRIP', ignorecase=true) %}
+            p2000_grip
+          {%- elif is_state_attr('sensor.p2000_latest','discipline','Ambulancediensten') %}
+            p2000_ambu
+          {%- elif is_state_attr('sensor.p2000_latest','discipline','Brandweerdiensten') %}
+            p2000_bran
+          {% endif %}
+        event_data:
+          state: "on"
 
   - id: 36348df1-34fc-4466-99b1-75e2ca91415b
     alias: P2000_announce_latest
@@ -282,8 +454,8 @@ automation:
     initial_state: false
     trigger:
       - platform: state
-        entity_id:
-          - sensor.p2000_latest
+        entity_id: sensor.p2000_latest
+        to:
     condition:
       - condition: and
         conditions:
@@ -317,15 +489,8 @@ automation:
               - condition: state
                 entity_id: input_select.arnoud_status
                 state: "Net Thuis"
-          - alias: "State msg should be different"
-            condition: template
-            value_template: "{{  trigger.to_state.state  != trigger.from_state.state  }}"
-          - alias: "geen VWS"
-            condition: template
-            value_template: "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
-          - alias: "geen intrekbericht"
-            condition: template
-            value_template: "{{states('sensor.p2000_latest') is not search('Intrekken Alarm', ignorecase=True)}}"
+          - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
+          - "{{states('sensor.p2000_latest') is not search('Intrekken Alarm', ignorecase=True)}}"
     action:
       - service: script.p2000_announce
         data:
@@ -364,6 +529,22 @@ automation:
             {{map.get(nearest, 'unknown')}}
           data:
             priority: -1
+
+  - alias: "NL gdacs alert"
+    trigger:
+      platform: geo_location
+      source: gdacs
+      zone: zone.nederland
+      event: enter
+#    condition:
+#      - "{{is_state_attr(trigger.entity_id, 'country', 'Netherlands')}}"  
+    action:
+      - service: persistent_notification.create
+        data:
+          message: >
+            {{ trigger.to_state.name }} - {{ trigger.to_state.attributes['event type'] }} - {{trigger.to_state.attributes.country}} - {{ trigger.to_state.attributes['alert level'] }}
+            {{trigger.to_state.attributes.description}}
+          title: "NL gdacs alert"
 script:
   p2000_announce:
     mode: queued
@@ -376,11 +557,11 @@ script:
         example: "Lifeliner 1"
     sequence:
       # Wait until media player is stopped
-      - service: timer.start
-        target:
-          entity_id: timer.p2000_announce
-      - alias: "Wait until media player is stopped or timer runs out"
-        wait_template: "{{ is_state('media_player.speakers', 'idle') or is_state('media_player.speakers', 'off') or is_state('timer.p2000_announce', 'idle')}}"
+#      - service: timer.start
+#        target:
+#          entity_id: timer.p2000_announce
+#      - alias: "Wait until media player is stopped or timer runs out"
+#        wait_template: "{{ is_state('media_player.speakers', 'idle') or is_state('media_player.speakers', 'off') or is_state('timer.p2000_announce', 'idle')}}"
 
       - alias: "Send TTS using Google Home Resume script"
         service: script.turn_on
@@ -403,7 +584,7 @@ script:
                     {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ bran_reden %}
                     {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
                     {% set brackets ='\([^)]+\) *' %}
-                    {% set ambu_string = '^(|( |)AMBU )([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
+                    {% set ambu_string = '^(( |)AMBU |)([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
                     {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
                     {% set mapdienst = {'A':'Ambulance','B':'Ambulance','P':'Brandweer'} %}
                     {% set mapreden = {'BR':'Brand,','HV':'Hulpverlening,', 'DV':'Dienstverlening,'} %}
@@ -448,5 +629,5 @@ script:
         target:
           entity_id: media_player.speakers
         data:
-          volume_level: 0.35
+          volume_level: "{{states('input_number.p2000_announce_volume')|float}}"
       - delay: "00:00:02"

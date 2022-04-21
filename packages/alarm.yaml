@@ -154,10 +154,10 @@ automation:
           message: "ALARM! The alarm has been triggered by {{states('input_text.last_alarm_trigger_reason')}}"
           data:
             priority: 1
-      - service: browser_mod.command
-        data:
-          command: more-info
-          entity_id: alarm_control_panel.ha_alarm
+#      - service: browser_mod.command
+#        data:
+#          command: more-info
+#          entity_id: alarm_control_panel.ha_alarm
 
   - alias: "Sound alarm if  trigger remains for 2 minutes"
     id: "7680218940823460"
