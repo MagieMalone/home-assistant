@@ -70,13 +70,21 @@ template:
       device_class: "timestamp"
       state: >
         {%- set duration = state_attr('sensor.google_travel_time_driving', 'duration') %}
-        {%- if duration == None %}
-          {%- set offset = timedelta(minutes=0) %}
-        {%-  else %}
-          {%- if duration.split(' ')[2]==Null %}
-            {%- set offset = timedelta(minutes=(duration.split(' ')[0])|int) %}
+        {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
+          {%- if states('sensor.here_travel_time_bike') == None %}
+            {%- set offset = timedelta(minutes=0) %}
           {%- else %}
-            {%- set offset = timedelta(hours=(duration.split(' ')[0])|int) + timedelta(minutes=(duration.split(' ')[2])|int) %}
+            {%- set offset = timedelta(minutes=states('sensor.here_travel_time_bike')|int) %}
+          {%- endif %}
+        {%- else %}
+          {%- if duration == None %}
+            {%- set offset = timedelta(minutes=0) %}
+          {%-  else %}
+            {%- if duration.split(' ')[2]==Null %}
+              {%- set offset = timedelta(minutes=(duration.split(' ')[0])|int) %}
+            {%- else %}
+              {%- set offset = timedelta(hours=(duration.split(' ')[0])|int) + timedelta(minutes=(duration.split(' ')[2])|int) %}
+            {%- endif %} 
           {%- endif %} 
         {%- endif %}
         {{- (state_attr('calendar.abuurmangmailcom', 'start_time')| as_datetime - offset).astimezone()}}
@@ -101,16 +109,42 @@ template:
       device_class: "timestamp"
       state: >
         {%- set duration = state_attr('sensor.google_travel_time_alarm', 'duration') %}
-        {%- if duration == None %}
-          {%- set offset = 0 %}
-        {%-  else %}
-          {%- if duration.split(' ')[2]==Null %}
-            {%- set offset = timedelta(minutes=(duration.split(' ')[0])|int) %}
+        {%- if state_attr('calendar.alarm', 'message')  is search('#bike', ignorecase=true) %}
+          {%- if states('sensor.here_travel_time_alarm_bike') == None %}
+            {%- set offset = timedelta(minutes=0) %}
           {%- else %}
-            {%- set offset = timedelta(hours=(duration.split(' ')[0])|int) + timedelta(minutes=(duration.split(' ')[2])|int) %}
+            {%- set offset = timedelta(minutes=states('sensor.here_travel_time_alarm_bike')|int) %}
+          {%- endif %}
+        {%- else %}
+          {%- if duration == None %}
+            {%- set offset = timedelta(minutes=0) %}
+          {%-  else %}
+            {%- if duration.split(' ')[2]==Null %}
+              {%- set offset = timedelta(minutes=(duration.split(' ')[0])|int) %}
+            {%- else %}
+              {%- set offset = timedelta(hours=(duration.split(' ')[0])|int) + timedelta(minutes=(duration.split(' ')[2])|int) %}
+            {%- endif %} 
           {%- endif %} 
         {%- endif %}
         {{- (state_attr('calendar.alarm', 'start_time')| as_datetime - offset).astimezone()}}
+    - name: calc_afspraak_reistijd
+      unique_id: "a3dad1d5-7a70-4121-832e-18332096ec71"
+      unit_of_measurement: "minutes"
+      state: >
+          {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
+            {%- if states('sensor.here_travel_time_bike') == None %}
+              {% set reistijd = 0 %}
+            {%- else %}
+              {% set reistijd = states('sensor.here_travel_time_bike')|int %}
+            {%- endif %}
+          {%- else %}
+            {%- if states('sensor.calc_travel_time') == None %}
+              {% set reistijd = 0 %}
+            {%-  else %}
+              {% set reistijd = states('sensor.calc_travel_time')|int /60 %}
+            {%- endif %} 
+          {%- endif %}
+          {{reistijd }}
     - name: f1_start_event
       unique_id: "08d27902-9f4f-4919-937c-9e4bd0b9793c"
       device_class: "timestamp"
@@ -132,7 +166,23 @@ automation:
       at:
         - "sensor.calc_leave_time"
     condition:
-      - "{{(states('sensor.calc_travel_time')|int)>120}}"
+      - alias: "more then 2 minutes?"
+        condition: template
+        value_template: >
+          {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
+            {%- if states('sensor.here_travel_time_bike') == None %}
+              {% set reistijd = 0 %}
+            {%- else %}
+              {% set reistijd = states('sensor.here_travel_time_bike')|int %}
+            {%- endif %}
+          {%- else %}
+            {%- if states('sensor.calc_travel_time') == None %}
+              {% set reistijd = 0 %}
+            {%-  else %}
+              {% set reistijd = states('sensor.calc_travel_time')|int /60 %}
+            {%- endif %} 
+          {%- endif %}
+          {{reistijd > 2}}
 
     action:
       - alias: "Send TTS using Google Home Resume script"
@@ -151,10 +201,11 @@ automation:
                   language: "nl"
                   message: >
                     {% set reistijd = states('sensor.calc_travel_time') %}
-                    {%if reistijd=='unknown' %} 
-                      Het is tijd om naar {{state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')}} te gaan. De reistijd is onbekend.
+                    {% set message = state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')| replace('#bike', '') %}
+                    {% if reistijd=='unknown' %} 
+                      Het is tijd om naar {{message}} te gaan. De reistijd is onbekend.
                     {% else %}
-                      Het is tijd om naar {{state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
+                      Het is tijd om naar {{message}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
                     {% endif %}
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
