@@ -74,7 +74,7 @@ tv:
   sequence:
     - service: homeassistant.turn_on
       target:
-        entity_id: light.audiowk
+        entity_id: switch.media_group
     - service: light.turn_off
       target:
         entity_id: 

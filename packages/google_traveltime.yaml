@@ -36,38 +36,43 @@ sensor:
 
   - platform: rest
     resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.cal_location_alarm')|regex_replace(find='[0-9]{4}(| )[A-Z]{2} *', replace='', ignorecase=False)|urlencode}}&apiKey={{states('input_text.here_api')}}
-    value_template: "{{(value_json['items'][0]['position']['lat']|string ) + ',' + (value_json['items'][0]['position']['lng'] |string)}}"
+    value_template: "{{ now() }}"
+    json_attributes_path: "items.0.position"
+    json_attributes:
+      - lng
+      - lat
     name: "alarm_latlong"
-
+  - platform: rest
+    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.cal_location')|regex_replace(find='[0-9]{4}(| )[A-Z]{2} *', replace='', ignorecase=False)|urlencode}}&apiKey={{states('input_text.here_api')}}
+    value_template: "{{ now() }}"
+    json_attributes_path: "items.0.position"
+    json_attributes:
+      - lng
+      - lat
+    name: "afspraak_latlong"
   - platform: here_travel_time
     api_key: !secret here_api
     origin_entity_id: zone.home
-    destination_entity_id: sensor.alarm_latlong
+    destination_entity_id: sensor.alarm_latlong_mod
     name: here_travel_time_alarm
   - platform: here_travel_time
     api_key: !secret here_api
     origin_entity_id: zone.home
-    destination_entity_id: sensor.alarm_latlong
+    destination_entity_id: sensor.alarm_latlong_mod
     name: here_travel_time_alarm_bike
     mode: bicycle
   - platform: here_travel_time
     api_key: !secret here_api
-    origin_entity_id: zone.home
-    destination_entity_id: sensor.cal_location
+    origin_entity_id: person.arnoud
+    destination_entity_id: sensor.afspraak_latlong_mod
     name: here_travel_time
-  - platform: statistics
-    unique_id: 74d05bf9-e853-4bd5-ba16-e03536bad0c8""
-    entity_id: sensor.ing_to_home
-    name: ing_to_home_stats
-    sampling_size: 288
-    state_characteristic: mean
-  - platform: statistics
-    unique_id: "568671b2-86fa-4c24-b6c1-9c7e6b1ec444"
-    entity_id: sensor.home_to_ing
-    name: home_to_ing_stats
-    sampling_size: 288
-    state_characteristic: mean
-
+  - platform: here_travel_time
+    api_key: !secret here_api
+    origin_entity_id: person.arnoud
+    destination_entity_id: sensor.afspraak_latlong_mod
+    name: here_travel_time_bike
+    mode: bicycle
+    
 template:
   - sensor:
     - name: "calc_travel_time"
@@ -86,3 +91,13 @@ template:
     - name: "google_api_key"
       unique_id: "a68c6663-094f-405d-b625-9eb104cd988f"
       state: !secret google_apikey
+    - name: "alarm_latlong_mod"
+      state: "{{states('sensor.alarm_latlong')}}"
+      attributes:
+        latitude: "{{iif(state_attr('sensor.alarm_latlong', 'lat') == None, 0, state_attr('sensor.alarm_latlong', 'lat')|float)}}"
+        longitude: "{{iif(state_attr('sensor.alarm_latlong', 'lng') == None, 0, state_attr('sensor.alarm_latlong', 'lng')|float)}}"
+    - name: "afspraak_latlong_mod"
+      state: "{{states('sensor.afspraak_latlong')}}"
+      attributes:
+        latitude: "{{iif(state_attr('sensor.afspraak_latlong', 'lat') == None, 0, state_attr('sensor.afspraak_latlong', 'lat')|float)}}"
+        longitude: "{{iif(state_attr('sensor.afspraak_latlong', 'lng') == None, 0, state_attr('sensor.afspraak_latlong', 'lng')|float)}}"

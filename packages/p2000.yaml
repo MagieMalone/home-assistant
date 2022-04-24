@@ -437,16 +437,90 @@ automation:
       - service: script.p2000_announce
         data:
           my_state: "{{states('sensor.p2000_latest')}}"
-      - event: >-
-          {%- if states('sensor.p2000_latest') is search('GRIP', ignorecase=true) %}
-            p2000_grip
-          {%- elif is_state_attr('sensor.p2000_latest','discipline','Ambulancediensten') %}
-            p2000_ambu
-          {%- elif is_state_attr('sensor.p2000_latest','discipline','Brandweerdiensten') %}
-            p2000_bran
-          {% endif %}
-        event_data:
-          state: "on"
+
+  - id: "c9445db9-4efb-4113-967f-4d1c58039e05"
+    alias: P2000_templates_update
+    trigger:
+      - platform: state
+        entity_id: sensor.p2000_latest
+        to:
+    condition:
+      - condition: and
+        conditions:
+          - condition: or
+            conditions:
+              - condition: and
+                conditions:
+                  - condition: or
+                    conditions:
+                      - condition: and
+                        conditions:
+                          - condition: state
+                            entity_id: sensor.p2000_latest
+                            attribute: discipline
+                            state: "Brandweerdiensten"
+                          - condition: numeric_state
+                            entity_id: sensor.p2000_latest
+                            attribute: distance
+                            above: 0.1
+                            below: 7500
+                      - condition: and
+                        conditions:
+                          - condition: state
+                            entity_id: sensor.p2000_latest
+                            attribute: discipline
+                            state: "Ambulancediensten"
+                          - condition: numeric_state
+                            entity_id: sensor.p2000_latest
+                            attribute: distance
+                            above: 0.1
+                            below: 1000
+                      - condition: and
+                        conditions:
+                          - condition: state
+                            entity_id: sensor.p2000_latest
+                            attribute: discipline
+                            state: "Politiediensten"
+                          - condition: numeric_state
+                            entity_id: sensor.p2000_latest
+                            attribute: distance
+                            above: 0.1
+                            below: 3000
+                      - condition: template
+                        value_template: >-
+                          {% set dist = distance(state_attr('sensor.p2000_latest' , 'latitude'), state_attr('sensor.p2000_latest', 'longitude'), states.zone.ymke_buurt)|float %}
+                          {{ dist <= 0.1 and dist > 0 }}
+                  - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
+                  - "{{states('sensor.p2000_latest' ) is not search('Intrekken Alarm', ignorecase=True)}}"
+              - condition: and
+                conditions:
+                  - "{{states('sensor.p2000_latest') is search('GRIP', ignorecase=true)}}"
+                  - condition: numeric_state
+                    entity_id: sensor.p2000_latest
+                    attribute: distance
+                    above: 0.1
+                    below: 15000
+
+    action:
+      - choose:
+        - conditions:
+            - "{{ states('sensor.p2000_latest') is search('GRIP', ignorecase=true) }}"
+          sequence:
+            - event: p2000_grip
+              event_data:
+                state: "on"
+        - conditions:
+            - "{{ is_state_attr('sensor.p2000_latest','discipline','Ambulancediensten') }}"
+          sequence:
+            - event: p2000_ambu
+              event_data:
+                state: "on"
+        - conditions:
+            - "{{ is_state_attr('sensor.p2000_latest','discipline','Brandweerdiensten') }}"
+          sequence:
+            - event: p2000_bran
+              event_data:
+                state: "on"
 
   - id: 36348df1-34fc-4466-99b1-75e2ca91415b
     alias: P2000_announce_latest
@@ -576,7 +650,7 @@ script:
                   entity_id: media_player.speakers
                 data:
                   message: >
-                    {% set BR_code ='BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole|afval|gebouw) ' %}
+                    {% set BR_code ='BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole|afval|gebouw|agrarisch) ' %}
                     {% set HV_code ='HV (materieel|(weg |spoor |water )(letsel|materieel|)|overig) *' %}
                     {% set DV_code ='DV (aan derden|Brw) ' %}
                     {% set no_code ='(CO-melder|Rookmelder|Liftopsluiting|Ass. (Ambu|Pol)|Reanimatie|(PAC|OMS) (brandmelding|handmelder)|(Persoon|Voertuig) te water|Wateroverlast|Uitval nutsvoorz.|Persoon te water|Dier (in problemen|op hoogte|te water|in put/kelder)|Stank/hind. lucht|Luid/optisch alarm|Stormschade) ' %}

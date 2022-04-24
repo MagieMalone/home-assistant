@@ -81,6 +81,26 @@ automation:
         data:
           is_volume_muted: false
 
+  - alias: "stop players when leaving"
+    id: "8dabd93a-0a59-47a9-a686-7c97c8afa9c4"
+    trigger:
+      - platform: numeric_state
+        entity_id: zone.home
+        below: 1
+        for: "00:05:00"
+    condition:
+      - "{{(states.media_player|selectattr('state', 'eq', 'playing')|map(attribute='entity_id')|list |length)>0}}"
+      - alias: "no guests in the house"
+        condition: state
+        entity_id: input_boolean.guests_boolean
+        state: "off"
+    action:
+      - service: media_player.media_stop
+        data: {}
+        target:
+          entity_id: "{{states.media_player|selectattr('state', 'eq', 'playing')|map(attribute='entity_id')|list}}"
+
+
 
 #
 #sensor:

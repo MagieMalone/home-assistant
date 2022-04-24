@@ -72,49 +72,6 @@
       light_entity_right: light.keuken
       light_entity_both: light.eetkamer, light.keuken
       mode_selector: input_select.house_mode
-- id: '1610275729152'
-  alias: Auto-verlaat-parkeerplaats
-  description: ''
-  trigger:
-  - platform: device
-    device_id: 7e3829df257c2775577967545c92c196
-    domain: device_tracker
-    entity_id: device_tracker.sz_436_p_device_tracker
-    type: leaves
-    zone: zone.parking
-  condition:
-  - condition: device
-    device_id: 5783e9f6177e11eb9d775b4d6ed4f183
-    domain: device_tracker
-    entity_id: device_tracker.kb2003
-    type: is_home
-  action:
-  - device_id: 5783e9f6177e11eb9d775b4d6ed4f183
-    domain: mobile_app
-    type: notify
-    message: Auto verlaat de parkeerplaats
-    title: ALARM!
-  mode: single
-- id: '1610285278747'
-  alias: test-room-presence
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.oneplus_8t_room_presence
-    to: Hal
-  condition:
-  - condition: device
-    device_id: 5783e9f6177e11eb9d775b4d6ed4f183
-    domain: device_tracker
-    entity_id: device_tracker.kb2003
-    type: is_not_home
-  action:
-  - service: notify.pushover
-    data:
-      title: room-presence testing
-      message: kb2003 is in {{states('sensor.oneplus_8t_room_presence')}} en afstand
-        is {{state_attr('sensor.oneplus_8t_room_presence','distance')}}
-  mode: single
 - id: '1646658068592'
   alias: test media play
   description: ''
