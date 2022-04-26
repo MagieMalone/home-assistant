@@ -57,14 +57,14 @@ template:
             {% else %}
               state_attr('sensor.p2000_latest', 'capcode')
             {% endif %}
-          longitude: "{{state_attr(entity, 'longitude')}}"
-          latitude:  "{{state_attr(entity, 'latitude')}}"
-          distance: "{{state_attr(entity, 'distance')}}"
-          regio: "{{state_attr(entity, 'regio')}}"
-          "regio name": "{{state_attr(entity, 'regio name')}}"
-          discipline: "{{state_attr(entity, 'discipline')}}"
-          time: "{{state_attr(entity, 'time')}}"
-          attribution: "{{state_attr(entity, 'attribution')}}"
+          longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
+          latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
+          distance: "{{state_attr('sensor.p2000_latest', 'distance')}}"
+          regio: "{{state_attr('sensor.p2000_latest', 'regio')}}"
+          "regio name": "{{state_attr('sensor.p2000_latest', 'regio name')}}"
+          discipline: "{{state_attr('sensor.p2000_latest', 'discipline')}}"
+          time: "{{state_attr('sensor.p2000_latest', 'time')}}"
+          attribution: "{{state_attr('sensor.p2000_latest', 'attribution')}}"
           friendly_name: "Last announced P2000 Ambulance"
   - trigger:
       - platform: event
@@ -85,14 +85,14 @@ template:
             {% else %}
               state_attr('sensor.p2000_latest', 'capcode')
             {% endif %}
-          longitude: "{{state_attr(entity, 'longitude')}}"
-          latitude:  "{{state_attr(entity, 'latitude')}}"
-          distance: "{{state_attr(entity, 'distance')}}"
-          regio: "{{state_attr(entity, 'regio')}}"
-          "regio name": "{{state_attr(entity, 'regio name')}}"
-          discipline: "{{state_attr(entity, 'discipline')}}"
-          time: "{{state_attr(entity, 'time')}}"
-          attribution: "{{state_attr(entity, 'attribution')}}"
+          longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
+          latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
+          distance: "{{state_attr('sensor.p2000_latest', 'distance')}}"
+          regio: "{{state_attr('sensor.p2000_latest', 'regio')}}"
+          "regio name": "{{state_attr('sensor.p2000_latest', 'regio name')}}"
+          discipline: "{{state_attr('sensor.p2000_latest', 'discipline')}}"
+          time: "{{state_attr('sensor.p2000_latest', 'time')}}"
+          attribution: "{{state_attr('sensor.p2000_latest', 'attribution')}}"
           friendly_name: "Last announced P2000 Firetruck"
   - trigger:
       - platform: event
@@ -113,14 +113,14 @@ template:
             {% else %}
               state_attr('sensor.p2000_latest', 'capcode')
             {% endif %}
-          longitude: "{{state_attr(entity, 'longitude')}}"
-          latitude:  "{{state_attr(entity, 'latitude')}}"
-          distance: "{{state_attr(entity, 'distance')}}"
-          regio: "{{state_attr(entity, 'regio')}}"
-          "regio name": "{{state_attr(entity, 'regio name')}}"
-          discipline: "{{state_attr(entity, 'discipline')}}"
-          time: "{{state_attr(entity, 'time')}}"
-          attribution: "{{state_attr(entity, 'attribution')}}"
+          longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
+          latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
+          distance: "{{state_attr('sensor.p2000_latest', 'distance')}}"
+          regio: "{{state_attr('sensor.p2000_latest', 'regio')}}"
+          "regio name": "{{state_attr('sensor.p2000_latest', 'regio name')}}"
+          discipline: "{{state_attr('sensor.p2000_latest', 'discipline')}}"
+          time: "{{state_attr('sensor.p2000_latest', 'time')}}"
+          attribution: "{{state_attr('sensor.p2000_latest', 'attribution')}}"
           friendly_name: "Last announced P2000 GRIP"
 #         {% set roepnummer = (mod_state | regex_findall_index(find=ambu_string, index=0, ignorecase=False))[4]|trim %}
   - sensor:

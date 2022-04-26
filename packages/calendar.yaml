@@ -72,18 +72,18 @@ template:
         {%- set duration = state_attr('sensor.google_travel_time_driving', 'duration') %}
         {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
           {%- if states('sensor.here_travel_time_bike') == None %}
-            {%- set offset = timedelta(minutes=0) %}
+            {%- set offset = timedelta(minutes=5) %}
           {%- else %}
-            {%- set offset = timedelta(minutes=states('sensor.here_travel_time_bike')|int) %}
+            {%- set offset = timedelta(minutes=states('sensor.here_travel_time_bike')|int +5)  %}
           {%- endif %}
         {%- else %}
           {%- if duration == None %}
-            {%- set offset = timedelta(minutes=0) %}
+            {%- set offset = timedelta(minutes=5) %}
           {%-  else %}
             {%- if duration.split(' ')[2]==Null %}
-              {%- set offset = timedelta(minutes=(duration.split(' ')[0])|int) %}
+              {%- set offset = timedelta(minutes=(duration.split(' ')[0])|int +5) %}
             {%- else %}
-              {%- set offset = timedelta(hours=(duration.split(' ')[0])|int) + timedelta(minutes=(duration.split(' ')[2])|int) %}
+              {%- set offset = timedelta(hours=(duration.split(' ')[0])|int) + timedelta(minutes=(duration.split(' ')[2])|int +5) %}
             {%- endif %} 
           {%- endif %} 
         {%- endif %}
@@ -142,6 +142,24 @@ template:
               {% set reistijd = 0 %}
             {%-  else %}
               {% set reistijd = states('sensor.calc_travel_time')|int /60 %}
+            {%- endif %} 
+          {%- endif %}
+          {{reistijd }}
+    - name: calc_alarm_reistijd
+      unique_id: "d39554cb-d18c-437e-af87-05e629a864ed"
+      unit_of_measurement: "minutes"
+      state: >
+          {%- if state_attr('calendar.alarm', 'message')  is search('#bike', ignorecase=true) %}
+            {%- if states('sensor.here_travel_time_alarm_bike') == None %}
+              {% set reistijd = 0 %}
+            {%- else %}
+              {% set reistijd = states('sensor.here_travel_time_alarm_bike')|int %}
+            {%- endif %}
+          {%- else %}
+            {%- if states('sensor.calc_travel_time_alarm') == None %}
+              {% set reistijd = 0 %}
+            {%-  else %}
+              {% set reistijd = states('sensor.calc_travel_time_alarm')|int /60 %}
             {%- endif %} 
           {%- endif %}
           {{reistijd }}
