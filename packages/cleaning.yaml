@@ -69,7 +69,7 @@ automation:
           entity_id: input_boolean.cleaningmode
       - service: tts.google_say
         target:
-          entity_id: media_player.huiskamer_speaker
+          entity_id: media_player.huiskamer_hub
         data:
           message: 'Goedemorgen jacqueline'
           language: 'nl'

@@ -30,9 +30,9 @@ google_assistant:
       expose: false
     input_boolean.wakeuplight_manual:
       expose: false
-    media_player.slaapkamer_speaker:
+    media_player.paar_studeerkamer:
       expose: false
-    media_player.huiskamer_speaker:
+    media_player.huiskamer_hub:
       expose: false
     media_player.ht_nt5:
       expose: false
@@ -44,8 +44,10 @@ google_assistant:
       expose: false
     media_player.slaapkamer_tv:
       expose: false
-
-
+    media_player.studeerkamer_speaker_l:
+      expose: false
+    media_player.studeerkamer_speaker_r:
+      expose: false
 
 automation:
   - alias: 'melding nieuw alarm'

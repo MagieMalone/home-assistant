@@ -27,7 +27,7 @@ nacht:
         seconds: 5
     - service: tts.google_say
       target:
-        entity_id: media_player.huiskamer_speaker
+        entity_id: media_player.huiskamer_hub
       data:
         message: "Nighty night"
         language: "en"
@@ -55,7 +55,7 @@ eten:
         seconds: 2
     - service: tts.google_say
       target:
-        entity_id: media_player.huiskamer_speaker
+        entity_id: media_player.huiskamer_hub
       data:
         message: "Eet smakelijk"
         language: "nl"
@@ -107,7 +107,7 @@ tv:
         seconds: 2
     - service: tts.google_say
       target:
-        entity_id: media_player.huiskamer_speaker
+        entity_id: media_player.huiskamer_hub
       data:
         message: "Veel plezier"
         language: "nl"

@@ -30,18 +30,16 @@ google_home_resume:
         boolean:
   variables:
     players_screen:
-      - media_player.keuken_hub
-      - media_player.slaapkamer_hub
-      - media_player.shield
+      - media_player.huiskamer_hub
     primary_spotcast: "arnoud_buurman"
     fixed_picture:
       NPO Radio 2: "http://192.168.2.3:8123/local/pictures/radio/npo_radio_2.png"
       Radio Veronica: "http://192.168.2.3:8123/local/pictures/radio/radio_veronica.png"
     speaker_groups:
       media_player.speakers:
-        - media_player.huiskamer_speaker
+        - media_player.huiskamer_hub
         - media_player.slaapkamer_speaker
-        - media_player.studeerkamer_speaker
+        - media_player.paar_studeerkamer
       media_player.speakerfancy:
         - media_player.slaapkamer_speaker
         - media_player.studeerkamer_speaker

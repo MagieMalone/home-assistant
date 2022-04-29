@@ -102,3 +102,24 @@
       - media_content_type: music
         media_content_id: media-source://radio_browser/country/NL
   mode: single
+- id: '1651157537171'
+  alias: cast dashboard to hub when idle
+  description: ''
+  trigger:
+  - platform: device
+    device_id: b4516adcd2d3f9f786af8bd19d53201c
+    domain: media_player
+    entity_id: media_player.huiskamer_hub
+    type: idle
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  condition: []
+  action:
+  - service: cast.show_lovelace_view
+    data:
+      entity_id: media_player.huiskamer_hub
+      dashboard_path: lovelace-nest
+      view_path: home
+  mode: single
