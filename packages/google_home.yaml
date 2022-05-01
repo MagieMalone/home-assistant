@@ -50,21 +50,67 @@ google_assistant:
       expose: false
 
 automation:
-  - alias: 'melding nieuw alarm'
-    id: '7480949648104893'
+  - alias: "melding nieuw alarm"
+    id: "7480949648104893"
     trigger:
       - platform: state
         entity_id: 
             - sensor.slaapkamer_speaker_alarms
-            - sensor.huiskamer_speaker_alarms
+            - sensor.huiskamer_hub_alarms
             - sensor.studeerkamer_speaker_alarms
             - sensor.slaapkamer_speaker_timers
-            - sensor.huiskamer_speaker_timers
+            - sensor.huiskamer_hub_timers
             - sensor.studeerkamer_speaker_timers
     action:
-      - condition: "{{ states(trigger.entity_id) != 'unavailable' }}"
+      - condition: "{{ states(trigger.entity_id) != 'unavailable' and states(trigger.entity_id) != None }}"
       - service: notify.pushover
         data:
           message: "Nieuw alarm gezet om {{as_timestamp(states(trigger.entity_id )) | timestamp_local}}"
-          title: 'Nieuw google home alarm'
-
+          title: "Nieuw google home alarm"
+  - id: "1651157537171"
+    alias: cast dashboard to hub when idle
+    description: ""
+    trigger:
+    - platform: device
+      device_id: b4516adcd2d3f9f786af8bd19d53201c
+      domain: media_player
+      entity_id: media_player.huiskamer_hub
+      type: idle
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 30
+    - platform: device
+      device_id: b4516adcd2d3f9f786af8bd19d53201c
+      domain: media_player
+      entity_id: media_player.huiskamer_hub
+      type: turned_off
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 30
+    condition: []
+    action:
+    - service: cast.show_lovelace_view
+      data:
+        entity_id: media_player.huiskamer_hub
+        dashboard_path: lovelace-nest
+        view_path: home
+    mode: single
+  - id: "33ae710c-2f29-4a76-a922-bb5f9732dd5a"
+    alias: "stop google hub cast so view mode can switch to and from dark mode"
+    trigger:
+      - platform: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: 0
+      - platform: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        above: 0
+    action:
+      - service: media_player.media_stop
+        data: {}
+        target:
+          device_id: b4516adcd2d3f9f786af8bd19d53201c
+    mode: single

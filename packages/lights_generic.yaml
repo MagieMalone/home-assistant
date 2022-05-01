@@ -83,6 +83,34 @@ light:
       - light.keuken_2
       - light.keuken_3
       - light.trap_hal
+  - platform: group
+    unique_id: "87dce9b7-29e4-4018-8d14-1d0e511a7e5a"
+    name: beganegrond
+    entities:
+      - light.hue_lightstrip_plus_1
+      - light.staande_lamp
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
+      - light.hal
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+      - light.trap_hal
+  - platform: group
+    unique_id: "6adb34ab-7b05-430d-ab17-65bb8d667846"
+    name: eersteverdieping
+    entities:
+      - light.computer
+      - light.sk_ceiling
+      - light.sk_duo_spot_1
+      - light.sk_duo_spot_2
+      - light.overloop
+  - platform: group
+    unique_id: "07bdee4f-a6df-45cf-9eed-ffb8162f024f"
+    name: zolder
+    entities:
+      - light.zoldervoor
+      - light.zolderachter
 group:
   switch-wk:
     entities:
