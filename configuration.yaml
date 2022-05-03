@@ -77,7 +77,6 @@ recorder:
     entities:
       - sun.sun
       - sensor.time
-      - proximity.home2
       - sensor.iss
 
 influxdb:
@@ -93,7 +92,6 @@ influxdb:
     entities:
       - sun.sun
       - sensor.time
-      - proximity.home2
       - sensor.iss
   tags_attributes:
     - friendly_name

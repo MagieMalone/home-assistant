@@ -1,8 +1,4 @@
-proximity:
-  home2:
-    devices:
-      - sensor.iss
-    unit_of_measurement: km
+
 #camera:
 #  - platform: generic
 #    name: iss

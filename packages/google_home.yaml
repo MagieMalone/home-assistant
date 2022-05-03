@@ -109,8 +109,8 @@ automation:
         attribute: elevation
         above: 0
     action:
-      - service: media_player.media_stop
+      - service: media_player.turn_off
         data: {}
         target:
-          device_id: b4516adcd2d3f9f786af8bd19d53201c
+          entity_id: media_player.huiskamer_hub
     mode: single
