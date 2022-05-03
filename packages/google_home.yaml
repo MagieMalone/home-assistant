@@ -107,7 +107,7 @@ automation:
       - platform: numeric_state
         entity_id: sun.sun
         attribute: elevation
-        above: 0
+        above: 1
     action:
       - service: media_player.turn_off
         data: {}
