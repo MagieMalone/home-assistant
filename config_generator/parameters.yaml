@@ -15,7 +15,7 @@
     kelvin: 5000
     brightness_pct: 100
   left: 
-    entity: 'light.light.hue_color_pendant_down_1, light.hue_color_pendant_up_1'
+    entity: 'light.hue_color_pendant_down_1, light.hue_color_pendant_up_1'
 - switchname: '0x00158d0002b42afb'
   room: 'slaapkamer'
   right: 
@@ -29,7 +29,7 @@
 - switchname: '0x00158d0002b4a1cf'
   room: 'studeerkamer'
   right: 
-    entity: 'group.lampen'
+    entity: 'light.lampen'
     kelvin: 5000
     brightness_pct: 100
   left: 

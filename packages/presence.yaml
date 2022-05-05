@@ -56,11 +56,11 @@ proximity:
     ignored_zones:
       - Ymke
     devices:
-      #      - device_tracker.4dd0404d
-      #      - device_tracker.unknown
+#      - device_tracker.4dd0404d
+#      - device_tracker.unknown
       - device_tracker.kb2003
       - device_tracker.467cfa38bbada1bf
-      - device_tracker.sz_436_p_device_tracker
+#      - device_tracker.sz_436_p_device_tracker
     unit_of_measurement: km
     tolerance: 50
 

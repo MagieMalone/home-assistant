@@ -27,7 +27,7 @@ automation:
             state: "Thuis"
       - condition: template
         value_template: >
-          {% if is_state('media_player.huiskamer_speaker', 'playing') %}
+          {% if is_state('media_player.huiskamer_hub', 'playing') %}
             false
           {% else %}
             true
@@ -35,7 +35,7 @@ automation:
     action:
       - service: media_player.play_media
         target:
-          entity_id: media_player.huiskamer_speaker
+          entity_id: media_player.huiskamer_hub
         data:
           media_content_id: >
             {% if now().strftime('%M')|int == 30 %}

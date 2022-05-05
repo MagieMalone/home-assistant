@@ -38,8 +38,6 @@ google_assistant:
       expose: false
     media_player.ht_nt5_surround:
       expose: false
-    media_player.studeerkamer_speaker:
-      expose: false
     media_player.huiskamer_tv:
       expose: false
     media_player.slaapkamer_tv:

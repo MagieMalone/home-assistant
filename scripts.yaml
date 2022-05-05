@@ -5,7 +5,7 @@ nacht:
         entity_id: switch.media_group
     - service: light.turn_off
       target:
-        entity_id: 
+        entity_id:
           - light.computer
           - light.hal
           - light.hue_lightstrip_plus_1
@@ -42,7 +42,7 @@ eten:
   sequence:
     - service: light.turn_on
       target:
-        entity_id: 
+        entity_id:
           - light.hue_color_pendant_down_1
           - light.hue_color_pendant_up_1
           - light.keuken_1
@@ -63,7 +63,7 @@ koken:
   sequence:
     - service: light.turn_on
       target:
-        entity_id: 
+        entity_id:
           - light.keuken_1
           - light.keuken_2
           - light.keuken_3
@@ -77,7 +77,7 @@ tv:
         entity_id: switch.media_group
     - service: light.turn_off
       target:
-        entity_id: 
+        entity_id:
           - light.computer
           - light.hue_color_pendant_down_1
           - light.hue_color_pendant_up_1

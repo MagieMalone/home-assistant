@@ -12,8 +12,6 @@
 #    name: soundbar
 #    endpoint: http://192.168.3.152:10000/sony
 
-
-
 automation:
   - alias: "Turn off mediacenter when leaving"
     id: "1528971801050"
@@ -70,14 +68,14 @@ automation:
         data:
           is_volume_muted: true
       - wait_for_trigger:
-        - platform: state
-          entity_id: sensor.kb2003_telefoon_status
-          to: idle
+          - platform: state
+            entity_id: sensor.kb2003_telefoon_status
+            to: idle
         timeout:
           seconds: 300
       - service: media_player.volume_mute
         target:
-          entity_id: "{{states.media_player|selectattr('state', 'eq', 'playing')|map(attribute='entity_id')|list}}"
+          entity_id: "{{states.media_player|selectattr('attributes.is_volume_muted')|map(attribute='entity_id')|list}}"
         data:
           is_volume_muted: false
 
@@ -100,8 +98,6 @@ automation:
         target:
           entity_id: "{{states.media_player|selectattr('state', 'eq', 'playing')|map(attribute='entity_id')|list}}"
 
-
-
 #
 #sensor:
 #  - platform: plex
@@ -121,7 +117,7 @@ script:
         description: "The type of the content to play. Must be one of image, music, tvshow, video, episode, channel or playlist	"
       entity_id:
         description: "Name(s) of entities to seek media on"
-        example: "media_player.living_room_chromecast"
+        example: "media_player.huiskamer_hub"
     sequence:
       - service: media_player.volume_mute
         target:
