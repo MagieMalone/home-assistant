@@ -107,13 +107,12 @@ automation:
                 data:
                   mode: "away"
           - conditions:
-              - condition: and
-                conditions:
-                  - condition: trigger
-                    id: "pre_heat"
-                  - condition: numeric_state
-                    entity_id: sensor.badkamer_temperature
-                    below: 20
+              - and:
+                - condition: trigger
+                  id: "pre_heat"
+                - condition: numeric_state
+                  entity_id: sensor.badkamer_temperature
+                  below: 20
             sequence:
               - alias: "zet kachel aan"
                 service: script.kachel_mode
@@ -129,57 +128,51 @@ automation:
                 data:
                   mode: "away"
           - conditions:
-              - condition: and
-                conditions:
+              - and:
+                - condition: state
+                  entity_id: sensor.thermostat_condition
+                  state: "True"
+                - condition: state
+                  entity_id: group.windows_kachel
+                  state: "off"
+                - or:
+                  - and:
+                    - condition: time
+                      after: "08:59:59"
+                      before: "21:00:00"
+                    - condition: state
+                      entity_id: binary_sensor.workday_sensor
+                      state: "on"
+                  - and:
+                    - condition: time
+                      after: "08:59:59"
+                      before: "22:00:00"
+                    - condition: state
+                      entity_id: binary_sensor.workday_sensor
+                      state: "off"
+                - or:
                   - condition: state
-                    entity_id: sensor.thermostat_condition
-                    state: "True"
+                    entity_id: input_select.arnoud_status
+                    state: "Thuis"
                   - condition: state
-                    entity_id: group.windows_kachel
-                    state: "off"
-                  - condition: or
-                    conditions:
-                      - condition: and
-                        conditions:
-                          - condition: time
-                            after: "08:59:59"
-                            before: "21:00:00"
-                          - condition: state
-                            entity_id: binary_sensor.workday_sensor
-                            state: "on"
-                      - condition: and
-                        conditions:
-                          - condition: time
-                            after: "08:59:59"
-                            before: "22:00:00"
-                          - condition: state
-                            entity_id: binary_sensor.workday_sensor
-                            state: "off"
-                  - condition: or
-                    conditions:
-                      - condition: state
-                        entity_id: input_select.arnoud_status
-                        state: "Thuis"
-                      - condition: state
-                        entity_id: input_select.arnoud_status
-                        state: "Net Thuis"
-                      - condition: trigger
-                        id: "proximity_below"
-                      - condition: trigger
-                        id: "action_leave"
+                    entity_id: input_select.arnoud_status
+                    state: "Net Thuis"
+                  - condition: trigger
+                    id: "proximity_below"
+                  - condition: trigger
+                    id: "action_leave"
             sequence:
               - alias: "zet kachel aan"
                 service: script.kachel_mode
                 data:
                   mode: "home"
           - conditions:
-              - condition: and
-                conditions:
-                  - condition: state
-                    entity_id: binary_sensor.workday1d
-                    state: "on"
-                  - condition: time
-                    after: "21:29:59"
+              - and:
+                - condition: state
+                  entity_id: binary_sensor.workday1d
+                  state: "on"
+                - condition: time
+                  after: "21:29:59"
             sequence:
               - alias: "zet kachel uit"
                 service: script.kachel_mode

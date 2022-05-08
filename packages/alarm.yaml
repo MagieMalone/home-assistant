@@ -284,6 +284,7 @@ automation:
           - binary_sensor.0x000d6f001624f569_smoke
           - binary_sensor.0x000d6f001624f85e_smoke
           - binary_sensor.0x000d6f00162c1bfd_smoke
+        from: "on"
         to: "off"
         for: 
           minutes: 5
@@ -294,7 +295,7 @@ automation:
         data:
           transition: 2
   - alias: "clear lights if alarm trigger is removed"
-    id: "7680218940823460"
+    id: "6673b7e4-ef25-4aaf-ba3a-1be9d660649c"
     trigger:
       - platform: state
         entity_id: alarm_control_panel.ha_alarm

@@ -10,8 +10,6 @@
   friendly_name: '0x7cb03eaa0a0036d6'
 '0x7cb03eaa0a02be43':
   friendly_name: '0x7cb03eaa0a02be43'
-'0x00158d0002b4a1cf':
-  friendly_name: '0x00158d0002b4a1cf'
 '0x00158d00031e0bf7':
   friendly_name: '0x00158d00031e0bf7'
 '0x00158d0005278e2c':
@@ -29,7 +27,8 @@
 '0x00158d00031e318f':
   friendly_name: '0x00158d00031e318f'
 '0x00158d0002b42afb':
-  friendly_name: '0x00158d0002b42afb'
+  friendly_name: slaapkamer
+  legacy: false
 '0x00158d0002b7eda4':
   friendly_name: '0x00158d0002b7eda4'
   debounce: 0.5
@@ -52,7 +51,8 @@
 '0x00158d00036c1ba4':
   friendly_name: '0x00158d00036c1ba4'
 '0x00158d0002b4a149':
-  friendly_name: '0x00158d0002b4a149'
+  friendly_name: woonkamer
+  legacy: false
 '0x00158d0005278e3c':
   friendly_name: '0x00158d0005278e3c'
 '0x00158d00031e0c0a':
@@ -68,7 +68,8 @@
 '0x00158d00031e0aff':
   friendly_name: '0x00158d00031e0aff'
 '0x00158d0002b4582b':
-  friendly_name: '0x00158d0002b4582b'
+  friendly_name: keuken
+  legacy: false
 '0x00158d00052b224e':
   friendly_name: '0x00158d00052b224e'
 '0x00158d00052b235c':
@@ -81,3 +82,6 @@
   friendly_name: '0x000d6f001624f85e'
 '0x0017880102e1e3b4':
   friendly_name: '0x0017880102e1e3b4'
+'0x00158d0002b4a1cf':
+  friendly_name: studeerkamer
+  legacy: false

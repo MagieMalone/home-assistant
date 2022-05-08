@@ -97,6 +97,41 @@ automation:
         data: {}
         target:
           entity_id: "{{states.media_player|selectattr('state', 'eq', 'playing')|map(attribute='entity_id')|list}}"
+  - id: '1646658068592'
+    alias: test media play
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: person.arnoud
+      to: home
+    condition:
+    - condition: time
+      after: 09:00:00
+      before: '16:00:00'
+    action:
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.speakers
+      data:
+        media_content_id: media-source://radio_browser/9513b20b-e4bd-11e8-a9cc-52543be04c81
+        media_content_type: audio/mpeg
+        extra:
+          title: Arrow Classic Rock
+          thumb: https://www.arrow.nl/wp-content/uploads/2020/08/logo.png
+      metadata:
+        title: Arrow Classic Rock
+        thumbnail: https://www.arrow.nl/wp-content/themes/bones-master/library/images/apple-touch-icon.png
+        media_class: music
+        children_media_class:
+        navigateIds:
+        - {}
+        - media_content_type: app
+          media_content_id: media-source://radio_browser
+        - media_content_type: music
+          media_content_id: media-source://radio_browser/country/NL
+    mode: single
+
+ 
 
 #
 #sensor:

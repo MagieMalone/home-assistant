@@ -45,7 +45,7 @@
   use_blueprint:
     path: myown/aqara_doubleswitch_action_light.yaml
     input:
-      switch_entity: sensor.switch_woonkamer_action
+      switch_entity: sensor.woonkamer_action
       light_entity_left: light.hue_lightstrip_plus_1
       light_entity_right: light.staande_lamp
       light_entity_both: light.woonkamer
@@ -72,34 +72,26 @@
       light_entity_right: light.keuken
       light_entity_both: light.eetkamer, light.keuken
       mode_selector: input_select.house_mode
-- id: '1646658068592'
-  alias: test media play
+- id: '1651741431457'
+  alias: notify if TV is missing
   description: ''
   trigger:
   - platform: state
-    entity_id: person.arnoud
-    to: home
+    entity_id: media_player.tv_samsung
+    to: unavailable
+    for:
+      hours: 12
+      minutes: 0
+      seconds: 0
   condition:
-  - condition: time
-    after: 09:00:00
-    before: '16:00:00'
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: input_select.house_mode
+      state: weg
   action:
-  - service: media_player.play_media
-    target:
-      entity_id: media_player.speakers
+  - service: persistent_notification.create
     data:
-      media_content_id: media-source://radio_browser/9513b20b-e4bd-11e8-a9cc-52543be04c81
-      media_content_type: audio/mpeg
-    metadata:
-      title: Arrow Classic Rock
-      thumbnail: https://www.arrow.nl/wp-content/themes/bones-master/library/images/apple-touch-icon.png
-      media_class: music
-      children_media_class:
-      navigateIds:
-      - {}
-      - media_content_type: app
-        media_content_id: media-source://radio_browser
-      - media_content_type: music
-        media_content_id: media-source://radio_browser/country/NL
+      message: 'TV unavailable '
+      title: 'TV unavailable '
   mode: single
-
