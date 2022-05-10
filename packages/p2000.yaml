@@ -55,7 +55,7 @@ template:
                 {{state_attr('sensor.p2000_latest', 'capcodes')}}
               {% endif %}
             {% else %}
-              state_attr('sensor.p2000_latest', 'capcode')
+              {{state_attr('sensor.p2000_latest', 'capcode')}}
             {% endif %}
           longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
           latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
@@ -83,7 +83,7 @@ template:
                 {{state_attr('sensor.p2000_latest', 'capcodes')}}
               {% endif %}
             {% else %}
-              state_attr('sensor.p2000_latest', 'capcode')
+              {{state_attr('sensor.p2000_latest', 'capcode')}}
             {% endif %}
           longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
           latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
@@ -99,7 +99,7 @@ template:
         event_type: p2000_grip
     sensor:
       - name: "P2000_last_grip"
-        unique_id: 3a2a46ab-b282-4325-838d-b1fe63871bc6""
+        unique_id: "3a2a46ab-b282-4325-838d-b1fe63871bc6"
         state: "{{states('sensor.p2000_latest')}}"
         icon: "mdi:alarm-light"
         attributes:
@@ -111,7 +111,7 @@ template:
                 {{state_attr('sensor.p2000_latest', 'capcodes')}}
               {% endif %}
             {% else %}
-              state_attr('sensor.p2000_latest', 'capcode')
+              {{state_attr('sensor.p2000_latest', 'capcode')}}
             {% endif %}
           longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
           latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
@@ -122,7 +122,38 @@ template:
           time: "{{state_attr('sensor.p2000_latest', 'time')}}"
           attribution: "{{state_attr('sensor.p2000_latest', 'attribution')}}"
           friendly_name: "Last announced P2000 GRIP"
-#         {% set roepnummer = (mod_state | regex_findall_index(find=ambu_string, index=0, ignorecase=False))[4]|trim %}
+  - trigger:
+      - platform: event
+        event_type: p2000_heli
+    sensor:
+      - name: "P2000_last_heli"
+        unique_id: "e6d9879f-070d-4c27-8b42-2c6b64b46500"
+        state: >
+            {% set map = {'sensor.ll1':'LL1','sensor.ll2':'LL2','sensor.ll3':'LL3','sensor.ll4':'LL4'} %}
+            {% set heli = trigger.event.data.entity_id %}
+            {{map.get(heli, 'unknown')}}: {{states(trigger.event.data.entity_id)}}
+        icon: "mdi:alarm-light"
+        attributes:
+          capcode: >
+            {% if state_attr(trigger.event.data.entity_id, 'capcode') == None  %}
+              {% if state_attr(trigger.event.data.entity_id, 'capcodes') == None %}
+                Unknown
+              {% else %}
+                {{state_attr(trigger.event.data.entity_id, 'capcodes')}}
+              {% endif %}
+            {% else %}
+              {{state_attr(trigger.event.data.entity_id, 'capcode')}}
+            {% endif %}
+          longitude: "{{state_attr(trigger.event.data.entity_id, 'longitude')}}"
+          latitude:  "{{state_attr(trigger.event.data.entity_id, 'latitude')}}"
+          distance: "{{state_attr(trigger.event.data.entity_id, 'distance')}}"
+          regio: "{{state_attr(trigger.event.data.entity_id, 'regio')}}"
+          "regio name": "{{state_attr(trigger.event.data.entity_id, 'regio name')}}"
+          discipline: "{{state_attr(trigger.event.data.entity_id, 'discipline')}}"
+          time: "{{state_attr(trigger.event.data.entity_id, 'time')}}"
+          attribution: "{{state_attr(trigger.event.data.entity_id, 'attribution')}}"
+          friendly_name: "Last announced P2000 Heli"
+
   - sensor:
       - name: "p2000_last"
         unique_id: "8e9a755b-5522-42ab-980b-2b3e6d641311"
@@ -444,63 +475,65 @@ automation:
       - platform: state
         entity_id: sensor.p2000_latest
         to:
+      - platform: state
+        entity_id:
+          - sensor.ll1
+          - sensor.ll2
+          - sensor.ll3
+          - sensor.ll4
+        to:
+        id: "heli"
     condition:
-      - condition: and
-        conditions:
-          - condition: or
-            conditions:
-              - condition: and
-                conditions:
-                  - condition: or
-                    conditions:
-                      - condition: and
-                        conditions:
-                          - condition: state
-                            entity_id: sensor.p2000_latest
-                            attribute: discipline
-                            state: "Brandweerdiensten"
-                          - condition: numeric_state
-                            entity_id: sensor.p2000_latest
-                            attribute: distance
-                            above: 0.1
-                            below: 7500
-                      - condition: and
-                        conditions:
-                          - condition: state
-                            entity_id: sensor.p2000_latest
-                            attribute: discipline
-                            state: "Ambulancediensten"
-                          - condition: numeric_state
-                            entity_id: sensor.p2000_latest
-                            attribute: distance
-                            above: 0.1
-                            below: 1000
-                      - condition: and
-                        conditions:
-                          - condition: state
-                            entity_id: sensor.p2000_latest
-                            attribute: discipline
-                            state: "Politiediensten"
-                          - condition: numeric_state
-                            entity_id: sensor.p2000_latest
-                            attribute: distance
-                            above: 0.1
-                            below: 3000
-                      - condition: template
-                        value_template: >-
-                          {% set dist = distance(state_attr('sensor.p2000_latest' , 'latitude'), state_attr('sensor.p2000_latest', 'longitude'), states.zone.ymke_buurt)|float %}
-                          {{ dist <= 0.1 and dist > 0 }}
-                  - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
-                  - "{{states('sensor.p2000_latest' ) is not search('Intrekken Alarm', ignorecase=True)}}"
-              - condition: and
-                conditions:
-                  - "{{states('sensor.p2000_latest') is search('GRIP', ignorecase=true)}}"
-                  - condition: numeric_state
-                    entity_id: sensor.p2000_latest
-                    attribute: distance
-                    above: 0.1
-                    below: 15000
-
+      - or:
+        - and:
+          - or:
+            - and:
+                - condition: state
+                  entity_id: sensor.p2000_latest
+                  attribute: discipline
+                  state: "Brandweerdiensten"
+                - condition: numeric_state
+                  entity_id: sensor.p2000_latest
+                  attribute: distance
+                  above: 0.1
+                  below: 7500
+            -  and:
+                - condition: state
+                  entity_id: sensor.p2000_latest
+                  attribute: discipline
+                  state: "Ambulancediensten"
+                - condition: numeric_state
+                  entity_id: sensor.p2000_latest
+                  attribute: distance
+                  above: 0.1
+                  below: 1000
+            - and:
+                - condition: state
+                  entity_id: sensor.p2000_latest
+                  attribute: discipline
+                  state: "Politiediensten"
+                - condition: numeric_state
+                  entity_id: sensor.p2000_latest
+                  attribute: distance
+                  above: 0.1
+                  below: 3000
+            - condition: template
+              value_template: >-
+                {% set dist = distance(state_attr('sensor.p2000_latest' , 'latitude'), state_attr('sensor.p2000_latest', 'longitude'), states.zone.ymke_buurt)|float %}
+                {{ dist <= 0.1 and dist > 0 }}
+          - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
+          - "{{states('sensor.p2000_latest' ) is not search('Intrekken Alarm', ignorecase=True)}}"
+        - and:
+          - "{{states('sensor.p2000_latest') is search('GRIP', ignorecase=true)}}"
+          - condition: numeric_state
+            entity_id: sensor.p2000_latest
+            attribute: distance
+            above: 0.1
+            below: 15000
+        - and:
+          - condition: trigger
+            id: "heli"
+          - "{{ (state_attr(trigger.entity_id,'distance')| int <= 15000) and (state_attr(trigger.entity_id,'distance')| int != 0)}}"
     action:
       - choose:
         - conditions:
@@ -521,7 +554,14 @@ automation:
             - event: p2000_bran
               event_data:
                 state: "on"
-
+        - conditions:
+            - condition: trigger
+              id: "heli"
+          sequence:
+            - event: p2000_heli
+              event_data:
+                state: "on"
+                entity_id: trigger.entity_id
   - id: 36348df1-34fc-4466-99b1-75e2ca91415b
     alias: P2000_announce_latest
     mode: queued
