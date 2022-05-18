@@ -136,6 +136,8 @@ gdacs:
   latitude: 52.23677047848721
   longitude: 5.383300781250001
 
+wake_on_lan:
+
 zone: !include zones.yaml
 group: !include groups.yaml
 #automation: !include_dir_merge_list automations/

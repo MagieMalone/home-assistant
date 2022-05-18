@@ -1,6 +1,8 @@
 input_text:
   here_api:
     initial: !secret here_api
+  home_address:
+    initial: !secret home_address
 sensor:
 #  - platform: google_travel_time
 #    scan_interval: 1800
@@ -58,6 +60,7 @@ sensor:
     destination_entity_id: sensor.alarm_latlong_mod
     name: here_travel_time_alarm
     scan_interval: 900
+    traffic_mode: true
   - platform: here_travel_time
     api_key: !secret here_api
     origin_entity_id: zone.home
@@ -71,6 +74,7 @@ sensor:
     destination_entity_id: sensor.afspraak_latlong_mod
     name: here_travel_time
     scan_interval: 900
+    traffic_mode: true
   - platform: here_travel_time
     api_key: !secret here_api
     origin_entity_id: person.arnoud
