@@ -220,7 +220,10 @@ automation:
                     {% if reistijd=='unknown' %} 
                       Het is tijd om naar {{message}} te gaan. De reistijd is onbekend.
                     {% else %}
-                      Het is tijd om naar {{message}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten
+                      Het is tijd om naar {{message}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten.
+                    {% endif %}
+                    {% if is_state('group.windows_kachel', 'on') %}
+                      Vergeet niet om de ramen te sluiten
                     {% endif %}
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"

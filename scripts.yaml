@@ -4,15 +4,53 @@ nacht:
     data: {}
     target:
       entity_id: media_player.tv_samsung
+  - service: light.turn_off
+    target:
+      entity_id:
+      - light.computer
+      - light.hal
+      - light.hue_lightstrip_plus_1
+      - light.staande_lamp
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
+    data:
+      transition: 10
+  - service: light.turn_on
+    target:
+      entity_id: light.slaapkamer
+    data: {}
+  - service: switch.turn_off
+    target:
+      entity_id: switch.tplink_b0_4e_26_6b_a1_f5
+    data: {}
   - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
+      seconds: 10
   - service: homeassistant.turn_off
     target:
       entity_id: switch.media_group
     data: {}
+  - service: tts.google_say
+    target:
+      entity_id: media_player.huiskamer_hub
+    data:
+      message: Nighty night
+      language: en
+  - delay:
+      minutes: 30
+  - service: input_select.select_option
+    target:
+      entity_id: input_select.house_mode
+    data:
+      option: nacht
+nacht-aangepast:
+  sequence:
+  - service: media_player.turn_off
+    data: {}
+    target:
+      entity_id: media_player.tv_samsung
   - service: light.turn_off
     target:
       entity_id:
