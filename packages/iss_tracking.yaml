@@ -143,7 +143,7 @@ automation:
         target:
           entity_id: media_player.speakers
         data:
-          volume_level: 0.5
+          volume_level: "{{states('input_number.tts_volume')| float}}"
           
   - alias: "update alt_az sensor"
     id: "6b87ea2d-ff66-4d86-9b9f-123b171e2f99"

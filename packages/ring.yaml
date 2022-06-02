@@ -53,7 +53,7 @@ automation:
               target:
                 entity_id: media_player.speakers
               data:
-                volume_level: 1
+                volume_level: "{{states('input_number.tts_volume')| float}}"
             - service: media_player.play_media
               target:
                 entity_id: media_player.speakers

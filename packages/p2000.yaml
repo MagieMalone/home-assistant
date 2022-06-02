@@ -160,11 +160,13 @@ template:
         state: >
           {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
           {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-          {{ (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='state')|first}}
+          {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+          {{ (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='state')|first}}
         icon: >
           {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
           {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-          {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+          {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+          {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
           {% set ambu_string = '^(A|B|P |Prio |)([0-9]|) (( |)AMBU |)([0-9]{5} |[0-9]{2}mc[0-9]{3} |)' %}
           {% set brackets ='\([^)]+\) *' %}
           {% set mod_state = states(entity)| regex_replace(find=brackets, replace='', ignorecase=False) %}
@@ -190,7 +192,8 @@ template:
           capcode: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {% if state_attr(entity, 'capcode') == None  %}
               {% if state_attr(entity, 'capcodes') == None %}
                 Unknown
@@ -203,7 +206,8 @@ template:
           longitude: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'longitude') == None  %}
               0
             {%- else %}
@@ -212,7 +216,8 @@ template:
           latitude: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'latitude') == None  %}
               0
             {%- else %}
@@ -221,7 +226,8 @@ template:
           distance: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'distance') == None  %}
               0
             {%- else %}
@@ -230,7 +236,8 @@ template:
           regio: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'regio') == None  %}
               0
             {%- else %}
@@ -239,7 +246,8 @@ template:
           "regio name": >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'regio name') == None  %}
               ""
             {%- else %}
@@ -248,7 +256,8 @@ template:
           discipline: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'discipline') == None  %}
               0
             {%- else %}
@@ -257,7 +266,8 @@ template:
           time: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'time') == None  %}
               {{now()}}
             {%- else %}
@@ -266,7 +276,8 @@ template:
           attribution: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'attribution') == None  %}
               Unknown
             {%- else %}
@@ -275,7 +286,8 @@ template:
           friendly_name: >
             {% set capcodes = states.sensor|selectattr('attributes.capcodes', 'defined')|list %}
             {% set capcode = states.sensor|selectattr('attributes.capcode', 'defined')|list %}
-            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'ne',  'sensor.p2000_last')|map(attribute='entity_id')|first %}
+            {% set entities = [ "sensor.p2000_latest", "sensor.ll3", "sensor.ll4", "sensor.ll1", "sensor.ll2" ]  %}
+            {% set entity = (capcode + capcodes)|sort(reverse=true,attribute='last_changed')|selectattr('entity_id', 'in',  entities)|map(attribute='entity_id')|first %}
             {%- if state_attr(entity, 'friendly_name') == None  %}
               Unknown
             {%- else %}
@@ -471,6 +483,7 @@ automation:
 
   - id: "c9445db9-4efb-4113-967f-4d1c58039e05"
     alias: P2000_templates_update
+    mode: queued
     trigger:
       - platform: state
         entity_id: sensor.p2000_latest
@@ -523,6 +536,9 @@ automation:
                 {{ dist <= 0.1 and dist > 0 }}
           - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
           - "{{states('sensor.p2000_latest' ) is not search('Intrekken Alarm', ignorecase=True)}}"
+          - not:
+            - condition: trigger
+              id: "heli"
         - and:
           - "{{states('sensor.p2000_latest') is search('GRIP', ignorecase=true)}}"
           - condition: numeric_state
@@ -543,6 +559,14 @@ automation:
               event_data:
                 state: "on"
         - conditions:
+            - condition: trigger
+              id: "heli"
+          sequence:
+            - event: p2000_heli
+              event_data:
+                state: "on"
+                entity_id: "{{trigger.entity_id}}"
+        - conditions:
             - "{{ is_state_attr('sensor.p2000_latest','discipline','Ambulancediensten') }}"
           sequence:
             - event: p2000_ambu
@@ -554,14 +578,7 @@ automation:
             - event: p2000_bran
               event_data:
                 state: "on"
-        - conditions:
-            - condition: trigger
-              id: "heli"
-          sequence:
-            - event: p2000_heli
-              event_data:
-                state: "on"
-                entity_id: trigger.entity_id
+
   - id: 36348df1-34fc-4466-99b1-75e2ca91415b
     alias: P2000_announce_latest
     mode: queued

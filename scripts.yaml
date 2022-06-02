@@ -45,7 +45,7 @@ nacht:
       entity_id: input_select.house_mode
     data:
       option: nacht
-nacht-aangepast:
+nacht_aangepast:
   sequence:
   - service: media_player.turn_off
     data: {}

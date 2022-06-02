@@ -232,8 +232,50 @@ automation:
         target:
           entity_id: media_player.speakers
         data:
-          volume_level: 0.35
+          volume_level: "{{states('input_number.tts_volume')| float}}"
+  - id: '1654164134828'
+    alias: alert for online event
+    description: ''
+    trigger:
+    - platform: calendar
+      event: start
+      entity_id: calendar.online_events
+    condition: 
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: "Thuis"
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: "Net Thuis"
+    action:
+      - alias: "Send TTS using Google Home Resume script"
+        service: script.turn_on
+        target:
+          entity_id: script.google_home_resume
+        data:
+          variables:
+            action:
+              - alias: "Send TTS message"
+                service: tts.google_say
+                target:
+                  entity_id: media_player.speakers
+                data:
+                  message: "De {{state_attr('calendar.online_events', 'message')}} begint over vijf minuten"
+                  cache: false
+                  language: "nl"
+      - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+        wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+      - alias: "Apply TTS volume"
+        service: media_player.volume_set
+        target:
+          entity_id: media_player.speakers
+        data:
+          volume_level: "{{states('input_number.tts_volume')| float}}"
 
+    mode: single
+    
   - alias: "F1 begin wedstrijd"
     id: "3478021346858103290"
     trigger:
@@ -276,7 +318,7 @@ automation:
         target:
           entity_id: media_player.speakers
         data:
-          volume_level: 0.35
+          volume_level: "{{states('input_number.tts_volume')| float}}"
       - service: homeassistant.turn_on
         target:
           entity_id: switch.media_group
