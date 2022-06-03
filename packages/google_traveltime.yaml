@@ -54,34 +54,34 @@ sensor:
       - lat
     name: "afspraak_latlong"
     scan_interval: 900
-  - platform: here_travel_time
-    api_key: !secret here_api
-    origin_entity_id: zone.home
-    destination_entity_id: sensor.alarm_latlong_mod
-    name: here_travel_time_alarm
-    scan_interval: 900
-    traffic_mode: true
-  - platform: here_travel_time
-    api_key: !secret here_api
-    origin_entity_id: zone.home
-    destination_entity_id: sensor.alarm_latlong_mod
-    name: here_travel_time_alarm_bike
-    mode: bicycle
-    scan_interval: 900
-  - platform: here_travel_time
-    api_key: !secret here_api
-    origin_entity_id: person.arnoud
-    destination_entity_id: sensor.afspraak_latlong_mod
-    name: here_travel_time
-    scan_interval: 900
-    traffic_mode: true
-  - platform: here_travel_time
-    api_key: !secret here_api
-    origin_entity_id: person.arnoud
-    destination_entity_id: sensor.afspraak_latlong_mod
-    name: here_travel_time_bike
-    mode: bicycle
-    scan_interval: 900
+#  - platform: here_travel_time
+#    api_key: !secret here_api
+#    origin_entity_id: zone.home
+#    destination_entity_id: sensor.alarm_latlong_mod
+#    name: here_travel_time_alarm
+#    scan_interval: 900
+#    traffic_mode: true
+#  - platform: here_travel_time
+#    api_key: !secret here_api
+#    origin_entity_id: zone.home
+#    destination_entity_id: sensor.alarm_latlong_mod
+#    name: here_travel_time_alarm_bike
+#    mode: bicycle
+#    scan_interval: 900
+#  - platform: here_travel_time
+#    api_key: !secret here_api
+#    origin_entity_id: person.arnoud
+#    destination_entity_id: sensor.afspraak_latlong_mod
+#    name: here_travel_time
+#    scan_interval: 900
+#    traffic_mode: true
+#  - platform: here_travel_time
+#    api_key: !secret here_api
+#    origin_entity_id: person.arnoud
+#    destination_entity_id: sensor.afspraak_latlong_mod
+#    name: here_travel_time_bike
+#    mode: bicycle
+#    scan_interval: 900
     
 template:
   - sensor:

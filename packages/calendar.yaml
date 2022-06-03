@@ -1,6 +1,6 @@
-google:
-  client_id: 836630737755-pr91j52c6n1700mvlsu5tn3tn4maoel6.apps.googleusercontent.com
-  client_secret: !secret google_cal_apikey
+#google:
+#  client_id: 836630737755-pr91j52c6n1700mvlsu5tn3tn4maoel6.apps.googleusercontent.com
+#  client_secret: !secret google_cal_apikey
 
 input_boolean:
   f1_announcements:
