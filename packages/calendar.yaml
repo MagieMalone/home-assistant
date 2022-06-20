@@ -163,15 +163,7 @@ template:
             {%- endif %} 
           {%- endif %}
           {{reistijd }}
-      - name: f1_start_event
-        unique_id: "08d27902-9f4f-4919-937c-9e4bd0b9793c"
-        device_class: "timestamp"
-        state: >
-          {% if state_attr('calendar.formula_1_calendar_by_racefans_net', 'start_time') == None %}
-            False
-          {% else %}
-            {{(state_attr('calendar.formula_1_calendar_by_racefans_net', 'start_time')|as_datetime - timedelta(minutes=10)).astimezone()}}
-          {% endif %}
+
 
 automation:
   - alias: "vertrek melding"
@@ -240,6 +232,7 @@ automation:
     - platform: calendar
       event: start
       entity_id: calendar.online_events
+      offset: "-00:05:00"
     condition: 
       - condition: or
         conditions:
@@ -279,9 +272,10 @@ automation:
   - alias: "F1 begin wedstrijd"
     id: "3478021346858103290"
     trigger:
-      platform: time
-      at:
-        - "sensor.f1_start_event"
+    - platform: calendar
+      event: start
+      entity_id: calendar.formula_1_calendar_by_racefans_net
+      offset: "-00:10:00"
     condition:
       - "{{not state_attr('calendar.formula_1_calendar_by_racefans_net','all_day') }}"
       - condition: state
