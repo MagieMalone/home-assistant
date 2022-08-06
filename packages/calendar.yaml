@@ -71,10 +71,10 @@ template:
         state: >
           {%- set duration = state_attr('sensor.google_travel_time_driving', 'duration') %}
           {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
-            {%- if states('sensor.here_travel_time_bike') == None %}
+            {%- if states('sensor.here_travel_time_bike_duration') == None %}
               {%- set offset = timedelta(minutes=5) %}
             {%- else %}
-              {%- set offset = timedelta(minutes=states('sensor.here_travel_time_bike')|int +5)  %}
+              {%- set offset = timedelta(minutes=states('sensor.here_travel_time_bike_duration')|int +5)  %}
             {%- endif %}
           {%- else %}
             {%- if duration == None %}
@@ -110,10 +110,10 @@ template:
         state: >
           {%- set duration = state_attr('sensor.google_travel_time_alarm', 'duration') %}
           {%- if state_attr('calendar.alarm', 'message')  is search('#bike', ignorecase=true) %}
-            {%- if states('sensor.here_travel_time_alarm_bike') == None %}
+            {%- if states('sensor.here_travel_time_alarm_bike_duration') == None %}
               {%- set offset = timedelta(minutes=0) %}
             {%- else %}
-              {%- set offset = timedelta(minutes=states('sensor.here_travel_time_alarm_bike')|int) %}
+              {%- set offset = timedelta(minutes=states('sensor.here_travel_time_alarm_bike_duration')|int) %}
             {%- endif %}
           {%- else %}
             {%- if duration == None %}
@@ -132,10 +132,10 @@ template:
         unit_of_measurement: "minutes"
         state: >
           {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
-            {%- if states('sensor.here_travel_time_bike') == None %}
+            {%- if states('sensor.here_travel_time_bike_duration') == None %}
               {% set reistijd = 0 %}
             {%- else %}
-              {% set reistijd = states('sensor.here_travel_time_bike')|int %}
+              {% set reistijd = states('sensor.here_travel_time_bike_duration')|int %}
             {%- endif %}
           {%- else %}
             {%- if states('sensor.calc_travel_time') == None %}
@@ -150,10 +150,10 @@ template:
         unit_of_measurement: "minutes"
         state: >
           {%- if state_attr('calendar.alarm', 'message')  is search('#bike', ignorecase=true) %}
-            {%- if states('sensor.here_travel_time_alarm_bike') == None %}
+            {%- if states('sensor.here_travel_time_alarm_bike_duration') == None %}
               {% set reistijd = 0 %}
             {%- else %}
-              {% set reistijd = states('sensor.here_travel_time_alarm_bike')|int %}
+              {% set reistijd = states('sensor.here_travel_time_alarm_bike_duration')|int %}
             {%- endif %}
           {%- else %}
             {%- if states('sensor.calc_travel_time_alarm') == None %}
@@ -177,10 +177,10 @@ automation:
         condition: template
         value_template: >
           {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
-            {%- if states('sensor.here_travel_time_bike') == None %}
+            {%- if states('sensor.here_travel_time_bike_duration') == None %}
               {% set reistijd = 0 %}
             {%- else %}
-              {% set reistijd = states('sensor.here_travel_time_bike')|int %}
+              {% set reistijd = states('sensor.here_travel_time_bike_duration')|int %}
             {%- endif %}
           {%- else %}
             {%- if states('sensor.calc_travel_time') == None %}
@@ -330,6 +330,9 @@ automation:
         {% else %}
           {{(states('sensor.calc_leave_time_alarm')|as_datetime - timedelta(minutes=(states('input_number.wul_time_before_leave')|int))).astimezone() }}
         {% endif %}
+    condition:
+      # don't set time back before current time, or the alarm will be skipped
+      - "{{((states('sensor.calc_leave_time_alarm')|as_datetime - timedelta(minutes=(states('input_number.wul_time_before_leave')|int))).astimezone()) > (now()+ timedelta(minutes=2))}}"
     action:
       - service: input_datetime.set_datetime
         target:

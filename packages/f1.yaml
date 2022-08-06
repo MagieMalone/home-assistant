@@ -112,7 +112,7 @@ template:
     - name: F1 (sprint)
       icon: mdi:keyboard-f1
       state: >
-        {% if as_timestamp(state_attr('calendar.f1_sprint_race', 'start_time')) | timestamp_custom('%W') == now().isocalendar()[1] %}
+        {% if as_timestamp(state_attr('calendar.f1_sprint_race', 'start_time')) | timestamp_custom('%W')|int  == now().isocalendar()[1] %}
           on
         {% else %}
           off

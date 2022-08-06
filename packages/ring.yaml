@@ -24,14 +24,14 @@ template:
       - name: "last_ring"
         unique_id: "4a23d188-2f96-4e30-ada7-8687a5fad980"
         state: >-
-          {% if state_attr('sensor.front_door_last_ding','created_at') != None %}
-            {{relative_time(state_attr('sensor.front_door_last_ding','created_at'))   }}
+          {% if state_attr('sensor.voordeur_last_ding','created_at') != None %}
+            {{relative_time(state_attr('sensor.voordeur_last_ding','created_at'))   }}
           {% endif %}
       - name: "last_motion"
         unique_id: "716f0459-4145-4e87-8245-6ad4657f52e5"
         state: >-
-          {% if state_attr('sensor.front_door_last_motion','created_at') != None %}
-            {{relative_time(state_attr('sensor.front_door_last_motion','created_at')) }}
+          {% if state_attr('sensor.voordeur_last_motion','created_at') != None %}
+            {{relative_time(state_attr('sensor.voordeur_last_motion','created_at')) }}
           {% endif %}
 
 automation:
@@ -39,7 +39,7 @@ automation:
     id: "753125809170657784308"
     trigger:
       platform: state
-      entity_id: binary_sensor.front_door_ding
+      entity_id: binary_sensor.voordeur_ding
       to: "on"
     action:
       - service: script.turn_on
