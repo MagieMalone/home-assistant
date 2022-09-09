@@ -69,7 +69,6 @@ template:
         unique_id: "73400fa8-6115-464b-9ab4-477661dbfada"
         device_class: "timestamp"
         state: >
-          {%- set duration = state_attr('sensor.google_travel_time_driving', 'duration') %}
           {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
             {%- if states('sensor.here_travel_time_bike_duration') == None %}
               {%- set offset = timedelta(minutes=5) %}
@@ -77,38 +76,17 @@ template:
               {%- set offset = timedelta(minutes=states('sensor.here_travel_time_bike_duration')|int +5)  %}
             {%- endif %}
           {%- else %}
-            {%- if duration == None %}
+            {%- if states('sensor.here_travel_time_duration_in_traffic') == None %}
               {%- set offset = timedelta(minutes=5) %}
             {%-  else %}
-              {%- if duration.split(' ')[2]==Null %}
-                {%- set offset = timedelta(minutes=(duration.split(' ')[0])|int +5) %}
-              {%- else %}
-                {%- set offset = timedelta(hours=(duration.split(' ')[0])|int) + timedelta(minutes=(duration.split(' ')[2])|int +5) %}
-              {%- endif %} 
+              {%- set offset = timedelta(minutes=states('sensor.here_travel_time_duration_in_traffic')|int +5)  %}
             {%- endif %} 
           {%- endif %}
           {{- (state_attr('calendar.abuurmangmailcom', 'start_time')| as_datetime - offset).astimezone()}}
-      - name: calc_leave_time_unix
-        unique_id: "1977399f-e061-42ab-b9d0-6148723f13e7"
-        state: >
-          {% set tz = as_timestamp(now())|timestamp_custom('%z') %}
-          {% set time = state_attr('calendar.abuurmangmailcom', 'start_time') + tz %}
-          {% set starttime = as_timestamp(time) %}    
-          {% set duration = state_attr('sensor.google_travel_time_driving', 'duration') %}
-          {%if duration == None %}
-            {{ starttime }}
-          {% else %}
-            {%if duration.split(' ')[2]==Null %}
-              {{ (starttime  - (duration.split(' ')[0]  | int * 60 )) }}
-            {% else %}
-              {{ (starttime - (duration.split(' ')[0] | int *3600 + duration.split(' ')[2] | int *60 )) }}
-            {% endif %} 
-          {% endif %}
       - name: calc_leave_time_alarm
         unique_id: "e9dce637-9b57-4321-8b95-10e2b9e56411"
         device_class: "timestamp"
         state: >
-          {%- set duration = state_attr('sensor.google_travel_time_alarm', 'duration') %}
           {%- if state_attr('calendar.alarm', 'message')  is search('#bike', ignorecase=true) %}
             {%- if states('sensor.here_travel_time_alarm_bike_duration') == None %}
               {%- set offset = timedelta(minutes=0) %}
@@ -116,14 +94,10 @@ template:
               {%- set offset = timedelta(minutes=states('sensor.here_travel_time_alarm_bike_duration')|int) %}
             {%- endif %}
           {%- else %}
-            {%- if duration == None %}
-              {%- set offset = timedelta(minutes=0) %}
+            {%- if states('sensor.here_travel_time_alarm_duration_in_traffic') == None %}
+              {%- set offset = timedelta(minutes=5) %}
             {%-  else %}
-              {%- if duration.split(' ')[2]==Null %}
-                {%- set offset = timedelta(minutes=(duration.split(' ')[0])|int) %}
-              {%- else %}
-                {%- set offset = timedelta(hours=(duration.split(' ')[0])|int) + timedelta(minutes=(duration.split(' ')[2])|int) %}
-              {%- endif %} 
+              {%- set offset = timedelta(minutes=states('sensor.here_travel_time_alarm_duration_in_traffic')|int +5)  %}
             {%- endif %} 
           {%- endif %}
           {{- (state_attr('calendar.alarm', 'start_time')| as_datetime - offset).astimezone()}}
@@ -138,10 +112,10 @@ template:
               {% set reistijd = states('sensor.here_travel_time_bike_duration')|int %}
             {%- endif %}
           {%- else %}
-            {%- if states('sensor.calc_travel_time') == None %}
+            {%- if states('sensor.here_travel_time_duration_in_traffic') == None %}
               {% set reistijd = 0 %}
             {%-  else %}
-              {% set reistijd = states('sensor.calc_travel_time')|int /60 %}
+              {% set reistijd = states('sensor.here_travel_time_duration_in_traffic')|int %}
             {%- endif %} 
           {%- endif %}
           {{reistijd }}
@@ -156,10 +130,10 @@ template:
               {% set reistijd = states('sensor.here_travel_time_alarm_bike_duration')|int %}
             {%- endif %}
           {%- else %}
-            {%- if states('sensor.calc_travel_time_alarm') == None %}
+            {%- if states('sensor.here_travel_time_alarm_duration_in_traffic') == None %}
               {% set reistijd = 0 %}
             {%-  else %}
-              {% set reistijd = states('sensor.calc_travel_time_alarm')|int /60 %}
+              {% set reistijd = states('sensor.here_travel_time_alarm_duration_in_traffic')|int %}
             {%- endif %} 
           {%- endif %}
           {{reistijd }}
@@ -183,10 +157,10 @@ automation:
               {% set reistijd = states('sensor.here_travel_time_bike_duration')|int %}
             {%- endif %}
           {%- else %}
-            {%- if states('sensor.calc_travel_time') == None %}
+            {%- if states('sensor.here_travel_time_duration_in_traffic') == None %}
               {% set reistijd = 0 %}
             {%-  else %}
-              {% set reistijd = states('sensor.calc_travel_time')|int /60 %}
+              {% set reistijd = states('sensor.here_travel_time_duration_in_traffic')|int %}
             {%- endif %} 
           {%- endif %}
           {{reistijd > 2}}
@@ -207,7 +181,19 @@ automation:
                   cache: false
                   language: "nl"
                   message: >
-                    {% set reistijd = states('sensor.calc_travel_time') %}
+                    {%- if state_attr('calendar.abuurmangmailcom', 'message')  is search('#bike', ignorecase=true) %}
+                      {%- if states('sensor.here_travel_time_bike_duration') == None %}
+                        {% set reistijd = 0 %}
+                      {%- else %}
+                        {% set reistijd = states('sensor.here_travel_time_bike_duration')|int %}
+                      {%- endif %}
+                    {%- else %}
+                      {%- if states('sensor.here_travel_time_duration_in_traffic') == None %}
+                        {% set reistijd = 0 %}
+                      {%-  else %}
+                        {% set reistijd = states('sensor.here_travel_time_duration_in_traffic')|int %}
+                      {%- endif %} 
+                    {%- endif %}
                     {% set message = state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')| replace('#bike', '') %}
                     {% if reistijd=='unknown' %} 
                       Het is tijd om naar {{message}} te gaan. De reistijd is onbekend.

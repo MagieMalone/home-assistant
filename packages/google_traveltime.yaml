@@ -85,32 +85,7 @@ sensor:
     
 template:
   - sensor:
-    - name: "calc_travel_time"
-      unique_id: "d0efa819-5eab-4c5d-993f-95d03ccb0b99"
-      state: >
-        {% set duration = state_attr("sensor.google_travel_time_driving", "duration") %}
-        {%if duration == None %}
-          0
-        {% else %}
-          {%if duration.split(" ")[2]==Null %}
-            {{ duration.split(" ")[0] | int * 60 }}
-          {% else %}
-            {{ duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60}}
-          {% endif %}
-        {% endif %}
-    - name: "calc_travel_time_alarm"
-      unique_id: "95f95923-34f8-4a25-b3fa-696884a37611"
-      state: >
-        {% set duration = state_attr("sensor.google_travel_time_alarm", "duration") %}
-        {%if duration == None %}
-          0
-        {% else %}
-          {%if duration.split(" ")[2]==Null %}
-            {{ duration.split(" ")[0] | int * 60 }}
-          {% else %}
-            {{ duration.split(" ")[0] | int *3600 + duration.split(" ")[2] | int *60}}
-          {% endif %}
-        {% endif %}
+
     - name: "google_api_key"
       unique_id: "a68c6663-094f-405d-b625-9eb104cd988f"
       state: !secret google_apikey

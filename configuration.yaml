@@ -116,10 +116,10 @@ notify:
     vapid_pub_key: !secret google_vapid_pub_key
     vapid_prv_key: !secret google_vapid_prv_key
     vapid_email: !secret google_vapid_email
-  - platform: pushover
-    name: pushover
-    api_key: !secret pushover_api
-    user_key: !secret pushover_user
+#  - platform: pushover
+#    name: pushover
+#    api_key: !secret pushover_api
+#    user_key: !secret pushover_user
 
 sensor:
   - platform: systemmonitor
