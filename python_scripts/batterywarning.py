@@ -28,6 +28,7 @@ def get_battery_entities():
                 and "charging" not in state.state
                 and "discharging" not in state.state
                 and "unavailable" not in state.state
+                and "unknown" not in state.state
             ):
                 out.update({entity_id: int(state.state)})
         return out
