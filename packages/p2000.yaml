@@ -333,28 +333,10 @@ automation:
     condition:
       - condition: and
         conditions:
-          - condition: or
-            conditions:
-              - condition: and
-                conditions:
-                  - alias: "werkdag"
-                    condition: time
-                    after: "06:30:00"
-                    before: "22:00:00"
-                  - alias: "workday"
-                    condition: state
-                    entity_id: binary_sensor.workday_sensor
-                    state: "on"
-              - condition: and
-                conditions:
-                  - alias: "vrijedag"
-                    condition: time
-                    after: "09:00:00"
-                    before: "22:00:00"
-                  - alias: "workday"
-                    condition: state
-                    entity_id: binary_sensor.workday_sensor
-                    state: "off"
+          - condition: state
+            entity_id:
+              - schedule.tts_announce
+            state: "on"
           - condition: or
             conditions:
               - condition: state
@@ -390,28 +372,10 @@ automation:
     condition:
       - condition: and
         conditions:
-          - condition: or
-            conditions:
-              - condition: and
-                conditions:
-                  - alias: "werkdag"
-                    condition: time
-                    after: "06:30:00"
-                    before: "22:00:00"
-                  - alias: "workday"
-                    condition: state
-                    entity_id: binary_sensor.workday_sensor
-                    state: "on"
-              - condition: and
-                conditions:
-                  - alias: "vrijedag"
-                    condition: time
-                    after: "09:00:00"
-                    before: "22:00:00"
-                  - alias: "workday"
-                    condition: state
-                    entity_id: binary_sensor.workday_sensor
-                    state: "off"
+          - condition: state
+            entity_id:
+              - schedule.tts_announce
+            state: "on"
           - condition: or
             conditions:
               - condition: state
@@ -590,28 +554,10 @@ automation:
     condition:
       - condition: and
         conditions:
-          - condition: or
-            conditions:
-              - condition: and
-                conditions:
-                  - alias: "werkdag"
-                    condition: time
-                    after: "06:30:00"
-                    before: "22:00:00"
-                  - alias: "workday"
-                    condition: state
-                    entity_id: binary_sensor.workday_sensor
-                    state: "on"
-              - condition: and
-                conditions:
-                  - alias: "vrijedag"
-                    condition: time
-                    after: "09:00:00"
-                    before: "22:00:00"
-                  - alias: "workday"
-                    condition: state
-                    entity_id: binary_sensor.workday_sensor
-                    state: "off"
+          - condition: state
+            entity_id:
+              - schedule.tts_announce
+            state: "on"
           - condition: or
             conditions:
               - condition: state

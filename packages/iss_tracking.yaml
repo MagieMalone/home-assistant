@@ -117,10 +117,10 @@ automation:
           - condition: state
             entity_id: person.arnoud
             state: "home"
-          - alias: "daytime"
-            condition: time
-            after: "08:00:00"
-            before: "22:30:00"
+          - condition: state
+            entity_id:
+              - schedule.tts_announce
+            state: "on"
       - alias: "Send TTS using Google Home Resume script"
         service: script.turn_on
         target:
