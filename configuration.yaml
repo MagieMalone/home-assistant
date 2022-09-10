@@ -140,8 +140,8 @@ wake_on_lan:
 
 zone: !include zones.yaml
 group: !include groups.yaml
-#automation: !include_dir_merge_list automations/
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 script include: !include_dir_merge_named include/scripts
+automation include: !include_dir_merge_named include/automations

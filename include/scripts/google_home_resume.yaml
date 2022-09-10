@@ -3,7 +3,7 @@
 # for more details: https://github.com/TheFes/HA-configuration/blob/main/include/script/00_general/google_cast/docs/google_home_resume.md
 #
 google_home_resume:
-  alias: "00 🔊 Google Home Resume"
+  alias: "00 - Google Home Resume"
   description: Script for resuming Google Home speakers
   icon: mdi:cast-audio
   mode: parallel
@@ -29,6 +29,9 @@ google_home_resume:
       selector:
         boolean:
   variables:
+    dummy_player: media_player.vlc_telnet
+    image_delay:
+      seconds: 20
     players_screen:
       - media_player.huiskamer_hub
     primary_spotcast: "arnoud_buurman"
@@ -49,11 +52,10 @@ google_home_resume:
         - media_player.studeerkamer_speaker
         - media_player.ht_nt5
     default_volume_level: 0.5
-    dummy_player: media_player.vlc_telnet
   sequence:
     - alias: "Version number"
       variables:
-        version: 2.5.0
+        version: 2.8.2
     - alias: "Failsafe to remove all groups if the script was not running"
       if: >
         {{ 
@@ -78,17 +80,18 @@ google_home_resume:
     - alias: "Create variables based on action section"
       variables:
         event_script: "{{ event_script if event_script is defined else false }}"
+        automation: "{{ automation if automation is defined else false }}"
         service_calls: >
-          {{ iif(action is mapping,[ action ], action) | selectattr('service', 'defined') | list }}
+          {{ iif(action is mapping,[ action ], action) | selectattr('service', 'defined') | list if action is defined and action else [] }}
         no_service_count: >
-          {{ iif(action is mapping,[ action ], action) | count - service_calls | count }}
+          {{ iif(action is mapping,[ action ], action) | count - service_calls | count if action is defined and action else [] }}
     - alias: "Wrong actions provided"
       choose:
-        - conditions: "{{ (not event_script) and service_calls | count == 0 }}"
+        - conditions: "{{ (not (event_script or automation)) and service_calls | count == 0 }}"
           sequence:
             - stop: "There were no service calls defined, no actions are performed. The script script has been aborted."
               error: true
-        - conditions: "{{ (not event_script) and no_service_count > 0 }}"
+        - conditions: "{{ (not (event_script or automation)) and no_service_count > 0 }}"
           sequence:
             - service: system_log.write
               data:
@@ -98,11 +101,25 @@ google_home_resume:
                   {{ no_service_count }} out of {{ service_calls | count }} actions were not performed because they are not service calls.
     - alias: "Set variables to be used in the script"
       variables:
-        start_time: "{{ now() }}"
+        start_time: "{{ start_time if start_time is defined else now() }}"
         speaker_group_list: "{{ speaker_groups.keys() | list if (speaker_groups is defined and speaker_groups) else [] }}"
         speaker_groups: "{{ speaker_groups if (speaker_groups is defined and speaker_groups) else { 'no group': [ 'no members' ] } }}"
         cast_entities: "{{ integration_entities('cast') }}"
         spotify_entities: "{{ integration_entities('spotify') }}"
+        mass_entities: "{{ integration_entities('mass') | select('match', '^media_player.') | list }}"
+        cast_mass_playing: >
+          {%- if cast_mass_playing is defined %}
+            {{ cast_mass_playing }}
+          {%- else %}
+            {{
+              expand(integration_entities('cast'))
+                | selectattr('attributes.media_title', 'defined')
+                | selectattr('attributes.media_title', 'search', 'Streaming from Music Assistant')
+                | map(attribute='entity_id')
+                | list
+            }}
+          {%- endif %}
+        mass_playing: "{{ (cast_mass_playing | join(',') | replace('.', '.mass_')).split(',') | select() | list }}"
         primary_spotcast_check: >
           {% set accounts = (spotify_entities | join(',') | replace('media_player.spotify_', '')).split(',') %}
           {{
@@ -235,13 +252,21 @@ google_home_resume:
                   {%- set ns.device = ns.device + device_entities(device) | list %}
                 {%- endfor %}
                 {%- set device_list = ns.device %}
-            {# create list with all cast entities #}
+            {# create list with all cast and mass entities #}
               {%- set total_list = expand(area_list + device_list + entity_list)
                                     | map(attribute='entity_id')
-                                    | select('in', cast_entities)
+                                    | select('in', cast_entities + mass_entities)
                                     | unique
                                     | list
               %}
+            {# replace mass entities with cast entities #}
+              {%- if mass_entities | count > 0 and total_list | select('search', '.mass_') | list | count > 0%}
+                {%- set ns = namespace(no_mass = []) %}
+                {% for item in total_list %}
+                  {%- set ns.no_mass = ns.no_mass + ( [item] if item in cast_entities else [ item | replace('.mass_', '.') ] ) %}
+                {%- endfor %}
+                {%- set tota_list = ns.no_mass | select('in', cast_entities) | unique | list %}
+              {%- endif %}
             {# avoid to target both complete speaker groups and single members #}
               {%- set target_group = total_list | select('in', speaker_group_list) | list %}
               {%- set target_single = total_list | reject('in', speaker_group_list) | list %}
@@ -309,7 +334,15 @@ google_home_resume:
                                         state = entity.state
                                         )
                 %}
-                {%- if entity.attributes.app_name == 'Spotify' %}
+                {%- if mass_entities | count > 0 %}
+                  {%- set mass_data = dict(
+                                            mass_playing = entity.entity_id in cast_mass_playing,
+                                            mass_sync = entity.entity_id | replace('.', '.mass_')
+                                          )
+                  %}
+                  {%- set general = dict(general, **mass_data) %}
+                {%- endif %}
+                {%- if entity.attributes.app_name is defined and entity.attributes.app_name == 'Spotify' %}
                   {%- set additional = dict(
                                             app_name = 'Spotify',
                                             volume_level = entity.attributes.volume_level,
@@ -318,11 +351,25 @@ google_home_resume:
                                                               + entity.attributes.get('media_position', 0)
                                             )
                   %}
-                {%- elif entity.attributes.app_name in ['YouTube', 'YouTube Music'] %}
+                {%- elif entity.attributes.app_name is defined and entity.attributes.app_name in ['YouTube', 'YouTube Music'] %}
                   {%- set additional = dict(
                                             app_name = entity.attributes.app_name,
                                             volume_level = entity.attributes.volume_level,
                                             media_content_id = entity.attributes.get('media_content_id', 'no media_content'),
+                                            media_position =  as_timestamp(now()) | round(2)
+                                                              - as_timestamp(entity.attributes.get('media_position_updated_at', now())) | round(2) 
+                                                              + entity.attributes.get('media_position', 0)
+                                            )
+                  %}
+                {%- elif entity.attributes.app_name is defined and entity.attributes.app_name == 'Google Podcasts' %}
+                  {%- set additional = dict(
+                                            app_name = entity.attributes.app_name,
+                                            volume_level = entity.attributes.volume_level,
+                                            media_content_id = (entity.attributes.get('media_content_id', {}) | from_json).get('contentId', 'no media_content'),
+                                            media_title = entity.attributes.get('media_title', 'no title'),
+                                            media_artist = 'Google Podcasts',
+                                            media_content_type = entity.attributes.get('media_content_type', 'no type'),
+                                            entity_picture = entity.attributes.get('entity_picture', 'no pic'),
                                             media_position =  as_timestamp(now()) | round(2)
                                                               - as_timestamp(entity.attributes.get('media_position_updated_at', now())) | round(2) 
                                                               + entity.attributes.get('media_position', 0)
@@ -363,7 +410,7 @@ google_home_resume:
             %}
             {%- set type = iif(members,'group',iif(screen,'screen','no screen')) %}
             {%- set additional =  dict(members = members, type = type) %}
-            {%- if entity.app_name == 'Spotify' %}
+            {%- if entity.app_name is defined and entity.app_name == 'Spotify' %}
               {%- set list_check = [ entity.entity_id ] + members %}
               {%- set names_check = expand(list_check) | map(attribute='name') | list %}
               {%- set primary_spotcast = primary_spotcast 
@@ -383,12 +430,16 @@ google_home_resume:
               {%- set add_spotcast =  dict(spotcast = spotcast) %}
               {%- set additional = dict(additional, **add_spotcast) %}
             {%- elif entity.state == 'playing'
-                      and fixed_picture is defined
-                      and iif(fixed_picture)
-                      and entity.media_artist in fixed_picture.keys() | list
+                      and radio_data is defined
+                      and iif(radio_data)
+                      and entity.media_artist in radio_data.keys() | list
             %}
-              {%- set add_picture = dict(fixed_picture = fixed_picture[entity.media_artist]) %}
-              {%- set additional = dict(additional, **add_picture) %}
+              {%- set add_radio_data = dict(
+                                            entity_picture = radio_data[entity.media_artist].picture,
+                                            media_title = radio_data[entity.media_artist].title
+                                            )
+              %}
+              {%- set additional = dict(additional, **add_radio_data) %}
             {%- endif %}
             {%- set ns.info = ns.info + [ dict(entity, **additional) ] %}
           {%- endfor %}
@@ -626,6 +677,17 @@ google_home_resume:
             entity_id: >
               {{ ytube_music_data | selectattr('target', 'in', players_to_resume) | map(attribute='player') | list }}
             command: interrupt_start
+    - alias: "Create Music Assistant snapshots if needed"
+      if: "{{ mass_playing | count > 0 }}"
+      then:
+        - repeat:
+            for_each: "{{ mass_playing }}"
+            sequence:
+              - service: mass.queue_command
+                data:
+                  command: snapshot_create
+                target:
+                  entity_id: "{{ repeat.item }}"
     - alias: "Perform service calls defined in action"
       repeat:
         for_each: "{{ service_calls }}"
@@ -637,8 +699,6 @@ google_home_resume:
                 {% set d = service_call.get('data', {}).items() | selectattr('0', 'in', ['entity_id', 'area_id', 'device_id']) | list %}
                 {% set t = service_call.get('target', {}).items() | selectattr('0', 'in', ['entity_id', 'area_id', 'device_id']) | list %}
                 {{ dict(s, **dict(t, **dict(d))) }}
-              data: >
-                {{ dict(service_call.get('data', {}).items() | rejectattr('0', 'in', ['entity_id', 'area_id', 'device_id', 'script_extra']) | list) }}
               extra: >
                 {%- set extra =
                           dict(service_call.get('extra', {}).items()
@@ -702,6 +762,14 @@ google_home_resume:
                   and extra.screen_tts is defined
                   and dummy_player is defined and iif(dummy_player)
                 }}
+              data: >
+                {{ dict(service_call.get('data', {}).items() | rejectattr('0', 'in', ['entity_id', 'area_id', 'device_id', 'script_extra']) | list) }}
+          - alias: "Stop all targets which are playing"
+            service: media_player.media_stop
+            target:
+              entity_id: "{{ expand(media_entities) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | list }}"
+          - alias: "Wait until they are all stopped"
+            wait_template: "{{ expand(media_entities) | selectattr('state', 'eq', 'playing') | list | count == 0 }}"
           - alias: "Set volume to TTS volume if set"
             choose:
               - conditions: "{{ volume_set }}"
@@ -739,12 +807,22 @@ google_home_resume:
                     continue_on_error: true
           - service: "{{ service_call.service }}"
             target: >
+              {%- set mass = target_entities | select('in', mass_playing) | list | count > 0 %}
+              {%- if mass %}
+                {%- set ns = namespace(no_mass = []) %}
+                {%- for entity in target_entities %}
+                  {%- set e = entity | replace('.mass_', '.') if entity in mass_playing else entity %}
+                  {%- set ns.no_mass = ns.no_mass + [ e ] %}
+                {%- endfor %}
+                {%- set target_entities = ns.target_no_mass %}
+                {%- set media_entities = target | select('match', '^media_player') | list %}
+              {%- endif %}
               {%- if screen and tts %}
                 {{ dict(entity_id = dummy_player) }}
               {%- elif tts and iif(target.get('area_id', '')) %}
                 {{ dict(entity_id = media_entities) }}
               {%- else %}
-                {{ target }}
+                {{ dict(entity_id = target_entities) if mass else target }}
               {%- endif %}
             data: "{{ data }}"
             continue_on_error: true
@@ -786,6 +864,7 @@ google_home_resume:
                 resume: "{{ repeat.item in players_to_resume }}"
                 ytube_resume: false
                 action_type: resume
+                image_delay: "{{ image_delay if image_delay is defined and image_delay else 20 }}"
     - alias: "Create variable for existing groups"
       variables:
         groups_to_remove: >
@@ -813,7 +892,7 @@ google_home_resume:
 # GOOGLE HOME RESUME HELPER
 
 google_home_resume_helper:
-  alias: "00 🔊 Google Home Resume - Helper Script"
+  alias: "00 - Google Home Resume - Helper Script"
   description: Helper script for the Google Home Resume script
   icon: mdi:cast-audio
   mode: parallel
@@ -821,16 +900,28 @@ google_home_resume_helper:
   sequence:
     - if: "{{ action_type == 'resume' }}"
       then:
+        - variables:
+            image: >
+              {{
+                state_attr(player.entity_id, 'media_content_id') is not none
+                and (
+                      'jpg' in state_attr(player.entity_id, 'media_content_id') | lower
+                      or 'jpeg' in state_attr(player.entity_id, 'media_content_id') | lower
+                      or 'png' in state_attr(player.entity_id, 'media_content_id') | lower
+                    )
+              }}
         - alias: "State changed since script started?"
           wait_template: >
             {{
-              event_script or ytube_resume or
-              (
-                (states[player.entity_id].last_changed > as_datetime(start_time))
-                and expand([player.entity_id] + player.members)
-                      | selectattr('state', 'eq', 'playing')
-                      | list | count > 0
-              )
+              event_script
+              or ytube_resume 
+              or (
+                  (states[player.entity_id].last_changed > as_datetime(start_time))
+                  and expand([player.entity_id] + player.members)
+                        | selectattr('state', 'eq', 'playing')
+                        | list | count > 0
+                )
+              or image
             }}
           timeout: "00:00:30"
         - variables:
@@ -856,9 +947,12 @@ google_home_resume_helper:
             %}
             {%- set checklist = [player.entity_id] + player.members %}
             {{
-              expand(checklist) | rejectattr('state', 'in', ['idle', 'off']) | list | count == 0
+              expand(checklist) | rejectattr('state', 'in', ['idle', 'off', 'paused']) | list | count == 0
               and current | select('eq', player.entity_id) | list | count == 0
             }}
+        - if: "{{ image }}"
+          then:
+            - delay: "{{ image_delay }}"
         - alias: "Restore volume in case volume has changed"
           if: >
             {{ player.volume_level | round(2, default=0) != state_attr(player.entity_id, 'volume_level') | round(2, default=0) }}
@@ -896,6 +990,8 @@ google_home_resume_helper:
                   {{ player.app_name == 'Spotify' }}
                 youtube: >
                   {{ player.app_name in ['YouTube', 'YouTube Music'] }}
+                podcast: >
+                  {{ player.app_name == 'Google Podcasts' }}
                 stream: >
                   {%- set y = ytube_music_data
                               | rejectattr('target', 'in', players_to_resume)
@@ -907,8 +1003,17 @@ google_home_resume_helper:
                     and player.media_content_id.startswith('http')
                     and not player.entity_id in y
                   }}
+                mass: "{{ player.mass_playing if player.mass_playing is defined else false }}"
             - alias: "Resume playing"
               choose:
+                - alias: "Music Assistant?"
+                  conditions: "{{ mass }}"
+                  sequence:
+                    - service: mass.queue_command
+                      data:
+                        command: snapshot_restore
+                      target:
+                        entity_id: "{{ player.mass_sync }}"
                 - alias: "Ytube Music?"
                   conditions: "{{ ytube_music }}"
                   sequence:
@@ -936,11 +1041,7 @@ google_home_resume_helper:
                         entity_id: "{{ player.entity_id }}"
                       data:
                         media_content_type: cast
-                        media_content_id: '
-                          {
-                          "app_name": "youtube",
-                          "media_id": "{{ player.media_content_id }}"
-                          }'
+                        media_content_id: '{{ dict(app_name="youtube", media_id=player.media_content_id) | to_json }}'
                     - alias: "Wait until video is playing"
                       wait_template: >
                         {{
@@ -976,11 +1077,45 @@ google_home_resume_helper:
                         entity_id: "{{ player.entity_id }}"
                       data:
                         seek_position: "{{ player.media_position }}"
+                - alias: "Google Podcast?"
+                  conditions: "{{ podcast }}"
+                  sequence:
+                    - variables:
+                        picture_url: "{{ player.fixed_picture if player.fixed_picture is defined else player.entity_picture }}"
+                        metadata:
+                          metadataType: 3
+                          title: "{{ player.media_title }}"
+                          artist: "{{ player.media_artist }}"
+                        picture:
+                          images:
+                            - url: "{{ picture_url }}"
+                    - alias: "Resume stream"
+                      service: media_player.play_media
+                      target:
+                        entity_id: "{{ player.entity_id }}"
+                      data:
+                        media_content_id: "{{ player.media_content_id }}"
+                        media_content_type: "{{ player.media_content_type }}"
+                        extra:
+                          metadata: >
+                            {{ medadata if picture_url == 'no pic' else dict(metadata, **picture) }}
+                    - alias: "Wait until media_content_id is available"
+                      wait_template: "{{ is_state_attr(player.entity_id, 'media_content_id', player.media_content_id) }}"
+                    - alias: "Play (avoids long delay)"
+                      service: media_player.media_play
+                      target:
+                        entity_id: "{{ player.entity_id }}"
+                    - alias: "Seek"
+                      service: media_player.media_seek
+                      target:
+                        entity_id: "{{ player.entity_id }}"
+                      data:
+                        seek_position: "{{ player.media_position }}"
                 - alias: "Stream?"
                   conditions: "{{ stream }}"
                   sequence:
                     - variables:
-                        picture_url: "{{ player.fixed_picture if player.fixed_picture is defined else player.entity_picture }}"
+                        picture_url: "{{ player.entity_picture }}"
                         metadata:
                           metadataType: 3
                           title: "{{ player.media_title }}"
@@ -1053,6 +1188,7 @@ google_home_resume_helper:
           data:
             media_content_id: "{{ wait.trigger.event.data.service_data.media_content_id }}"
             media_content_type: "music"
+            announce: true
             extra:
               metadata:
                 metadataType: 3
@@ -1060,4 +1196,3 @@ google_home_resume_helper:
                 artist: "{{ small_text }}"
                 images:
                   - url: "{{ picture_url }}"
-
