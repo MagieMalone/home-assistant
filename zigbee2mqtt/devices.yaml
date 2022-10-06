@@ -82,6 +82,7 @@
   friendly_name: '0x000d6f001624f85e'
 '0x0017880102e1e3b4':
   friendly_name: '0x0017880102e1e3b4'
+  legacy: false
 '0x00158d0002b4a1cf':
   friendly_name: studeerkamer
   legacy: false

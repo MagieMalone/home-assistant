@@ -19,16 +19,16 @@ smooth_fader:
     entity_id:
       description: light.entity ; required
     duration:
-      description: '00:00:00' ; required, time under 10 seconds is not advised
+      description:  ¨'00:00:00'  required, time under 10 seconds is not advised¨
     brightness_start:
-      description: 0-255 ; default: current
+      description: 0-255 default current
     brightness_end:
-      description: 0-255 ; default: current
+      description: 0-255 default current
     brightness_curve:
-      description: 'linear' or 'exp2' or 'exp5' or 'smooth' ; default: exp5
+      description:  ¨'linear' or 'exp2' or 'exp5' or 'smooth'  default exp5 ¨
     temperature_start:
-      description: 154-370 ; default: current 
+      description: 154-370  default current 
     temperature_end:
-      description: 154-370 ; default: current
+      description: 154-370 efault current
     temperature_curve:
-      description: 'linear' or 'exp2' or 'exp5' or 'smooth' ; default: exp2
+      description: ¨'linear' or 'exp2' or 'exp5' or 'smooth' default exp2¨

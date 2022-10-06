@@ -1,33 +1,3 @@
-- id: '1608366491394'
-  alias: Motion-activated Light Hal
-  description: ''
-  use_blueprint:
-    path: myown/motion_light_lightlevel.yaml
-    input:
-      motion_entity: binary_sensor.hal_occupancy
-      light_target:
-        entity_id: light.hal
-      threshold_input: input_number.lightlevel
-- id: '1608456934898'
-  alias: Motion-activated Light Lightlevel traphal
-  description: ''
-  use_blueprint:
-    path: myown/motion_light_lightlevel.yaml
-    input:
-      motion_entity: binary_sensor.traphal_occupancy
-      threshold_input: input_number.lightlevel
-      light_target:
-        device_id: e837c327c3614cb3a4b06ec0087b6a43
-- id: '1608456965094'
-  alias: Motion-activated Light Lightlevel overloop
-  description: ''
-  use_blueprint:
-    path: myown/motion_light_lightlevel.yaml
-    input:
-      motion_entity: binary_sensor.overloop_occupancy
-      threshold_input: input_number.lightlevel
-      light_target:
-        device_id: b9ef9bd7da184d988ac72702f6cb2e8a
 - id: '1608714195345'
   alias: aqara studeerkamer
   description: ''
@@ -95,4 +65,30 @@
       message: 'TV unavailable '
       title: 'TV unavailable '
   mode: single
-
+- id: '1664433767950'
+  alias: Motion-activated Light Lightlevel hal
+  description: ''
+  use_blueprint:
+    path: myown/motion_light_lightlevel.yaml
+    input:
+      motion_entity: binary_sensor.hal_occupancy
+      light_entity: light.hal
+      threshold_input: input_number.lightlevel
+- id: '1664434226722'
+  alias: Motion-activated Light Lightlevel overloop
+  description: ''
+  use_blueprint:
+    path: myown/motion_light_lightlevel.yaml
+    input:
+      motion_entity: binary_sensor.overloop_occupancy
+      light_entity: light.overloop
+      threshold_input: input_number.lightlevel
+- id: '1664434460237'
+  alias: Motion-activated Light Lightlevel traphal
+  description: ''
+  use_blueprint:
+    path: myown/motion_light_lightlevel.yaml
+    input:
+      motion_entity: binary_sensor.traphal_occupancy
+      light_entity: light.trap_hal
+      threshold_input: input_number.lightlevel

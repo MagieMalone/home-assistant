@@ -9,12 +9,11 @@ blueprint:
         entity:
           domain: binary_sensor
           device_class: motion
-    light_target:
+    light_entity:
       name: Light
       selector:
-        target:
-          entity:
-            domain: light
+        entity:
+          domain: light
     threshold_input:
       name: Light level input helper
       selector:
@@ -43,10 +42,10 @@ variables:
     {% endif %}
 
 condition:
-- "{{ light_level < light_threshold  }}"
-- condition: state
-  entity_id: input_boolean.cleaningmode
-  state: 'off'
+  - "{{ light_level < light_threshold  }}"
+  - condition: state
+    entity_id: input_boolean.cleaningmode
+    state: "off"
 
 trigger:
   platform: state
@@ -55,15 +54,20 @@ trigger:
 
 action:
   - service: light.turn_on
-    target: !input light_target
+    target: 
+      entity_id: !input light_entity
     data:
-      transition:  2
+      transition: 2
       brightness: "{{ brightness }}"
   - wait_for_trigger:
       platform: state
       entity_id: !input motion_entity
       to: "off"
+  - condition: state
+    entity_id: !input light_entity
+    state: "on"
   - service: light.turn_off
-    target: !input light_target
+    target:
+      entity_id: !input light_entity
     data:
       transition: 5

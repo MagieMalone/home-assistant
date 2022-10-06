@@ -198,7 +198,7 @@ automation:
                     {% if reistijd=='unknown' %} 
                       Het is tijd om naar {{message}} te gaan. De reistijd is onbekend.
                     {% else %}
-                      Het is tijd om naar {{message}} te gaan. De reistijd bedraagt {{ reistijd | int /60 |round }} minuten.
+                      Het is tijd om naar {{message}} te gaan. De reistijd bedraagt {{ reistijd | int }} minuten.
                     {% endif %}
                     {% if is_state('group.windows_kachel', 'on') %}
                       Vergeet niet om de ramen te sluiten

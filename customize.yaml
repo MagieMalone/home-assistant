@@ -84,10 +84,6 @@ sensor.ll4:
   icon: mdi:helicopter
 sensor.google_rtt:
   unit_of_measurement: ms
-sensor.edgeos_interface_eth0_in_kbps:
-  unit_of_measurement: kbps
-sensor.edgeos_interface_eth0_out_kbps:
-  unit_of_measurement: kbps
 light.hue_color_pendant_up_1:
   icon: hue:pendant-long-up
 light.hue_color_pendant_down_1:
