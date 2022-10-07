@@ -10,8 +10,8 @@ template:
         unique_id: "0b341900-6ec5-4ef2-8042-cbc003ebd04a"
         state: "{{state_attr('sun.sun', 'elevation')|float}}"
 
-sensor:
-  - platform: moon
+#sensor:
+#  - platform: moon
 
 input_select:
   sun:
