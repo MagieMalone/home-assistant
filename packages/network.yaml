@@ -11,10 +11,10 @@ template:
       state: "{{state_attr('binary_sensor.google', 'round_trip_time_avg')|float}}"
     - name: "edgeos_interface_eth0_internet_ipv4"
       unique_id: "0f88dc05-1ca4-4293-997b-8ee805b16eb2"
-      state: "{{(state_attr('binary_sensor.edgeos_interface_eth0_internet','Address')|regex_findall(find='([0-9.\/]+), ([0-9:\/a-f]+)', ignorecase=False))[0][0]}}"
+      state: "{{(state_attr('binary_sensor.router_interface_eth0_status','addresses')|regex_findall(find='.([0-9.\/]+)., .([0-9:\/a-f]+).', ignorecase=False))[0][0]}}"
     - name: "edgeos_interface_eth0_internet_ipv6"
       unique_id: "dadec2ee-eafa-4de0-a0db-a3d67afa602a"
-      state: "{{(state_attr('binary_sensor.edgeos_interface_eth0_internet','Address')|regex_findall(find='([0-9.\/]+), ([0-9:\/a-f]+)', ignorecase=False))[0][1]}}"
+      state: "{{(state_attr('binary_sensor.router_interface_eth0_status','addresses')|regex_findall(find='.([0-9.\/]+)., .([0-9:\/a-f]+).', ignorecase=False))[0][1]}}"
 automation:
   - alias: "ipv4_changed"
     id: "548892fc-7da0-43d1-9e71-8465dd803fbf"

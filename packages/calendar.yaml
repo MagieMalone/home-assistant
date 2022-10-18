@@ -275,6 +275,10 @@ automation:
           - condition: state
             entity_id: input_select.arnoud_status
             state: "Net Thuis"
+      - condition: state
+        entity_id:
+          - schedule.f1_announce
+        state: "on"
     action:
       - alias: "Send TTS using Google Home Resume script"
         service: script.turn_on
