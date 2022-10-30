@@ -1,0 +1,307 @@
+
+
+template:
+  - sensor:
+    - name: "w1k3f8hb2pv155037_tire_pressure_rear_left"
+      state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_tire_warning', 'tirepressureRearLeft' )}}"
+      unique_id: "5b2a9fb9-3327-4909-b090-b8aac0899577"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_tire_pressure_rear_right"
+      state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_tire_warning', 'tirepressureRearRight' )}}"
+      unique_id: "119380a9-09c4-428c-959a-30057ebf5a36"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_tire_pressure_front_left"
+      state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_tire_warning', 'tirepressureFrontLeft' )}}"
+      unique_id: "c0051521-8db8-4a55-b15c-06b081cc2268"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_tire_pressure_front_right"
+      state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_tire_warning', 'tirepressureFrontRight' )}}"
+      unique_id: "4f7d403d-fbd4-4ae1-a53d-0c00ea6cbb23"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_park_brake_wear"
+      unique_id: "ca51ddc4-fece-4c7a-9726-542c69b00b11"
+      state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_park_brake_status', 'preWarningBrakeLiningWear') }}"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_ecoscoreaccel"
+      unique_id: "a40f0d5d-57a4-4113-aeb0-d11a0ee75836"
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'ecoscoreaccel') | float }}"
+      unit_of_measurement: "%"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_ecoscorefreewhl"
+      unique_id: "f0ed2745-79ae-441a-b553-473f5e0d7791"
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'ecoscorefreewhl') | float }}"
+      unit_of_measurement: "%"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_ecoscoreconst"
+      unique_id: "75d058df-db38-4963-a27e-71cffdb1e12f"
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'ecoscoreconst') | float }}"
+      unit_of_measurement: "%"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_liquidconsumptionstart"
+      unique_id: "7f0e39c5-9d5d-4252-b352-bc4d4254963a"
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'liquidconsumptionreset') | float }}"
+      unit_of_measurement: "l/100 Km"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_averagespeedstart"
+      unique_id: ""
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'averageSpeedStart') | float }}"
+      unit_of_measurement: "Km/h"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_distancestart"
+      unique_id: "1c926f8c-eb39-4c43-916a-425bf350daa4"
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'distanceStart') | float }}"
+      unit_of_measurement: "Km"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_drivenytimestart"
+      unique_id: "34176b79-a8ac-449e-9198-190354920378"
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'drivenTimeStart') }}"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_rangeliquid"
+      unique_id: "d1977046-dc33-42e9-93aa-398853b0f79a"
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'rangeliquid') | float }}"
+      unit_of_measurement: "Km"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_lock_status"
+      unique_id: "08ea6481-1248-4b28-9db2-ee67ed34c9d1"
+      state: >-
+        {% if is_state('sensor.w1k3f8hb2pv155037_lock', '0') %}
+          Open
+        {% elif is_state('sensor.w1k3f8hb2pv155037_lock', '1') %}
+          Intern vergrendeld
+        {% elif is_state('sensor.w1k3f8hb2pv155037_lock', '2') %}
+          Extern vergrendeld
+        {% elif is_state('sensor.w1k3f8hb2pv155037_lock', '3') %}
+          Selectief ontgrendeld
+        {% else %}
+          Onbekend
+        {% endif %}
+      icon: >
+        {% if is_state('sensor.w1k3f8hb2pv155037_lock', '0') %}
+          mdi:lock-open-variant-outline
+        {% else %}
+          mdi:lock-outline
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_serviceintervaldays"
+      unique_id: "2e113082-7dad-4c25-ad75-7905870a30c0"
+      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'serviceintervaldays') | int }}"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+      ## Door status
+    - name: "w1k3f8hb2pv155037_door_open_rearleft"
+      unique_id: "1d8274b7-1e44-45b1-979a-5d9866f1e8af"
+      state: "{{state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorstatusrearleft')}}"
+      icon: "mdi:car-door"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_door_open_rearright"
+      unique_id: "fff23bbf-f829-46d1-b1f8-2958c3d09572"
+      state: "{{state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorstatusrearright')}}"
+      icon: "mdi:car-door"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_door_open_frontright"
+      unique_id: "1f08dc1b-dd88-4d2f-82ac-f7725eab46af"
+      state: "{{state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorstatusfrontright')}}"
+      icon: "mdi:car-door"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_door_open_frontleft"
+      unique_id: "c162c911-6162-42ed-bf2c-c491f6a87780"
+      state: "{{state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorstatusfrontleft')}}"
+      icon: "mdi:car-door"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_door_open_deck"
+      unique_id: "56b733d6-12c2-4627-ab1f-af48d6e86bbf"
+      state: "{{state_attr('sensor.w1k3f8hb2pv155037_lock', 'decklidstatus')}}"
+      icon: "mdi:car-door"
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_door_open_hood"
+      unique_id: "e3bd6a7f-816f-4e33-a6a7-d2d4e731ec63"
+      state: "{{state_attr('sensor.w1k3f8hb2pv155037_lock', 'engineHoodStatus')}}"
+      icon: >
+        {%if state_attr("sensor.w1k3f8hb2pv155037_lock", "engineHoodStatus") %}
+          "mdi:car-door"
+        {% else %}
+          "mdi:none"
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+      ### locks
+    - name: "w1k3f8hb2pv155037_lock_front_right"
+      unique_id: "dd1286d3-5859-4401-a170-307b13f977f7"
+      state: >-
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusfrontright', false)%}
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusfrontright', false)%}
+          mdi:lock-outline
+        {% else %} 
+          mdi:lock-open-variant-outline
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_lock_front_left"
+      unique_id: "6d8d5344-5d7f-4047-bcf7-caa6f979ae15"
+      state: >-
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusfrontleft', false)%}
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusfrontleft', false)%}
+          mdi:lock-outline
+        {% else %} 
+          mdi:lock-open-variant-outline
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_lock_rear_right"
+      unique_id: "ffadaf22-7dc1-4f1c-a850-5d97c8d9f3dd"
+      state: >-
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusrearright', false)%}
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusrearright', false)%}
+          mdi:lock-outline
+        {% else %} 
+          mdi:lock-open-variant-outline
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_lock_rear_left"
+      unique_id: "d95a9adf-011a-4699-b102-5c1794a11a6f"
+      state: >-
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusrearleft', false)%}
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusrearleft', false)%}
+          mdi:lock-outline
+        {% else %} 
+          mdi:lock-open-variant-outline
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_lock_trunk"
+      unique_id: "0c1cb4cf-4e91-4570-bcd3-cd00f63c2193"
+      state: >-
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusdecklid', false)%} 
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusdecklid', false)%} 
+          mdi:lock-outline
+        {% else %}
+          mdi:lock-open-variant-outline
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_lock_gas"
+      unique_id: "3fe5ebbc-9d27-4a8e-ab71-98df4aedb4e5"
+      state: >-
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusgas', false)%} 
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('sensor.w1k3f8hb2pv155037_lock', 'doorlockstatusgas', false)%} 
+          mdi:lock-outline
+        {% else %}
+          mdi:lock-open-variant-outline
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+      ## windows
+    - name: "w1k3f8hb2pv155037_window_front_left"
+      unique_id: "9d7d4a1c-548f-4bbd-b96e-787829e61626"
+      state: >-
+        {% if is_state_attr('binary_sensor.w1k3f8hb2pv155037_windows_closed', 'windowstatusfrontleft', '2')%} 
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('binary_sensor.w1k3f8hb2pv155037_windows_closed', 'windowstatusfrontleft', '2')%} 
+          mdi:window-closed
+        {% else %}
+          mdi:window-open
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_window_front_right"
+      unique_id: "620df868-4cba-4c6b-8820-d78a5472d567"
+      state: >-
+        {% if is_state_attr('binary_sensor.w1k3f8hb2pv155037_windows_closed', 'windowstatusfrontright', '2')%} 
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('binary_sensor.w1k3f8hb2pv155037_windows_closed', 'windowstatusfrontright', '2')%} 
+          mdi:window-closed
+        {% else %}
+          mdi:window-open
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_window_rear_left"
+      unique_id: "d3b568a8-dd14-4780-bbcb-24ea01c27da1"
+      state: >-
+        {% if is_state_attr('binary_sensor.w1k3f8hb2pv155037_windows_closed', 'windowstatusrearleft', '2')%} 
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('binary_sensor.w1k3f8hb2pv155037_windows_closed', 'windowstatusrearleft', '2')%} 
+          mdi:window-closed
+        {% else %}
+          mdi:window-open
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"
+    - name: "w1k3f8hb2pv155037_window_rear_right"
+      unique_id: "3b65f218-240d-44ca-8608-6255b4193404"
+      state: >-
+        {% if is_state_attr('binary_sensor.w1k3f8hb2pv155037_windows_closed', 'windowstatusrearright', '2')%} 
+            Closed
+        {% else %}
+            Open
+        {% endif %}
+      icon: >
+        {% if is_state_attr('binary_sensor.w1k3f8hb2pv155037_windows_closed', 'windowstatusrearright', '2')%} 
+          mdi:window-closed
+        {% else %}
+          mdi:window-open
+        {% endif %}
+      attributes:
+        vin: "W1K3F8HB2PV155037"

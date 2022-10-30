@@ -1,139 +1,139 @@
-- id: "1575027586508"
+- id: '1575027586508'
   name: film
   entities:
     light.computer:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       friendly_name: Computer
       supported_features: 63
-      state: "off"
+      state: 'off'
     light.hal:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       friendly_name: Hal
       supported_features: 63
-      state: "off"
+      state: 'off'
     light.hue_lightstrip_plus_1:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 79
       hs_color:
-        - 288.932
-        - 80.784
+      - 288.932
+      - 80.784
       rgb_color:
-        - 217
-        - 49
-        - 255
+      - 217
+      - 49
+      - 255
       xy_color:
-        - 0.334
-        - 0.141
+      - 0.334
+      - 0.141
       effect: none
       friendly_name: Hue lightstrip plus 1
       supported_features: 63
-      state: "on"
+      state: 'on'
     light.keuken_1:
       min_mireds: 200
       max_mireds: 454
       friendly_name: keuken 1
       supported_features: 43
-      state: "off"
+      state: 'off'
     light.keuken_2:
       min_mireds: 200
       max_mireds: 454
       friendly_name: keuken 2
       supported_features: 43
-      state: "off"
+      state: 'off'
     light.keuken_3:
       min_mireds: 200
       max_mireds: 454
       friendly_name: keuken 3
       supported_features: 43
-      state: "off"
+      state: 'off'
     light.overloop:
       min_mireds: 200
       max_mireds: 454
       friendly_name: overloop
       supported_features: 43
-      state: "off"
+      state: 'off'
     light.sk_ceiling:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       friendly_name: sk_ceiling
       supported_features: 63
-      state: "off"
+      state: 'off'
     light.staande_lamp:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 88
       color_temp: 333
       effect: none
       friendly_name: Staande lamp
       supported_features: 63
-      state: "on"
+      state: 'on'
     light.trap_hal:
       min_mireds: 200
       max_mireds: 454
       friendly_name: trap-hal
       supported_features: 43
-      state: "off"
+      state: 'off'
     light.hue_color_pendant_down_1:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 51
       color_temp: 449
       effect: none
       friendly_name: Hue color pendant down 1
       supported_features: 63
-      state: "on"
+      state: 'on'
     light.hue_color_pendant_up_1:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 128
       hs_color:
-        - 283.949
-        - 61.569
+      - 283.949
+      - 61.569
       rgb_color:
-        - 212
-        - 97
-        - 255
+      - 212
+      - 97
+      - 255
       xy_color:
-        - 0.321
-        - 0.163
+      - 0.321
+      - 0.163
       effect: none
       friendly_name: Hue color pendant up 1
       supported_features: 63
-      state: "on"
+      state: 'on'
     climate.toon_thermostat:
       hvac_modes:
-        - heat
+      - heat
       min_temp: 6
       max_temp: 30
       preset_modes:
-        - away
-        - comfort
-        - home
-        - sleep
+      - away
+      - comfort
+      - home
+      - sleep
       current_temperature: 15
       temperature: 18
       hvac_action: idle
@@ -146,89 +146,89 @@
     input_boolean.cleaningmode:
       editable: false
       friendly_name: cleaning mode
-      state: "off"
+      state: 'off'
   icon: mdi:filmstrip
-- id: "1609945255056"
+- id: '1609945255056'
   name: Slapen
   entities:
     light.eetkamer:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       entity_id:
-        - light.hue_color_pendant_down_1
-        - light.hue_color_pendant_up_1
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
       friendly_name: eetkamer
       icon: mdi:lightbulb-group
       supported_features: 63
-      state: "off"
+      state: 'off'
     light.keuken:
       min_mireds: 200
       max_mireds: 454
       entity_id:
-        - light.keuken_1
-        - light.keuken_2
-        - light.keuken_3
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
       friendly_name: keuken
       icon: mdi:lightbulb-group
       supported_features: 43
-      state: "off"
+      state: 'off'
     light.sk_spot:
       min_mireds: 200
       max_mireds: 454
       entity_id:
-        - light.sk_duo_spot_1
-        - light.sk_duo_spot_2
+      - light.sk_duo_spot_1
+      - light.sk_duo_spot_2
       friendly_name: sk_spot
       icon: mdi:lightbulb-group
       supported_features: 43
-      state: "off"
+      state: 'off'
     light.woonkamer:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       entity_id:
-        - light.hue_lightstrip_plus_1
-        - light.staande_lamp
+      - light.hue_lightstrip_plus_1
+      - light.staande_lamp
       friendly_name: woonkamer
       icon: mdi:lightbulb-group
       supported_features: 63
-      state: "off"
+      state: 'off'
     light.sk_ceiling:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 33
       color_temp: 500
       effect: none
       friendly_name: sk_ceiling
       supported_features: 63
-      state: "on"
+      state: 'on'
     light.computer:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       friendly_name: Computer
       supported_features: 63
-      state: "off"
+      state: 'off'
     climate.toon_thermostat:
       hvac_modes:
-        - heat
+      - heat
       min_temp: 6
       max_temp: 30
       preset_modes:
-        - away
-        - comfort
-        - home
-        - sleep
+      - away
+      - comfort
+      - home
+      - sleep
       current_temperature: 15
       temperature: 15
       hvac_action: idle
@@ -241,61 +241,61 @@
     switch.media_group:
       friendly_name: media_group
       supported_features: 40
-      state: "off"
+      state: 'off'
     input_select.house_mode:
       options:
-        - weg
-        - overdag
-        - avond
-        - nacht
+      - weg
+      - overdag
+      - avond
+      - nacht
       editable: false
       friendly_name: House
       state: nacht
     input_boolean.cleaningmode:
       editable: false
       friendly_name: cleaning mode
-      state: "off"
+      state: 'off'
   icon: mdi:bed-outline
-- id: "1610030266385"
+- id: '1610030266385'
   name: away
   entities:
     light.lampen:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       entity_id:
-        - light.hue_lightstrip_plus_1
-        - light.staande_lamp
-        - light.hue_color_pendant_down_1
-        - light.hue_color_pendant_up_1
-        - light.computer
-        - light.hal
-        - light.zoldervoor
-        - light.zolderachter
-        - light.sk_ceiling
-        - light.sk_duo_spot_1
-        - light.sk_duo_spot_2
-        - light.overloop
-        - light.keuken_1
-        - light.keuken_2
-        - light.keuken_3
-        - light.trap_hal
+      - light.hue_lightstrip_plus_1
+      - light.staande_lamp
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
+      - light.computer
+      - light.hal
+      - light.zoldervoor
+      - light.zolderachter
+      - light.sk_ceiling
+      - light.sk_duo_spot_1
+      - light.sk_duo_spot_2
+      - light.overloop
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+      - light.trap_hal
       friendly_name: lampen
       icon: mdi:lightbulb-group
       supported_features: 63
-      state: "off"
+      state: 'off'
     climate.toon_thermostat:
       hvac_modes:
-        - heat
+      - heat
       min_temp: 6
       max_temp: 30
       preset_modes:
-        - away
-        - comfort
-        - home
-        - sleep
+      - away
+      - comfort
+      - home
+      - sleep
       current_temperature: 15
       temperature: 15
       hvac_action: idle
@@ -307,19 +307,19 @@
       state: heat
     switch.esspresso:
       linkquality: 0
-      state: "off"
+      state: 'off'
       update_available: false
       friendly_name: Esspresso
     switch.media_group:
       friendly_name: media_group
       supported_features: 40
-      state: "off"
+      state: 'off'
     input_boolean.cleaningmode:
       editable: false
       friendly_name: cleaning mode
-      state: "off"
+      state: 'off'
   icon: mdi:arrow-right-bold-outline
-- id: "1610030364128"
+- id: '1610030364128'
   name: koken
   entities:
     light.keuken:
@@ -328,118 +328,118 @@
       brightness: 255
       color_temp: 201
       entity_id:
-        - light.keuken_1
-        - light.keuken_2
-        - light.keuken_3
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
       friendly_name: keuken
       icon: mdi:lightbulb-group
       supported_features: 43
-      state: "on"
+      state: 'on'
     input_boolean.cleaningmode:
       editable: false
       friendly_name: cleaning mode
-      state: "off"
+      state: 'off'
   icon: mdi:stove
-- id: "1610030777991"
+- id: '1610030777991'
   name: eten
   entities:
     light.hue_color_pendant_down_1:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 128
       color_temp: 449
       effect: none
       friendly_name: Hue color pendant down 1
       supported_features: 63
-      state: "on"
+      state: 'on'
     light.hue_color_pendant_up_1:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 128
       hs_color:
-        - 284.815
-        - 63.529
+      - 284.815
+      - 63.529
       rgb_color:
-        - 214
-        - 93
-        - 255
+      - 214
+      - 93
+      - 255
       xy_color:
-        - 0.324
-        - 0.161
+      - 0.324
+      - 0.161
       effect: none
       friendly_name: Hue color pendant up 1
       supported_features: 63
-      state: "on"
+      state: 'on'
     light.keuken:
       min_mireds: 200
       max_mireds: 454
       brightness: 38
       color_temp: 387
       entity_id:
-        - light.keuken_1
-        - light.keuken_2
-        - light.keuken_3
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
       friendly_name: keuken
       icon: mdi:lightbulb-group
       supported_features: 43
-      state: "on"
+      state: 'on'
     light.hue_lightstrip_plus_1:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 52
       hs_color:
-        - 289.194
-        - 82.745
+      - 289.194
+      - 82.745
       rgb_color:
-        - 216
-        - 44
-        - 255
+      - 216
+      - 44
+      - 255
       xy_color:
-        - 0.333
-        - 0.139
+      - 0.333
+      - 0.139
       effect: none
       friendly_name: Hue lightstrip plus 1
       supported_features: 63
-      state: "on"
+      state: 'on'
     light.staande_lamp:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 88
       color_temp: 333
       effect: none
       friendly_name: Staande lamp
       supported_features: 63
-      state: "on"
+      state: 'on'
     input_boolean.cleaningmode:
       editable: false
       friendly_name: cleaning mode
-      state: "off"
+      state: 'off'
   icon: mdi:food
-- id: "1610086746819"
+- id: '1610086746819'
   name: day
   entities:
     climate.toon_thermostat:
       hvac_modes:
-        - heat
+      - heat
       min_temp: 6
       max_temp: 30
       preset_modes:
-        - away
-        - comfort
-        - home
-        - sleep
+      - away
+      - comfort
+      - home
+      - sleep
       current_temperature: 15
       temperature: 18
       hvac_action: idle
@@ -451,194 +451,414 @@
       state: heat
     input_select.house_mode:
       options:
-        - weg
-        - overdag
-        - avond
-        - nacht
+      - weg
+      - overdag
+      - avond
+      - nacht
       editable: false
       friendly_name: House
       state: overdag
     input_boolean.cleaningmode:
       editable: false
       friendly_name: cleaning mode
-      state: "off"
+      state: 'off'
   icon: mdi:home-outline
-- id: "1610087070587"
+- id: '1610087070587'
   name: Avond
   entities:
-    light.computer:
-      min_mireds: 153
-      max_mireds: 500
-      effect_list:
-        - colorloop
-        - random
-      friendly_name: Computer
-      supported_features: 63
-      state: "off"
     light.hue_color_pendant_down_1:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
-      brightness: 115
-      color_temp: 449
-      effect: none
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
       friendly_name: Hue color pendant down 1
-      supported_features: 63
-      state: "on"
+      supported_features: 44
+      icon: hue:pendant-long
+      color_mode: color_temp
+      brightness: 118
+      hs_color:
+      - 29.702
+      - 83.435
+      rgb_color:
+      - 255
+      - 147
+      - 42
+      xy_color:
+      - 0.576
+      - 0.388
+      effect: None
+      color_temp: 449
+      state: 'on'
     light.hue_color_pendant_up_1:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
-      brightness: 166
-      hs_color:
-        - 283.846
-        - 61.176
-      rgb_color:
-        - 212
-        - 99
-        - 255
-      xy_color:
-        - 0.32
-        - 0.165
-      effect: none
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
       friendly_name: Hue color pendant up 1
-      supported_features: 63
-      state: "on"
+      supported_features: 44
+      icon: hue:pendant-long-up
+      color_mode: xy
+      brightness: 138
+      hs_color:
+      - 283.137
+      - 60
+      rgb_color:
+      - 212
+      - 102
+      - 255
+      xy_color:
+      - 0.32
+      - 0.165
+      effect: None
+      state: 'on'
     light.hue_lightstrip_plus_1:
       min_mireds: 153
       max_mireds: 500
-      effect_list:
-        - colorloop
-        - random
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Hue lightstrip plus 1
+      supported_features: 40
+      icon: hue:lightstrip
+      color_mode: xy
       brightness: 85
       hs_color:
-        - 288.955
-        - 78.824
+      - 288.485
+      - 77.647
       rgb_color:
-        - 217
-        - 53
-        - 255
+      - 217
+      - 57
+      - 255
       xy_color:
-        - 0.333
-        - 0.142
-      effect: none
-      friendly_name: Hue lightstrip plus 1
-      supported_features: 63
-      state: "on"
+      - 0.333
+      - 0.142
+      state: 'on'
     light.staande_lamp:
       min_mireds: 153
       max_mireds: 500
-      effect_list:
-        - colorloop
-        - random
-      brightness: 88
-      color_temp: 368
-      effect: none
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: color_temp
+      brightness: 103
+      hs_color:
+      - 28.358
+      - 65.183
+      rgb_color:
+      - 255
+      - 167
+      - 88
+      xy_color:
+      - 0.524
+      - 0.388
+      mode: normal
+      dynamics: none
       friendly_name: Staande lamp
-      supported_features: 63
-      state: "on"
+      supported_features: 40
+      icon: hue:floor-shade
+      color_temp: 368
+      state: 'on'
     climate.toon_thermostat:
       hvac_modes:
-        - heat
+      - heat
       min_temp: 6
       max_temp: 30
       preset_modes:
-        - away
-        - comfort
-        - home
-        - sleep
-      current_temperature: 15
+      - away
+      - comfort
+      - home
+      - sleep
+      current_temperature: 19.5
       temperature: 15
       hvac_action: idle
       preset_mode: comfort
       heating_type: GAS
-      friendly_name: Thermostat
       icon: mdi:thermostat
+      friendly_name: Thermostat
       supported_features: 17
       state: heat
     input_select.house_mode:
       options:
-        - weg
-        - overdag
-        - avond
-        - nacht
+      - weg
+      - overdag
+      - avond
+      - nacht
       editable: false
       friendly_name: House
       state: avond
     light.keuken:
       min_mireds: 200
       max_mireds: 454
+      supported_color_modes:
+      - color_temp
       entity_id:
-        - light.keuken_1
-        - light.keuken_2
-        - light.keuken_3
-      friendly_name: keuken
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
       icon: mdi:lightbulb-group
-      supported_features: 43
-      state: "off"
+      friendly_name: keuken
+      supported_features: 40
+      state: 'off'
     input_boolean.cleaningmode:
       editable: false
       friendly_name: cleaning mode
-      state: "off"
+      state: 'off'
   icon: mdi:weather-night
-- id: "1610087742225"
+  metadata: {}
+- id: '1610087742225'
   name: clean
   entities:
     light.color:
       min_mireds: 153
       max_mireds: 500
       effect_list:
-        - colorloop
-        - random
+      - colorloop
+      - random
       brightness: 255
       hs_color:
-        - 0
-        - 0.392
+      - 0
+      - 0.392
       rgb_color:
-        - 255
-        - 254
-        - 254
+      - 255
+      - 254
+      - 254
       xy_color:
-        - 0.324
-        - 0.329
+      - 0.324
+      - 0.329
       effect: none
       entity_id:
-        - light.hue_lightstrip_plus_1
-        - light.staande_lamp
-        - light.hue_color_pendant_down_1
-        - light.hue_color_pendant_up_1
-        - light.computer
-        - light.hal
-        - light.zoldervoor
-        - light.zolderachter
-        - light.sk_ceiling
+      - light.hue_lightstrip_plus_1
+      - light.staande_lamp
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
+      - light.computer
+      - light.hal
+      - light.zoldervoor
+      - light.zolderachter
+      - light.sk_ceiling
       friendly_name: color
       icon: mdi:lightbulb-group
       supported_features: 63
-      state: "on"
+      state: 'on'
     light.whites:
       min_mireds: 200
       max_mireds: 454
       brightness: 255
       color_temp: 200
       entity_id:
-        - light.sk_duo_spot_1
-        - light.sk_duo_spot_2
-        - light.overloop
-        - light.keuken_1
-        - light.keuken_2
-        - light.keuken_3
-        - light.trap_hal
+      - light.sk_duo_spot_1
+      - light.sk_duo_spot_2
+      - light.overloop
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+      - light.trap_hal
       friendly_name: whites
       icon: mdi:lightbulb-group
       supported_features: 43
-      state: "on"
+      state: 'on'
     input_boolean.cleaningmode:
       editable: false
       friendly_name: cleaning mode
-      state: "on"
+      state: 'on'
   icon: mdi:spray-bottle
+- id: '1667070373475'
+  name: Astro
+  entities:
+    light.computer:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Computer
+      supported_features: 40
+      color_mode: xy
+      brightness: 28
+      hs_color:
+      - 10.118
+      - 100
+      rgb_color:
+      - 255
+      - 43
+      - 0
+      xy_color:
+      - 0.6915
+      - 0.3083
+      state: 'on'
+    light.hue_color_pendant_down_1:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Hue color pendant down 1
+      supported_features: 44
+      icon: hue:pendant-long
+      color_mode: xy
+      brightness: 64
+      hs_color:
+      - 10.118
+      - 100
+      rgb_color:
+      - 255
+      - 43
+      - 0
+      xy_color:
+      - 0.6915
+      - 0.3083
+      effect: None
+      state: 'on'
+    light.hue_color_pendant_up_1:
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Hue color pendant up 1
+      supported_features: 44
+      icon: hue:pendant-long-up
+      color_mode: xy
+      brightness: 41
+      hs_color:
+      - 10.118
+      - 100
+      rgb_color:
+      - 255
+      - 43
+      - 0
+      xy_color:
+      - 0.6915
+      - 0.3083
+      effect: None
+      state: 'on'
+    light.overloop:
+      min_mireds: 200
+      max_mireds: 454
+      supported_color_modes:
+      - color_temp
+      mode: normal
+      dynamics: none
+      friendly_name: overloop
+      supported_features: 40
+      icon: hue:ceiling-round
+      color_mode: color_temp
+      brightness: 3
+      color_temp: 454
+      hs_color:
+      - 29.79
+      - 84.553
+      rgb_color:
+      - 255
+      - 146
+      - 39
+      xy_color:
+      - 0.579
+      - 0.388
+      state: 'on'
+    light.staande_lamp:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - xy
+      color_mode: xy
+      brightness: 64
+      hs_color:
+      - 15.178
+      - 99.216
+      rgb_color:
+      - 255
+      - 66
+      - 2
+      xy_color:
+      - 0.677
+      - 0.319
+      mode: normal
+      dynamics: none
+      friendly_name: Staande lamp
+      supported_features: 40
+      icon: hue:floor-shade
+      state: 'on'
+    light.trap_hal:
+      min_mireds: 200
+      max_mireds: 454
+      supported_color_modes:
+      - color_temp
+      mode: normal
+      dynamics: none
+      friendly_name: trap-hal
+      supported_features: 40
+      icon: hue:ceiling-round
+      color_mode: color_temp
+      brightness: 1
+      color_temp: 454
+      hs_color:
+      - 29.79
+      - 84.553
+      rgb_color:
+      - 255
+      - 146
+      - 39
+      xy_color:
+      - 0.579
+      - 0.388
+      state: 'on'
+    light.hue_lightstrip_plus_1:
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - xy
+      mode: normal
+      dynamics: none
+      friendly_name: Hue lightstrip plus 1
+      supported_features: 40
+      icon: hue:lightstrip
+      state: 'off'
+  icon: mdi:star
+  metadata:
+    light.computer:
+      entity_only: true
+    light.hue_color_pendant_down_1:
+      entity_only: true
+    light.hue_color_pendant_up_1:
+      entity_only: true
+    light.overloop:
+      entity_only: true
+    light.staande_lamp:
+      entity_only: true
+    light.trap_hal:
+      entity_only: true
+    light.hue_lightstrip_plus_1:
+      entity_only: true

@@ -8,8 +8,9 @@ homeassistant:
 
 #logger
 logger:
-  default: info
-#  logs:
+  default: warning
+  logs:
+    custom_components.edgeos: debug
     #    homeassistant.components: warn
     #    homeassistant.components.device_tracker: debug
     #    homeassistant.components.sensor.buienradar: debug
