@@ -50,12 +50,23 @@ automation:
         data:
           title: "IPv4 address changed"
           message: "Internet address changed from {{trigger.from_state.state}} to {{trigger.to_state.state}}"
+  - alias: "reload-edgeos"
+    id: "a2c7f335-8592-4a50-8b64-148a8abf20c6"
+    trigger:
+      - platform: time
+        at: "00:30:00"
+    action:
+      - service: homeassistant.reload_config_entry
+        data: {}
+        target:
+          device_id: b9556a2f1c64b248f6d110346db789d6
+
 sensor:
   - platform: snmp
     name: "esxi cpu 1"
     baseoid: 1.3.6.1.2.1.25.3.3.1.2.1
     unique_id: "75e6a7bc-5c28-4f00-af0b-f4509327aedb"
-    host: 192.168.1.32
+    host: 192.168.3.4
     auth_key: !secret esxi_snmp_key
     auth_protocol: hmac-sha
     priv_key: !secret esxi_snmp_key
@@ -71,7 +82,7 @@ sensor:
     name: "esxi cpu 2"
     baseoid: 1.3.6.1.2.1.25.3.3.1.2.2
     unique_id: "cc95cbe4-af1b-47e4-ad4c-23eb6a54d652"
-    host: 192.168.1.32
+    host: 192.168.3.4
     auth_key: !secret esxi_snmp_key
     auth_protocol: hmac-sha
     priv_key: !secret esxi_snmp_key
@@ -87,7 +98,7 @@ sensor:
     name: "esxi cpu 3"
     baseoid: 1.3.6.1.2.1.25.3.3.1.2.3
     unique_id: "56469141-371d-4ac0-b70a-950f7dcaa05c"
-    host: 192.168.1.32
+    host: 192.168.3.4
     auth_key: !secret esxi_snmp_key
     auth_protocol: hmac-sha
     priv_key: !secret esxi_snmp_key
@@ -103,12 +114,76 @@ sensor:
     name: "esxi cpu 4"
     baseoid: 1.3.6.1.2.1.25.3.3.1.2.4
     unique_id: "ce70b7bd-d7a5-4b3a-bad0-8b3c4dd5ee0d"
-    host: 192.168.1.32
+    host: 192.168.3.4
     auth_key: !secret esxi_snmp_key
     auth_protocol: hmac-sha
     priv_key: !secret esxi_snmp_key
     priv_protocol: aes-cfb-128
     username: !secret esxi_snmp_user
+    version: "3"
+    unit_of_measurement: "%"
+    accept_errors: true
+    default_value: 0
+    icon: "mdi:cpu-64-bit"
+
+  - platform: snmp
+    name: "edgeos cpu 1"
+    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196608
+    unique_id: "d3f4cee1-fc9a-48b6-b038-5cdd48f3eb6d"
+    host: 192.168.3.1
+    auth_key: !secret edgeos_snmp_key
+    auth_protocol: hmac-sha
+    priv_key: !secret edgeos_snmp_key
+    priv_protocol: aes-cfb-128
+    username: !secret edgeos_snmp_user
+    version: "3"
+    unit_of_measurement: "%"
+    accept_errors: true
+    default_value: 0
+    icon: "mdi:cpu-64-bit"
+
+  - platform: snmp
+    name: "edgeos cpu 2"
+    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196609
+    unique_id: ""
+    host: 192.168.3.1
+    auth_key: !secret edgeos_snmp_key
+    auth_protocol: hmac-sha
+    priv_key: !secret edgeos_snmp_key
+    priv_protocol: aes-cfb-128
+    username: !secret edgeos_snmp_user
+    version: "3"
+    unit_of_measurement: "%"
+    accept_errors: true
+    default_value: 0
+    icon: "mdi:cpu-64-bit"
+
+  - platform: snmp
+    name: "edgeos cpu 3"
+    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196610
+    unique_id: "524f06c2-75df-48f0-85f2-1ebf496f94dc"
+    host: 192.168.3.1
+    auth_key: !secret edgeos_snmp_key
+    auth_protocol: hmac-sha
+    priv_key: !secret edgeos_snmp_key
+    priv_protocol: aes-cfb-128
+    username: !secret edgeos_snmp_user
+    version: "3"
+    unit_of_measurement: "%"
+    accept_errors: true
+    default_value: 0
+    icon: "mdi:cpu-64-bit"
+
+  - platform: snmp
+    name: "edgeos cpu 4"
+    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196611
+    unique_id: "bae11c03-95f0-46c8-be38-91b3de540ffb"
+    host: 192.168.3.1
+    auth_key: !secret edgeos_snmp_key
+    auth_protocol: hmac-sha
+    priv_key: !secret edgeos_snmp_key
+    priv_protocol: aes-cfb-128
+    username: !secret edgeos_snmp_user
     version: "3"
     unit_of_measurement: "%"
     accept_errors: true
