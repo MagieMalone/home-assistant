@@ -17,6 +17,10 @@ template:
       unique_id: "a985bff2-d76f-4e9c-81a2-2fbe01e82ec4"
       state: "{{state_attr('sensor.esxi_vmhost_localhost_local_foto_album_com', 'memusage_gb')|float}}"
       unit_of_measurement: "GB"
+    - name: "esxi_disk_used"
+      unique_id: "cc833e94-1fa0-43b0-b81e-cba39a97b700"
+      state: "{{(state_attr('sensor.esxi_datastore_main', 'total_space_gb') - state_attr('sensor.esxi_datastore_main', 'free_space_gb'))|int }}"
+      unit_of_measurement: "GB"
     - name: "edgeos_interface_eth0_internet_ipv4"
       unique_id: "0f88dc05-1ca4-4293-997b-8ee805b16eb2"
       state: >
