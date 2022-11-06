@@ -63,7 +63,7 @@ automation:
       - service: homeassistant.reload_config_entry
         data: {}
         target:
-          device_id: b9556a2f1c64b248f6d110346db789d6
+          device_id: a22c03e9fff39036212524820e2f68b5
 
 sensor:
   - platform: snmp

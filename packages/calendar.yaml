@@ -45,7 +45,7 @@ template:
       - name: cal_location
         unique_id: "77f75bb5-7cee-4eb1-b423-da10ab4f6b3e"
         state: >
-          {% if is_state_attr('calendar.abuurmangmailcom', 'location', '') or is_state_attr('calendar.abuurmangmailcom', 'location', 'unknown') %}
+          {% if is_state_attr('calendar.abuurmangmailcom', 'location', '') or is_state_attr('calendar.abuurmangmailcom', 'location', 'Unknown') %}
             {{states('input_text.home_address')}}
           {% else %}
             {{ state_attr('calendar.abuurmangmailcom', 'location') }}
@@ -53,7 +53,7 @@ template:
       - name: cal_location_alarm
         unique_id: "ca48506b-d62b-4be4-839d-d2c32bfe3cfd"
         state: >
-          {% if is_state_attr('calendar.alarm', 'location', '') or is_state_attr('calendar.alarm', 'location', 'unknown') %}
+          {% if is_state_attr('calendar.alarm', 'location', '') or is_state_attr('calendar.alarm', 'location', 'Unknown') %}
             {{state_attr('zone.home', 'latitude')}},{{state_attr('zone.home', 'longitude')}}
           {% else %}
             {{ state_attr('calendar.alarm', 'location') }}

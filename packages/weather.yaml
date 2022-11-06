@@ -196,6 +196,7 @@ sensor:
     precision: 1
     name: bijkeuken_temp_max
     state_characteristic: value_max
+
 thermal_comfort:
   - custom_icons: true
     sensor:
