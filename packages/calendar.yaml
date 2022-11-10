@@ -318,7 +318,7 @@ automation:
         {% if states('sensor.calc_leave_time_alarm') == 'unknown' %}
           {{ today_at("09:00") + timedelta(hours=24) }}
         {% else %}
-          {{(states('sensor.calc_leave_time_alarm')|as_datetime - timedelta(minutes=(states('input_number.wul_time_before_leave')|int)) + timedelta(minutes=60)).astimezone() }}
+          {{(states('sensor.calc_leave_time_alarm')|as_datetime - timedelta(minutes=(states('input_number.wul_time_before_leave')|int))).astimezone() }}
         {% endif %}
     condition:
       # don't set time back before current time, or the alarm will be skipped
