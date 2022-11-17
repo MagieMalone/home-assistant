@@ -45,6 +45,13 @@ nacht:
       entity_id: input_select.house_mode
     data:
       option: nacht
+  - service: climate.set_preset_mode
+    data:
+      preset_mode: away
+    target:
+      entity_id: climate.toon_thermostat
+  alias: ''
+  mode: single
 nacht_aangepast:
   sequence:
   - service: media_player.turn_off

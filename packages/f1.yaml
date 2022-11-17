@@ -112,10 +112,14 @@ template:
     - name: F1 (sprint)
       icon: mdi:keyboard-f1
       state: >
-        {% if as_timestamp(state_attr('calendar.f1_sprint_race', 'start_time')) | timestamp_custom('%W')|int  == now().isocalendar()[1] %}
-          on
+        {% if states.calendar.f1_sprint_race.attributes.start_time is defined %}
+            {% if as_timestamp(state_attr('calendar.f1_sprint_race', 'start_time')) | timestamp_custom('%W')|int  == now().isocalendar()[1] %}
+              on
+            {% else %}
+              off
+            {% endif %}
         {% else %}
-          off
+           off
         {% endif %}
 sensor:
   - platform: formulaone_api
