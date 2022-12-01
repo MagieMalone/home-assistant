@@ -1,6 +1,11 @@
 #google:
 #  client_id: 836630737755-pr91j52c6n1700mvlsu5tn3tn4maoel6.apps.googleusercontent.com
 #  client_secret: !secret google_cal_apikey
+calendar:
+- platform: ics_calendar
+  calendars:
+      - name: "Action"
+        url: "https://outlook.office365.com/owa/calendar/06232f8ce3134d20ba900718041c943b@action.nl/0e63658da45346948340073320ca2ddd12232588031098642347/S-1-8-2766736951-4256691664-3679573647-448257908/reachcalendar.ics"
 
 input_boolean:
   f1_announcements:
@@ -252,8 +257,45 @@ automation:
           entity_id: media_player.speakers
         data:
           volume_level: "{{states('input_number.tts_volume')| float}}"
-
     mode: single
+  - alias: "action meetings"
+    id: "e2b57899-5d48-4171-811f-28e105324e64"
+    trigger:
+      - platform: calendar
+        event: start
+        entity_id: calendar.action
+        offset: "-00:02:00"
+    condition: 
+      - condition: state
+        entity_id:
+          - schedule.werktijd
+        state: "on"
+    action:
+      - alias: "Send TTS using Google Home Resume script"
+        service: script.turn_on
+        target:
+          entity_id: script.google_home_resume
+        data:
+          variables:
+            action:
+              - alias: "Send TTS message"
+                service: tts.google_say
+                target:
+                  entity_id: media_player.speakers
+                data:
+                  message: "De meeting {{state_attr('calendar.action', 'message')}} begint over twee minuten"
+                  cache: false
+                  language: "nl"
+      - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+        wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+      - alias: "Apply TTS volume"
+        service: media_player.volume_set
+        target:
+          entity_id: media_player.speakers
+        data:
+          volume_level: "{{states('input_number.tts_volume')| float}}"
+    mode: single
+      
     
   - alias: "F1 begin wedstrijd"
     id: "3478021346858103290"

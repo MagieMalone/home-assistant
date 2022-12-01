@@ -130,7 +130,10 @@ input_number:
     max: 200
     step: 5
     unit_of_measurement: lx
-
+input_boolean:
+  astro:
+    name: Astro mode
+    icon: mdi:star-outline
 #binary_sensor:
 # custom hue component
 #  - platform: huesensor
@@ -289,6 +292,170 @@ automation:
           entity_id: light.lampen
         data:
           transition: 900
+  - alias: "update brightness based on house status"
+    id: "4a57e407-f48e-4c1e-a7a6-be8314f4a48c"
+    trigger:
+      - platform: state
+        entity_id: 
+          - light.hue_lightstrip_plus_1
+          - light.staande_lamp
+          - light.hue_color_pendant_down_1
+          - light.hue_color_pendant_up_1
+          - light.computer
+          - light.hal
+          - light.zoldervoor
+          - light.zolderachter
+          - light.sk_ceiling
+          - light.sk_duo_spot_1
+          - light.sk_duo_spot_2
+          - light.overloop
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
+          - light.trap_hal
+        from: "off"
+        to: "on"
+    action:
+      - choose:
+          - conditions:
+              - condition: state
+                entity_id: input_select.house_mode
+                state: "overdag"
+            sequence:
+              - service: light.turn_on
+                target: 
+                  entity_id: "{{trigger.entity_id}}"
+                data:
+                  brightness: 191
+                  transition: 2
+          - conditions:
+              - condition: state
+                entity_id: input_select.house_mode
+                state: "avond"
+            sequence:
+              - service: light.turn_on
+                target: 
+                  entity_id: "{{trigger.entity_id}}"
+                data:
+                  brightness: 128
+                  transition: 2
+          - conditions:
+              - condition: state
+                entity_id: input_select.house_mode
+                state: "nacht"
+            sequence:
+              - service: light.turn_on
+                target: 
+                  entity_id: "{{trigger.entity_id}}"
+                data:
+                  brightness: 1
+                  transition: 2
+          - conditions:
+              - condition: state
+                entity_id: input_select.house_mode
+                state: "astro"
+            sequence:
+              - choose:
+                - conditions:
+                  - "{{'xy' in state_attr(trigger.entity_id, 'supported_color_modes') }}"
+                  sequence:
+                    - service: light.turn_on
+                      target: 
+                        entity_id: "{{trigger.entity_id}}"
+                      data:
+                        brightness: 28
+                        transition: 2
+                        xy_color:
+                          - 0.6915
+                          - 0.3083
+                - conditions:
+                  - "{{'color_temp' in state_attr(trigger.entity_id, 'supported_color_modes') }}"
+                  sequence:
+                    - service: light.turn_on
+                      target: 
+                        entity_id: "{{trigger.entity_id}}"
+                      data:
+                        brightness: 1
+                        transition: 2
+                        color_temp: "{{state_attr(trigger.entity_id, 'max_mireds')}}"
+                default:
+                  - service: light.turn_on
+                    target: 
+                      entity_id: "{{trigger.entity_id}}"
+                    data:
+                      brightness: 1
+                      transition: 2
+        default:
+          - service: light.turn_on
+            target: 
+              entity_id: "{{trigger.entity_id}}"
+            data:
+              brightness: 255
+    mode: parallel
+  - alias: "do astro mode"
+    trigger:
+      - platform: state
+        entity_id: input_boolean.astro
+        to: "on"
+    action:
+      - service: light.turn_on
+        target:
+          entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|selectattr('attributes.supported_color_modes','search', 'xy', )|map(attribute='entity_id')|list}}"
+        data: 
+          brightness: 2
+          transition: 2
+          xy_color:
+            - 0.691
+            - 0.3083
+      - service: light.turn_on
+        target:
+          entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|selectattr('attributes.supported_color_modes','search', 'color_temp', )|rejectattr('attributes.supported_color_modes','search', 'xy', )|map(attribute='entity_id')|list}}"
+        data: 
+          color_temp: 454
+      - service: input_select.select_option
+        target:
+          entity_id: input_select.house_mode
+        data:
+          option: astro
+  - alias: "undo astro mode"
+    trigger:
+      - platform: state
+        entity_id: input_boolean.astro
+        to: "off"
+    variables:
+      off_lights: "{{states.light|rejectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
+    action:
+      - service: light.turn_on
+        target:
+          entity_id: "{{states.light|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
+        data: 
+          color_temp: 298
+      - alias: strip
+        service: light.turn_on
+        target:
+          entity_id: light.hue_lightstrip_plus_1
+        data:
+          xy_color:
+            - 0.3388
+            - 0.1332
+      - alias: pendant_up
+        service: light.turn_on
+        target:
+          entity_id: light.hue_color_pendant_up_1
+        data:
+          xy_color:
+            - 0.324
+            - 0.154
+      - alias: pendant_down
+        service: light.turn_on
+        target:
+          entity_id: light.hue_color_pendant_down_1
+        data:
+          color_temp: 449
+      - service: light.turn_off
+        target: 
+          entity_id: "{{off_lights}}"
+
 
   - alias: "dim lights in day"
     id: "54618293609860132486029"

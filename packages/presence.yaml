@@ -20,6 +20,7 @@ input_select:
       - overdag
       - avond
       - nacht
+      - astro
 input_boolean:
   guests_boolean:
     name: Guests in the house
@@ -203,11 +204,14 @@ automation:
         attribute: elevation
         above: 3.5
         id: "sun_above"
+      - platform: state
+        entity_id: input_boolean.astro
+        to: "off"
     action:
       - choose:
           - conditions:
-              - condition: or
-                conditions:
+              - and:
+                - or:
                   - condition: state
                     entity_id: input_select.arnoud_status
                     state: "Thuis"
@@ -219,6 +223,16 @@ automation:
                     state: "on"
             sequence:
               - choose:
+                  - conditions: 
+                    - condition: state
+                      entity_id: input_boolean.astro
+                      state: "on"
+                    sequence:
+                      - service: input_select.select_option
+                        target:
+                          entity_id: input_select.house_mode
+                        data:
+                          option: astro
                   # status set to nacht by bedtime
                   - conditions: "{{ trigger.entity_id == 'input_datetime.bedtime' }}"
                     sequence:
@@ -251,8 +265,20 @@ automation:
                           option: overdag
                   # status set to nacht by before sunrise
                   - conditions:
-                      - condition: sun
-                        before: sunrise
+                      - and: 
+                        - condition: sun
+                          before: sunrise
+                        - or:
+                          - alias: "only when comming from weg or evening or already night"
+                            condition: state
+                            entity_id: input_select.house_mode
+                            state: "Weg"
+                          - condition: state
+                            entity_id: input_select.house_mode
+                            state: "Avond"
+                          - condition: state
+                            entity_id: input_select.house_mode
+                            state: "Nacht"
                     sequence:
                       - service: input_select.select_option
                         target:
