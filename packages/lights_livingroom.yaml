@@ -82,6 +82,10 @@ automation:
 script:
   woonkamer_lights_fadein:
     sequence:
+      - alias: "turn off brightness automation"
+        service: automation.turn_off
+        target:
+          entity_id: automation.update_brightness_based_on_house_status
       - alias: staande lamp
         service: light.turn_on
         target:
@@ -150,6 +154,12 @@ script:
           color_temp: 449
           brightness_pct: 50
           transition: 300
+      - delay:
+          seconds: 5
+      - alias: "turn on brightness automation"
+        service: automation.turn_on
+        target:
+          entity_id: automation.update_brightness_based_on_house_status
   woonkamer_lights:
     sequence:
       - alias: staande lamp
