@@ -425,6 +425,10 @@ automation:
     variables:
       off_lights: "{{states.light|rejectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
     action:
+      - service: automation.trigger
+        data: {}
+        target:
+          entity_id: automation.change_house_status
       - service: light.turn_on
         target:
           entity_id: "{{states.light|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"

@@ -30,16 +30,7 @@ variables:
   light_level: "{{(state_attr( motion_entity, 'illuminance') |float)}}"
   threshhold_entity: !input threshold_input
   light_threshold: "{{states( threshhold_entity) | float}}"
-#  brightness: >
-#    {% if is_state('input_select.house_mode', 'overdag') %}
-#      191
-#    {% elif is_state('input_select.house_mode', 'avond') %}
-#      128
-#    {% elif is_state('input_select.house_mode', 'nacht') %}
-#      1
-#    {% else %}
-#      255
-#    {% endif %}
+
 
 condition:
   - "{{ light_level < light_threshold  }}"
@@ -58,7 +49,6 @@ action:
       entity_id: !input light_entity
     data:
       transition: 2
-#      brightness: "{{ brightness }}"
   - wait_for_trigger:
       platform: state
       entity_id: !input motion_entity
@@ -70,4 +60,4 @@ action:
     target:
       entity_id: !input light_entity
     data:
-      transition: 5
+      transition: 2

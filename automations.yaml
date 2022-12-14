@@ -92,3 +92,33 @@
       motion_entity: binary_sensor.traphal_occupancy
       light_entity: light.trap_hal
       threshold_input: input_number.lightlevel
+- id: '1670329716450'
+  alias: Motion-activated Light-hal-default
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      motion_entity: binary_sensor.hal_occupancy
+      light_target:
+        entity_id: light.hal
+      no_motion_wait: 0
+- id: '1670329753777'
+  alias: Motion-activated Light-overloop-default
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      motion_entity: binary_sensor.overloop_occupancy
+      light_target:
+        entity_id: light.overloop
+      no_motion_wait: 0
+- id: '1670329790024'
+  alias: Motion-activated Light-traphal-default
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      motion_entity: binary_sensor.traphal_occupancy
+      light_target:
+        entity_id: light.trap_hal
+      no_motion_wait: 0
