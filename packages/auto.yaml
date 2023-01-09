@@ -45,53 +45,6 @@ template:
       state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_park_brake_status', 'preWarningBrakeLiningWear') }}"
       attributes:
         vin: "W1K3F8HB2PV155037"
-    - name: "w1k3f8hb2pv155037_ecoscoreaccel"
-      unique_id: "a40f0d5d-57a4-4113-aeb0-d11a0ee75836"
-      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'ecoscoreaccel') | float }}"
-      unit_of_measurement: "%"
-      attributes:
-        vin: "W1K3F8HB2PV155037"
-    - name: "w1k3f8hb2pv155037_ecoscorefreewhl"
-      unique_id: "f0ed2745-79ae-441a-b553-473f5e0d7791"
-      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'ecoscorefreewhl') | float }}"
-      unit_of_measurement: "%"
-      attributes:
-        vin: "W1K3F8HB2PV155037"
-    - name: "w1k3f8hb2pv155037_ecoscoreconst"
-      unique_id: "75d058df-db38-4963-a27e-71cffdb1e12f"
-      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'ecoscoreconst') | float }}"
-      unit_of_measurement: "%"
-      attributes:
-        vin: "W1K3F8HB2PV155037"
-    - name: "w1k3f8hb2pv155037_liquidconsumptionstart"
-      unique_id: "7f0e39c5-9d5d-4252-b352-bc4d4254963a"
-      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'liquidconsumptionreset') | float }}"
-      unit_of_measurement: "l/100 Km"
-      attributes:
-        vin: "W1K3F8HB2PV155037"
-    - name: "w1k3f8hb2pv155037_averagespeedstart"
-      unique_id: ""
-      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'averageSpeedStart') | float }}"
-      unit_of_measurement: "Km/h"
-      attributes:
-        vin: "W1K3F8HB2PV155037"
-    - name: "w1k3f8hb2pv155037_distancestart"
-      unique_id: "1c926f8c-eb39-4c43-916a-425bf350daa4"
-      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'distanceStart') | float }}"
-      unit_of_measurement: "Km"
-      attributes:
-        vin: "W1K3F8HB2PV155037"
-    - name: "w1k3f8hb2pv155037_drivenytimestart"
-      unique_id: "34176b79-a8ac-449e-9198-190354920378"
-      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'drivenTimeStart') }}"
-      attributes:
-        vin: "W1K3F8HB2PV155037"
-    - name: "w1k3f8hb2pv155037_rangeliquid"
-      unique_id: "d1977046-dc33-42e9-93aa-398853b0f79a"
-      state: "{{ state_attr('sensor.w1k3f8hb2pv155037_odometer', 'rangeliquid') | float }}"
-      unit_of_measurement: "Km"
-      attributes:
-        vin: "W1K3F8HB2PV155037"
     - name: "w1k3f8hb2pv155037_lock_status"
       unique_id: "08ea6481-1248-4b28-9db2-ee67ed34c9d1"
       state: >-

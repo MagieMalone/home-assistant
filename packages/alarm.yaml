@@ -47,6 +47,12 @@ automation:
       - service: alarm_control_panel.alarm_arm_away
         target:
           entity_id: alarm_control_panel.ha_alarm
+      - service: script.slow_flash_color_on_lights
+        data:
+          brightness_pct: 10
+          xy_color:
+            - 0.6091 
+            - 0.3702
   - alias: "return home immidiate "
     id: "43246809632049861384906"
     trigger:

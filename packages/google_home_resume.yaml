@@ -30,7 +30,7 @@ homeassistant:
             - media_player.paar_studeerkamer
           media_player.speakerfancy:
             - media_player.slaapkamer_speaker
-            - media_player.studeerkamer_speaker
+            - media_player.paar_studeerkamer
             - media_player.ht_nt5
         default_volume_level: 0.5
         dummy_player: media_player.vlc_telnet

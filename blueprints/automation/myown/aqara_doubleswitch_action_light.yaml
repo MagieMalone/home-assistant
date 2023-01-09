@@ -9,7 +9,7 @@ blueprint:
       selector:
         entity:
           domain: sensor
-          integration: mqtt       
+          integration: mqtt
     light_entity_left:
       name: Light left
       selector:
@@ -25,28 +25,11 @@ blueprint:
       selector:
         entity:
           domain: light
-    mode_selector:
-      name: time of day
-      description: input select that determines time of day, values are overdag, avond & nacht
-      selector:
-        entity:
-          domain: input_select
+
 
 mode: single
 max_exceeded: silent
 
-#variables:
-#  mode_selector: !input mode_selector
-#  brightness: >
-#    {% if is_state( mode_selector , 'overdag') %}
-#      191
-#    {% elif is_state( mode_selector , 'avond') %}
-#      128
-#    {% elif is_state( mode_selector , 'nacht') %}
-#      1
-#    {% else %}
-#      255
-#    {% endif %}
 
 
 trigger:
@@ -65,7 +48,6 @@ action:
             entity_id: !input light_entity_left
           data:
             transition:  2
-#            brightness: "{{ brightness }}"
     - conditions:
         - "{{ command == 'single_right' }}"
       sequence:
@@ -74,7 +56,6 @@ action:
             entity_id: !input light_entity_right
           data:
             transition:  2
-#            brightness: "{{ brightness }}"
     - conditions:
         - "{{ command == 'single_both' }}"
       sequence:
@@ -83,7 +64,6 @@ action:
             entity_id: !input light_entity_both
           data:
             transition:  2
-#            brightness: "{{ brightness }}"
     - conditions:
         - "{{ command == 'double_left' }}"
       sequence:
@@ -96,7 +76,6 @@ action:
         - choose:
           - conditions:
             - "{{  current_mired == None }}"
-
             sequence:
               - service: light.turn_on
                 target:
@@ -193,7 +172,6 @@ action:
                 entity_id: !input light_entity_right
               data:
                 brightness_step_pct: 10
-
     - conditions:
         - "{{ command == 'hold_both' }}"
       sequence:

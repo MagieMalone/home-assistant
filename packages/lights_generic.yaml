@@ -216,13 +216,54 @@ script:
             {% set data = {"brightness_pct":  brightness_pct, "transition": transition, "xy_color": xy_color} %}
           {% elif brightness_pct and transition %}
             {% set data = {"brightness_pct":  brightness_pct, "transition": transition} %}
+          {% elif transition and xy_color %}
+            {% set data = {"transition": transition, "xy_color": xy_color} %}
+          {% elif brightness_pct and xy_color %}
+            {% set data = {"brightness_pct":  brightness_pct, "xy_color": xy_color} %}
           {% elif  brightness_pct %}
             {% set data = {"brightness_pct":  brightness_pct } %}
+          {% elif xy_color %}
+            {% set data = {"xy_color": xy_color} %}
           {% else %}
             {% set data = {"brightness_pct":  100} %}
           {% endif %}
           {{ data }}
-
+  slow_flash_color_on_lights:
+    fields:
+      xy_color:
+        description: "color in xy color notation"
+        example: "[0.5, 0.5]"
+      brightness_pct:
+        description: "brightness in %"
+        example: "75"
+    sequence:
+      - service: scene.create
+        data:
+          scene_id: before
+          snapshot_entities: "{{states.light|rejectattr('state', 'eq', 'off')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
+      - service: script.update_lights_attributes
+        data:
+          brightness_pct: >
+            {% if brightness_pct %}
+              {{brightness_pct}}
+            {% else %}
+              10
+            {% endif %}
+          transition: 2
+          xy_color: >
+            {% if xy_color %}
+              {{xy_color}}
+            {% else %}
+              - 0.5
+              - 0.5
+            {% endif %}
+      - delay:
+          seconds: 5
+      - service: scene.turn_on
+        target:
+          entity_id: scene.before
+        data:
+          transition: 2
 
 automation:
   - alias: "lights off when leaving"
@@ -504,37 +545,10 @@ automation:
       entity_id: light.lampen
       state: "on"
     action:
-      - service: scene.create
-        data:
-          scene_id: before
-          snapshot_entities:
-            - light.hue_lightstrip_plus_1
-            - light.staande_lamp
-            - light.hue_color_pendant_down_1
-            - light.hue_color_pendant_up_1
-            - light.computer
-            - light.hal
-            - light.zoldervoor
-            - light.zolderachter
-            - light.sk_ceiling
-            - light.sk_duo_spot_1
-            - light.sk_duo_spot_2
-            - light.overloop
-            - light.keuken_1
-            - light.keuken_2
-            - light.keuken_3
-            - light.trap_hal
-      - service: script.update_lights_attributes
+      - service: script.slow_flash_color_on_lights
         data:
           brightness_pct: 10
-          transition: 2
           xy_color:
             - 0.167
             - 0.04
-      - delay:
-          seconds: 5
-      - service: scene.turn_on
-        target:
-          entity_id: scene.before
-        data:
-          transition: 2
+

@@ -272,13 +272,13 @@ automation:
                           - alias: "only when comming from weg or evening or already night"
                             condition: state
                             entity_id: input_select.house_mode
-                            state: "Weg"
+                            state: "weg"
                           - condition: state
                             entity_id: input_select.house_mode
-                            state: "Avond"
+                            state: "avond"
                           - condition: state
                             entity_id: input_select.house_mode
-                            state: "Nacht"
+                            state: "nacht"
                     sequence:
                       - service: input_select.select_option
                         target:

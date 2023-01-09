@@ -22,6 +22,15 @@ input_number:
     icon: mdi:thermometer
 
 template:
+  - trigger:
+    - platform: time_pattern
+      hours: "0"
+      minutes: "10"
+    binary_sensor:
+      - name: "workday_sensor_mod"
+        unique_id: "c662b422-0024-46cb-b4d2-289a15a5dbef"
+        # if workday and alarm before 8 o'clock then workday, otherwise it's vacation
+        state: "{{states('binary_sensor.workday_sensor') and as_datetime(state_attr('calendar.alarm', 'start_time'))|as_local < today_at('8:00')}}"
   - sensor:
     - name: "heating_set_temperature"
       unique_id: "1394c112-73e9-4884-b8a3-6c01ce3e5d85"
@@ -92,6 +101,7 @@ automation:
         to: "off"
       - platform: time
         at:
+          - "08:00:00"
           - "09:00:00"
           - "23:00:00"
           - "21:30:00"
@@ -131,7 +141,7 @@ automation:
               - alias: "zet kachel uit"
                 service: script.kachel_mode
                 data:
-                  mode: "away"
+                  mode: "sleep"
           - conditions:
               - and:
                 - condition: state
@@ -143,17 +153,17 @@ automation:
                 - or:
                   - and:
                     - condition: time
-                      after: "08:59:59"
+                      after: "07:59:59"
                       before: "21:00:00"
                     - condition: state
-                      entity_id: binary_sensor.workday_sensor
+                      entity_id: binary_sensor.workday_sensor_mod
                       state: "on"
                   - and:
                     - condition: time
                       after: "08:59:59"
                       before: "22:00:00"
                     - condition: state
-                      entity_id: binary_sensor.workday_sensor
+                      entity_id: binary_sensor.workday_sensor_mod
                       state: "off"
                 - or:
                   - condition: state
@@ -182,12 +192,12 @@ automation:
               - alias: "zet kachel uit"
                 service: script.kachel_mode
                 data:
-                  mode: "away"
+                  mode: "sleep"
         default:
           - alias: "zet kachel uit"
             service: script.kachel_mode
             data:
-              mode: "away"
+              mode: "sleep"
 
   ########################
   ##
