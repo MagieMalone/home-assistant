@@ -189,15 +189,77 @@ automation:
                 - condition: time
                   after: "21:29:59"
             sequence:
+              - choose: 
+                  - conditions:
+                      - condition: state
+                        entity_id: climate.toon_thermostat
+                        state: "unavailable"
+                    sequence:
+                      - alias: "melding op speakers"
+                        service: script.turn_on
+                        target:
+                          entity_id: script.google_home_resume
+                        data:
+                          variables:
+                            action:
+                              - alias: "cloud tts"
+                                service: tts.cloud_say
+                                data:
+                                  entity_id: media_player.speakers
+                                  message: "Toon van Eneco heeft een storing, vergeet niet de kachel uit te doen"
+                                  options:
+                                    gender: "female"
+                                  language: "nl-NL"
+                                  cache: false
+                      - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+                        wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+                      - alias: "Apply TTS volume"
+                        service: media_player.volume_set
+                        target:
+                          entity_id: media_player.speakers
+                        data:
+                          volume_level: "{{states('input_number.tts_volume')| float}}"
+                default:
+                  - alias: "zet kachel uit"
+                    service: script.kachel_mode
+                    data:
+                      mode: "sleep"
+        default:
+          - choose: 
+              - conditions:
+                  - condition: state
+                    entity_id: climate.toon_thermostat
+                    state: "unavailable"
+                sequence:
+                  - alias: "melding op speakers"
+                    service: script.turn_on
+                    target:
+                      entity_id: script.google_home_resume
+                    data:
+                      variables:
+                        action:
+                          - alias: "cloud tts"
+                            service: tts.cloud_say
+                            data:
+                              entity_id: media_player.speakers
+                              message: "Toon van Eneco heeft een storing, vergeet niet de kachel uit te doen"
+                              options:
+                                gender: "female"
+                              language: "nl-NL"
+                              cache: false
+                  - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+                    wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+                  - alias: "Apply TTS volume"
+                    service: media_player.volume_set
+                    target:
+                      entity_id: media_player.speakers
+                    data:
+                      volume_level: "{{states('input_number.tts_volume')| float}}"
+            default:
               - alias: "zet kachel uit"
                 service: script.kachel_mode
                 data:
                   mode: "sleep"
-        default:
-          - alias: "zet kachel uit"
-            service: script.kachel_mode
-            data:
-              mode: "sleep"
 
   ########################
   ##
@@ -295,4 +357,9 @@ script:
                 preset_mode: "{{ mode }}"
             - delay:
                 seconds: 30
-          until: "{{ is_state('sensor.heating_preset_mode', mode ) }}"
+          until: 
+            - or:
+              - "{{ is_state('sensor.heating_preset_mode', mode ) }}"
+              - condition: state
+                entity_id: timer.toon_automation
+                state: idle

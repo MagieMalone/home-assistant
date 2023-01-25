@@ -278,14 +278,23 @@ automation:
         data:
           variables:
             action:
-              - alias: "Send TTS message"
-                service: tts.google_say
-                target:
-                  entity_id: media_player.speakers
+              - alias: "cloud tts"
+                service: tts.cloud_say
                 data:
+                  entity_id: media_player.speakers
                   message: "De meeting {{state_attr('calendar.action', 'message')}} begint over twee minuten"
+                  options:
+                    gender: "female"
+                  language: "nl-NL"
                   cache: false
-                  language: "nl"
+#              - alias: "Send TTS message"
+#                service: tts.google_say
+#                target:
+#                  entity_id: media_player.speakers
+#                data:
+#                  message: "De meeting {{state_attr('calendar.action', 'message')}} begint over twee minuten"
+#                  cache: false
+#                  language: "nl"
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
       - alias: "Apply TTS volume"
