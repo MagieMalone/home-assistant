@@ -1,6 +1,78 @@
-toon:
-  client_id: !secret toon_consumer_key
-  client_secret: !secret toon_consumer_secret
+#toon:
+#  client_id: !secret toon_consumer_key
+#  client_secret: !secret toon_consumer_secret
+climate:
+  - platform: toon_climate
+    name: Toon Thermostat
+    host: !secret toon_ip
+    port: 80
+    scan_interval: 10
+    min_temp: 6.0
+    max_temp: 30.0
+sensor:
+  - platform: toon_smartmeter
+    host: !secret toon_ip
+    port: 80
+    scan_interval: 5
+    resources:
+      - gasused
+      - gasusedcnt
+      - elecusageflowpulse
+      - elecusagecntpulse
+      - elecusageflowlow
+      - elecusagecntlow
+      - elecusageflowhigh
+      - elecusagecnthigh
+      - elecprodflowlow
+      - elecprodcntlow
+      - elecprodflowhigh
+      - elecprodcnthigh
+      - heat
+  - platform: toon_boilerstatus
+    name: Toon
+    host: !secret toon_ip
+    port: 80
+    scan_interval: 10
+    resources:
+      - boilersetpoint
+      - boilerintemp
+      - boilerouttemp
+      - boilerpressure
+      - boilermodulationlevel
+      - roomtemp
+      - roomtempsetpoint
+utility_meter:
+  daily_energy_offpeak:
+    source: sensor.toon_p1_power_use_cnt_low
+    name: Daily Energy (Offpeak)
+    cycle: daily
+    unique_id: "a77273c9-d067-492b-8676-11873eb62672"
+  daily_energy_peak:
+    source: sensor.toon_p1_power_use_cnt_high
+    name: Daily Energy (Peak)
+    cycle: daily
+    unique_id: "8d410996-ac41-4688-b9f9-fe84ac703c8c"
+  daily_gas:
+    source: sensor.toon_gas_used_cnt
+    name: Daily Gas
+    cycle: daily
+    unique_id: "9040c422-e569-47bd-9996-97de7ae82702"
+  daily_energy_offpeak_cost:
+    source: sensor.toon_p1_power_use_cnt_low_cost
+    name: Daily Energy (Offpeak)
+    cycle: daily
+    unique_id: "78f9d530-e57b-43ff-91a8-ee7aa148088b"
+  daily_energy_peak_cost:
+    source: sensor.toon_p1_power_use_cnt_high_cost
+    name: Daily Energy (Peak)
+    cycle: daily
+    unique_id: "6294ab96-422a-49e3-b85e-37c00af94f56"
+  daily_gas_cost:
+    source: sensor.toon_gas_used_cnt_cost 
+    name: Daily Gas
+    cycle: daily
+    unique_id: "5494f121-40c6-445b-82e8-80054e284c16"
+
 input_select:
   heating:
     name: Heating options
@@ -60,7 +132,34 @@ template:
         {% else %}
           {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
         {% endif %}
-
+    - name: 'Daily Energy Total'
+      device_class: energy
+      unit_of_measurement: kWh
+      unique_id: "eac068f5-42e9-480a-a643-ebe4589cb7aa"
+      state: >
+        {% if is_number(states('sensor.daily_energy_offpeak')) and is_number(states('sensor.daily_energy_peak')) %}
+          {{ states('sensor.daily_energy_offpeak') | float + states('sensor.daily_energy_peak') | float }}
+        {% elif is_number(states('sensor.daily_energy_offpeak')) %}
+          {{ states('sensor.daily_energy_offpeak') | float}}
+        {% elif is_number(states('sensor.daily_energy_peak')) %}
+          {{ states('sensor.daily_energy_peak') | float}}
+        {% else %}
+          None
+        {% endif %}
+    - name: 'Daily Energy Total Cost'
+      device_class: monetary
+      unit_of_measurement: EUR
+      unique_id: a43d4839-893d-43ae-afbd-1e01b834707d""
+      state: >
+        {% if is_number(states('sensor.daily_energy_offpeak_2')) and is_number(states('sensor.daily_energy_peak_2')) %}
+          {{ states('sensor.daily_energy_offpeak_2') | float + states('sensor.daily_energy_peak_2') | float }}
+        {% elif is_number(states('sensor.daily_energy_offpeak_2')) %}
+          {{ states('sensor.daily_energy_offpeak_2') | float }}
+        {% elif is_number(states('sensor.daily_energy_peak_2')) %}
+          {{ states('sensor.daily_energy_peak_2') | float }}
+        {% else %}
+          None
+        {% endif %}
 timer:
   toon_automation:
     name: Time remaining
@@ -122,13 +221,12 @@ automation:
                 data:
                   mode: "away"
           - conditions:
-              - and:
-                - condition: trigger
-                  id: "pre_heat"
-                - condition: numeric_state
-                  entity_id: sensor.badkamer_temperature
-                  below: 20
+              condition: trigger
+              id: "pre_heat"
             sequence:
+              - condition: numeric_state
+                entity_id: sensor.badkamer_temperature
+                below: 20
               - alias: "zet kachel aan"
                 service: script.kachel_mode
                 data:
@@ -231,6 +329,10 @@ automation:
                     entity_id: climate.toon_thermostat
                     state: "unavailable"
                 sequence:
+                  - alias: "check if it's not too late or too early"
+                    condition: state
+                    entity_id: schedule.tts_announce
+                    state: "on"
                   - alias: "melding op speakers"
                     service: script.turn_on
                     target:

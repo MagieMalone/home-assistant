@@ -1,6 +1,11 @@
-# Script and automation to resume streams on Google Home speakes after it has been interrupted by service calls
+# Scripts and automation to resume streams on Google Home speakes after it has been interrupted by service calls
 # Supports resuming of Spotify and online streams (like TuneIn)
-# for more details: https://github.com/TheFes/HA-configuration/blob/main/include/script/00_general/google_cast/docs/google_home_resume.md
+# Package contains 3 main scripts, the helper script to perform the resume and supporting template sensor and automation
+# for more details:
+#
+## Google Home Resume: https://github.com/TheFes/HA-configuration/blob/main/include/script/00_general/google_cast/docs/google_home_resume.md
+## Google Home Event: https://github.com/TheFes/HA-configuration/blob/main/include/integrations/packages/google_cast/docs/google_home_event.md
+## Google Home Voice: https://github.com/TheFes/HA-configuration/blob/main/include/integrations/packages/google_cast/docs/google_home_voice.md
 
 homeassistant:
   customize:
@@ -9,7 +14,7 @@ homeassistant:
       settings: &settings
         players_screen:
           - media_player.huiskamer_hub
-        primary_spotcast: "arnoud_buurman"
+        primary_spotcast: arnoud_buurman
         radio_data:
           NPO Radio 2:
             picture: "http://192.168.2.3:8123/local/pictures/radio/npo_radio_2.png"
