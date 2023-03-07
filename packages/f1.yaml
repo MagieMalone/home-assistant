@@ -119,7 +119,5 @@ template:
               off
             {% endif %}
         {% else %}
-           off
+          off
         {% endif %}
-sensor:
-  - platform: formulaone_api
