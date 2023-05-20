@@ -299,18 +299,16 @@ automation:
         target:
           entity_id: light.lampen
 
-  - alias: "lights off weekdays"
+  - alias: "lights off "
     id: "1528912303194"
     trigger:
-      #- platform: time
-      #  at:
-      #    - input_datetime.bedtime
-      - at: "23:59:59"
-        platform: time
+      - platform: state
+        entity_id: schedule.lights
+        to: "off"
     condition:
-      condition: state
-      entity_id: binary_sensor.workday1d
-      state: "on"
+      - condition: state
+        entity_id: light.lampen
+        state: "on"
     action:
       - service: light.turn_off
         target:
@@ -318,21 +316,7 @@ automation:
         data:
           transition: 900
 
-  - alias: "lights off weekenddays"
-    id: "1528912303472"
-    trigger:
-      - at: "01:00:00"
-        platform: time
-    condition:
-      condition: state
-      entity_id: binary_sensor.workday_sensor
-      state: "off"
-    action:
-      - service: light.turn_off
-        target:
-          entity_id: light.lampen
-        data:
-          transition: 900
+
   - alias: "update brightness based on house status"
     id: "4a57e407-f48e-4c1e-a7a6-be8314f4a48c"
     trigger:

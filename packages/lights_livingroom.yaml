@@ -13,8 +13,10 @@ automation:
           entity_id: light.woonkamer
           state: "off"
         - "{{ not is_state('input_select.house_mode', 'weg') }}"
-        - condition: time
-          after: "12:00:00"
+        - condition: state
+          entity_id:
+            - schedule.lights
+          state: "on"
     action:
       - service: script.woonkamer_lights_fadein
 

@@ -50,15 +50,6 @@ frontend:
 
 python_script:
 
-# Enables support for tracking state changes over time
-history:
-  exclude:
-    domains:
-      - automations
-      - calendar
-      - input_boolean
-      - input_datetime
-      - input_number
 
 # View all events in a logbook
 logbook:

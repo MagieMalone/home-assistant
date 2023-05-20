@@ -44,13 +44,13 @@ template:
       unique_id: "d72f5617-b74d-4f48-a889-e4ae5472fc3d"
       state: "{{state_attr('proximity.home','dir_of_travel')}}"
 
-binary_sensor:
-  - platform: workday
-    country: NL
-  - platform: workday
-    name: workday1d
-    country: NL
-    days_offset: 1
+#binary_sensor:
+#  - platform: workday
+#    country: NL
+# - platform: workday
+#    name: workday1d
+#    country: NL
+#    days_offset: 1
 
 proximity:
   home:

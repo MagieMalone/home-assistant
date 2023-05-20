@@ -23,21 +23,29 @@ template:
     - name: "w1k3f8hb2pv155037_tire_pressure_rear_left"
       state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_tire_warning', 'tirepressureRearLeft' )}}"
       unique_id: "5b2a9fb9-3327-4909-b090-b8aac0899577"
+      device_class: atmospheric_pressure
+      unit_of_measurement: kPa
       attributes:
         vin: "W1K3F8HB2PV155037"
     - name: "w1k3f8hb2pv155037_tire_pressure_rear_right"
       state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_tire_warning', 'tirepressureRearRight' )}}"
       unique_id: "119380a9-09c4-428c-959a-30057ebf5a36"
+      device_class: atmospheric_pressure
+      unit_of_measurement: kPa
       attributes:
         vin: "W1K3F8HB2PV155037"
     - name: "w1k3f8hb2pv155037_tire_pressure_front_left"
       state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_tire_warning', 'tirepressureFrontLeft' )}}"
       unique_id: "c0051521-8db8-4a55-b15c-06b081cc2268"
+      device_class: atmospheric_pressure
+      unit_of_measurement: kPa
       attributes:
         vin: "W1K3F8HB2PV155037"
     - name: "w1k3f8hb2pv155037_tire_pressure_front_right"
       state: "{{ state_attr('binary_sensor.w1k3f8hb2pv155037_tire_warning', 'tirepressureFrontRight' )}}"
       unique_id: "4f7d403d-fbd4-4ae1-a53d-0c00ea6cbb23"
+      device_class: atmospheric_pressure
+      unit_of_measurement: kPa
       attributes:
         vin: "W1K3F8HB2PV155037"
     - name: "w1k3f8hb2pv155037_park_brake_wear"

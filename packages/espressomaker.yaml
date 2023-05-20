@@ -2,8 +2,6 @@ automation:
   - alias: "turn off espressomaker"
     id: "678328023792301"
     trigger:
-#      - platform: template
-#        value_template: "{{ is_state('input_select.house_mode', 'weg') }}"
       - platform: state
         entity_id: schedule.espresso
         to: "off"
@@ -16,37 +14,12 @@ automation:
       - service: switch.turn_off
         target:
           entity_id: switch.esspresso
-#  - alias: "turn off esspresso maker"
-#    id: "1529161972987"
-#    trigger:
-#      - at: "21:00:00"
-#        platform: time
-#    action:
-#      - service: switch.turn_off
-#        target:
-#          entity_id: switch.esspresso
-#  - alias: "Turn on espresso  maker"
-#    id: "1529161700562"
-#    trigger:
-#      - at: "07:30:00"
-#        platform: time
-#    condition: "{{ not is_state('input_select.house_mode', 'weg') }}"
-#    action:
-#      - service: switch.turn_on
-#        target:
-#          entity_id: switch.esspresso
-
-  - alias: "Turn on espresso maker (afternoon)"
+  - alias: "Turn on espresso maker"
     id: "1529161701532"
     trigger:
-#      - platform: time
-#        at: "19:00:00"
       - platform: state
         entity_id: schedule.espresso
         to: "on"
-#      - platform: state
-#        entity_id: input_select.arnoud_status
-#        to: "Net Thuis"
       - platform: numeric_state
         entity_id: zone.home
         above: 0
@@ -61,21 +34,15 @@ automation:
           entity_id:
             - zone.home
           above: 0
-
-#        - condition: time
-#          after: "19:00:00"
-#          before: "20:30:00"
-#        - condition: or
-#          conditions:
-#            - alias: "arnoud thuis"
-#              condition: state
-#              entity_id: input_select.arnoud_status
-#             state: "Thuis"
-#            - alias: "arnoud net thuis"
-#              condition: state
-#              entity_id: input_select.arnoud_status
-#              state: "Net Thuis"
     action:
-      - service: switch.turn_on
-        target:
-          entity_id: switch.esspresso
+      - repeat:
+          sequence:
+            - service: switch.turn_on
+              target:
+                entity_id: switch.esspresso
+            - delay:
+              seconds: 60
+          until:
+            - condition: state
+              entity_id: switch.esspresso
+              state: "on"
