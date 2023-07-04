@@ -41,7 +41,7 @@ automation:
               target:
                 entity_id: switch.esspresso
             - delay:
-              seconds: 60
+                seconds: 60
           until:
             - condition: state
               entity_id: switch.esspresso

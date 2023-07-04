@@ -61,3 +61,4 @@ action:
       entity_id: !input light_entity
     data:
       transition: 2
+  - delay: 10

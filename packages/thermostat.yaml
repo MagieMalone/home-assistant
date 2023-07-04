@@ -227,6 +227,10 @@ automation:
               - condition: numeric_state
                 entity_id: sensor.badkamer_temperature
                 below: 20
+              - alias: "raam dicht?"
+                condition: state
+                entity_id: binary_sensor.badkamer_raam_contact
+                state: "off"
               - alias: "zet kachel aan"
                 service: script.kachel_mode
                 data:
