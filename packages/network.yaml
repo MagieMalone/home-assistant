@@ -4,6 +4,11 @@ binary_sensor:
     name: "google"
     count: 3
     scan_interval: 15
+  - platform: ping
+    host: p2000.brandweer-berkel-enschot.nl
+    name: p2000
+    count: 1
+    scan_interval: 300
 template:
   - sensor:
     - name: "google_rtt"
@@ -173,66 +178,66 @@ sensor:
     default_value: 0
     icon: "mdi:cpu-64-bit"
 
-  - platform: snmp
-    name: "edgeos cpu 1"
-    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196608
-    unique_id: "d3f4cee1-fc9a-48b6-b038-5cdd48f3eb6d"
-    host: 192.168.3.1
-    auth_key: !secret edgeos_snmp_key
-    auth_protocol: hmac-sha
-    priv_key: !secret edgeos_snmp_key
-    priv_protocol: aes-cfb-128
-    username: !secret edgeos_snmp_user
-    version: "3"
-    unit_of_measurement: "%"
-    accept_errors: true
-    default_value: 0
-    icon: "mdi:cpu-64-bit"
-
-  - platform: snmp
-    name: "edgeos cpu 2"
-    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196609
-    unique_id: ""
-    host: 192.168.3.1
-    auth_key: !secret edgeos_snmp_key
-    auth_protocol: hmac-sha
-    priv_key: !secret edgeos_snmp_key
-    priv_protocol: aes-cfb-128
-    username: !secret edgeos_snmp_user
-    version: "3"
-    unit_of_measurement: "%"
-    accept_errors: true
-    default_value: 0
-    icon: "mdi:cpu-64-bit"
-
-  - platform: snmp
-    name: "edgeos cpu 3"
-    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196610
-    unique_id: "524f06c2-75df-48f0-85f2-1ebf496f94dc"
-    host: 192.168.3.1
-    auth_key: !secret edgeos_snmp_key
-    auth_protocol: hmac-sha
-    priv_key: !secret edgeos_snmp_key
-    priv_protocol: aes-cfb-128
-    username: !secret edgeos_snmp_user
-    version: "3"
-    unit_of_measurement: "%"
-    accept_errors: true
-    default_value: 0
-    icon: "mdi:cpu-64-bit"
-
-  - platform: snmp
-    name: "edgeos cpu 4"
-    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196611
-    unique_id: "bae11c03-95f0-46c8-be38-91b3de540ffb"
-    host: 192.168.3.1
-    auth_key: !secret edgeos_snmp_key
-    auth_protocol: hmac-sha
-    priv_key: !secret edgeos_snmp_key
-    priv_protocol: aes-cfb-128
-    username: !secret edgeos_snmp_user
-    version: "3"
-    unit_of_measurement: "%"
-    accept_errors: true
-    default_value: 0
-    icon: "mdi:cpu-64-bit"
+#  - platform: snmp
+#    name: "edgeos cpu 1"
+#    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196608
+#    unique_id: "d3f4cee1-fc9a-48b6-b038-5cdd48f3eb6d"
+#    host: 192.168.3.1
+#    auth_key: !secret edgeos_snmp_key
+#    auth_protocol: hmac-sha
+#    priv_key: !secret edgeos_snmp_key
+#    priv_protocol: aes-cfb-128
+#    username: !secret edgeos_snmp_user
+#    version: "3"
+#    unit_of_measurement: "%"
+#    accept_errors: true
+#    default_value: 0
+#    icon: "mdi:cpu-64-bit"
+#
+#  - platform: snmp
+#    name: "edgeos cpu 2"
+#    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196609
+#    unique_id: ""
+#    host: 192.168.3.1
+#    auth_key: !secret edgeos_snmp_key
+#    auth_protocol: hmac-sha
+#    priv_key: !secret edgeos_snmp_key
+#    priv_protocol: aes-cfb-128
+#    username: !secret edgeos_snmp_user
+#    version: "3"
+#    unit_of_measurement: "%"
+#    accept_errors: true
+#    default_value: 0
+#    icon: "mdi:cpu-64-bit"
+#
+#  - platform: snmp
+#    name: "edgeos cpu 3"
+#    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196610
+#    unique_id: "524f06c2-75df-48f0-85f2-1ebf496f94dc"
+#    host: 192.168.3.1
+#    auth_key: !secret edgeos_snmp_key
+#    auth_protocol: hmac-sha
+#    priv_key: !secret edgeos_snmp_key
+#    priv_protocol: aes-cfb-128
+#    username: !secret edgeos_snmp_user
+#    version: "3"
+#    unit_of_measurement: "%"
+#    accept_errors: true
+#    default_value: 0
+#    icon: "mdi:cpu-64-bit"
+#
+#  - platform: snmp
+#    name: "edgeos cpu 4"
+#    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196611
+#    unique_id: "bae11c03-95f0-46c8-be38-91b3de540ffb"
+#    host: 192.168.3.1
+#    auth_key: !secret edgeos_snmp_key
+#    auth_protocol: hmac-sha
+#    priv_key: !secret edgeos_snmp_key
+#    priv_protocol: aes-cfb-128
+#    username: !secret edgeos_snmp_user
+#    version: "3"
+#    unit_of_measurement: "%"
+#    accept_errors: true
+#    default_value: 0
+#    icon: "mdi:cpu-64-bit"

@@ -23,24 +23,37 @@ def get_battery_entities():
         for entity_id in hass.states.entity_ids("sensor"):
             state = hass.states.get(entity_id)
             if (
-                state.attributes.get("device_class") is "battery"
+                state.attributes.get("device_class") == "battery"
                 and "is_charging" not in state.attributes
                 and "charging" not in state.state
                 and "discharging" not in state.state
                 and "unavailable" not in state.state
                 and "unknown" not in state.state
+                and state.attributes.get("friendly_name") != "ToonBoiler Modulation"
             ):
-                out.update({entity_id: int(state.state)})
+                out.update({entity_id: int(float(state.state))})
+        return out
+
+    def get_binary_sensor_battery_entities():
+        out = {}
+        for entity_id in hass.states.entity_ids("binary_sensor"):
+            state = hass.states.get(entity_id)
+            if (
+                state.attributes.get("device_class") == "battery"
+                and "unknown" not in state.state
+            ):
+                out.update({entity_id: state.attributes["battery"]})
         return out
 
     entities = {}
     entities.update(get_device_tracker_battery_entities())
     entities.update(get_sensor_battery_entities())
+    entities.update(get_binary_sensor_battery_entities())
     return entities
 
 
 def get_low_battery_entities(battery_entities, threshold):
-    if len(battery_entities) is 0:
+    if len(battery_entities) == 0:
         return None
     return [
         ''.join(entity_id + ': ' + str(value) + '%') for entity_id, value in battery_entities.items() if value < threshold

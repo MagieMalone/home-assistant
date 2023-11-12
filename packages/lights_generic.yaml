@@ -144,6 +144,44 @@ input_boolean:
 #  - platform: rflink
 #    automatic_add: true
 script:
+  random_light_off:
+    sequence:
+      - variables:
+          random_1: "{{states('sensor.random_0_90')|int}}"
+          random_2: "{{states('sensor.random_0_15')|int}}"
+      - delay:
+          minutes: "{{random_1|int}}"
+      - service: light.turn_off
+        target:
+          entity_id:
+            - light.hue_lightstrip_plus_1
+            - light.staande_lamp
+            - light.hue_color_pendant_down_1
+            - light.hue_color_pendant_up_1
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.sk_duo_spot_1
+            - light.sk_duo_spot_2
+            - light.trap_hal
+      - delay: 5
+      - service: light.turn_off
+        target:
+          entity_id:
+            - light.overloop
+      - delay: 25
+      - service: light.turn_off
+        target:
+          entity_id:
+            - light.trap_hal
+      - delay:
+          minutes: "{{random_2}}"
+      - service: light.turn_off
+        target:
+          entity_id:
+            - light.sk_duo_spot_1
+            - light.sk_duo_spot_2
+
   flash_lights:
     sequence:
       - variables:
@@ -316,7 +354,21 @@ automation:
         data:
           transition: 900
 
-
+  - alias: "vakantie lights off "
+    id: "830ea569-b7fe-46d2-900b-42e80f9ddd6a"
+    trigger:
+      - platform: state
+        entity_id: schedule.vakantie_lights
+        to: "off"
+    condition:
+      - condition: state
+        entity_id: light.lampen
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.vakantie_mode
+        state: "on"
+    action:
+      - service: script.random_light_off
   - alias: "update brightness based on house status"
     id: "4a57e407-f48e-4c1e-a7a6-be8314f4a48c"
     trigger:
@@ -536,3 +588,14 @@ automation:
             - 0.167
             - 0.04
 
+# Example configuration.yaml entry
+sensor:
+  - platform: random
+    name: "random_0_90"
+    minimum: 0
+    maximum: 90
+
+  - platform: random
+    name: "random_0_15"
+    minimum: 10
+    maximum: 15

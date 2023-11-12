@@ -1,0 +1,24 @@
+multiscrape:
+  - name: HA scraper
+    resource: https://www.spaceweatherlive.com/
+    scan_interval: 3600
+    headers:
+      User-agent: "Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405"
+    log_response: True
+    sensor:
+      - unique_id: "dbc092d1-bbd9-448e-9fa6-16f0c21854d4"
+        name: kpemax
+        select: "table.table-sm.table-striped.mb-0 tr:nth-child(2) td:nth-child(3) span:nth-child(1)"
+      - unique_id: "a2063c1f-cdbf-4362-a3fe-da3852f7f3f7"
+        name: kpemin
+        select: "table.table-sm.table-striped.mb-0 tr:nth-child(2) td:nth-child(2) span:nth-child(1)"
+#      - unique_id: "0b6796e1-2ed2-4a07-a708-f284bac7f103"
+#        name: kpe
+#        select: "div.highcharts-label.highcharts-data-label.highcharts-data-label-color-0.highcharts-tracker"
+sensor:
+  - platform: rest
+    resource: "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+    value_template: "{{(value_json|last)[1] | float}}"
+    name: "kpe"
+    unique_id: "9b1d5f22-f99c-411e-b89e-f21a2acfd751"
+    scan_interval: 900

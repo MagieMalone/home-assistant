@@ -11,13 +11,17 @@
 '0x7cb03eaa0a02be43':
   friendly_name: '0x7cb03eaa0a02be43'
 '0x00158d00031e0bf7':
-  friendly_name: '0x00158d00031e0bf7'
+  friendly_name: Studeerkamer_temp
+  temperature_precision: 1
+  humidity_precision: 1
 '0x00158d0005278e2c':
   friendly_name: '0x00158d0005278e2c'
 '0x8418260000105782':
   friendly_name: '0x8418260000105782'
 '0x00158d00031e31ac':
-  friendly_name: '0x00158d00031e31ac'
+  friendly_name: badkamer_temp
+  temperature_precision: 1
+  humidity_precision: 1
 '0x00158d00040e3366':
   friendly_name: '0x00158d00040e3366'
 '0x00158d00040e32de':
@@ -25,7 +29,9 @@
 '0x00158d000522a155':
   friendly_name: '0x00158d000522a155'
 '0x00158d00031e318f':
-  friendly_name: '0x00158d00031e318f'
+  friendly_name: slaapkamer_temp
+  temperature_precision: 1
+  humidity_precision: 1
 '0x00158d0002b42afb':
   friendly_name: slaapkamer
   legacy: false
@@ -35,11 +41,13 @@
   filtered_attributes: []
   optimistic: true
 '0x00158d000315e79c':
-  friendly_name: '0x00158d000315e79c'
+  friendly_name: zolder_voor_temp
 '0x00158d0005304ae1':
   friendly_name: '0x00158d0005304ae1'
 '0x00158d00031632ed':
-  friendly_name: '0x00158d00031632ed'
+  friendly_name: zolder_achter_temp
+  temperature_precision: 1
+  humidity_precision: 1
 '0x00158d00046113b0':
   friendly_name: '0x00158d00046113b0'
 '0x00158d0002b8586b':
@@ -49,14 +57,19 @@
 '0x00158d00045067d1':
   friendly_name: '0x00158d00045067d1'
 '0x00158d00036c1ba4':
-  friendly_name: '0x00158d00036c1ba4'
+  friendly_name: woonkamer_temp
+  temperature_precision: 1
+  pressure_precision: 0
+  humidity_precision: 1
 '0x00158d0002b4a149':
   friendly_name: woonkamer
   legacy: false
 '0x00158d0005278e3c':
   friendly_name: '0x00158d0005278e3c'
 '0x00158d00031e0c0a':
-  friendly_name: '0x00158d00031e0c0a'
+  friendly_name: bijkeuken_temp
+  temperature_precision: 1
+  humidity_precision: 1
 '0x00158d0002b5d42f':
   friendly_name: '0x00158d0002b5d42f'
   debounce: 0.5
@@ -66,7 +79,9 @@
 '0x00158d000289e817':
   friendly_name: '0x00158d000289e817'
 '0x00158d00031e0aff':
-  friendly_name: '0x00158d00031e0aff'
+  friendly_name: buiten_temp
+  temperature_precision: 1
+  humidity_precision: 1
 '0x00158d0002b4582b':
   friendly_name: keuken
   legacy: false

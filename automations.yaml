@@ -122,3 +122,27 @@
       light_target:
         entity_id: light.trap_hal
       no_motion_wait: 0
+- id: '1688716773073'
+  alias: Conversation agent agenda notification
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_agent_agenda.yaml
+    input:
+      conversation_agent: 7df39e215dafbd1d3d853b5366ab81c1
+      calendar_entity: calendar.abuurmangmailcom
+      weather_entity: weather.berkhout
+      zone_entity: zone.home
+      notify_service: notify.notify
+- id: '1688897943906'
+  alias: Conversation agent agenda notification fixed weather
+  description: ''
+  use_blueprint:
+    path: myown/notitfy_agent_agenda_mod.yaml
+    input:
+      conversation_agent: 7df39e215dafbd1d3d853b5366ab81c1
+      calendar_entity: calendar.abuurmangmailcom
+      weather_entity: sensor.nextday_weather
+      zone_entity: zone.home
+      notify_service: notify.webbrowser
+      calendar2_entity: calendar.f1_calendar_2019
+      calendar3_entity: calendar.action

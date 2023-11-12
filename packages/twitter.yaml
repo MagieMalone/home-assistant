@@ -1,0 +1,8 @@
+# Example configuration.yaml entry
+notify:
+  - name: twitter-notify
+    platform: twitter
+    consumer_key: !secret twitter_consumer_key
+    consumer_secret: !secret twitter_consumer_secret
+    access_token: !secret twitter_access-token
+    access_token_secret: !secret twitter_access-token-secret

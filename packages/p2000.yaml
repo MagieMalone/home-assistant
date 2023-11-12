@@ -1,33 +1,33 @@
-sensor:
-  - platform: p2000
-    name: Brandweer
-    regios: 10
-    disciplines: Brandweerdiensten
-    radius: 7500
-  - platform: p2000
-    name: Ambulance
-    regios: 10
-    disciplines: Ambulancediensten
-    radius: 1000
-  - platform: p2000
-    name: LL1
-    capcodes: 0120901
-  - platform: p2000
-    name: LL2
-    capcodes: 1420059
-  - platform: p2000
-    name: LL3
-    capcodes: 0923993
-  - platform: p2000
-    name: LL4
-    capcodes: 0320908
-  - platform: p2000
-    name: grip
-    radius: 30000
-    contains: "GRIP"
-  - platform: p2000
-    name: p2000_latest
-    regios: 10
+#sensor:
+#  - platform: p2000
+#    name: Brandweer
+#    regios: 10
+#    disciplines: Brandweerdiensten
+#    radius: 7500
+#  - platform: p2000
+#    name: Ambulance
+#    regios: 10
+#    disciplines: Ambulancediensten
+#    radius: 1000
+#  - platform: p2000
+#    name: LL1
+#    capcodes: 0120901
+#  - platform: p2000
+#    name: LL2
+#    capcodes: 1420059
+#  - platform: p2000
+#    name: LL3
+#    capcodes: 0923993
+#  - platform: p2000
+#    name: LL4
+#    capcodes: 0320908
+#  - platform: p2000
+#    name: grip
+#    radius: 30000
+#    contains: "GRIP"
+#  - platform: p2000
+#    name: p2000_latest
+#    regios: 10
 #  - platform: rest
 #    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.p2000_latest_location')|urlencode}}&apiKey={{states('input_text.here_api')}}
 #    value_template: "{{(value_json['items'][0]['position']['lat']|string ) + ',' + (value_json['items'][0]['position']['lng'] |string)}}"

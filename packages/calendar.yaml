@@ -1,11 +1,10 @@
 #google:
 #  client_id: 836630737755-pr91j52c6n1700mvlsu5tn3tn4maoel6.apps.googleusercontent.com
 #  client_secret: !secret google_cal_apikey
-calendar:
-- platform: ics_calendar
+ics_calendar:
   calendars:
-      - name: "Action"
-        url: "https://outlook.office365.com/owa/calendar/06232f8ce3134d20ba900718041c943b@action.nl/0e63658da45346948340073320ca2ddd12232588031098642347/S-1-8-2766736951-4256691664-3679573647-448257908/reachcalendar.ics"
+    - name: "Action"
+      url: "https://outlook.office365.com/owa/calendar/06232f8ce3134d20ba900718041c943b@action.nl/0e63658da45346948340073320ca2ddd12232588031098642347/S-1-8-2766736951-4256691664-3679573647-448257908/reachcalendar.ics"
 
 input_boolean:
   f1_announcements:
@@ -38,6 +37,24 @@ sensor:
     display_options:
       - "time"
 template:
+#  - trigger:
+#      - platform: time_pattern
+#        minutes: /30
+#    action:
+#      - service: calendar.list_events
+#        data:
+#          duration:
+#            hours: 168
+#        target:
+#          entity_id: calendar.formula_1
+#        response_variable: events
+#    sensor:
+#      - name: f1_fp1
+#        unique_id: "79ca5522-2f69-42e7-9f4a-6dd3ee1e8402"
+#        state: "{{ now().isoformat() }}"
+#        attributes:
+#          forecast: "{{ daily.forecast }}"
+
   - sensor:
       - name: cal_travelmode
         unique_id: "69d11577-e8da-45fb-a986-b8ba9d898b31"
@@ -50,7 +67,7 @@ template:
       - name: cal_location
         unique_id: "77f75bb5-7cee-4eb1-b423-da10ab4f6b3e"
         state: >
-          {% if is_state_attr('calendar.abuurmangmailcom', 'location', '') or is_state_attr('calendar.abuurmangmailcom', 'location', 'Unknown') %}
+          {% if is_state_attr('calendar.abuurmangmailcom', 'location', '') or is_state_attr('calendar.abuurmangmailcom', 'location', 'Unknown') or state_attr('calendar.abuurmangmailcom', 'location') == None or states.calendar.abuurmangmailcom.attributes.location is undefined  %}
             {{states('input_text.home_address')}}
           {% else %}
             {{ state_attr('calendar.abuurmangmailcom', 'location') }}

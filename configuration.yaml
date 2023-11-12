@@ -9,23 +9,25 @@ homeassistant:
 #logger
 logger:
   default: warning
-#  logs:
+  logs:
 #    custom_components.edgeos: debug
-    #    homeassistant.components: warn
-    #    homeassistant.components.device_tracker: debug
-    #    homeassistant.components.sensor.buienradar: debug
-    #    homeassistant.components.sensor.ring: debug
-    #    homeassistant.components.sensor.postnl: debug
-    #    homeassistant.components.binary_sensor.ring: debug
-    #    homeassistant.components.media_player.spotify: info
-    #    homeassistant.components.google_travel_time: debug
-    #    custom_components.mercedesmeapi: debug
-    #    custom_components.mercedesmeapi.sensor: info
-    #    custom_components.mercedesmeapi.apicontroller: debug
-    #    custom_components.mercedesmeapi.OAuth: debug
-    #    homeassistant.components.tplink: debug
-    #    custom_components.p2000: debug
-
+#    homeassistant.components: warn
+#    homeassistant.components.device_tracker: debug
+#    homeassistant.components.sensor.buienradar: debug
+#    homeassistant.components.sensor.ring: debug
+#    homeassistant.components.sensor.postnl: debug
+#    homeassistant.components.binary_sensor.ring: debug
+#    homeassistant.components.media_player.spotify: info
+#    homeassistant.components.google_travel_time: debug
+#    homeassistant.components.rest: debug
+#    custom_components.mercedesmeapi: debug
+#    custom_components.mercedesmeapi.sensor: info
+#    custom_components.mercedesmeapi.apicontroller: debug
+#    custom_components.mercedesmeapi.OAuth: debug
+#    homeassistant.components.tplink: debug
+#    custom_components.p2000: debug
+    custom_components.multiscrape: debug    
+    
 http:
   #  ssl_certificate: /ssl/fullchain.pem
   #  ssl_key: /ssl/privkey.pem
@@ -37,7 +39,7 @@ http:
   login_attempts_threshold: 5
 
 # Discover some devices automatically
-discovery:
+# discovery:
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:

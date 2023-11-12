@@ -209,6 +209,39 @@ template:
       device_class: temperature
       unit_of_measurement: °C
       icon: mdi:thermometer
+  - trigger:
+      - platform: time
+        at: "23:55:00"
+      - platform: event
+        event_type: "call_service"
+        event_data:
+          domain: template
+          service: reload
+
+    sensor:
+      - name: nextday_weather
+        unique_id: "cac9318d-e750-4a54-9ac1-bd98431783a5"
+        state: "{{states('sensor.berkhout_condition_1d')}}"
+        attributes:
+          forecast: "[{{state_attr('weather.berkhout', 'forecast')[0]}}]"
+
+
+  - trigger:
+      - platform: time_pattern
+        minutes: /30
+    action:
+      - service: weather.get_forecast
+        data:
+          type: daily
+        target:
+          entity_id: weather.knmi_home
+        response_variable: daily
+    sensor:
+      - name: knmi_fcast_daily
+        unique_id: "71c723fb-6320-4735-b3c0-62d1dbf9bb7a"
+        state: "{{ now().isoformat() }}"
+        attributes:
+          forecast: "{{ daily.forecast }}"
 
 
 
@@ -225,7 +258,7 @@ automation:
         target:
           entity_id: input_number.berkhout_temperatuur_0d
         data:
-          value: "{{ states('sensor.berkhout_temperature_1d') }}"
+          value: "{{ state_attr('sensor.knmi_fcast_daily','forecast')[1].temperature|int }}"
   - alias: "alert zolder ramen dicht"
     trigger:
       platform: template

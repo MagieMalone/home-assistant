@@ -12,7 +12,11 @@ automation:
         - condition: state
           entity_id: light.woonkamer
           state: "off"
-        - "{{ not is_state('input_select.house_mode', 'weg') }}"
+        - or:
+          - "{{ not is_state('input_select.house_mode', 'weg') }}"
+          - condition: state
+            entity_id: input_boolean.vakantie_mode
+            state: "on"
         - condition: state
           entity_id:
             - schedule.lights
@@ -33,7 +37,11 @@ automation:
         - condition: state
           entity_id: light.woonkamer
           state: "off"
-        - "{{ not is_state('input_select.house_mode', 'weg') }}"
+        - or:
+          - "{{ not is_state('input_select.house_mode', 'weg') }}"
+          - condition: state
+            entity_id: input_boolean.vakantie_mode
+            state: "on"
         # measurement newer then 30 minutes
         - "{{as_timestamp(strptime(state_attr('sensor.berkhout_condition', 'Measured'),'%a %b %d %H:%M:%S %Y'))+1800 > as_timestamp(now())}}"
         # sky not clear
