@@ -121,6 +121,10 @@ automation:
             entity_id:
               - schedule.tts_announce
             state: "on"
+          - alias: "no clouds"
+            condition: numeric_state
+            entity_id: sensor.astroweather_cloudless
+            above: 75
       - alias: "Send TTS using Google Home Resume script"
         service: script.turn_on
         target:

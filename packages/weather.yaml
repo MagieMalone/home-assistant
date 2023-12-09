@@ -229,8 +229,7 @@ template:
   - trigger:
       - platform: time_pattern
         minutes: /30
-    action:
-      - service: weather.get_forecast
+      - service: weather.get_forecasts
         data:
           type: daily
         target:
@@ -241,7 +240,7 @@ template:
         unique_id: "71c723fb-6320-4735-b3c0-62d1dbf9bb7a"
         state: "{{ now().isoformat() }}"
         attributes:
-          forecast: "{{ daily.forecast }}"
+          forecast: "{{ daily.weather.knmi_home.forecast }}"
 
 
 

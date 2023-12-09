@@ -123,14 +123,14 @@ template:
     - name: "thermostat_condition"
       unique_id: "04b4cc23-5941-4fb4-901e-452e0fdb0153"
       state: >
-        {% if is_state('sensor.buiten_temperature', 'unknown') %}
-          {% if is_state('sensor.woonkamer_temperature', 'unknown') %}
-            {{(states('input_number.berkhout_temperatuur_0d') |float ) <20}}
-          {% else %}
-            {{(states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
-          {% endif %}
+        {% if is_state('sensor.buiten_temperature', 'unavailable') %}
+          {{(states('input_number.berkhout_temperatuur_0d') |float ) <20}}
         {% else %}
-          {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+          {% if is_state('sensor.woonkamer_temperature', 'unavailable') %}
+            {{(states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+          {% else %}
+            {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+          {% endif %}
         {% endif %}
     - name: 'Daily Energy Total'
       device_class: energy

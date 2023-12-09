@@ -114,21 +114,21 @@ action:
       calendar_duration: !input calendar_duration
       prompt: !input prompt
   - alias: Fetch Calendar Agenda
-    service: calendar.list_events
+    service: calendar.get_events
     data:
       duration: !input calendar_duration
     target:
       entity_id: !input calendar_entity
     response_variable: agenda
   - alias: Fetch Calendar Agenda
-    service: calendar.list_events
+    service: calendar.get_events
     data:
       duration: !input calendar_duration
     target:
       entity_id: !input calendar2_entity
     response_variable: agenda2
   - alias: Fetch Calendar Agenda
-    service: calendar.list_events
+    service: calendar.get_events
     data:
       duration: !input calendar_duration
     target:
@@ -151,11 +151,11 @@ action:
         {%- endif %}
 
         Calendar "{{ state_attr(calendar_entity, 'friendly_name') }}" events for the next {{ calendar_duration.hours }}:
-        {%- if not agenda.events and not agenda2.events and not agenda3.events %}
+        {%- if not agenda.calendar_entity.events and not agenda2.calendar2_entity.events and not agenda3.calendar3_entity.events %}
           - No upcoming events.
         {%- endif %}
-        {%- if agenda.events %}
-          {%- for event in agenda.events %}
+        {%- if agenda.calendar_entity.events %}
+          {%- for event in agenda.calendar_entity.events %}
           - Summary: {{ event.summary }}
             Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
             {%- if event.descripton is defined %}
@@ -166,8 +166,8 @@ action:
             {% endif -%}
           {%- endfor %}
         {%- endif %}
-        {%- if agenda2.events %}
-          {%- for event in agenda2.events %}
+        {%- if agenda2.calendar2_entity.events %}
+          {%- for event in agenda2.calendar2_entity.events %}
           - Summary: {{ event.summary }}
             Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
             {%- if event.descripton is defined %}
@@ -178,8 +178,8 @@ action:
             {% endif -%}
           {%- endfor %}
         {%- endif %}
-        {%- if agenda3.events %}
-          {%- for event in agenda3.events %}
+        {%- if agenda3.calendar3_entity.events %}
+          {%- for event in agenda3.calendar3_entity.events %}
             {%- if event.summary is defined %}
               {%- if event.summary != "Private Appointment" and event.summary != "lunch"  and event.summary != "outside working hours" %}
                 - Summary: {{ event.summary }}

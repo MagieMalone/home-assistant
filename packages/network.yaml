@@ -1,14 +1,14 @@
-binary_sensor:
-  - platform: ping
-    host: 8.8.8.8
-    name: "google"
-    count: 3
-    scan_interval: 15
-  - platform: ping
-    host: p2000.brandweer-berkel-enschot.nl
-    name: p2000
-    count: 1
-    scan_interval: 300
+#binary_sensor:
+#  - platform: ping
+#    host: 8.8.8.8
+#    name: "google"
+#    count: 3
+#    scan_interval: 15
+#  - platform: ping
+#    host: p2000.brandweer-berkel-enschot.nl
+#    name: p2000
+#    count: 1
+#    scan_interval: 300
 template:
   - sensor:
     - name: "google_rtt"
