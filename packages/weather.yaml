@@ -229,6 +229,7 @@ template:
   - trigger:
       - platform: time_pattern
         minutes: /30
+    action:
       - service: weather.get_forecasts
         data:
           type: daily

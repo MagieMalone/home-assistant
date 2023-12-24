@@ -1,0 +1,34 @@
+blueprint:
+  name: test Conversation agent agenda notification
+  description:
+    Conversation agent generates a notification based on the upcoming calendar
+    agenda, location, and weather.
+  author: allenporter
+  domain: automation
+  input:
+    calendar_entity:
+      name: Calendar
+      description: The calendar entity to use for finding upcoming calendar events.
+      selector:
+        target:
+          entity:
+            domain: calendar
+
+    calendar_duration:
+      name: Calendar event duration
+      description: How many hours ahead to look for upcoming calendar events.
+      selector:
+        duration:
+      default:
+        hours: 18
+trigger:
+  platform: time
+  at: 07:00
+
+action:
+  - alias: Fetch Calendar Agenda
+    service: calendar.get_events
+    target: !input calendar_entity
+    response_variable: agenda
+    data:
+      duration: !input calendar_duration

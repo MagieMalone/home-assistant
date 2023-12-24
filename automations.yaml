@@ -133,16 +133,29 @@
       weather_entity: weather.berkhout
       zone_entity: zone.home
       notify_service: notify.notify
-- id: '1688897943906'
-  alias: Conversation agent agenda notification fixed weather
+- id: '1702198164985'
+  alias: test-calendar
+  description: ''
+  use_blueprint:
+    path: myown/test.yaml
+    input:
+      calendar_entity:
+        entity_id:
+        - calendar.abuurmangmailcom
+        - calendar.action
+        - calendar.calendar
+- id: '1702198681269'
+  alias: Conversation agent agenda notification fixed
   description: ''
   use_blueprint:
     path: myown/notitfy_agent_agenda_mod.yaml
     input:
       conversation_agent: 7df39e215dafbd1d3d853b5366ab81c1
-      calendar_entity: calendar.abuurmangmailcom
+      notify_service: notify.webbrowser
+      calendar_entity:
+        entity_id:
+        - calendar.abuurmangmailcom
+        - calendar.action
+        - calendar.calendar
       weather_entity: sensor.nextday_weather
       zone_entity: zone.home
-      notify_service: notify.webbrowser
-      calendar2_entity: calendar.f1_calendar_2019
-      calendar3_entity: calendar.action

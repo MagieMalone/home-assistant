@@ -24,29 +24,10 @@ blueprint:
       name: Calendar
       description: The calendar entity to use for finding upcoming calendar events.
       selector:
-        entity:
-          multiple: false
-          filter:
-            - domain:
-                - calendar
-    calendar2_entity:
-      name: Calendar f1
-      description: The calendar entity to use for finding upcoming calendar events.
-      selector:
-        entity:
-          multiple: false
-          filter:
-            - domain:
-                - calendar
-    calendar3_entity:
-      name: Calendar work
-      description: The calendar entity to use for finding upcoming calendar events.
-      selector:
-        entity:
-          multiple: false
-          filter:
-            - domain:
-                - calendar
+        target:
+          entity:
+            domain: calendar
+
     calendar_duration:
       name: Calendar event duration
       description: How many hours ahead to look for upcoming calendar events.
@@ -107,33 +88,17 @@ trigger:
 action:
   - variables:
       weather_entity: !input weather_entity
-      calendar_entity: !input calendar_entity
-      calendar2_entity: !input calendar2_entity
-      calendar3_entity: !input calendar3_entity
       zone_entity: !input zone_entity
       calendar_duration: !input calendar_duration
       prompt: !input prompt
+
   - alias: Fetch Calendar Agenda
     service: calendar.get_events
-    data:
-      duration: !input calendar_duration
-    target:
-      entity_id: !input calendar_entity
+    target: !input calendar_entity
     response_variable: agenda
-  - alias: Fetch Calendar Agenda
-    service: calendar.get_events
     data:
       duration: !input calendar_duration
-    target:
-      entity_id: !input calendar2_entity
-    response_variable: agenda2
-  - alias: Fetch Calendar Agenda
-    service: calendar.get_events
-    data:
-      duration: !input calendar_duration
-    target:
-      entity_id: !input calendar3_entity
-    response_variable: agenda3
+
   - alias: "Conversation Agent Notification Text"
     service: conversation.process
     data:
@@ -149,58 +114,58 @@ action:
         {%- set temperature_unit = state_attr(weather_entity, 'temperature_unit') -%}
         Weather: {{ forecast.condition }} ({{ forecast.temperature }}{{ temperature_unit }}, {{ forecast.precipitation }}% precipitation)
         {%- endif %}
-
-        Calendar "{{ state_attr(calendar_entity, 'friendly_name') }}" events for the next {{ calendar_duration.hours }}:
-        {%- if not agenda.calendar_entity.events and not agenda2.calendar2_entity.events and not agenda3.calendar3_entity.events %}
+        Calendar events for the next {{ calendar_duration.hours }}:
+        {%- if not agenda.items() %}
           - No upcoming events.
-        {%- endif %}
-        {%- if agenda.calendar_entity.events %}
-          {%- for event in agenda.calendar_entity.events %}
-          - Summary: {{ event.summary }}
-            Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
-            {%- if event.descripton is defined %}
-            Descripton: {{ event.descripton }}
-            {% endif -%}
-            {%- if event.location is defined %}
-            Location: {{ event.location }}
-            {% endif -%}
-          {%- endfor %}
-        {%- endif %}
-        {%- if agenda2.calendar2_entity.events %}
-          {%- for event in agenda2.calendar2_entity.events %}
-          - Summary: {{ event.summary }}
-            Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
-            {%- if event.descripton is defined %}
-            Descripton: {{ event.descripton }}
-            {% endif -%}
-            {%- if event.location is defined %}
-            Location: {{ event.location }}
-            {% endif -%}
-          {%- endfor %}
-        {%- endif %}
-        {%- if agenda3.calendar3_entity.events %}
-          {%- for event in agenda3.calendar3_entity.events %}
-            {%- if event.summary is defined %}
-              {%- if event.summary != "Private Appointment" and event.summary != "lunch"  and event.summary != "outside working hours" %}
-                - Summary: {{ event.summary }}
-                  Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
+        {%- else %}
+          {%- for key, value in agenda.items() %}
+            {% if key == "calendar.action" %}
+              {%- for event in value.events %}
+                {%- if event.summary is defined %}
+                  {%- if  event.summary != "Private Appointment" and event.summary != "lunch"  and event.summary != "outside working hours" %}
+                    - Summary: {{ event.summary }}
+                      Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
+                    {%- if event.descripton is defined %}
+                      Description: {{ event.descripton }}
+                    {% endif -%}
+                    {%- if event.location is defined %}
+                      Location: {{ event.location }}
+                    {% endif -%}
+                  {% endif -%}
+                {%- else %}
+                  - Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
                   {%- if event.descripton is defined %}
-                  Descripton: {{ event.descripton }}
+                    Description: {{ event.descripton }}
                   {% endif -%}
                   {%- if event.location is defined %}
-                  Location: {{ event.location }}
+                    Location: {{ event.location }}
                   {% endif -%}
-              {% endif -%}
-            {% else -%}
-              - Summary: {{ event.summary }}
-                Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
-                {%- if event.descripton is defined %}
-                Descripton: {{ event.descripton }}
                 {% endif -%}
-                {%- if event.location is defined %}
-                Location: {{ event.location }}
+              {%- endfor %}
+            {% else %}
+              {%- for event in value.events %}
+                {%- if event.summary is defined %}
+                  {%- if  event.summary != "Private Appointment" and event.summary != "lunch"  and event.summary != "outside working hours" %}
+                    - Summary: {{ event.summary }}
+                      Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
+                    {%- if event.descripton is defined %}
+                      Description: {{ event.descripton }}
+                    {% endif -%}
+                    {%- if event.location is defined %}
+                      Location: {{ event.location }}
+                    {% endif -%}
+                  {% endif -%}
+                {%- else %}
+                  - Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
+                  {%- if event.descripton is defined %}
+                    Description: {{ event.descripton }}
+                  {% endif -%}
+                  {%- if event.location is defined %}
+                    Location: {{ event.location }}
+                  {% endif -%}
                 {% endif -%}
-            {% endif -%}
+              {%- endfor %}
+            {%- endif %}
           {%- endfor %}
         {%- endif %}
         {{ prompt }}
