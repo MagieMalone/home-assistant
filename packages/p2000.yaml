@@ -1,4 +1,4 @@
-#sensor:
+sensor:
 #  - platform: p2000
 #    name: Brandweer
 #    regios: 10
@@ -9,25 +9,25 @@
 #    regios: 10
 #    disciplines: Ambulancediensten
 #    radius: 1000
-#  - platform: p2000
-#    name: LL1
-#    capcodes: 0120901
-#  - platform: p2000
-#    name: LL2
-#    capcodes: 1420059
-#  - platform: p2000
-#    name: LL3
-#    capcodes: 0923993
-#  - platform: p2000
-#    name: LL4
-#    capcodes: 0320908
-#  - platform: p2000
+  - platform: p2000
+    name: LL1
+    capcodes: 0120901
+  - platform: p2000
+    name: LL2
+    capcodes: 1420059
+  - platform: p2000
+    name: LL3
+    capcodes: 0923993
+  - platform: p2000
+    name: LL4
+    capcodes: 0320908
+  - platform: p2000
 #    name: grip
 #    radius: 30000
 #    contains: "GRIP"
-#  - platform: p2000
-#    name: p2000_latest
-#    regios: 10
+  - platform: p2000
+    name: p2000_latest
+    regios: 10
 #  - platform: rest
 #    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.p2000_latest_location')|urlencode}}&apiKey={{states('input_text.here_api')}}
 #    value_template: "{{(value_json['items'][0]['position']['lat']|string ) + ',' + (value_json['items'][0]['position']['lng'] |string)}}"
@@ -36,6 +36,19 @@
 #    json_attributes:
 #      - lat
 #      - lng
+
+feedreader:
+  urls:
+#    - https://alarmeringen.nl/feeds/city/lutjebroek.rss
+#    - https://alarmeringen.nl/feeds/city/grootebroek.rss
+#    - https://alarmeringen.nl/feeds/city/hoogkarspel.rss
+#    - https://alarmeringen.nl/feeds/region/noord-holland-noord.rss
+    - http://feeds.livep2000.nl?r=10
+  scan_interval:
+    minutes: 1
+
+
+
 
 template:
   - trigger:
@@ -317,6 +330,27 @@ timer:
 
 
 automation:
+  - id: 33b77f22-f101-4641-82f2-70c7e4a1d703
+    alias: "Send notification of RSS feed title when updated"
+    trigger:
+      platform: event
+      event_type: feedreader
+    condition:
+      - alias: "Only nearby villages"
+        condition: template
+        value_template: >
+          {% set title = trigger.event.data.title %}
+          {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
+          {% set location = title |regex_replace(find=bon_string, replace='', ignorecase=False) %}
+          {{ (location.split(' ')|last |lower ) in ['hoogkarspel', 'lutjebroek', 'grootebroek'] }}
+    action:
+      service: persistent_notification.create
+      data:
+        title: "{{ trigger.event.data.title }}"
+        message: >
+          {{trigger.event.data.summary}}
+
+        notification_id: "{{ trigger.event.data.title }}"
   - id: 789d0d2c-4ee0-41af-999d-c6f5a9f28c85
     alias: Lifeliners_announce
     trigger:

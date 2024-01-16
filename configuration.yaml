@@ -8,10 +8,9 @@ homeassistant:
 
 #logger
 logger:
-  default: warning
+  default: info 
   logs:
 #    custom_components.edgeos: debug
-#    homeassistant.components: warn
 #    homeassistant.components.device_tracker: debug
 #    homeassistant.components.sensor.buienradar: debug
 #    homeassistant.components.sensor.ring: debug
@@ -26,8 +25,11 @@ logger:
 #    custom_components.mercedesmeapi.OAuth: debug
 #    homeassistant.components.tplink: debug
 #    custom_components.p2000: debug
-    custom_components.multiscrape: debug    
-    
+#    custom_components.multiscrape: debug    
+    custom_components.toon_smartmeter: debug
+#    custom_components.toon_boilerstatus: debug
+#    custom_components.toon_climate: debug
+
 http:
   #  ssl_certificate: /ssl/fullchain.pem
   #  ssl_key: /ssl/privkey.pem
@@ -116,13 +118,13 @@ notify:
 #    api_key: !secret pushover_api
 #    user_key: !secret pushover_user
 
-sensor:
-  - platform: systemmonitor
-    resources:
-      - type: disk_use_percent
-        arg: /
-      - type: memory_use_percent
-      - type: processor_use
+#sensor:
+#  - platform: systemmonitor
+#    resources:
+#      - type: disk_use_percent
+#        arg: /
+#      - type: memory_use_percent
+#      - type: processor_use
 
 
 # Example configuration.yaml entry
