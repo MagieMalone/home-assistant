@@ -701,7 +701,7 @@ script:
                     {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
                     {% set brackets ='\([^)]+\) *' %}
                     {% set ambu_string = '^(( |)AMBU |)([0-9]{5} |[0-9]{2}mc[0-9]{3} )+' %}
-                    {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{5,6}( |$))+' %}
+                    {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{4,6}( |$))+' %}
                     {% set mapdienst = {'A':'Ambulance','B':'Ambulance','P':'Brandweer'} %}
                     {% set mapreden = {'BR':'Brand,','HV':'Hulpverlening,', 'DV':'Dienstverlening,'} %}
                     {% set mapast = {'Ass. Ambu ':'Assistentie ambulance','Ass. Pol ':'Assistentie Politie','Stank/hind. lucht ':'Stank of hinderlijke lucht'} %}

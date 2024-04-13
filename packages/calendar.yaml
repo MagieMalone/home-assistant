@@ -64,6 +64,14 @@ template:
           {% else %}
             driving
           {% endif %}
+  - trigger:
+    - platform: state
+      entity_id: calendar.abuurmangmailcom
+      attribute: location
+      not_to:
+        - "unknown"
+        - "unavailable"
+    sensor:
       - name: cal_location
         unique_id: "77f75bb5-7cee-4eb1-b423-da10ab4f6b3e"
         state: >
@@ -72,6 +80,14 @@ template:
           {% else %}
             {{ state_attr('calendar.abuurmangmailcom', 'location') }}
           {% endif %}
+  - trigger:
+    - platform: state
+      entity_id: calendar.alarm
+      attribute: location
+      not_to:
+        - "unknown"
+        - "unavailable"
+    sensor:
       - name: cal_location_alarm
         unique_id: "ca48506b-d62b-4be4-839d-d2c32bfe3cfd"
         state: >
@@ -80,6 +96,7 @@ template:
           {% else %}
             {{ state_attr('calendar.alarm', 'location') }}
           {% endif %}
+  - sensor:
       - name: cal_reminders_name
         unique_id: "9aa64b47-5434-4399-81a6-65c338bf6a5e"
         state: "{{ state_attr('calendar.reminders', 'message') | replace('#reminders', '')}}"
@@ -302,7 +319,7 @@ automation:
 #                  message: "De meeting {{state_attr('calendar.action', 'message')}} begint over twee minuten"
                   message: "De meeting {{trigger.calendar_event.summary}} begint over twee minuten"
                   options:
-                    gender: "female"
+                    voice: FennaNeural
                   language: "nl-NL"
                   cache: false
 #              - alias: "Send TTS message"

@@ -241,24 +241,24 @@ template:
         unique_id: "71c723fb-6320-4735-b3c0-62d1dbf9bb7a"
         state: "{{ now().isoformat() }}"
         attributes:
-          forecast: "{{ daily.weather.knmi_home.forecast }}"
-
+#          forecast: "{{ daily['weather.knmi_home'] }}"
+          forecast: "{{ daily['weather.knmi_home']['forecast'] }}"
 
 
 
 
 automation:
-  - alias: "kopieer forecast naar input_number"
-    id: "8749832079108927490821"
-    trigger:
-      - platform: time
-        at: "00:00:01"
-    action:
-      - service: input_number.set_value
-        target:
-          entity_id: input_number.berkhout_temperatuur_0d
-        data:
-          value: "{{ state_attr('sensor.knmi_fcast_daily','forecast')[1].temperature|int }}"
+#  - alias: "kopieer forecast naar input_number"
+#    id: "8749832079108927490821"
+#    trigger:
+#      - platform: time
+#        at: "00:00:01"
+#    action:
+#      - service: input_number.set_value
+#        target:
+#          entity_id: input_number.berkhout_temperatuur_0d
+#        data:
+#          value: "{{ state_attr('sensor.knmi_fcast_daily','forecast')[1].temperature|int }}"
   - alias: "alert zolder ramen dicht"
     trigger:
       platform: template

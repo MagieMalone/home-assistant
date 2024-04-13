@@ -43,7 +43,7 @@ automation:
             entity_id: input_boolean.vakantie_mode
             state: "on"
         # measurement newer then 30 minutes
-        - "{{as_timestamp(strptime(state_attr('sensor.berkhout_condition', 'Measured'),'%a %b %d %H:%M:%S %Y'))+1800 > as_timestamp(now())}}"
+        #- "{{as_timestamp(states.sensor.berkhout_condition.last_updated)+1800 > as_timestamp(now())}}"
         # sky not clear
         - "{{ not is_state('sensor.berkhout_condition', 'clear') }}"
     action:

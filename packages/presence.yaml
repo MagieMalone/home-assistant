@@ -40,9 +40,9 @@ template:
     - name: "arnoud_status"
       unique_id: "8ef066b3-0304-4fd2-bda0-282b24a11a8d"
       state: "{{ states('input_select.arnoud_status') }}"
-    - name: "prox_home_dir_of_travel"
-      unique_id: "d72f5617-b74d-4f48-a889-e4ae5472fc3d"
-      state: "{{state_attr('proximity.home','dir_of_travel')}}"
+#    - name: "prox_home_dir_of_travel"
+#      unique_id: "d72f5617-b74d-4f48-a889-e4ae5472fc3d"
+#      state: "{{state_attr('proximity.home','dir_of_travel')}}"
 
 #binary_sensor:
 #  - platform: workday
@@ -52,18 +52,17 @@ template:
 #    country: NL
 #    days_offset: 1
 
-proximity:
-  home:
-    ignored_zones:
-      - Ymke
-    devices:
-#      - device_tracker.4dd0404d
-#      - device_tracker.unknown
-      - device_tracker.kb2003
-      - device_tracker.467cfa38bbada1bf
-#      - device_tracker.sz_436_p_device_tracker
-    unit_of_measurement: km
-    tolerance: 50
+#proximity:
+#  home:
+#    ignored_zones:
+#      - Ymke
+#    devices:
+#
+#      - device_tracker.kb2003
+#      - device_tracker.467cfa38bbada1bf
+#      
+#    unit_of_measurement: km
+#    tolerance: 50
 
 automation:
   - alias: 'edwin-binnen'

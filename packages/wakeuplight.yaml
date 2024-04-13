@@ -119,10 +119,10 @@ automation:
         - condition: or
           conditions:
             - condition: state
-              entity_id: sensor.prox_home_dir_of_travel
+              entity_id: sensor.home_nearest_direction_of_travel
               state: "arrived"
             - condition: state
-              entity_id: sensor.prox_home_dir_of_travel
+              entity_id: sensor.home_nearest_direction_of_travel
               state: "towards"
     action:
       service: script.wakeup_light

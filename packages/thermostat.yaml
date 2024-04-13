@@ -58,17 +58,17 @@ utility_meter:
     cycle: daily
     unique_id: "9040c422-e569-47bd-9996-97de7ae82702"
   daily_energy_offpeak_cost:
-    source: sensor.toon_p1_power_use_cnt_low_cost
+    source: sensor.toon_p1_power_use_cnt_low_cost_2
     name: Daily Energy (Offpeak)
     cycle: daily
     unique_id: "78f9d530-e57b-43ff-91a8-ee7aa148088b"
   daily_energy_peak_cost:
-    source: sensor.toon_p1_power_use_cnt_high_cost
+    source: sensor.toon_p1_power_use_cnt_high_cost_2
     name: Daily Energy (Peak)
     cycle: daily
     unique_id: "6294ab96-422a-49e3-b85e-37c00af94f56"
   daily_gas_cost:
-    source: sensor.toon_gas_used_cnt_cost 
+    source: sensor.toon_gas_used_cnt_cost_2 
     name: Daily Gas
     cycle: daily
     unique_id: "5494f121-40c6-445b-82e8-80054e284c16"
@@ -124,12 +124,12 @@ template:
       unique_id: "04b4cc23-5941-4fb4-901e-452e0fdb0153"
       state: >
         {% if is_state('sensor.buiten_temperature', 'unavailable') %}
-          {{(states('input_number.berkhout_temperatuur_0d') |float ) <20}}
+          {{(states('sensor.knmi_max_temperature_today') |float ) <20}}
         {% else %}
           {% if is_state('sensor.woonkamer_temperature', 'unavailable') %}
-            {{(states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+            {{(states('sensor.buiten_temperature') |float ) <20  and (states('sensor.knmi_max_temperature_today') |float ) <20 }}
           {% else %}
-            {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('input_number.berkhout_temperatuur_0d') |float ) <20 }}
+            {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('sensor.knmi_max_temperature_today') |float ) <20 }}
           {% endif %}
         {% endif %}
     - name: 'Daily Energy Total'
@@ -177,11 +177,11 @@ automation:
         to: "Weg"
         for: "01:00:00"
       - platform: numeric_state
-        entity_id: proximity.home
+        entity_id: sensor.home_nearest_distance
         above: 11.8
         id: "proximity_above"
       - platform: numeric_state
-        entity_id: proximity.home
+        entity_id: sensor.home_nearest_distance
         below: 25
         id: "proximity_below"
       - platform: state
@@ -310,9 +310,9 @@ automation:
                                   entity_id: media_player.speakers
                                   message: "Toon van Eneco heeft een storing, vergeet niet de kachel uit te doen"
                                   options:
-                                    gender: "female"
+                                    voice: FennaNeural
                                   language: "nl-NL"
-                                  cache: false
+                                  cache: true
                       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
                         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
                       - alias: "Apply TTS volume"
@@ -350,9 +350,9 @@ automation:
                               entity_id: media_player.speakers
                               message: "Toon van Eneco heeft een storing, vergeet niet de kachel uit te doen"
                               options:
-                                gender: "female"
+                                voice: FennaNeural
                               language: "nl-NL"
-                              cache: false
+                              cache: true
                   - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
                     wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
                   - alias: "Apply TTS volume"
