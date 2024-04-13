@@ -260,6 +260,7 @@ automation:
 #        data:
 #          value: "{{ state_attr('sensor.knmi_fcast_daily','forecast')[1].temperature|int }}"
   - alias: "alert zolder ramen dicht"
+    id: "80dffcf4-e561-4ebb-bec0-4531f6e7e4cf"
     trigger:
       platform: template
       value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) < (states('sensor.buiten_temperature')|float)}} "
@@ -277,6 +278,7 @@ automation:
         target:
           entity_id: automation.alert_zolder_ramen_dicht
   - alias: "alert verdieping ramen dicht"
+    id: "61b7fdec-02a7-4715-8903-9b33500a9466"
     trigger:
       platform: template
       value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.buiten_temperature'), states('sensor.badkamer_temperature')]|min|float -1) < (states('sensor.buiten_temperature')|float)}} "
@@ -295,6 +297,7 @@ automation:
           entity_id: automation.alert_verdieping_ramen_dicht
 
   - alias: "alert beneden ramen dicht"
+    id: "7baa566a-aa7b-4ad9-9aee-b87d63ae22d7"
     trigger:
       platform: template
       value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) < (states('sensor.buiten_temperature')|float)}} "
@@ -313,6 +316,7 @@ automation:
           entity_id: automation.alert_beneden_ramen_dicht
 
   - alias: "alert zolder ramen open"
+    id: "23db046f-7ae2-423f-98d7-eb93f38180db"
     trigger:
       platform: template
       value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) > (states('sensor.buiten_temperature')|float)}} "
@@ -331,6 +335,7 @@ automation:
           entity_id: automation.alert_zolder_ramen_open
 
   - alias: "alert verdieping ramen open"
+    id: "0da85dba-f329-4b49-8927-82767de9f389"
     trigger:
       platform: template
       value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.buiten_temperature'), states('sensor.badkamer_temperature')]|min|float -1) > (states('sensor.buiten_temperature')|float)}} "
@@ -348,6 +353,7 @@ automation:
         target:
           entity_id: automation.alert_verdieping_ramen_open
   - alias: "alert beneden ramen open"
+    id: "a0d1aa31-a084-4839-8f26-b8c96e3ae0a3"
     trigger:
       platform: template
       value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) > (states('sensor.buiten_temperature')|float)}} "

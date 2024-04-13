@@ -642,6 +642,7 @@ automation:
             priority: -1
 
   - alias: "NL gdacs alert"
+    id: "823f535d-77df-48de-8589-8fa6d3534f28"
     trigger:
       platform: geo_location
       source: gdacs

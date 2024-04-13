@@ -470,6 +470,7 @@ automation:
               brightness: 255
     mode: parallel
   - alias: "do astro mode"
+    id: "3e857202-9058-4f02-b34e-c6c79e0d2dac"
     trigger:
       - platform: state
         entity_id: input_boolean.astro
@@ -495,6 +496,7 @@ automation:
         data:
           option: astro
   - alias: "undo astro mode"
+    id: "6bdec97d-0991-4f54-a29e-9d1c7b9330a0"
     trigger:
       - platform: state
         entity_id: input_boolean.astro
