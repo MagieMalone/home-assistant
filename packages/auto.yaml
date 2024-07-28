@@ -1,22 +1,22 @@
-automation:
-  - alias: "send route to car"
-    id: "03341c42-1881-4af4-aa3a-d2f7d564c073"
-    trigger:
-      - platform: state
-        entity_id: sensor.afspraak_latlong
-    condition:
-      - "{{trigger.from_state.attributes.position != trigger.to_state.attributes.position}}"
-      - "{{distance(state_attr('sensor.afspraak_latlong','position')['lat'], state_attr('sensor.afspraak_latlong','position')['lng'], 'device_tracker.kb2003')>=0.2}}"
-    action:
-      - service: mbapi2020.send_route
-        data:
-          vin: "W1K3F8HB2PV155037"
-          title: "{{states('sensor.afspraak_latlong')}}"
-          latitude: "{{state_attr('sensor.afspraak_latlong','position')['lat']}}"
-          longitude: "{{state_attr('sensor.afspraak_latlong','position')['lng']}}"
-          city: "{{state_attr('sensor.afspraak_latlong','address')['city']}}"
-          street: "{{state_attr('sensor.afspraak_latlong','address')['street']}}"
-          postcode: "{{state_attr('sensor.afspraak_latlong','address')['postalCode']}}"
+#automation:
+#  - alias: "send route to car"
+#    id: "03341c42-1881-4af4-aa3a-d2f7d564c073"
+#    trigger:
+#      - platform: state
+#        entity_id: sensor.afspraak_latlong
+#    condition:
+#      - "{{trigger.from_state.attributes.position != trigger.to_state.attributes.position}}"
+#      - "{{distance(state_attr('sensor.afspraak_latlong','position')['lat'], state_attr('sensor.afspraak_latlong','position')['lng'], 'device_tracker.kb2003')>=0.2}}"
+#    action:
+#      - service: mbapi2020.send_route
+#        data:
+#          vin: "W1K3F8HB2PV155037"
+#          title: "{{states('sensor.afspraak_latlong')}}"
+#          latitude: "{{state_attr('sensor.afspraak_latlong','position')['lat']}}"
+#          longitude: "{{state_attr('sensor.afspraak_latlong','position')['lng']}}"
+#          city: "{{state_attr('sensor.afspraak_latlong','address')['city']}}"
+#          street: "{{state_attr('sensor.afspraak_latlong','address')['street']}}"
+#          postcode: "{{state_attr('sensor.afspraak_latlong','address')['postalCode']}}"
 
 template:
   - sensor:

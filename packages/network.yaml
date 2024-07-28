@@ -91,6 +91,19 @@ automation:
         data:
           title: "IPv4 address changed"
           message: "Internet address changed from {{trigger.from_state.state}} to {{trigger.to_state.state}}"
+  - alias: "ping6 failed"
+    id: "b5d6a22f-c0a0-45d0-8dc4-3eb9ac23c17f"
+    trigger:
+      - platform: state
+        entity_id: sensor.ping6_google
+        attribute:
+        to: "100"
+        for: 00:05:00
+    action:
+      - service: notify.persistent_notification
+        data:
+          title: "IPv6 ping to google failed"
+          message: "ipv6 address: {{trigger.to_state.attributes.address}} {{trigger.to_state.attributes.loss_percentage}}%"
   - alias: "ipv4_test"
     id: "5d4c55c9-12ad-48f6-8a4f-4e5d51448724"
     trigger:
@@ -241,3 +254,23 @@ sensor:
 #    accept_errors: true
 #    default_value: 0
 #    icon: "mdi:cpu-64-bit"
+command_line:
+  - sensor:
+      name: ping6_google
+      command: /config/command_line/ping6.sh www.google.com
+      command_timeout: 30
+      scan_interval: 60
+      device_class: duration
+      state_class: measurement
+      value_template: "{{iif(value_json.avg == None, 2000, value_json.avg)}}"
+      unit_of_measurement: ms
+      json_attributes:
+        - destination
+        - address
+        - exit_code
+        - transmitted
+        - received
+        - loss_percentage
+        - min
+        - avg
+        - max

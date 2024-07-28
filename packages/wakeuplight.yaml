@@ -66,7 +66,7 @@ script:
               target:
                 entity_id: media_player.slaapkamer_speaker
               data:
-                media_content_id: "https://streaming.radio.co/s5c5da6a36/listen"
+                media_content_id: "https://a1.radio.co/s5c5da6a36/listen"
                 media_content_type: audio/mp4
             - alias: mediaplayer_play
               service: media_player.media_play

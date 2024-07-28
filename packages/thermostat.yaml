@@ -28,6 +28,11 @@ sensor:
       - elecprodflowhigh
       - elecprodcnthigh
       - heat
+      - elecsolar
+      - elecsolarcnt
+      - waterflow
+      - waterquantity
+      
   - platform: toon_boilerstatus
     name: Toon
     host: !secret toon_ip

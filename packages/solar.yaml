@@ -1,0 +1,39 @@
+template:
+  - sensor:
+    - name: "Solar_used"
+      unique_id: "bcb686d6-5de2-47fb-a260-4eac972b6012"
+      state: "{{states('sensor.inverter_active_power')|float - states('sensor.power_to_net')|float}}"
+      device_class: "power"
+      unit_of_measurement: "W"
+    - name: "total_power_used"
+      unique_id: "e3798d72-a709-4258-9a38-564c2214b7dc"
+      state: "{{states('sensor.inverter_active_power')|float - states('sensor.power_to_net')|float + states('sensor.current_power_usage')|float }}"
+      device_class: "power"
+      unit_of_measurement: "W"
+sensor:
+  - platform: statistics
+    unique_id: "87357bb9-e175-4fa6-bb7d-4fc22cc14a2c"
+    entity_id: sensor.inverter_daily_yield
+    max_age:
+      days: 366
+    precision: 1
+    name: Solar yield max
+    state_characteristic: value_max
+  - platform: statistics
+    unique_id: "40600077-74c6-4196-bd4a-071bf964812f"
+    entity_id: sensor.inverter_daily_yield
+    max_age:
+      hours: 24
+    precision: 1
+    name: Solar yield max 24h
+    state_characteristic: value_max
+  - platform: statistics
+    unique_id: "2fa04d3d-093a-4321-ace4-d25d09a5cf6f"
+    entity_id: sensor.solar_yield_max_24h
+    max_age:
+      days: 366
+    precision: 1
+    name: Solar yield min
+    state_characteristic: value_min
+
+    

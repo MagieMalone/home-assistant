@@ -36,24 +36,34 @@ sensor:
 #    name: google_travel_time_alarm
 # Example configuration.yaml entry
 
-  - platform: rest
-    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.cal_location_alarm')|regex_replace(find='[0-9]{4}(| )[A-Z]{2} *', replace='', ignorecase=False)|urlencode}}&apiKey={{states('input_text.here_api')}}
-    value_template: "{{value_json['items'][0]['address']['label'] }}"
-    json_attributes_path: "items.0.position"
-    json_attributes:
-      - lng
-      - lat
-    name: "alarm_latlong"
-    scan_interval: 900
-  - platform: rest
-    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.cal_location')|regex_replace(find='[0-9]{4}(| )[A-Z]{2} *', replace='', ignorecase=False)|urlencode}}&apiKey={{states('input_text.here_api')}}
-    value_template: "{{value_json['items'][0]['address']['label'] }}"
-    json_attributes_path: "items.0"
-    json_attributes:
-      - position
-      - address
-    name: "afspraak_latlong"
-    scan_interval: 900
+
+#
+#  - platform: rest
+#    resource_template: https://api.tomtom.com/search/2/geocode/{{states('sensor.cal_location')|urlencode}}.json?key={Your_API_Key}'
+#    value_template: "{{value_json['results'][0]['address']['freeformAddress'] }}"
+#    json_attributes_path: "results.0"
+#    json_attributes:
+#      - position
+#      - address
+#  https://developer.tomtom.com/geocoding-api/documentation/geocode
+#  - platform: rest
+#    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.cal_location_alarm')|regex_replace(find='[0-9]{4}(| )[A-Z]{2} *', replace='', ignorecase=False)|urlencode}}&apiKey={{states('input_text.here_api')}}
+#    value_template: "{{value_json['items'][0]['address']['label'] }}"
+#    json_attributes_path: "items.0.position"
+#    json_attributes:
+#      - lng
+#      - lat
+#    name: "alarm_latlong"
+#    scan_interval: 900
+#  - platform: rest
+#    resource_template: https://geocode.search.hereapi.com/v1/geocode?q={{states('sensor.cal_location')|regex_replace(find='[0-9]{4}(| )[A-Z]{2} *', replace='', ignorecase=False)|urlencode}}&apiKey={{states('input_text.here_api')}}
+#    value_template: "{{value_json['items'][0]['address']['label'] }}"
+#    json_attributes_path: "items.0"
+#    json_attributes:
+#      - position
+#      - address
+#    name: "afspraak_latlong"
+#    scan_interval: 900
 #  - platform: here_travel_time
 #    api_key: !secret here_api
 #    origin_entity_id: zone.home
@@ -88,33 +98,33 @@ template:
     - name: "google_api_key"
       unique_id: "a68c6663-094f-405d-b625-9eb104cd988f"
       state: !secret google_apikey
-    - name: "alarm_latlong_mod"
-      unique_id: "49cd05d9-1035-433c-8a97-b976bc8d55cf"
-      state: "{{states('sensor.alarm_latlong')}}"
-      attributes:
-        latitude: "{{iif(state_attr('sensor.alarm_latlong', 'lat') == None, 0, state_attr('sensor.alarm_latlong', 'lat')|float)}}"
-        longitude: "{{iif(state_attr('sensor.alarm_latlong', 'lng') == None, 0, state_attr('sensor.alarm_latlong', 'lng')|float)}}"
-    - name: "afspraak_latlong_mod"
-      unique_id: "631b528f-3e33-4390-9c6c-bb3c20ebdd90"
-      state: "{{states('sensor.afspraak_latlong')}}"
-      attributes:
-        latitude: >
-          {% if states.sensor.afspraak_latlong.attributes is defined %}
-            {% if states.sensor.afspraak_latlong.attributes.position is defined %}
-              {{iif(state_attr('sensor.afspraak_latlong','position')['lat'] == None, 0, state_attr('sensor.afspraak_latlong','position')['lat']|float)}}
-            {% else -%}
-              0
-            {% endif %}
-          {% else -%}
-            0
-          {% endif %}
-        longitude: >
-          {% if states.sensor.afspraak_latlong.attributes is defined %}
-          {% if states.sensor.afspraak_latlong.attributes.position is defined %}
-              {{iif(state_attr('sensor.afspraak_latlong','position')['lng'] == None, 0, state_attr('sensor.afspraak_latlong','position')['lng']|float)}}
-            {% else -%}
-              0
-            {% endif %}
-          {% else -%}
-            0
-          {% endif %}
+#    - name: "alarm_latlong_mod"
+#      unique_id: "49cd05d9-1035-433c-8a97-b976bc8d55cf"
+#      state: "{{states('sensor.alarm_latlong')}}"
+#      attributes:
+#        latitude: "{{iif(state_attr('sensor.alarm_latlong', 'lat') == None, 0, state_attr('sensor.alarm_latlong', 'lat')|float)}}"
+#        longitude: "{{iif(state_attr('sensor.alarm_latlong', 'lng') == None, 0, state_attr('sensor.alarm_latlong', 'lng')|float)}}"
+#    - name: "afspraak_latlong_mod"
+#      unique_id: "631b528f-3e33-4390-9c6c-bb3c20ebdd90"
+#      state: "{{states('sensor.afspraak_latlong')}}"
+#      attributes:
+#        latitude: >
+#          {% if states.sensor.afspraak_latlong.attributes is defined %}
+#            {% if states.sensor.afspraak_latlong.attributes.position is defined %}
+#              {{iif(state_attr('sensor.afspraak_latlong','position')['lat'] == None, 0, state_attr('sensor.afspraak_latlong','position')['lat']|float)}}
+#            {% else -%}
+#              0
+#            {% endif %}
+#          {% else -%}
+#            0
+#          {% endif %}
+#        longitude: >
+#          {% if states.sensor.afspraak_latlong.attributes is defined %}
+#          {% if states.sensor.afspraak_latlong.attributes.position is defined %}
+#              {{iif(state_attr('sensor.afspraak_latlong','position')['lng'] == None, 0, state_attr('sensor.afspraak_latlong','position')['lng']|float)}}
+#            {% else -%}
+#              0
+#            {% endif %}
+#          {% else -%}
+#            0
+#          {% endif %}

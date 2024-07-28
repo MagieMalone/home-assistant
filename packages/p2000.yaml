@@ -37,16 +37,16 @@ sensor:
 #      - lat
 #      - lng
 
-feedreader:
-  urls:
-#    - https://alarmeringen.nl/feeds/city/lutjebroek.rss
-#    - https://alarmeringen.nl/feeds/city/grootebroek.rss
-#    - https://alarmeringen.nl/feeds/city/hoogkarspel.rss
-#    - https://alarmeringen.nl/feeds/region/noord-holland-noord.rss
-    - http://feeds.livep2000.nl?r=10
-  scan_interval:
-    minutes: 1
-
+#feedreader:
+#  urls:
+##    - https://alarmeringen.nl/feeds/city/lutjebroek.rss
+##    - https://alarmeringen.nl/feeds/city/grootebroek.rss
+##    - https://alarmeringen.nl/feeds/city/hoogkarspel.rss
+##    - https://alarmeringen.nl/feeds/region/noord-holland-noord.rss
+#    - http://feeds.livep2000.nl?r=10
+#  scan_interval:
+#    minutes: 1
+#
 
 
 
