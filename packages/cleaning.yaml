@@ -67,12 +67,14 @@ automation:
       - service: input_boolean.turn_on
         target:
           entity_id: input_boolean.cleaningmode
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.huiskamer_hub
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
           message: 'Goedemorgen jacqueline'
-          language: 'nl'
+          language: nl-NL
       - delay:
           seconds: 5
       - service: spotcast.start

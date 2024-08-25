@@ -309,15 +309,17 @@ automation:
                         data:
                           variables:
                             action:
-                              - alias: "cloud tts"
-                                service: tts.cloud_say
+                              - action: tts.speak
+                                target:
+                                  entity_id: tts.home_assistant_cloud
                                 data:
-                                  entity_id: media_player.speakers
-                                  message: "Toon van Eneco heeft een storing, vergeet niet de kachel uit te doen"
+                                  cache: false
+                                  media_player_entity_id: media_player.speakers
+                                  language: nl-NL
                                   options:
                                     voice: FennaNeural
-                                  language: "nl-NL"
-                                  cache: true
+                                  message: "Toon van Eneco heeft een storing, vergeet niet de kachel uit te doen"
+
                       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
                         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
                       - alias: "Apply TTS volume"
@@ -349,15 +351,16 @@ automation:
                     data:
                       variables:
                         action:
-                          - alias: "cloud tts"
-                            service: tts.cloud_say
+                          - action: tts.speak
+                            target:
+                              entity_id: tts.home_assistant_cloud
                             data:
-                              entity_id: media_player.speakers
-                              message: "Toon van Eneco heeft een storing, vergeet niet de kachel uit te doen"
+                              cache: false
+                              media_player_entity_id: media_player.speakers
+                              language: nl-NL
                               options:
                                 voice: FennaNeural
-                              language: "nl-NL"
-                              cache: true
+                              message: "Toon van Eneco heeft een storing, vergeet niet de kachel uit te doen"
                   - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
                     wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
                   - alias: "Apply TTS volume"

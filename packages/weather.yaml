@@ -265,12 +265,14 @@ automation:
       platform: template
       value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) < (states('sensor.buiten_temperature')|float)}} "
     action:
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.speakers
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
+          language: nl-NL
           message: "Tijd om de ramen op zolder dicht te doen"
-          language: "nl"
       - service: automation.turn_on
         target:
           entity_id: automation.alert_zolder_ramen_open
@@ -283,12 +285,14 @@ automation:
       platform: template
       value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.buiten_temperature'), states('sensor.badkamer_temperature')]|min|float -1) < (states('sensor.buiten_temperature')|float)}} "
     action:
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.speakers
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
+          language: nl-NL
           message: "Tijd om de ramen op de eerste verdieping dicht te doen"
-          language: "nl"
       - service: automation.turn_on
         target:
           entity_id: automation.alert_verdieping_ramen_open
@@ -302,12 +306,14 @@ automation:
       platform: template
       value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) < (states('sensor.buiten_temperature')|float)}} "
     action:
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.speakers
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
+          language: nl-NL
           message: "Tijd om de ramen beneden dicht te doen"
-          language: "nl"
       - service: automation.turn_on
         target:
           entity_id: automation.alert_beneden_ramen_open
@@ -321,12 +327,14 @@ automation:
       platform: template
       value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) > (states('sensor.buiten_temperature')|float)}} "
     action:
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.speakers
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
+          language: nl-NL
           message: "Tijd om de ramen op zolder open te doen"
-          language: "nl"
       - service: automation.turn_on
         target:
           entity_id: automation.alert_zolder_ramen_dicht
@@ -340,12 +348,14 @@ automation:
       platform: template
       value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.buiten_temperature'), states('sensor.badkamer_temperature')]|min|float -1) > (states('sensor.buiten_temperature')|float)}} "
     action:
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.speakers
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
+          language: nl-NL
           message: "Tijd om de ramen op de eerste verdieping open te doen"
-          language: "nl"
       - service: automation.turn_on
         target:
           entity_id: automation.alert_verdieping_ramen_dicht
@@ -358,12 +368,14 @@ automation:
       platform: template
       value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) > (states('sensor.buiten_temperature')|float)}} "
     action:
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.speakers
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
+          language: nl-NL
           message: "Tijd om de ramen beneden open te doen"
-          language: "nl"
       - service: automation.turn_on
         target:
           entity_id: automation.alert_beneden_ramen_dicht

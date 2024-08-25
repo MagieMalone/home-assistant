@@ -64,10 +64,19 @@ automation:
                   thumb: "https://brands.home-assistant.io/_/homeassistant/logo.png"
                   title: Doorbell
             - delay: "00:00:03"
-            - service: tts.google_say
+            - alias: "Send TTS using Google Home Resume script"
+              service: script.turn_on
               target:
-                entity_id: media_player.speakers
+                entity_id: script.google_home_resume
               data:
-                message: "Er is iemand aan de deur"
-                language: "nl"
+                variables:
+                  action:
+                    - action: tts.speak
+                      target:
+                        entity_id: tts.home_assistant_cloud
+                      data:
+                        cache: false
+                        media_player_entity_id: media_player.speakers
+                        language: nl-NL
+                        message: "Er is iemand aan de deur"
             - delay: "00:00:10"

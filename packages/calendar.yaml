@@ -172,13 +172,13 @@ automation:
         data:
           variables:
             action:
-              - alias: "Send TTS message"
-                service: tts.google_say
+              - action: tts.speak
                 target:
-                  entity_id: media_player.speakers
+                  entity_id: tts.home_assistant_cloud
                 data:
                   cache: false
-                  language: "nl"
+                  media_player_entity_id: media_player.speakers
+                  language: nl-NL
                   message: >
                     {%- if states('sensor.waze_travel_time') == None %}
                       {% set reistijd = 0 %}
@@ -227,14 +227,14 @@ automation:
         data:
           variables:
             action:
-              - alias: "Send TTS message"
-                service: tts.google_say
+              - action: tts.speak
                 target:
-                  entity_id: media_player.speakers
+                  entity_id: tts.home_assistant_cloud
                 data:
-                  message: "De {{state_attr('calendar.online_events', 'message')}} begint over vijf minuten"
                   cache: false
-                  language: "nl"
+                  media_player_entity_id: media_player.speakers
+                  language: nl-NL
+                  message: "De {{state_attr('calendar.online_events', 'message')}} begint over vijf minuten"
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
       - alias: "Apply TTS volume"
@@ -264,16 +264,18 @@ automation:
         data:
           variables:
             action:
-              - alias: "cloud tts"
-                service: tts.cloud_say
+              - action: tts.speak
+                target:
+                  entity_id: tts.home_assistant_cloud
                 data:
-                  entity_id: media_player.speakers
+                  cache: false
+                  media_player_entity_id: media_player.speakers
 #                  message: "De meeting {{state_attr('calendar.action', 'message')}} begint over twee minuten"
                   message: "De meeting {{trigger.calendar_event.summary}} begint over twee minuten"
                   options:
                     voice: FennaNeural
                   language: "nl-NL"
-                  cache: false
+
 #              - alias: "Send TTS message"
 #                service: tts.google_say
 #                target:
@@ -325,14 +327,15 @@ automation:
         data:
           variables:
             action:
-              - alias: "Send TTS message"
-                service: tts.google_say
+              - action: tts.speak
                 target:
-                  entity_id: media_player.speakers
+                  entity_id: tts.home_assistant_cloud
                 data:
-                  message: "De {{state_attr('calendar.formula_1_calendar_by_racefans_net', 'message')}} begint over tien minuten"
                   cache: false
-                  language: "nl"
+                  media_player_entity_id: media_player.speakers
+                  message: >
+                    De {{state_attr('calendar.formula_1_calendar_by_racefans_net', 'message')}} begint over tien minuten
+                  language: nl-NL
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
       - alias: "Apply TTS volume"
@@ -386,11 +389,12 @@ automation:
 script:
   test_f1_announce:
     sequence:
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.speakers
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: false
+          media_player_entity_id: media_player.speakers
           message: >
             De {{state_attr('calendar.formula_1_calendar_by_racefans_net', 'message')}} begint over tien minuten
-          cache: false
-          language: "nl"
+          language: nl-NL

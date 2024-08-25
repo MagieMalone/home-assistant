@@ -32,12 +32,14 @@ nacht:
     target:
       entity_id: switch.media_group
     data: {}
-  - service: tts.google_say
+  - action: tts.speak
     target:
-      entity_id: media_player.huiskamer_hub
+      entity_id: tts.home_assistant_cloud
     data:
+      cache: true
+      media_player_entity_id: media_player.speakers
       message: Nighty night
-      language: en
+      language: en-US
   - delay:
       minutes: 30
   - service: input_select.select_option
@@ -82,12 +84,14 @@ nacht_aangepast:
     data: {}
   - delay:
       seconds: 5
-  - service: tts.google_say
+  - action: tts.speak
     target:
-      entity_id: media_player.huiskamer_hub
+      entity_id: tts.home_assistant_cloud
     data:
+      cache: true
+      media_player_entity_id: media_player.speakers
       message: Nighty night
-      language: en
+      language: en-US
   - delay:
       minutes: 30
   - service: input_select.select_option
@@ -110,12 +114,14 @@ eten:
       color_temp: 500
   - delay:
       seconds: 2
-  - service: tts.google_say
+  - action: tts.speak
     target:
-      entity_id: media_player.huiskamer_hub
+      entity_id: tts.home_assistant_cloud
     data:
+      cache: true
+      media_player_entity_id: media_player.speakers
       message: Eet smakelijk
-      language: nl
+      language: nl-NL
 koken:
   sequence:
   - service: light.turn_on
@@ -162,12 +168,14 @@ tv:
       transition: 10
   - delay:
       seconds: 2
-  - service: tts.google_say
+  - action: tts.speak
     target:
-      entity_id: media_player.huiskamer_hub
+      entity_id: tts.home_assistant_cloud
     data:
+      cache: true
+      media_player_entity_id: media_player.speakers
       message: Veel plezier
-      language: nl
+      language: nl-NL
 start_chromecast:
   alias: Start chromecast
   sequence:

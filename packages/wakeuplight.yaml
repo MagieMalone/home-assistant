@@ -88,13 +88,14 @@ script:
 
       - delay:
           minutes: 1
-      - alias: opstaan!
-        service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.slaapkamer_speaker
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
+          language: nl-NL
           message: "Goeie morgen, tijd om op te staan"
-          language: "nl"
       - delay:
           minutes: 1
       - alias: volume

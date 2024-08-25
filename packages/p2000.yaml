@@ -1,14 +1,4 @@
 sensor:
-#  - platform: p2000
-#    name: Brandweer
-#    regios: 10
-#    disciplines: Brandweerdiensten
-#    radius: 7500
-#  - platform: p2000
-#    name: Ambulance
-#    regios: 10
-#    disciplines: Ambulancediensten
-#    radius: 1000
   - platform: p2000
     name: LL1
     capcodes: 0120901
@@ -22,9 +12,6 @@ sensor:
     name: LL4
     capcodes: 0320908
   - platform: p2000
-#    name: grip
-#    radius: 30000
-#    contains: "GRIP"
   - platform: p2000
     name: p2000_latest
     regios: 10
@@ -687,11 +674,13 @@ script:
         data:
           variables:
             action:
-              - alias: "Send TTS message"
-                service: tts.google_say
+              - action: tts.speak
                 target:
-                  entity_id: media_player.speakers
+                  entity_id: tts.home_assistant_cloud
                 data:
+                  cache: false
+                  media_player_entity_id: media_player.speakers
+                  language: nl-NL
                   message: >
                     {% set BR_code ='BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole|afval|gebouw|agrarisch) ' %}
                     {% set HV_code ='HV (materieel|(weg |spoor |water )(letsel|materieel|)|overig) *' %}
@@ -736,8 +725,7 @@ script:
                     {% else %}
                       De {{dienst}} is onderweg naar {{location}}
                     {% endif %}
-                  cache: false
-                  language: "nl"
+
 
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"

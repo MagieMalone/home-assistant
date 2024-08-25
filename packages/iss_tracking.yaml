@@ -9,6 +9,7 @@ sensor:
   - platform: rest
     resource: https://api.wheretheiss.at/v1/satellites/25544
     name: iss
+    unique_id: "6ff0f7d9-0338-4fd2-b835-728692c7acd1"
     verify_ssl: true
     value_template: "{{ value_json.timestamp }}"
     json_attributes:
@@ -132,13 +133,13 @@ automation:
         data:
           variables:
             action:
-              - alias: "Send TTS message"
-                service: tts.google_say
+              - action: tts.speak
                 target:
-                  entity_id: media_player.speakers
+                  entity_id: tts.home_assistant_cloud
                 data:
                   cache: false
-                  language: "nl"
+                  media_player_entity_id: media_player.speakers
+                  language: nl-NL
                   message: "ISS is nu {{state_attr('sensor.iss_alt_az', 'altitude')|round(1)}} graden boven de horizon in {{iss_direction}} richting "
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"

@@ -113,3 +113,4 @@ automation:
           title: "{{ now().strftime('%A') }} Agenda"
           target:
             - "a.buurman@gmail.com"
+

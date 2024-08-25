@@ -26,16 +26,17 @@ logger:
 #    homeassistant.components.tplink: debug
 #    custom_components.p2000: debug
 #    custom_components.multiscrape: debug    
-    custom_components.toon_smartmeter: debug
+#    custom_components.toon_smartmeter: debug
 #    custom_components.toon_boilerstatus: debug
 #    custom_components.toon_climate: debug
-
+    homeassistant.components.snmp: debug
+    homeassistant.components.sensor.snmp: debug
 http:
   #  ssl_certificate: /ssl/fullchain.pem
   #  ssl_key: /ssl/privkey.pem
   use_x_forwarded_for: true
   trusted_proxies:
-    - 192.168.20.20
+    - 192.168.20.19
     - 127.0.0.1
   #ip_ban_enabled: true
   login_attempts_threshold: 5

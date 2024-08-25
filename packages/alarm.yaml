@@ -173,12 +173,14 @@ automation:
         to: "triggered"
         for: "00:01:55"
     action:
-      - service: tts.google_say
+      - action: tts.speak
         target:
-          entity_id: media_player.speakers
+          entity_id: tts.home_assistant_cloud
         data:
+          cache: true
+          media_player_entity_id: media_player.speakers
           message: "Alarm! Alarm! Alarm! indringer in huis!"
-          language: "nl"
+          language: "nl-NL"
       - service: scene.create
         data:
           scene_id: before_alarm
