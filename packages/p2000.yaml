@@ -589,6 +589,7 @@ automation:
                 state: "Net Thuis"
           - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
           - "{{states('sensor.p2000_latest') is not search('Intrekken Alarm', ignorecase=True)}}"
+          - "{{states('sensor.p2000_latest') is not search('Nacontrole', ignorecase=True)}}"
     action:
       - service: script.p2000_announce
         data:
@@ -685,7 +686,7 @@ script:
                     {% set BR_code ='BR (woning|gezondheidszorg|ziekenhuis|buiten|berm-/bosschage|container|gerucht|industrie|nablussen|wegvervoer|nacontrole|afval|gebouw|agrarisch) ' %}
                     {% set HV_code ='HV (materieel|(weg |spoor |water )(letsel|materieel|)|overig) *' %}
                     {% set DV_code ='DV (aan derden|Brw) ' %}
-                    {% set no_code ='(CO-melder|Rookmelder|Liftopsluiting|Ass. (Ambu|Pol)|Reanimatie|(PAC|OMS) (brandmelding|handmelder)|(Persoon|Voertuig) te water|Wateroverlast|Uitval nutsvoorz.|Persoon te water|Dier (in problemen|op hoogte|te water|in put/kelder)|Stank/hind. lucht|Luid/optisch alarm|Stormschade) ' %}
+                    {% set no_code ='(CO-melder|Rookmelder|Liftopsluiting|Ass. (Ambu|Pol)|Reanimatie|(PAC|OMS) (brandmelding|handmelder)|(Persoon|Voertuig) te water|Wateroverlast|Uitval nutsvoorz.|Persoon te water|Dier (in problemen|op hoogte|te water|in put/kelder)|Stank/hind. lucht|Luid/optisch alarm|Stormschade) |Ongeval (gev. stof|spoor) ' %}
                     {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
                     {% set br_string ='^([A-Z]{3}-[0-9]{2} |)' ~ bran_reden %}
                     {% set dienstprio ='^(A|B|P |Prio )([0-9]|) ' %}
@@ -694,7 +695,7 @@ script:
                     {% set bon_string = '([A-Z]{6} |)(rit|bon|Rit|Bon|)(: | |VWS )([0-9]{4,6}( |$))+' %}
                     {% set mapdienst = {'A':'Ambulance','B':'Ambulance','P':'Brandweer'} %}
                     {% set mapreden = {'BR':'Brand,','HV':'Hulpverlening,', 'DV':'Dienstverlening,'} %}
-                    {% set mapast = {'Ass. Ambu ':'Assistentie ambulance','Ass. Pol ':'Assistentie Politie','Stank/hind. lucht ':'Stank of hinderlijke lucht'} %}
+                    {% set mapast = {'Ass. Ambu ':'Assistentie ambulance','Ass. Pol ':'Assistentie Politie','Stank/hind. lucht ':'Stank of hinderlijke lucht','Ongeval gev. stof ':'ongeval gevaarlijke stoffen'} %}
                     {% set location1 = my_state |regex_replace(find=dienstprio, replace='', ignorecase=False) %}
                     {% set location2 = location1 |regex_replace(find=brackets, replace='', ignorecase=False)  %}
                     {% set location3 = location2 |regex_replace(find=ambu_string, replace='', ignorecase=False) %}

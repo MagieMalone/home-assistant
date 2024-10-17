@@ -1,0 +1,14 @@
+sensor:
+  - platform: rest
+    resource: "https://gvb.nl/api/gvb-shared-services/travelinformation/api/v1/Notification/GetNotification?language=nl"
+    value_template: "{{value_json['isActive'] }}"
+    name: "gvb_notification"
+    unique_id: "b600fc6f-324c-498e-88eb-4d2571be0ee6"
+    scan_interval: 900
+    json_attributes:
+      - notification
+  - platform: ovapi
+    name: Metro_52
+    timing_point_code: 30009572
+    line_filter: 52
+    show_future_departures: 10

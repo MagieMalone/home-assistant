@@ -1,10 +1,10 @@
 #google:
 #  client_id: 836630737755-pr91j52c6n1700mvlsu5tn3tn4maoel6.apps.googleusercontent.com
 #  client_secret: !secret google_cal_apikey
-ics_calendar:
-  calendars:
-    - name: "Action"
-      url: "https://outlook.office365.com/owa/calendar/06232f8ce3134d20ba900718041c943b@action.nl/0e63658da45346948340073320ca2ddd12232588031098642347/S-1-8-2766736951-4256691664-3679573647-448257908/reachcalendar.ics"
+#ics_calendar:
+#  calendars:
+#    - name: "Action"
+#      url: "https://outlook.office365.com/owa/calendar/06232f8ce3134d20ba900718041c943b@action.nl/0e63658da45346948340073320ca2ddd12232588031098642347/S-1-8-2766736951-4256691664-3679573647-448257908/reachcalendar.ics"
 
 input_boolean:
   f1_announcements:

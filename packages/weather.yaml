@@ -217,14 +217,20 @@ template:
         event_data:
           domain: template
           service: reload
-
+    action:
+      - action: weather.get_forecasts
+        data:
+          type: daily
+        target:
+          entity_id: weather.berkhout
+        response_variable: daily
     sensor:
       - name: nextday_weather
         unique_id: "cac9318d-e750-4a54-9ac1-bd98431783a5"
         state: "{{states('sensor.berkhout_condition_1d')}}"
         attributes:
-          forecast: "[{{state_attr('weather.berkhout', 'forecast')[0]}}]"
-
+#          forecast: "[{{state_attr('weather.berkhout', 'forecast')[0]}}]"
+          forecast: "{{ daily['weather.knmi_home']['forecast'] }}"
 
   - trigger:
       - platform: time_pattern
