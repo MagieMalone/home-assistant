@@ -19,6 +19,15 @@ light:
       - light.hue_lightstrip_plus_1
       - light.staande_lamp
   - platform: group
+    unique_id: "aa58c282-d5a3-4b73-b288-528e1d6c1993"
+    name: keuken_en_eethoek
+    entities:
+      - light.hue_color_pendant_down_1
+      - light.hue_color_pendant_up_1
+      - light.keuken_1
+      - light.keuken_2
+      - light.keuken_3
+  - platform: group
     unique_id: "9a92f8b0-a07c-4e3a-b1ab-f7106caac260"
     name: eetkamer
     entities:

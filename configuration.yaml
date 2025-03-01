@@ -18,7 +18,7 @@ logger:
 #    homeassistant.components.binary_sensor.ring: debug
 #    homeassistant.components.media_player.spotify: info
 #    homeassistant.components.google_travel_time: debug
-#    homeassistant.components.rest: debug
+    homeassistant.components.rest: debug
 #    custom_components.mercedesmeapi: debug
 #    custom_components.mercedesmeapi.sensor: info
 #    custom_components.mercedesmeapi.apicontroller: debug
@@ -78,10 +78,16 @@ recorder:
       - sensor.iss
 
 influxdb:
+  api_version: 2
+  ssl: false
+  token: !secret influxdb_token
+  organization: 58f4d308ad4d35a0
+  bucket: home_assistant/90_days
+  tags:
+    source: HA
+  default_measurement: units
   host: 192.168.3.6
   port: 8086
-  username: !secret influxdb_user
-  password: !secret influxdb_password
   exclude:
     domains:
       - updater

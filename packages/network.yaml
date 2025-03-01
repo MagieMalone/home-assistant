@@ -14,6 +14,9 @@ template:
     - name: "google_rtt"
       unique_id: "a2640ba7-762c-4eb0-9932-2c9e61879128"
       state: "{{state_attr('binary_sensor.google', 'round_trip_time_avg')|float}}"
+    - name: "firewall_connected_devices"
+      unique_id: "e6952d11-bc47-4749-8d55-e5efe2b670c2"
+      state: "{{states.device_tracker |selectattr('attributes.source_type', 'eq', 'router')|list|count}}"
     - name: "esxi_cpu_mhz_used"
       unique_id: "f4068b2f-9c94-4a2f-9186-129e274b4c32"
       state: "{{state_attr('sensor.esxi_vmhost_localhost_local_foto_album_com', 'cpuusage_ghz')|float }}"
@@ -77,7 +80,7 @@ automation:
     id: "548892fc-7da0-43d1-9e71-8465dd803fbf"
     trigger:
       - platform: state
-        entity_id: sensor.edgeos_interface_eth0_internet_ipv4
+        entity_id: sensor.firewall_ipv4
     condition:
       - and:
           - "{{trigger.from_state.state != 'unavailable'}}"
@@ -394,7 +397,36 @@ sensor:
     version: "3"
     username: !secret forti_snmp_user
     value_template: '{{ value | float }}'
-    scan_interval: 60  
+    scan_interval: 60
+  - platform: rest
+    resource: https://192.168.3.1/api/v2/cmdb/system/interface?filter="name==wan1"
+    headers: 
+      Authorization: !secret firewall_bearer_token
+      Content-Type: application/json
+    value_template: "{{value_json['results'][0]['ip']}}"
+    json_attributes_path: results.0
+    json_attributes:
+      - ipv6.ip6-address
+      - mode
+      - ipv6.ip6-mode
+      - status
+    name: "firewall_ipv4"
+    unique_id: "508eb87d-e6a8-46d0-be28-d0daedb536f7"
+    scan_interval: 300
+    verify_ssl: false
+  - platform: rest
+    resource: https://192.168.3.1/api/v2/cmdb/system/interface?filter="name==wan1"
+    headers: 
+      Authorization: !secret firewall_bearer_token
+      Content-Type: application/json
+    value_template: "{{value_json['results'][0]['ipv6']['ip6-address']}}"
+    json_attributes_path: results.0.ipv6
+    json_attributes:
+      - ip6-mode
+    name: "firewall_ipv6"
+    unique_id: "e8d35018-26f1-47dd-8997-43eb0286ecc6"
+    scan_interval: 300
+    verify_ssl: false
 command_line:
   - sensor:
       name: ping6_google

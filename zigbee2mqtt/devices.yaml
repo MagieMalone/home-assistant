@@ -33,7 +33,7 @@
   temperature_precision: 1
   humidity_precision: 1
 '0x00158d0002b42afb':
-  friendly_name: slaapkamer
+  friendly_name: sw_slaapkamer
   legacy: false
 '0x00158d0002b7eda4':
   friendly_name: '0x00158d0002b7eda4'
@@ -62,7 +62,7 @@
   pressure_precision: 0
   humidity_precision: 1
 '0x00158d0002b4a149':
-  friendly_name: woonkamer
+  friendly_name: sw_woonkamer
   legacy: false
 '0x00158d0005278e3c':
   friendly_name: '0x00158d0005278e3c'
@@ -83,7 +83,7 @@
   temperature_precision: 1
   humidity_precision: 1
 '0x00158d0002b4582b':
-  friendly_name: keuken
+  friendly_name: sw_keuken
   legacy: false
 '0x00158d00052b224e':
   friendly_name: '0x00158d00052b224e'
@@ -99,7 +99,7 @@
   friendly_name: '0x0017880102e1e3b4'
   legacy: false
 '0x00158d0002b4a1cf':
-  friendly_name: studeerkamer
+  friendly_name: sw_studeerkamer
   legacy: false
 '0x00158d00017d4599':
   friendly_name: '0x00158d00017d4599'

@@ -1,47 +1,3 @@
-- id: '1608714195345'
-  alias: aqara studeerkamer
-  description: ''
-  use_blueprint:
-    path: myown/aqara_doubleswitch_action_light.yaml
-    input:
-      switch_entity: sensor.studeerkamer_action
-      light_entity_left: light.computer
-      light_entity_right: light.computer
-      light_entity_both: light.computer
-      mode_selector: input_select.house_mode
-- id: '1608714470902'
-  alias: aqara woonkamer
-  description: ''
-  use_blueprint:
-    path: myown/aqara_doubleswitch_action_light.yaml
-    input:
-      switch_entity: sensor.woonkamer_action
-      light_entity_left: light.hue_lightstrip_plus_1
-      light_entity_right: light.staande_lamp
-      light_entity_both: light.woonkamer
-      mode_selector: input_select.house_mode
-- id: '1608714589824'
-  alias: aqara slaapkamer
-  description: ''
-  use_blueprint:
-    path: myown/aqara_doubleswitch_action_light.yaml
-    input:
-      switch_entity: sensor.slaapkamer_action
-      light_entity_left: light.sk_spot
-      light_entity_right: light.sk_ceiling
-      light_entity_both: light.slaapkamer
-      mode_selector: input_select.house_mode
-- id: '1608714672968'
-  alias: aqara keuken
-  description: ''
-  use_blueprint:
-    path: myown/aqara_doubleswitch_action_light.yaml
-    input:
-      switch_entity: sensor.keuken_action
-      light_entity_left: light.eetkamer
-      light_entity_right: light.keuken
-      light_entity_both: light.eetkamer, light.keuken
-      mode_selector: input_select.house_mode
 - id: '1651741431457'
   alias: notify if TV is missing
   description: ''
@@ -74,6 +30,7 @@
       motion_entity: binary_sensor.hal_occupancy
       light_entity: light.hal
       threshold_input: input_number.lightlevel
+      illu_entity: sensor.hal_illuminance
 - id: '1664434226722'
   alias: Motion-activated Light Lightlevel overloop
   description: ''
@@ -83,6 +40,7 @@
       motion_entity: binary_sensor.overloop_occupancy
       light_entity: light.overloop
       threshold_input: input_number.lightlevel
+      illu_entity: sensor.overloop_illuminance
 - id: '1664434460237'
   alias: Motion-activated Light Lightlevel traphal
   description: ''
@@ -92,6 +50,7 @@
       motion_entity: binary_sensor.traphal_occupancy
       light_entity: light.trap_hal
       threshold_input: input_number.lightlevel
+      illu_entity: sensor.traphal_illuminance
 - id: '1670329716450'
   alias: Motion-activated Light-hal-default
   description: ''
@@ -159,3 +118,219 @@
         - calendar.calendar
       weather_entity: sensor.nextday_weather
       zone_entity: zone.home
+- id: '1736856884500'
+  alias: sw_keuken_single_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 9dd5732a111d48efbbbabc90d41ef787
+      light_entity: light.eetkamer
+      my_action: single_left
+- id: '1736857048411'
+  alias: sw_keuken_single_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 9dd5732a111d48efbbbabc90d41ef787
+      light_entity: light.keuken
+      my_action: single_right
+- id: '1736857140632'
+  alias: sw_slaapkamer_single_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 9ffb11cd66084c9180697da85c7744dd
+      my_action: single_left
+      light_entity: light.sk_spot
+- id: '1736857340401'
+  alias: sw_woonkamer_single_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
+      light_entity: light.hue_lightstrip_plus_1
+      my_action: single_left
+- id: '1736857386492'
+  alias: sw_slaapkamer_single_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 9ffb11cd66084c9180697da85c7744dd
+      my_action: single_right
+      light_entity: light.sk_ceiling
+- id: '1736857428495'
+  alias: sw_slaapkamer_single_both
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 9ffb11cd66084c9180697da85c7744dd
+      my_action: single_both
+      light_entity: light.slaapkamer
+- id: '1736857514490'
+  alias: sw_keuken_double_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-double-light.yaml
+    input:
+      switch_entity: 9dd5732a111d48efbbbabc90d41ef787
+      light_entity: light.eetkamer
+      my_action: double_left
+- id: '1736857572928'
+  alias: sw_keuken_double_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-double-light.yaml
+    input:
+      switch_entity: 9dd5732a111d48efbbbabc90d41ef787
+      light_entity: light.keuken
+      my_action: double_right
+- id: '1736857622382'
+  alias: sw_slaapkamer_double_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-double-light.yaml
+    input:
+      switch_entity: 9ffb11cd66084c9180697da85c7744dd
+      light_entity: light.sk_spot
+      my_action: double_left
+- id: '1736857666912'
+  alias: sw_slaapkamer_double_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-double-light.yaml
+    input:
+      switch_entity: 9ffb11cd66084c9180697da85c7744dd
+      light_entity: light.sk_ceiling
+      my_action: double_right
+- id: '1736857709640'
+  alias: sw_woonkamer_double_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-double-light.yaml
+    input:
+      switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
+      light_entity: light.hue_lightstrip_plus_1
+      my_action: double_left
+- id: '1736857786952'
+  alias: sw_woonkamer_double_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-double-light.yaml
+    input:
+      switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
+      light_entity: light.staande_lamp
+      my_action: double_right
+- id: '1736857837284'
+  alias: sw_keuken_hold_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 9dd5732a111d48efbbbabc90d41ef787
+      light_entity: light.eetkamer
+      my_action: hold_left
+- id: '1736857897391'
+  alias: sw_keuken_hold_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 9dd5732a111d48efbbbabc90d41ef787
+      light_entity: light.keuken
+      my_action: hold_right
+- id: '1736857951540'
+  alias: sw_slaapkamer_hold_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 9ffb11cd66084c9180697da85c7744dd
+      light_entity: light.sk_spot
+      my_action: hold_left
+- id: '1736857995030'
+  alias: sw_slaapkamer_hold_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 9ffb11cd66084c9180697da85c7744dd
+      light_entity: light.sk_ceiling
+      my_action: hold_right
+- id: '1736858039240'
+  alias: sw_slaapkamer_hold_both
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 9ffb11cd66084c9180697da85c7744dd
+      light_entity: light.slaapkamer
+      my_action: hold_both
+- id: '1736858069003'
+  alias: sw_woonkamer_hold_left
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
+      light_entity: light.hue_lightstrip_plus_1
+      my_action: hold_left
+- id: '1736858109015'
+  alias: sw_woonkamer_hold_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
+      light_entity: light.staande_lamp
+      my_action: hold_right
+- id: '1736858150889'
+  alias: sw_woonkamer_hold_both
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
+      light_entity: light.woonkamer
+      my_action: hold_both
+- id: '1736930888506'
+  alias: sw_keuken_hold_both
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-hold-light.yaml
+    input:
+      switch_entity: 9dd5732a111d48efbbbabc90d41ef787
+      light_entity: light.keuken_en_eethoek
+      my_action: hold_both
+- id: '1736930948607'
+  alias: sw_keuken_single_both
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 9dd5732a111d48efbbbabc90d41ef787
+      light_entity: light.keuken_en_eethoek
+      my_action: single_both
+- id: '1736931305029'
+  alias: sw_woonkamer_single_right
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
+      light_entity: light.staande_lamp
+      my_action: single_right
+- id: '1736931379088'
+  alias: sw_woonkamer_single_both
+  description: ''
+  use_blueprint:
+    path: myown/aqara_double-sw-single-light.yaml
+    input:
+      switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
+      light_entity: light.woonkamer
+      my_action: single_both

@@ -1,0 +1,57 @@
+blueprint:
+  name: aqara double switch hold switch to control Light brightness
+  description: perform actions on light when button is held
+  domain: automation
+  input:
+    switch_entity:
+      name: Switch action Sensor
+      description: aqara mqtt device
+      selector:
+        device:
+          filter:
+            integration: mqtt
+    light_entity:
+      name: my_Light
+      selector:
+        entity:
+          filter:
+            domain: light
+    my_action:
+      name: action to be perfomed
+      selector:
+        select:
+          options:
+            - hold_left
+            - hold_right
+            - hold_both
+
+
+mode: single
+max_exceeded: silent
+
+
+triggers:
+  - trigger: device
+    domain: mqtt
+    device_id: !input switch_entity
+    type: action
+    subtype: !input my_action
+
+
+action:
+  - variables:
+      light_entity: !input light_entity
+  - choose:
+    - conditions: "{{ (state_attr(light_entity, 'brightness') |int) > 245 }}"
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: !input light_entity
+          data:
+            brightness: 1
+    default:
+      - service: light.turn_on
+        target:
+          entity_id: !input light_entity
+        data:
+          brightness_step_pct: 10

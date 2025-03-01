@@ -1,0 +1,56 @@
+external_converters: []
+devices:
+  - devices.yaml
+groups:
+  - groups.yaml
+permit_join: false
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtts://core-mosquitto:8883
+  user: mqtt
+  password: '!nw7MiM07r6IVeJw'
+  reject_unauthorized: false
+serial:
+  adapter: zstack
+  port: >-
+    /dev/serial/by-id/usb-Silicon_Labs_slae.sh_cc2652rb_stick_-_slaesh_s_iot_stuff_00_12_4B_00_21_CC_49_61-if00-port0
+advanced:
+  log_level: debug
+  pan_id: 6754
+  channel: 11
+  network_key:
+    - 1
+    - 3
+    - 5
+    - 7
+    - 9
+    - 11
+    - 13
+    - 15
+    - 0
+    - 2
+    - 4
+    - 6
+    - 8
+    - 10
+    - 12
+    - 13
+  availability_blocklist: []
+  availability_passlist: []
+  homeassistant_legacy_entity_attributes: false
+  homeassistant_legacy_triggers: false
+  legacy_api: false
+  legacy_availability_payload: false
+device_options:
+  legacy: false
+blocklist: []
+passlist: []
+queue: {}
+frontend:
+  port: 8099
+experimental: {}
+availability:
+  active:
+    timeout: 10
+  passive:
+    timeout: 1500

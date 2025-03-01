@@ -1,0 +1,47 @@
+blueprint:
+  name: aqara double switch single clikc switch to toggle Light
+  description: perform actions on light when button is held
+  domain: automation
+  input:
+    switch_entity:
+      name: Switch action Sensor
+      description: aqara mqtt device
+      selector:
+        device:
+          filter:
+            integration: mqtt
+    light_entity:
+      name: my_Light
+      selector:
+        entity:
+          filter:
+            domain: light
+    my_action:
+      name: action to be perfomed
+      selector:
+        select:
+          options:
+            - single_left
+            - single_right
+            - single_both
+
+
+mode: single
+max_exceeded: silent
+
+
+triggers:
+  - trigger: device
+    domain: mqtt
+    device_id: !input switch_entity
+    type: action
+    subtype: !input my_action
+
+
+
+action:
+  - action: light.toggle
+    target:
+      entity_id: !input light_entity
+    data:
+      transition: 2

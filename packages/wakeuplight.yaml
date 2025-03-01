@@ -20,10 +20,10 @@ script:
   wakeup_light:
     sequence:
       - alias: "turn off brightness automation"
-        service: automation.turn_off
+        action: automation.turn_off
         target:
           entity_id: automation.update_brightness_based_on_house_status
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.sk_ceiling
         data:
@@ -31,7 +31,7 @@ script:
           xy_color:
             - 0.64
             - 0.33
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.sk_ceiling
         data:
@@ -43,11 +43,11 @@ script:
       - delay:
           seconds: 5
       - alias: "turn on brightness automation"
-        service: automation.turn_on
+        action: automation.turn_on
         target:
           entity_id: automation.update_brightness_based_on_house_status
       - alias: volume
-        service: media_player.volume_set
+        action: media_player.volume_set
         target:
           entity_id: media_player.slaapkamer_speaker
         data:
@@ -62,14 +62,14 @@ script:
                   state: "playing"
           sequence:
             - alias: mediaplayer_setmedia
-              service: media_player.play_media
+              action: media_player.play_media
               target:
                 entity_id: media_player.slaapkamer_speaker
               data:
                 media_content_id: "https://a1.radio.co/s5c5da6a36/listen"
                 media_content_type: audio/mp4
             - alias: mediaplayer_play
-              service: media_player.media_play
+              action: media_player.media_play
               target:
                 entity_id: media_player.slaapkamer_speaker
             - delay:
@@ -77,7 +77,7 @@ script:
       - alias: repeat
         repeat:
           sequence:
-            - service: media_player.volume_set
+            - action: media_player.volume_set
               target:
                 entity_id: media_player.slaapkamer_speaker
               data:
@@ -93,13 +93,13 @@ script:
           entity_id: tts.home_assistant_cloud
         data:
           cache: true
-          media_player_entity_id: media_player.speakers
+          media_player_entity_id: media_player.slaapkamer_speaker
           language: nl-NL
           message: "Goeie morgen, tijd om op te staan"
       - delay:
-          minutes: 1
+          minutes: 2
       - alias: volume
-        service: media_player.volume_set
+        action: media_player.volume_set
         target:
           entity_id: media_player.slaapkamer_speaker
         data:
@@ -108,7 +108,7 @@ automation:
   - alias: "wakeup light"
     id: "342090870414607831"
     trigger:
-      - platform: time
+      - trigger: time
         at:
           - input_datetime.wakeuplight_time
     condition:
@@ -126,12 +126,12 @@ automation:
               entity_id: sensor.home_nearest_direction_of_travel
               state: "towards"
     action:
-      service: script.wakeup_light
+      action: script.wakeup_light
 
   - alias: "Manual wakeup light"
     id: "6583925910238569382012"
     trigger:
-      - platform: time
+      - trigger: time
         at: input_datetime.wul_manual_time
     condition:
       condition: state
@@ -139,8 +139,8 @@ automation:
       state: "on"
     action:
       - alias: "run script wakeuplight"
-        service: script.wakeup_light
+        action: script.wakeup_light
       - alias: "turn manual wakeup off"
-        service: input_boolean.turn_off
+        action: input_boolean.turn_off
         target:
           entity_id: input_boolean.wakeuplight_manual

@@ -7,18 +7,28 @@ blueprint:
       name: Motion Sensor
       selector:
         entity:
-          domain: binary_sensor
-          device_class: motion
+          filter:
+            domain: binary_sensor
+            device_class: motion
+    illu_entity:
+      name: Illuminance of motion sensor
+      selector:
+        entity:
+          filter:
+            domain: sensor
+            device_class: illuminance
     light_entity:
       name: Light
       selector:
         entity:
-          domain: light
+          filter:
+            domain: light
     threshold_input:
       name: Light level input helper
       selector:
         entity:
-          domain: input_number
+          filter:
+            domain: input_number
 
 # If motion is detected within the delay,
 # we restart the script.
@@ -27,7 +37,8 @@ max_exceeded: silent
 
 variables:
   motion_entity: !input motion_entity
-  light_level: "{{(state_attr( motion_entity, 'illuminance') |float)}}"
+  illu_entity: !input illu_entity
+  light_level: "{{(states(illu_entity) |float)}}"
   threshhold_entity: !input threshold_input
   light_threshold: "{{states( threshhold_entity) | float}}"
 
@@ -39,24 +50,26 @@ condition:
     state: "off"
 
 trigger:
-  platform: state
+  trigger: state
   entity_id: !input motion_entity
   to: "on"
 
 action:
-  - service: light.turn_on
-    target: 
+  - action: light.turn_on
+    target:
       entity_id: !input light_entity
     data:
       transition: 2
+
   - wait_for_trigger:
-      platform: state
+      trigger: state
       entity_id: !input motion_entity
       to: "off"
-  - condition: state
-    entity_id: !input light_entity
-    state: "on"
-  - service: light.turn_off
+  - not:
+    - condition: state
+      entity_id: !input light_entity
+      state: "off"
+  - action: light.turn_off
     target:
       entity_id: !input light_entity
     data:

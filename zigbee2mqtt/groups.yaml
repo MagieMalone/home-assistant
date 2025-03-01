@@ -1,6 +1,2 @@
 '1':
   friendly_name: media_group
-  devices:
-    - 0x7cb03eaa0a0219e9/3
-    - 0x7cb03eaa0a0036d6/3
-    - 0x7cb03eaa0a031c8d/3

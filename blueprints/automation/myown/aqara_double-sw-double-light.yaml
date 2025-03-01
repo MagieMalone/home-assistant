@@ -1,0 +1,72 @@
+blueprint:
+  name: aqara double switch double click to control Light color
+  description: perform actions on light when button is clicked
+  domain: automation
+  input:
+    switch_entity:
+      name: Switch action Sensor
+      description: aqara mqtt device
+      selector:
+        device:
+          filter:
+            integration: mqtt
+    light_entity:
+      name: Light to control
+      selector:
+        entity:
+          filter:
+            domain: light
+    my_action:
+      name: action to be perfomed
+      selector:
+        select:
+          options:
+            - double_left
+            - double_right
+
+
+mode: single
+max_exceeded: silent
+
+
+triggers:
+    - trigger: device
+      domain: mqtt
+      device_id: !input switch_entity
+      type: action
+      subtype: !input my_action
+
+
+action:
+  - variables:
+      light_entity: !input light_entity
+      start_mired: "{{ state_attr(light_entity , 'min_mireds') |int }}"
+      end_mired: "{{ state_attr(light_entity , 'max_mireds') |int }}"
+      step: "{{ ((end_mired - start_mired )/4 )| int }}"
+      current_mired: "{{ state_attr(light_entity, 'color_temp') }}"
+  - choose:
+    - conditions:
+      - "{{  current_mired == None }}"
+      sequence:
+        - action: light.turn_on
+          target:
+            entity_id: !input light_entity
+          data:
+            transition: 2
+            color_temp: "{{ start_mired }}"
+    - conditions:
+      -  "{{ ( current_mired |int + step) > end_mired }}"
+      sequence:
+        - action: light.turn_on
+          target:
+            entity_id: !input light_entity
+          data:
+            transition: 2
+            color_temp: "{{ start_mired }}"
+    default:
+        - action: light.turn_on
+          target:
+            entity_id: !input light_entity
+          data:
+            transition: 2
+            color_temp: "{{ state_attr(light_entity, 'color_temp') |int + step }}"
