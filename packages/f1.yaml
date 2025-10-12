@@ -1,6 +1,7 @@
 template:
   - sensor:
     - name: Formula 1
+      unique_id: "ed8a5a02-da6d-4ef9-b1e3-6a4bf7a5b859"
       icon: mdi:keyboard-f1
       state: >
         {% if (as_timestamp(now()) | timestamp_custom('%W')) == (as_timestamp(state_attr('calendar.f1_race', 'start_time')) | timestamp_custom('%W')) %}
@@ -111,6 +112,7 @@ template:
           {% endif %}
     - name: F1 (sprint)
       icon: mdi:keyboard-f1
+      unique_id: "954f3860-b187-4691-891e-51e94ed75ced"
       state: >
         {% if states.calendar.f1_sprint_race.attributes.start_time is defined %}
             {% if as_timestamp(state_attr('calendar.f1_sprint_race', 'start_time')) | timestamp_custom('%W')|int  == now().isocalendar()[1] %}
@@ -121,3 +123,109 @@ template:
         {% else %}
           off
         {% endif %}
+    - name: f1_next_fp1
+      unique_id: "7c6dc347-04e9-4ca1-99a7-8d89ecde3606"
+      state: "{{state_attr('sensor.f1_next_race', 'first_practice_start')}}"
+      device_class: "timestamp"
+    - name: f1_next_fp2
+      unique_id: "63a7dc27-82ec-40e3-ab2b-120a6859c9cd"
+      state: "{{state_attr('sensor.f1_next_race', 'second_practice_start')}}"
+      device_class: "timestamp"
+    - name: f1_next_fp3
+      unique_id: "a3e811c1-40a3-420c-9f9e-06235d9bb6f8"
+      state: "{{state_attr('sensor.f1_next_race', 'third_practice_start')}}"
+      device_class: "timestamp"
+    - name: f1_next_qualifying
+      unique_id: "ebfb0659-bc80-4dce-ae51-fb3370b80b7c"
+      state: "{{state_attr('sensor.f1_next_race', 'qualifying_start')}}"
+      device_class: "timestamp"
+    - name: f1_next_sq
+      unique_id: "726d5f63-f025-49cb-a92f-3b54a187baa4"
+      state: "{{state_attr('sensor.f1_next_race', 'sprint_qualifying_start')}}"
+      device_class: "timestamp"
+    - name: f1_next_sprint
+      unique_id: "93da9a69-5934-40bd-9a44-6501de75f0d4"
+      state: "{{state_attr('sensor.f1_next_race', 'sprint_start')}}"
+      device_class: "timestamp"
+    - name: f1_next_race_time
+      unique_id: "1497e14e-7c02-4166-9dd3-f19ab2bd5942"
+      state: "{{state_attr('sensor.f1_next_race', 'race_start')}}"
+      device_class: "timestamp"
+
+
+automation:
+  - alias: "f1-announce"
+    id: "4814210d-7c2b-481f-85e4-8c5278e30a5a"
+
+    triggers:
+      - trigger: time
+        at:
+          - entity_id: sensor.f1_next_fp1
+            offset: "-00:10:00"
+          - entity_id: sensor.f1_next_fp2
+            offset: "-00:10:00"
+          - entity_id: sensor.f1_next_fp3
+            offset: "-00:10:00"
+          - entity_id: sensor.f1_next_qualifying
+            offset: "-00:10:00"
+          - entity_id: sensor.f1_next_race_time
+            offset: "-00:10:00"
+          - entity_id: sensor.f1_next_sprint
+            offset: "-00:10:00"
+          - entity_id: sensor.f1_next_sq
+            offset: "-00:10:00"
+    condition:
+      - condition: state
+        entity_id: input_boolean.f1_announcements
+        state: "on"
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: "Thuis"
+          - condition: state
+            entity_id: input_select.arnoud_status
+            state: "Net Thuis"
+      - condition: state
+        entity_id:
+          - schedule.f1_announce
+        state: "on"
+    action:
+#      - action: notify.pushover
+#        data:
+#          message: >
+#            {% set next_race = state_attr('sensor.f1_next_race', 'race_name') %}
+#            {% set mapentity = {'sensor.f1_next_fp1':'Eerste vrij training','sensor.f1_next_fp2':'Tweede vrije training','sensor.f1_next_fp3':'Derde vrije training','sensor.f1_next_qualifying':'Kwalificatie', 'sensor.f1_next_race':'Race','sensor.f1_next_sprint':'Sprint race', 'sensor.f1_next_sq':'Sprint kwalificatie'} %}
+#            {% set name = mapentity.get(trigger.entity_id, 'unknown') %} 
+#            de {{name}} van de {{next_race}} begint over 10 minuten 
+#          title: f1 testing
+      - alias: "Send TTS using Google Home Resume script"
+        action: script.turn_on
+        target:
+          entity_id: script.google_home_resume
+        data:
+          variables:
+            action:
+              - action: tts.speak
+                target:
+                  entity_id: tts.home_assistant_cloud
+                data:
+                  cache: false
+                  media_player_entity_id: media_player.speakers
+                  message: >
+                    {% set next_race = state_attr('sensor.f1_next_race', 'race_name') %}
+                    {% set mapentity = {'sensor.f1_next_fp1':'Eerste vrij training','sensor.f1_next_fp2':'Tweede vrije training','sensor.f1_next_fp3':'Derde vrije training','sensor.f1_next_qualifying':'Kwalificatie', 'sensor.f1_next_race':'Race','sensor.f1_next_sprint':'Sprint race', 'sensor.f1_next_sq':'Sprint kwalificatie'} %}
+                    {% set name = mapentity.get(trigger.entity_id, 'unknown') %} 
+                    de {{name}} van de {{next_race}} begint over 10 minuten 
+                  language: nl-NL
+      - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+        wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+      - alias: "Apply TTS volume"
+        action: media_player.volume_set
+        target:
+          entity_id: media_player.speakers
+        data:
+          volume_level: "{{states('input_number.tts_volume')| float}}"
+      - action: switch.turn_on
+        target:
+          entity_id: switch.media_group

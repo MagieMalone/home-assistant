@@ -108,7 +108,64 @@ automation:
         target:
           entity_id: "{{states.media_player|selectattr('state', 'eq', 'playing')|map(attribute='entity_id')|list}}"
 
+  - alias: "turn on surround when players playing"
+    id: "f6c971ab-7309-47d7-bd87-d681480e4d60"
+    triggers:
+      - trigger: state
+        entity_id: 
+          - media_player.huiskamer
+          - media_player.ht_nt5_2
+        to: "playing"
+    conditions:
+      - condition: state
+        entity_id:
+          - switch.media_group
+        state: "off"
+    actions:
+      - action: switch.turn_on
+        entity_id: 
+          - switch.media_group
+      - action: input_boolean.turn_on
+        entity_id:
+          - input_boolean.auto_surround
 
+  - alias: "turn off surround when players done playing"
+    id: "1679b019-b6f4-482f-b5b0-798df187a66e"
+    triggers:
+      - trigger: state
+        entity_id: 
+          - media_player.huiskamer
+          - media_player.ht_nt5_2
+        to:
+          - "off"
+          - "idle"
+    conditions:
+      and:
+        - condition: state
+          entity_id:
+            - input_boolean.auto_surround
+          state: "on"
+        - not:
+          - or: 
+            - condition: state
+              entity_id:
+                - media_player.huiskamer
+              state: 
+                - "playing"
+                - "paused"
+            - condition: state
+              entity_id:
+                - media_player.ht_nt5_2
+              state: 
+                - "playing"
+                - "paused"
+    actions:
+      - action: switch.turn_off
+        entity_id: 
+          - switch.media_group
+      - action: input_boolean.turn_off
+        entity_id:
+          - input_boolean.auto_surround
 #
 #sensor:
 #  - platform: plex

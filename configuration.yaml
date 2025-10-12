@@ -18,7 +18,7 @@ logger:
 #    homeassistant.components.binary_sensor.ring: debug
 #    homeassistant.components.media_player.spotify: info
 #    homeassistant.components.google_travel_time: debug
-    homeassistant.components.rest: debug
+#    homeassistant.components.rest: debug
 #    custom_components.mercedesmeapi: debug
 #    custom_components.mercedesmeapi.sensor: info
 #    custom_components.mercedesmeapi.apicontroller: debug
@@ -29,8 +29,10 @@ logger:
 #    custom_components.toon_smartmeter: debug
 #    custom_components.toon_boilerstatus: debug
 #    custom_components.toon_climate: debug
-    homeassistant.components.snmp: debug
+#    homeassistant.components.snmp: debug
     homeassistant.components.sensor.snmp: debug
+#    homeassistant.components.waze_travel_time: debug
+
 http:
   #  ssl_certificate: /ssl/fullchain.pem
   #  ssl_key: /ssl/privkey.pem
@@ -52,6 +54,7 @@ frontend:
   themes: !include_dir_merge_named themes
   extra_module_url:
     - /hacsfiles/lovelace-card-mod/card-mod.js
+
 
 python_script:
 

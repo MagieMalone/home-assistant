@@ -39,7 +39,7 @@ automation:
     id: "753125809170657784308"
     trigger:
       platform: state
-      entity_id: binary_sensor.voordeur_ding
+      entity_id: binary_sensor.voordeur_ding_2
       to: "on"
     action:
       - service: script.turn_on

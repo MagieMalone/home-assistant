@@ -3,7 +3,7 @@ input_text:
     initial: !secret here_api
   home_address:
     initial: !secret home_address
-sensor:
+#sensor:
 #  - platform: google_travel_time
 #    scan_interval: 1800
 #    name: Phone To Home

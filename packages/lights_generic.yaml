@@ -72,6 +72,7 @@ light:
       - light.keuken_2
       - light.keuken_3
       - light.trap_hal
+      - light.badkamer_spiegel
   - platform: group
     unique_id: "44895708-5ac6-4f2a-98ea-aee477f7ff66"
     name: lampen
@@ -92,6 +93,7 @@ light:
       - light.keuken_2
       - light.keuken_3
       - light.trap_hal
+      - light.badkamer_spiegel
   - platform: group
     unique_id: "87dce9b7-29e4-4018-8d14-1d0e511a7e5a"
     name: beganegrond
@@ -114,6 +116,7 @@ light:
       - light.sk_duo_spot_1
       - light.sk_duo_spot_2
       - light.overloop
+      - light.badkamer_spiegel
   - platform: group
     unique_id: "07bdee4f-a6df-45cf-9eed-ffb8162f024f"
     name: zolder

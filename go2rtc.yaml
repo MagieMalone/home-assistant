@@ -1,0 +1,3 @@
+streams:
+  test:
+    - rtsp://03cabcc9-ring-mqtt:8554/9c7613372fed_live

@@ -43,6 +43,20 @@ template:
 #    - name: "prox_home_dir_of_travel"
 #      unique_id: "d72f5617-b74d-4f48-a889-e4ae5472fc3d"
 #      state: "{{state_attr('proximity.home','dir_of_travel')}}"
+# Example configuration.yaml entry
+
+binary_sensor:
+  - name: "Arnoud Home baysian"
+    platform: "bayesian"
+    device_class: "presence"
+    prior: 0.86
+    probability_threshold: 0.9
+    observations:
+      - platform: template
+        value_template: >
+          {{not is_state('device_tracker.467cfa38bbada1bf','home') and ((as_timestamp(now()) - as_timestamp(states.device_tracker['467cfa38bbada1bf'].last_changed)) > 300)}}
+        prob_given_true: 0.006
+        prob_given_false: 0.994
 
 #binary_sensor:
 #  - platform: workday

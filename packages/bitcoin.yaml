@@ -1,0 +1,4 @@
+sensor:
+  - platform: blockchain
+    addresses:
+      - '418bf6c1-4cbb-d0fa-ce74-7529b17015f7'
