@@ -81,7 +81,7 @@ template:
             {{ state_attr('calendar.abuurmangmailcom', 'location') }}
           {% endif %}
   - trigger:
-    - platform: state
+    - trigger: state
       entity_id: calendar.alarm
       attribute: location
       not_to:
@@ -104,6 +104,13 @@ template:
         unique_id: "6e1e91bd-9fae-4723-8a28-a1adfd50de3e"
         device_class: "timestamp"
         state: "{{(state_attr('calendar.reminders', 'start_time')|as_datetime).astimezone()}}"
+  - trigger:
+    - trigger: state
+      entity_id: sensor.waze_travel_time
+      not_to:
+        - "unknown"
+        - "unavailable"
+    sensor:
       - name: calc_leave_time
         unique_id: "73400fa8-6115-464b-9ab4-477661dbfada"
         device_class: "timestamp"
@@ -114,16 +121,6 @@ template:
             {%- set offset = timedelta(minutes=states('sensor.waze_travel_time')|int +5)  %}
           {%- endif %} 
           {{- (state_attr('calendar.abuurmangmailcom', 'start_time')| as_datetime - offset).astimezone()}}
-      - name: calc_leave_time_alarm
-        unique_id: "e9dce637-9b57-4321-8b95-10e2b9e56411"
-        device_class: "timestamp"
-        state: >
-          {%- if states('sensor.waze_travel_time_alarm') == None %}
-            {%- set offset = timedelta(minutes=5) %}
-          {%-  else %}
-            {%- set offset = timedelta(minutes=states('sensor.waze_travel_time_alarm')|int +5)  %}
-          {%- endif %} 
-          {{- (state_attr('calendar.alarm', 'start_time')| as_datetime - offset).astimezone()}}
       - name: calc_afspraak_reistijd
         unique_id: "a3dad1d5-7a70-4121-832e-18332096ec71"
         unit_of_measurement: "minutes"
@@ -134,6 +131,23 @@ template:
             {% set reistijd = states('sensor.waze_travel_time')|int %}
           {%- endif %} 
           {{reistijd }}
+  - trigger:
+    - trigger: state
+      entity_id: sensor.waze_travel_time_alarm
+      not_to:
+        - "unknown"
+        - "unavailable"
+    sensor:
+      - name: calc_leave_time_alarm
+        unique_id: "e9dce637-9b57-4321-8b95-10e2b9e56411"
+        device_class: "timestamp"
+        state: >
+          {%- if states('sensor.waze_travel_time_alarm') == None %}
+            {%- set offset = timedelta(minutes=5) %}
+          {%-  else %}
+            {%- set offset = timedelta(minutes=states('sensor.waze_travel_time_alarm')|int +5)  %}
+          {%- endif %} 
+          {{- (state_attr('calendar.alarm', 'start_time')| as_datetime - offset).astimezone()}}
       - name: calc_alarm_reistijd
         unique_id: "d39554cb-d18c-437e-af87-05e629a864ed"
         unit_of_measurement: "minutes"
@@ -144,6 +158,7 @@ template:
             {% set reistijd = states('sensor.waze_travel_time_alarm')|int %}
           {%- endif %} 
           {{reistijd }}
+
 
 
 automation:

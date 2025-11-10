@@ -229,3 +229,87 @@ automation:
       - action: switch.turn_on
         target:
           entity_id: switch.media_group
+  - alias: f1_lights
+    id: "440dee78-1a97-429e-8311-0cadb276dc85"
+    triggers:
+      - trigger: state
+        entity_id: sensor.f1_track_status
+    conditions:
+      - or:
+        - condition: state
+          entity_id: input_select.arnoud_status
+          state: "Thuis"
+        - condition: state
+          entity_id: input_select.arnoud_status
+          state: "Net Thuis"
+        - condition: state
+          entity_id: input_boolean.guests_boolean
+          state: "on"
+    actions:
+      - if:
+          - condition: template
+            value_template: "{{trigger.from_state.state == 'CLEAR'}}"
+        then:
+          - action: scene.create
+            data:
+              scene_id: before_f1lights
+              snapshot_entities:
+                - light.hue_lightstrip_plus_1
+      - choose:
+        # CLEAR, YELLOW, VSC, VSC_ENDING, SC, RED
+          - conditions:
+            - condition: state
+              entity_id: sensor.f1_track_status
+              state: "YELLOW"
+            sequence:
+              - action: light.turn_on
+                target: 
+                  entity_id: light.hue_lightstrip_plus_1
+                data:
+                  color_name: "yellow"
+          - conditions:
+            - condition: state
+              entity_id: sensor.f1_track_status
+              state: "VSC"
+            sequence:
+              - action: light.turn_on
+                target: 
+                  entity_id: light.hue_lightstrip_plus_1
+                data:
+                  color_name: "orange"
+          - conditions:
+            - condition: state
+              entity_id: sensor.f1_track_status
+              state: "VSC_ENDING"
+            sequence:
+              - action: light.turn_on
+                target: 
+                  entity_id: light.hue_lightstrip_plus_1
+                data:
+                  color_name: "orange"
+                  flash: short
+          - conditions:
+            - condition: state
+              entity_id: sensor.f1_track_status
+              state: "SC"
+            sequence:
+              - action: light.turn_on
+                target: 
+                  entity_id: light.hue_lightstrip_plus_1
+                data:
+                  color_name: "darkorange"
+          - conditions:
+            - condition: state
+              entity_id: sensor.f1_track_status
+              state: "RED"
+            sequence:
+              - action: light.turn_on
+                target: 
+                  entity_id: light.hue_lightstrip_plus_1
+                data:
+                  color_name: "red"
+        default:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.before_f1lights
+

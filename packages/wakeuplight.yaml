@@ -20,10 +20,12 @@ script:
   wakeup_light:
     sequence:
       - alias: "turn off brightness automation"
+        continue_on_error: true
         action: automation.turn_off
         target:
           entity_id: automation.update_brightness_based_on_house_status
       - action: light.turn_on
+        continue_on_error: true
         target:
           entity_id: light.sk_ceiling
         data:
@@ -32,6 +34,7 @@ script:
             - 0.64
             - 0.33
       - action: light.turn_on
+        continue_on_error: true
         target:
           entity_id: light.sk_ceiling
         data:
@@ -41,11 +44,13 @@ script:
             - 0.442
             - 0.447
       - action: light.turn_on
+        continue_on_error: true
         target:
           entity_id: light.badkamer_spiegel
         data:
           brightness: 1
       - action: light.turn_on
+        continue_on_error: true
         target:
           entity_id: light.badkamer_spiegel
         data:
@@ -54,10 +59,12 @@ script:
       - delay:
           seconds: 5
       - alias: "turn on brightness automation"
+        continue_on_error: true
         action: automation.turn_on
         target:
           entity_id: automation.update_brightness_based_on_house_status
       - alias: volume
+        continue_on_error: true
         action: media_player.volume_set
         target:
           entity_id: media_player.slaapkamer_speaker
@@ -73,6 +80,7 @@ script:
                   state: "playing"
           sequence:
             - alias: mediaplayer_setmedia
+              continue_on_error: true
               action: media_player.play_media
               target:
                 entity_id: media_player.slaapkamer_speaker
@@ -80,6 +88,7 @@ script:
                 media_content_id: "https://a1.radio.co/s5c5da6a36/listen"
                 media_content_type: audio/mp4
             - alias: mediaplayer_play
+              continue_on_error: true
               action: media_player.media_play
               target:
                 entity_id: media_player.slaapkamer_speaker
@@ -89,6 +98,7 @@ script:
         repeat:
           sequence:
             - action: media_player.volume_set
+              continue_on_error: true
               target:
                 entity_id: media_player.slaapkamer_speaker
               data:
@@ -100,6 +110,7 @@ script:
       - delay:
           minutes: 1
       - action: tts.speak
+        continue_on_error: true
         target:
           entity_id: tts.home_assistant_cloud
         data:
