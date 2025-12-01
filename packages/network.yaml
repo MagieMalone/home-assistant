@@ -29,6 +29,14 @@ template:
       unique_id: "cc833e94-1fa0-43b0-b81e-cba39a97b700"
       state: "{{(state_attr('sensor.esxi_datastore_main', 'total_space_gb') - state_attr('sensor.esxi_datastore_main', 'free_space_gb'))|int }}"
       unit_of_measurement: "GB"
+    - name: firewall_internet_out_mbps
+      unit_of_measurement: MBps
+      default_entity_id: sensor.firewall_internet_out_mbps
+      state: '{{ [((states(''sensor.firewall_wan_out_stats'')|float(none)*8)/1000000)|round(2,default=none),0]|max }}'
+    - name: firewall_internet_in_mbps
+      unit_of_measurement: MBps
+      default_entity_id: sensor.firewall_internet_in_mbps
+      state: '{{ [((states(''sensor.firewall_wan_in_stats'')|float(none)*8)/1000000)|round(2,default=none),0]|max }}'
   - trigger:
     - platform: template
       value_template: >
@@ -73,6 +81,7 @@ template:
         {% else %}
           Unknown
         {% endif %}
+
 
 
 automation:
@@ -355,14 +364,6 @@ sensor:
     source: sensor.firewall_wan_out
     unit_time: s
     unit: B
-  - platform: template
-    sensors:
-      firewall_internet_in_mbps:
-        value_template:  "{{ [((states('sensor.firewall_wan_in_stats')|float(none)*8)/1000000)|round(2, default=none),0]|max }}"
-        unit_of_measurement: 'MBps'
-      firewall_internet_out_mbps:
-        value_template:  "{{ [((states('sensor.firewall_wan_out_stats')|float(none)*8)/1000000)|round(2, default=none),0]|max }}"
-        unit_of_measurement: 'MBps'
   - platform: snmp
     name: 'Firewall CPU Used Percentage'
     host: !secret firewall_ip
@@ -459,6 +460,7 @@ sensor:
     unique_id: "b0a26da7-4d54-4ef2-bf17-881c7219fa55"
     scan_interval: 300
     verify_ssl: false
+
 command_line:
   - sensor:
       name: ping6_google

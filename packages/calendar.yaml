@@ -118,7 +118,7 @@ template:
           {%- if states('sensor.waze_travel_time') == None %}
             {%- set offset = timedelta(minutes=5) %}
           {%-  else %}
-            {%- set offset = timedelta(minutes=states('sensor.waze_travel_time')|int +5)  %}
+            {%- set offset = timedelta(minutes=states('sensor.waze_travel_time')|float|round(0,'ceil') +5)  %}
           {%- endif %} 
           {{- (state_attr('calendar.abuurmangmailcom', 'start_time')| as_datetime - offset).astimezone()}}
       - name: calc_afspraak_reistijd
@@ -128,7 +128,7 @@ template:
           {%- if states('sensor.waze_travel_time') == None %}
             {% set reistijd = 0 %}
           {%-  else %}
-            {% set reistijd = states('sensor.waze_travel_time')|int %}
+            {% set reistijd = states('sensor.waze_travel_time')|float|round(0,'ceil') %}
           {%- endif %} 
           {{reistijd }}
   - trigger:
@@ -137,16 +137,25 @@ template:
       not_to:
         - "unknown"
         - "unavailable"
+    - trigger: time
+      at: 
+        - "12:00:00"
+        - "14:35:00"
+        - "18:00:00"
     sensor:
       - name: calc_leave_time_alarm
         unique_id: "e9dce637-9b57-4321-8b95-10e2b9e56411"
         device_class: "timestamp"
         state: >
-          {%- if states('sensor.waze_travel_time_alarm') == None %}
-            {%- set offset = timedelta(minutes=5) %}
+          {% if is_state('sensor.waze_travel_time_alarm','unavailable') %}
+            {%- set offset = timedelta(minutes=15) %}
           {%-  else %}
-            {%- set offset = timedelta(minutes=states('sensor.waze_travel_time_alarm')|int +5)  %}
-          {%- endif %} 
+            {%- if states('sensor.waze_travel_time_alarm') == None %}
+              {%- set offset = timedelta(minutes=5) %}
+            {%-  else %}
+              {%- set offset = timedelta(minutes=states('sensor.waze_travel_time_alarm')|float|round(0,'ceil') +5)  %}
+            {%- endif %} 
+          {%- endif %}
           {{- (state_attr('calendar.alarm', 'start_time')| as_datetime - offset).astimezone()}}
       - name: calc_alarm_reistijd
         unique_id: "d39554cb-d18c-437e-af87-05e629a864ed"
@@ -155,7 +164,7 @@ template:
           {%- if states('sensor.waze_travel_time_alarm') == None %}
             {% set reistijd = 0 %}
           {%-  else %}
-            {% set reistijd = states('sensor.waze_travel_time_alarm')|int %}
+            {% set reistijd = states('sensor.waze_travel_time_alarm')|float|round(0,'ceil') %}
           {%- endif %} 
           {{reistijd }}
 
@@ -180,43 +189,70 @@ automation:
           {{reistijd > 2}}
 
     action:
-      - alias: "Send TTS using Google Home Resume script"
-        service: script.turn_on
-        target:
-          entity_id: script.google_home_resume
-        data:
-          variables:
-            action:
-              - action: tts.speak
+      - choose:
+          - conditions:
+            - or:
+              - condition: state
+                entity_id: input_select.arnoud_status
+                state: "Thuis"
+              - condition: state
+                entity_id: input_select.arnoud_status
+                state: "Net Thuis"
+            sequence:
+              - alias: "Send TTS using Google Home Resume script"
+                action: script.turn_on
                 target:
-                  entity_id: tts.home_assistant_cloud
+                  entity_id: script.google_home_resume
                 data:
-                  cache: false
-                  media_player_entity_id: media_player.speakers
-                  language: nl-NL
-                  message: >
-                    {%- if states('sensor.waze_travel_time') == None %}
-                      {% set reistijd = 0 %}
-                    {%-  else %}
-                      {% set reistijd = states('sensor.waze_travel_time')|int %}
-                    {%- endif %} 
-                    {% set message = state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')| replace('#bike', '') %}
-                    {% if reistijd=='unknown' %} 
-                      Het is tijd om naar {{message}} te gaan. De reistijd is onbekend.
-                    {% else %}
-                      Het is tijd om naar {{message}} te gaan. De reistijd bedraagt {{ reistijd | int }} minuten.
-                    {% endif %}
-                    {% if is_state('group.windows_kachel', 'on') %}
-                      Vergeet niet om de ramen te sluiten
-                    {% endif %}
-      - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
-        wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
-      - alias: "Apply TTS volume"
-        service: media_player.volume_set
-        target:
-          entity_id: media_player.speakers
-        data:
-          volume_level: "{{states('input_number.tts_volume')| float}}"
+                  variables:
+                    action:
+                      - action: tts.speak
+                        target:
+                          entity_id: tts.home_assistant_cloud
+                        data:
+                          cache: false
+                          media_player_entity_id: media_player.speakers
+                          language: nl-NL
+                          message: >
+                            {%- if states('sensor.waze_travel_time') == None %}
+                              {% set reistijd = 0 %}
+                            {%-  else %}
+                              {% set reistijd = states('sensor.waze_travel_time')|int %}
+                            {%- endif %} 
+                            {% set message = state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')| replace('#bike', '') %}
+                            {% if reistijd=='unknown' %} 
+                              Het is tijd om naar {{message}} te gaan. De reistijd is onbekend.
+                            {% else %}
+                              Het is tijd om naar {{message}} te gaan. De reistijd bedraagt {{ reistijd | int }} minuten.
+                            {% endif %}
+                            {% if is_state('group.windows_kachel', 'on') %}
+                              Vergeet niet om de ramen te sluiten
+                            {% endif %}
+              - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
+                wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
+              - alias: "Apply TTS volume"
+                action: media_player.volume_set
+                target:
+                  entity_id: media_player.speakers
+                data:
+                  volume_level: "{{states('input_number.tts_volume')| float}}"
+        default:
+          - action: notify.mobile_app_kb2003
+            data:
+              message: >
+                {%- if states('sensor.waze_travel_time') == None %}
+                  {% set reistijd = 0 %}
+                {%-  else %}
+                  {% set reistijd = states('sensor.waze_travel_time')|int %}
+                {%- endif %} 
+                {% set message = state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')| replace('#bike', '') %}
+                {% if reistijd=='unknown' %} 
+                  Het is tijd om naar {{message}} te gaan. De reistijd is onbekend.
+                {% else %}
+                  Het is tijd om naar {{message}} te gaan. De reistijd bedraagt {{ reistijd | int }} minuten.
+                {% endif %}
+              title: "Vertrek nu naar {{state_attr('calendar.abuurmangmailcom', 'message') | replace('#alarm', '')| replace('#bike', '')}}"
+
   - id: '1654164134828'
     alias: alert for online event
     description: ''
