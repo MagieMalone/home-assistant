@@ -15,9 +15,22 @@ automation:
         target:
           entity_id: input_boolean.input_dishwasher_has_run
       - action: notify.mobile_app_kb2003
+      # https://companion.home-assistant.io/docs/notifications/notifications-basic/#specific-channel-properties
         data:
           title: "Vaatwasser status"
           message: "De vaatwasser is klaar"
+          visibility: public
+          data:
+            channel: "Vaatwasser"
+            importance: high
+            vibrationPattern: "500, 1000, 500, 1000, 500"
+            ledColor: "orange"
+      - action: notify.mobile_app_kb2003
+        data:
+          message: "TTS"
+          data:
+            tts_text: "The dishwasher has finished"
+            media_stream: "alarm_stream_max"
   - alias: "dishwasher reset run status"
     id: "a4c1a63f-2ded-4305-a585-9cedf232a2c7"
     triggers:

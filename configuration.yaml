@@ -1,4 +1,5 @@
 default_config:
+bluetooth:
 homeassistant:
   # Customization file
   customize: !include customize.yaml

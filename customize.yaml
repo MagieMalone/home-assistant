@@ -114,4 +114,5 @@ light.trap_hal:
   icon: hue:ceiling-round
 switch.esspresso:
   icon: hue:plug-eu
-
+switch.shellyplugsg3_espresso:
+  icon: hue:plug-eu

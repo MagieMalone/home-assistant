@@ -13,7 +13,7 @@ automation:
     action:
       - service: switch.turn_off
         target:
-          entity_id: switch.esspresso
+          entity_id: switch.shellyplugsg3_espresso
   - alias: "Turn on espresso maker"
     id: "1529161701532"
     trigger:
@@ -39,10 +39,10 @@ automation:
           sequence:
             - service: switch.turn_on
               target:
-                entity_id: switch.esspresso
+                entity_id: switch.shellyplugsg3_espresso
             - delay:
                 seconds: 60
           until:
             - condition: state
-              entity_id: switch.esspresso
+              entity_id: sswitch.shellyplugsg3_espresso
               state: "on"

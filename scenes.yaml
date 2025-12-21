@@ -326,7 +326,7 @@
       icon: mdi:thermostat
       supported_features: 17
       state: heat
-    switch.esspresso:
+    switch.shellyplugsg3_espresso:
       linkquality: 0
       state: 'off'
       update_available: false

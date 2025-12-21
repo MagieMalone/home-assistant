@@ -32,7 +32,7 @@ sensor:
       - elecsolarcnt
       - waterflow
       - waterquantity
-      
+
   - platform: toon_boilerstatus
     name: Toon
     host: !secret toon_ip
@@ -73,7 +73,7 @@ utility_meter:
     cycle: daily
     unique_id: "6294ab96-422a-49e3-b85e-37c00af94f56"
   daily_gas_cost:
-    source: sensor.toon_gas_used_cnt_cost_2 
+    source: sensor.toon_gas_used_cnt_cost_2
     name: Daily Gas
     cycle: daily
     unique_id: "5494f121-40c6-445b-82e8-80054e284c16"
@@ -100,71 +100,71 @@ input_number:
 
 template:
   - trigger:
-    - platform: time_pattern
-      hours: "0"
-      minutes: "10"
+      - platform: time_pattern
+        hours: "0"
+        minutes: "10"
     binary_sensor:
       - name: "workday_sensor_mod"
         unique_id: "c662b422-0024-46cb-b4d2-289a15a5dbef"
         # if workday and alarm before 8 o'clock then workday, otherwise it's vacation
         state: "{{states('binary_sensor.workday_sensor') and as_datetime(state_attr('calendar.alarm', 'start_time'))|as_local < today_at('8:00')}}"
   - sensor:
-    - name: "heating_set_temperature"
-      unique_id: "1394c112-73e9-4884-b8a3-6c01ce3e5d85"
-      state: "{{state_attr('climate.toon_thermostat', 'temperature') | float }}"
-      device_class: "temperature"
-      unit_of_measurement: "°C"
-    - name: "heating_current_temperature"
-      unique_id: "1481a5b4-0950-4878-bddf-fabfb6bdc8db"
-      state: "{{state_attr('climate.toon_thermostat', 'current_temperature') | float }}"
-      device_class: "temperature"
-      unit_of_measurement: "°C"
-    - name: "heating_preset_mode"
-      unique_id: "0f64357c-5e9d-4939-aa83-180eee53740d"
-      state: "{{state_attr('climate.toon_thermostat', 'preset_mode')}}"
-    - name: "toon_action"
-      unique_id: "f35bbc32-e09b-418b-84cf-970d0378bf91"
-      state: "{{state_attr('climate.toon_thermostat', 'hvac_action')}}"
-    - name: "thermostat_condition"
-      unique_id: "04b4cc23-5941-4fb4-901e-452e0fdb0153"
-      state: >
-        {% if is_state('sensor.buiten_temperature', 'unavailable') %}
-          {{(states('sensor.knmi_max_temperature_today') |float ) <20}}
-        {% else %}
-          {% if is_state('sensor.woonkamer_temperature', 'unavailable') %}
-            {{(states('sensor.buiten_temperature') |float ) <20  and (states('sensor.knmi_max_temperature_today') |float ) <20 }}
+      - name: "heating_set_temperature"
+        unique_id: "1394c112-73e9-4884-b8a3-6c01ce3e5d85"
+        state: "{{state_attr('climate.toon_thermostat', 'temperature') | float }}"
+        device_class: "temperature"
+        unit_of_measurement: "°C"
+      - name: "heating_current_temperature"
+        unique_id: "1481a5b4-0950-4878-bddf-fabfb6bdc8db"
+        state: "{{state_attr('climate.toon_thermostat', 'current_temperature') | float }}"
+        device_class: "temperature"
+        unit_of_measurement: "°C"
+      - name: "heating_preset_mode"
+        unique_id: "0f64357c-5e9d-4939-aa83-180eee53740d"
+        state: "{{state_attr('climate.toon_thermostat', 'preset_mode')}}"
+      - name: "toon_action"
+        unique_id: "f35bbc32-e09b-418b-84cf-970d0378bf91"
+        state: "{{state_attr('climate.toon_thermostat', 'hvac_action')}}"
+      - name: "thermostat_condition"
+        unique_id: "04b4cc23-5941-4fb4-901e-452e0fdb0153"
+        state: >
+          {% if is_state('sensor.sbws_90cm_2eb8_temperature', 'unavailable') %}
+            {{(states('sensor.knmi_max_temperature_today') |float ) <20}}
           {% else %}
-            {{(( states('sensor.buiten_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.buiten_temperature') |float ) <20  and (states('sensor.knmi_max_temperature_today') |float ) <20 }}
+            {% if is_state('sensor.woonkamer_temperature', 'unavailable') %}
+              {{(states('sensor.sbws_90cm_2eb8_temperature') |float ) <20  and (states('sensor.knmi_max_temperature_today') |float ) <20 }}
+            {% else %}
+              {{(( states('sensor.sbws_90cm_2eb8_temperature')  )|float) < (( states('sensor.woonkamer_temperature') ) | float) and (states('sensor.sbws_90cm_2eb8_temperature') |float ) <20  and (states('sensor.knmi_max_temperature_today') |float ) <20 }}
+            {% endif %}
           {% endif %}
-        {% endif %}
-    - name: 'Daily Energy Total'
-      device_class: energy
-      unit_of_measurement: kWh
-      unique_id: "eac068f5-42e9-480a-a643-ebe4589cb7aa"
-      state: >
-        {% if is_number(states('sensor.daily_energy_offpeak')) and is_number(states('sensor.daily_energy_peak')) %}
-          {{ states('sensor.daily_energy_offpeak') | float + states('sensor.daily_energy_peak') | float }}
-        {% elif is_number(states('sensor.daily_energy_offpeak')) %}
-          {{ states('sensor.daily_energy_offpeak') | float}}
-        {% elif is_number(states('sensor.daily_energy_peak')) %}
-          {{ states('sensor.daily_energy_peak') | float}}
-        {% else %}
-          None
-        {% endif %}
-    - name: 'Daily Energy Total Cost'
-      device_class: monetary
-      unit_of_measurement: EUR
-      unique_id: a43d4839-893d-43ae-afbd-1e01b834707d""
-      state: >
-        {% if is_number(states('sensor.daily_energy_offpeak_2')) and is_number(states('sensor.daily_energy_peak_2')) %}
-          {{ states('sensor.daily_energy_offpeak_2') | float + states('sensor.daily_energy_peak_2') | float }}
-        {% elif is_number(states('sensor.daily_energy_offpeak_2')) %}
-          {{ states('sensor.daily_energy_offpeak_2') | float }}
-        {% elif is_number(states('sensor.daily_energy_peak_2')) %}
-          {{ states('sensor.daily_energy_peak_2') | float }}
-        {% else %}
-          None
-        {% endif %}
+      - name: "Daily Energy Total"
+        device_class: energy
+        unit_of_measurement: kWh
+        unique_id: "eac068f5-42e9-480a-a643-ebe4589cb7aa"
+        state: >
+          {% if is_number(states('sensor.daily_energy_offpeak')) and is_number(states('sensor.daily_energy_peak')) %}
+            {{ states('sensor.daily_energy_offpeak') | float + states('sensor.daily_energy_peak') | float }}
+          {% elif is_number(states('sensor.daily_energy_offpeak')) %}
+            {{ states('sensor.daily_energy_offpeak') | float}}
+          {% elif is_number(states('sensor.daily_energy_peak')) %}
+            {{ states('sensor.daily_energy_peak') | float}}
+          {% else %}
+            None
+          {% endif %}
+      - name: "Daily Energy Total Cost"
+        device_class: monetary
+        unit_of_measurement: EUR
+        unique_id: a43d4839-893d-43ae-afbd-1e01b834707d""
+        state: >
+          {% if is_number(states('sensor.daily_energy_offpeak_2')) and is_number(states('sensor.daily_energy_peak_2')) %}
+            {{ states('sensor.daily_energy_offpeak_2') | float + states('sensor.daily_energy_peak_2') | float }}
+          {% elif is_number(states('sensor.daily_energy_offpeak_2')) %}
+            {{ states('sensor.daily_energy_offpeak_2') | float }}
+          {% elif is_number(states('sensor.daily_energy_peak_2')) %}
+            {{ states('sensor.daily_energy_peak_2') | float }}
+          {% else %}
+            None
+          {% endif %}
 timer:
   toon_automation:
     name: Time remaining
@@ -251,38 +251,38 @@ automation:
                   mode: "sleep"
           - conditions:
               - and:
-                - condition: state
-                  entity_id: sensor.thermostat_condition
-                  state: "True"
-                - condition: state
-                  entity_id: group.windows_kachel
-                  state: "off"
-                - or:
-                  - and:
-                    - condition: time
-                      after: "07:59:59"
-                      before: "21:00:00"
-                    - condition: state
-                      entity_id: binary_sensor.workday_sensor_mod
-                      state: "on"
-                  - and:
-                    - condition: time
-                      after: "08:59:59"
-                      before: "22:00:00"
-                    - condition: state
-                      entity_id: binary_sensor.workday_sensor_mod
-                      state: "off"
-                - or:
                   - condition: state
-                    entity_id: input_select.arnoud_status
-                    state: "Thuis"
+                    entity_id: sensor.thermostat_condition
+                    state: "True"
                   - condition: state
-                    entity_id: input_select.arnoud_status
-                    state: "Net Thuis"
-                  - condition: trigger
-                    id: "proximity_below"
-                  - condition: trigger
-                    id: "action_leave"
+                    entity_id: group.windows_kachel
+                    state: "off"
+                  - or:
+                      - and:
+                          - condition: time
+                            after: "07:59:59"
+                            before: "21:00:00"
+                          - condition: state
+                            entity_id: binary_sensor.workday_sensor_mod
+                            state: "on"
+                      - and:
+                          - condition: time
+                            after: "08:59:59"
+                            before: "22:00:00"
+                          - condition: state
+                            entity_id: binary_sensor.workday_sensor_mod
+                            state: "off"
+                  - or:
+                      - condition: state
+                        entity_id: input_select.arnoud_status
+                        state: "Thuis"
+                      - condition: state
+                        entity_id: input_select.arnoud_status
+                        state: "Net Thuis"
+                      - condition: trigger
+                        id: "proximity_below"
+                      - condition: trigger
+                        id: "action_leave"
             sequence:
               - alias: "zet kachel aan"
                 service: script.kachel_mode
@@ -290,13 +290,13 @@ automation:
                   mode: "home"
           - conditions:
               - and:
-                - condition: state
-                  entity_id: binary_sensor.workday1d
-                  state: "on"
-                - condition: time
-                  after: "21:29:59"
+                  - condition: state
+                    entity_id: binary_sensor.workday1d
+                    state: "on"
+                  - condition: time
+                    after: "21:29:59"
             sequence:
-              - choose: 
+              - choose:
                   - conditions:
                       - condition: state
                         entity_id: climate.toon_thermostat
@@ -334,7 +334,7 @@ automation:
                     data:
                       mode: "sleep"
         default:
-          - choose: 
+          - choose:
               - conditions:
                   - condition: state
                     entity_id: climate.toon_thermostat
@@ -471,9 +471,9 @@ script:
                 preset_mode: "{{ mode }}"
             - delay:
                 seconds: 30
-          until: 
+          until:
             - or:
-              - "{{ is_state('sensor.heating_preset_mode', mode ) }}"
-              - condition: state
-                entity_id: timer.toon_automation
-                state: idle
+                - "{{ is_state('sensor.heating_preset_mode', mode ) }}"
+                - condition: state
+                  entity_id: timer.toon_automation
+                  state: idle

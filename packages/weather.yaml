@@ -53,7 +53,7 @@ sensor:
   #      - symbol
   #      - pressure
   - platform: statistics
-    entity_id: sensor.buiten_temperature
+    entity_id: sensor.sbws_90cm_2eb8_temperature
     unique_id: "521d1a56-0b77-42d0-b86e-ef0e2f69f76c"
     max_age:
       hours: 24
@@ -63,7 +63,7 @@ sensor:
     state_characteristic: value_min
   - platform: statistics
     unique_id: "1b79e3f9-92ca-4339-98d2-4010b7c54f63"
-    entity_id: sensor.buiten_temperature
+    entity_id: sensor.sbws_90cm_2eb8_temperature
     max_age:
       hours: 24
     sampling_size: 500
@@ -197,18 +197,36 @@ sensor:
     name: bijkeuken_temp_max
     state_characteristic: value_max
 
-
 template:
+  - weather:
+      - name: "My Weather Station"
+        condition_template: "{{ states('weather.berkhout')}} "
+        dew_point_template: "{{ states('sensor.sbws_90cm_2eb8_dew_point') }}"
+        humidity_template: "{{ states('sensor.sbws_90cm_2eb8_humidity') }}"
+        pressure_template: "{{ states('sensor.sbws_90cm_2eb8_pressure') }}"
+        pressure_unit: "mbar"
+        temperature_template: "{{ states('sensor.sbws_90cm_2eb8_temperature') }}"
+        temperature_unit: "°C"
+        wind_gust_speed_template: "{{ states('sensor.sbws_90cm_2eb8_speed_2') }}"
+        wind_speed_template: "{{ states('sensor.sbws_90cm_2eb8_speed') }}"
+        wind_speed_unit: "m/s"
+        wind_bearing_template: "{{ states('sensor.sbws_90cm_2eb8_direction') }}"
   - sensor:
-    - name: windchill
-      unique_id: "3d5430b2-5622-449e-81e5-e95626e0292b"
-      state: >
-        {% set V = (states('sensor.berkhout_wind_speed') | float * 0.75)**0.16 %}
-        {% set T = states('sensor.berkhout_temperature') |float %}
-        {{(13.12 + 0.6215*T - 11.37*V + 0.3965*T*V)|round(1)}}
-      device_class: temperature
-      unit_of_measurement: °C
-      icon: mdi:thermometer
+      - name: windchill
+        unique_id: "3d5430b2-5622-449e-81e5-e95626e0292b"
+        state: >
+          {% set V = (states('sensor.sbws_90cm_2eb8_speed') | float * 0.75)**0.16 %}
+          {% set T = states('sensor.sbws_90cm_2eb8_temperature') |float %}
+          {{(13.12 + 0.6215*T - 11.37*V + 0.3965*T*V)|round(1)}}
+        device_class: temperature
+        unit_of_measurement: °C
+        icon: mdi:thermometer
+      - name: Illumination_weatherstation
+        unique_id: "019b40f2-515f-706f-9566-0395709d3e9f"
+        state: "{{states('sensor.sbws_90cm_2eb8_illuminance')|float * 0.0079}}"
+        unit_of_measurement: W/m²
+        icon: mdi:sun-wireless
+
   - trigger:
       - platform: time
         at: "23:55:00"
@@ -229,7 +247,7 @@ template:
         unique_id: "cac9318d-e750-4a54-9ac1-bd98431783a5"
         state: "{{states('sensor.berkhout_condition_1d')}}"
         attributes:
-#          forecast: "[{{state_attr('weather.berkhout', 'forecast')[0]}}]"
+          #          forecast: "[{{state_attr('weather.berkhout', 'forecast')[0]}}]"
           forecast: "{{ daily['weather.knmi_home']['forecast'] }}"
 
   - trigger:
@@ -247,29 +265,26 @@ template:
         unique_id: "71c723fb-6320-4735-b3c0-62d1dbf9bb7a"
         state: "{{ now().isoformat() }}"
         attributes:
-#          forecast: "{{ daily['weather.knmi_home'] }}"
+          #          forecast: "{{ daily['weather.knmi_home'] }}"
           forecast: "{{ daily['weather.knmi_home']['forecast'] }}"
 
-
-
-
 automation:
-#  - alias: "kopieer forecast naar input_number"
-#    id: "8749832079108927490821"
-#    trigger:
-#      - platform: time
-#        at: "00:00:01"
-#    action:
-#      - service: input_number.set_value
-#        target:
-#          entity_id: input_number.berkhout_temperatuur_0d
-#        data:
-#          value: "{{ state_attr('sensor.knmi_fcast_daily','forecast')[1].temperature|int }}"
+  #  - alias: "kopieer forecast naar input_number"
+  #    id: "8749832079108927490821"
+  #    trigger:
+  #      - platform: time
+  #        at: "00:00:01"
+  #    action:
+  #      - service: input_number.set_value
+  #        target:
+  #          entity_id: input_number.berkhout_temperatuur_0d
+  #        data:
+  #          value: "{{ state_attr('sensor.knmi_fcast_daily','forecast')[1].temperature|int }}"
   - alias: "alert zolder ramen dicht"
     id: "80dffcf4-e561-4ebb-bec0-4531f6e7e4cf"
     trigger:
       platform: template
-      value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) < (states('sensor.buiten_temperature')|float)}} "
+      value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) < (states('sensor.sbws_90cm_2eb8_temperature')|float)}} "
     action:
       - action: tts.speak
         target:
@@ -289,7 +304,7 @@ automation:
     id: "61b7fdec-02a7-4715-8903-9b33500a9466"
     trigger:
       platform: template
-      value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.buiten_temperature'), states('sensor.badkamer_temperature')]|min|float -1) < (states('sensor.buiten_temperature')|float)}} "
+      value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.sbws_90cm_2eb8_temperature'), states('sensor.badkamer_temperature')]|min|float -1) < (states('sensor.sbws_90cm_2eb8_temperature')|float)}} "
     action:
       - action: tts.speak
         target:
@@ -310,7 +325,7 @@ automation:
     id: "7baa566a-aa7b-4ad9-9aee-b87d63ae22d7"
     trigger:
       platform: template
-      value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) < (states('sensor.buiten_temperature')|float)}} "
+      value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) < (states('sensor.sbws_90cm_2eb8_temperature')|float)}} "
     action:
       - action: tts.speak
         target:
@@ -331,7 +346,7 @@ automation:
     id: "23db046f-7ae2-423f-98d7-eb93f38180db"
     trigger:
       platform: template
-      value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) > (states('sensor.buiten_temperature')|float)}} "
+      value_template: "{{ ([states('sensor.zolder_voor_temperature'), states('sensor.zolder_achter_temperature')]|min|float -1) > (states('sensor.sbws_90cm_2eb8_temperature')|float)}} "
     action:
       - action: tts.speak
         target:
@@ -352,7 +367,7 @@ automation:
     id: "0da85dba-f329-4b49-8927-82767de9f389"
     trigger:
       platform: template
-      value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.buiten_temperature'), states('sensor.badkamer_temperature')]|min|float -1) > (states('sensor.buiten_temperature')|float)}} "
+      value_template: "{{ ([states('sensor.studeerkamer_temperature'), states('sensor.sbws_90cm_2eb8_temperature'), states('sensor.badkamer_temperature')]|min|float -1) > (states('sensor.sbws_90cm_2eb8_temperature')|float)}} "
     action:
       - action: tts.speak
         target:
@@ -372,7 +387,7 @@ automation:
     id: "a0d1aa31-a084-4839-8f26-b8c96e3ae0a3"
     trigger:
       platform: template
-      value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) > (states('sensor.buiten_temperature')|float)}} "
+      value_template: "{{ (states('sensor.woonkamer_temperature')|float -1) > (states('sensor.sbws_90cm_2eb8_temperature')|float)}} "
     action:
       - action: tts.speak
         target:
