@@ -8,7 +8,7 @@ blueprint:
       selector:
         entity:
           domain: sensor
-          integration: mqtt       
+          integration: mqtt
     light_entity:
       name: Light
       selector:
@@ -17,13 +17,13 @@ blueprint:
     side:
       name: side
       description: right_long, left_long or both_long
-      default: 'left_long'
+      default: "left_long"
     boolean_entity:
       name: boolean
       selector:
         entity:
           domain: input_boolean
-          
+
 mode: single
 max_exceeded: silent
 
@@ -31,21 +31,20 @@ variables:
   light_entity: !input light_entity
   side: !input side
   switch_entity: !input switch_entity
-#  boolean_entity: "{{ light_entity |replace('light.','input_boolean.')}}"
+  #  boolean_entity: "{{ light_entity |replace('light.','input_boolean.')}}"
   boolean_entity: !input boolean_entity
 
-
 trigger:
-    - platform: state
-      entity_id: !input switch_entity
-      to: !input side
+  - trigger: state
+    entity_id: !input switch_entity
+    to: !input side
 
 action:
-  - service: input_boolean.turn_on
+  - action: input_boolean.turn_on
     target:
       entity_id: !input boolean_entity
-#    entity_id: "{{ boolean_entity }}"
-  - service: notify.webbrowser
+  #    entity_id: "{{ boolean_entity }}"
+  - action: notify.webbrowser
     data:
       title: debug
       message: "{{ side , light_entity , state_attr(light_entity, 'brightness') , switch_entity , states(switch_entity), boolean_entity}}"
@@ -53,20 +52,20 @@ action:
     repeat:
       sequence:
         - choose:
-          - conditions: "{{ (state_attr(light_entity, 'brightness') |int) > 245 }}"
-            sequence:
-              - service: light.turn_on
-                target:
-                  entity_id: !input light_entity
-                data:
-                  brightness: 1
+            - conditions: "{{ (state_attr(light_entity, 'brightness') |int) > 245 }}"
+              sequence:
+                - action: light.turn_on
+                  target:
+                    entity_id: !input light_entity
+                  data:
+                    brightness: 1
           default:
-            - service: light.turn_on
+            - action: light.turn_on
               target:
                 entity_id: !input light_entity
               data:
                 brightness_step_pct: 5
-        - service: notify.webbrowser
+        - action: notify.webbrowser
           data:
             title: debug
             message: "{{ light_entity , state_attr(light_entity, 'brightness'), state_attr(switch_entity, 'action') }}"
@@ -77,7 +76,7 @@ action:
           conditions:
             - condition: state
               entity_id: !input switch_entity
-#              entity_id: "{{ boolean_entity }}"
+              #              entity_id: "{{ boolean_entity }}"
               state: None
               attribute: action
             - "{{ repeat.index > 25 }}"

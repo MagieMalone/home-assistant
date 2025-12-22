@@ -2,9 +2,12 @@ automation:
   - alias: "Update Available Notifications"
     id: "43897023907390"
     trigger:
-      platform: state
-      entity_id: updater.updater
+      trigger: state
+      entity_id:
+        - update.home_assistant_core_update
+        - update.home_assistant_operating_system_update
+        - update.home_assistant_supervisor_update
     action:
-      service: notify.pushover
+      action: notify.mobile_app_kb2003
       data:
-        message: "Update to {{states('updater.updater')}} for Home Assistant is available."
+        message: "Update to {{states('trigger.entity_id')}} for Home Assistant is available."

@@ -11,43 +11,43 @@
 #    scan_interval: 300
 template:
   - sensor:
-    - name: "google_rtt"
-      unique_id: "a2640ba7-762c-4eb0-9932-2c9e61879128"
-      state: "{{state_attr('binary_sensor.google', 'round_trip_time_avg')|float}}"
-    - name: "firewall_connected_devices"
-      unique_id: "e6952d11-bc47-4749-8d55-e5efe2b670c2"
-      state: "{{states.device_tracker |selectattr('attributes.source_type', 'eq', 'router')|list|count}}"
-    - name: "esxi_cpu_mhz_used"
-      unique_id: "f4068b2f-9c94-4a2f-9186-129e274b4c32"
-      state: "{{state_attr('sensor.esxi_vmhost_localhost_local_foto_album_com', 'cpuusage_ghz')|float }}"
-      unit_of_measurement: "ghz"
-    - name: "esxi_mem_mb_used"
-      unique_id: "a985bff2-d76f-4e9c-81a2-2fbe01e82ec4"
-      state: "{{state_attr('sensor.esxi_vmhost_localhost_local_foto_album_com', 'memusage_gb')|float}}"
-      unit_of_measurement: "GB"
-    - name: "esxi_disk_used"
-      unique_id: "cc833e94-1fa0-43b0-b81e-cba39a97b700"
-      state: "{{(state_attr('sensor.esxi_datastore_main', 'total_space_gb') - state_attr('sensor.esxi_datastore_main', 'free_space_gb'))|int }}"
-      unit_of_measurement: "GB"
-    - name: firewall_internet_out_mbps
-      unit_of_measurement: MBps
-      default_entity_id: sensor.firewall_internet_out_mbps
-      state: '{{ [((states(''sensor.firewall_wan_out_stats'')|float(none)*8)/1000000)|round(2,default=none),0]|max }}'
-    - name: firewall_internet_in_mbps
-      unit_of_measurement: MBps
-      default_entity_id: sensor.firewall_internet_in_mbps
-      state: '{{ [((states(''sensor.firewall_wan_in_stats'')|float(none)*8)/1000000)|round(2,default=none),0]|max }}'
+      - name: "google_rtt"
+        unique_id: "a2640ba7-762c-4eb0-9932-2c9e61879128"
+        state: "{{state_attr('binary_sensor.google', 'round_trip_time_avg')|float}}"
+      - name: "firewall_connected_devices"
+        unique_id: "e6952d11-bc47-4749-8d55-e5efe2b670c2"
+        state: "{{states.device_tracker |selectattr('attributes.source_type', 'eq', 'router')|list|count}}"
+      - name: "esxi_cpu_mhz_used"
+        unique_id: "f4068b2f-9c94-4a2f-9186-129e274b4c32"
+        state: "{{state_attr('sensor.esxi_vmhost_localhost_local_foto_album_com', 'cpuusage_ghz')|float }}"
+        unit_of_measurement: "ghz"
+      - name: "esxi_mem_mb_used"
+        unique_id: "a985bff2-d76f-4e9c-81a2-2fbe01e82ec4"
+        state: "{{state_attr('sensor.esxi_vmhost_localhost_local_foto_album_com', 'memusage_gb')|float}}"
+        unit_of_measurement: "GB"
+      - name: "esxi_disk_used"
+        unique_id: "cc833e94-1fa0-43b0-b81e-cba39a97b700"
+        state: "{{(state_attr('sensor.esxi_datastore_main', 'total_space_gb') - state_attr('sensor.esxi_datastore_main', 'free_space_gb'))|int }}"
+        unit_of_measurement: "GB"
+      - name: firewall_internet_out_mbps
+        unit_of_measurement: MBps
+        default_entity_id: sensor.firewall_internet_out_mbps
+        state: "{{ [((states('sensor.firewall_wan_out_stats')|float(none)*8)/1000000)|round(2,default=none),0]|max }}"
+      - name: firewall_internet_in_mbps
+        unit_of_measurement: MBps
+        default_entity_id: sensor.firewall_internet_in_mbps
+        state: "{{ [((states('sensor.firewall_wan_in_stats')|float(none)*8)/1000000)|round(2,default=none),0]|max }}"
   - trigger:
-    - platform: template
-      value_template: >
-        {% set address = state_attr('binary_sensor.router_interface_eth0_status','addresses') %}
-        {% if address|regex_findall(find="'([0-9\.\/]+)'", ignorecase=False)|length == 1 %}
-          {% set ipv4 = address|regex_findall_index(find="'([0-9\.\/]+)", index=0, ignorecase=False) %}
-        {% else %}
-          {% set ipv4 =''%}
-        {% endif %}
-        {{states('sensor.edgeos_interface_eth0_internet_ipv4') != ipv4 and ipv4|length >0 }}
-    sensor:  
+      - trigger: template
+        value_template: >
+          {% set address = state_attr('binary_sensor.router_interface_eth0_status','addresses') %}
+          {% if address|regex_findall(find="'([0-9\.\/]+)'", ignorecase=False)|length == 1 %}
+            {% set ipv4 = address|regex_findall_index(find="'([0-9\.\/]+)", index=0, ignorecase=False) %}
+          {% else %}
+            {% set ipv4 =''%}
+          {% endif %}
+          {{states('sensor.edgeos_interface_eth0_internet_ipv4') != ipv4 and ipv4|length >0 }}
+    sensor:
       - name: "edgeos_interface_eth0_internet_ipv4"
         unique_id: "0f88dc05-1ca4-4293-997b-8ee805b16eb2"
         state: >
@@ -60,35 +60,33 @@ template:
             Unknown
           {% endif %}
   - trigger:
-    - platform: template
-      value_template: >
-        {% set address = state_attr('binary_sensor.router_interface_eth0_status','addresses') %}
-        {% if address|regex_findall(find="'([0-9:\/a-f]+)'", ignorecase=False)|length == 1 %}
-          {% set ipv6 = address|regex_findall_index(find="'([0-9:\/a-f]+)'", index=0, ignorecase=False) %}
-        {% else %}
-          {% set ipv6 = '' %}
-        {% endif %}
-        {{states('sensor.edgeos_interface_eth0_internet_ipv6') != ipv6 and ipv6|length >0}}
+      - trigger: template
+        value_template: >
+          {% set address = state_attr('binary_sensor.router_interface_eth0_status','addresses') %}
+          {% if address|regex_findall(find="'([0-9:\/a-f]+)'", ignorecase=False)|length == 1 %}
+            {% set ipv6 = address|regex_findall_index(find="'([0-9:\/a-f]+)'", index=0, ignorecase=False) %}
+          {% else %}
+            {% set ipv6 = '' %}
+          {% endif %}
+          {{states('sensor.edgeos_interface_eth0_internet_ipv6') != ipv6 and ipv6|length >0}}
     sensor:
-    - name: "edgeos_interface_eth0_internet_ipv6"
-      unique_id: "dadec2ee-eafa-4de0-a0db-a3d67afa602a"
-      state: >
-        {% set address = state_attr('binary_sensor.router_interface_eth0_status','addresses') %}
-        {% if address|regex_findall(find="'([0-9\.\/]+)', '([0-9:\/a-f]+)'", ignorecase=False)|length == 2 %}
-          {{(address|regex_findall(find="'([0-9\.\/]+)', '([0-9:\/a-f]+)'", ignorecase=False))[0][1]}}
-        {% elif address|regex_findall(find="'([0-9:\/a-f]+)'", ignorecase=False)|length == 1 %}  
-          {{(address|regex_findall(find="'([0-9:\/a-f]+)'", ignorecase=False))[0] }}
-        {% else %}
-          Unknown
-        {% endif %}
-
-
+      - name: "edgeos_interface_eth0_internet_ipv6"
+        unique_id: "dadec2ee-eafa-4de0-a0db-a3d67afa602a"
+        state: >
+          {% set address = state_attr('binary_sensor.router_interface_eth0_status','addresses') %}
+          {% if address|regex_findall(find="'([0-9\.\/]+)', '([0-9:\/a-f]+)'", ignorecase=False)|length == 2 %}
+            {{(address|regex_findall(find="'([0-9\.\/]+)', '([0-9:\/a-f]+)'", ignorecase=False))[0][1]}}
+          {% elif address|regex_findall(find="'([0-9:\/a-f]+)'", ignorecase=False)|length == 1 %}  
+            {{(address|regex_findall(find="'([0-9:\/a-f]+)'", ignorecase=False))[0] }}
+          {% else %}
+            Unknown
+          {% endif %}
 
 automation:
   - alias: "ipv4_changed"
     id: "548892fc-7da0-43d1-9e71-8465dd803fbf"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.firewall_ipv4
     condition:
       - and:
@@ -99,33 +97,33 @@ automation:
           - "{{trigger.from_state.state != 'Unknown'}}"
           - "{{trigger.to_state.state != 'Unknown'}}"
     action:
-      - service: notify.persistent_notification
+      - action: notify.persistent_notification
         data:
           title: "IPv4 address changed"
           message: "Internet address changed from {{trigger.from_state.state}} to {{trigger.to_state.state}}"
   - alias: "ping6 failed"
     id: "b5d6a22f-c0a0-45d0-8dc4-3eb9ac23c17f"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.ping6_google
         attribute:
         to: "100"
         for: 00:05:00
     action:
-      - service: notify.persistent_notification
+      - action: notify.persistent_notification
         data:
           title: "IPv6 ping to google failed"
           message: "ipv6 address: {{trigger.to_state.attributes.address}} {{trigger.to_state.attributes.loss_percentage}}%"
   - alias: "p2000 url failed"
     id: "7267ce91-e9c8-49c8-9b39-2d686226e6c3"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.p2000
         attribute:
         to: "off"
         for: 00:05:00
     action:
-      - service: notify.pushover
+      - action: notify.pushover
         data:
           title: "P2000 URL"
           message: "P2000 URL onbeschikbaar voor 5 minuten"
@@ -134,21 +132,21 @@ automation:
   - alias: "ipv4_test"
     id: "5d4c55c9-12ad-48f6-8a4f-4e5d51448724"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.router_interface_eth0_status
         attribute: addresses
     action:
-      - service: notify.persistent_notification
+      - action: notify.persistent_notification
         data:
           title: "IPv4 address changed"
           message: "Internet address changed from {{trigger.from_state}} to {{trigger.to_state}}"
   - alias: "reload-edgeos"
     id: "a2c7f335-8592-4a50-8b64-148a8abf20c6"
     trigger:
-      - platform: time
+      - trigger: time
         at: "00:30:00"
     action:
-      - service: homeassistant.reload_config_entry
+      - action: homeassistant.reload_config_entry
         data: {}
         target:
           device_id: a22c03e9fff39036212524820e2f68b5
@@ -160,11 +158,11 @@ sensor:
     unique_id: "75e6a7bc-5c28-4f00-af0b-f4509327aedb"
     host: 192.168.3.4
     community: public
-#    auth_key: !secret xcp_ng_sha
-#    auth_protocol: hmac-sha
-#    priv_key: !secret xcp_ng_aes
-#    priv_protocol: aes-cfb-128
-#    username: !secret xcp_ng_user
+    #    auth_key: !secret xcp_ng_sha
+    #    auth_protocol: hmac-sha
+    #    priv_key: !secret xcp_ng_aes
+    #    priv_protocol: aes-cfb-128
+    #    username: !secret xcp_ng_user
     version: "2c"
     unit_of_measurement: "%"
     accept_errors: true
@@ -176,117 +174,117 @@ sensor:
     unique_id: "cc95cbe4-af1b-47e4-ad4c-23eb6a54d652"
     host: 192.168.3.4
     community: public
-#    auth_key: !secret xcp_ng_sha
-#    auth_protocol: hmac-sha
-#    priv_key: !secret xcp_ng_aes
-#    priv_protocol: aes-cfb-128
-#    username: !secret xcp_ng_user
+    #    auth_key: !secret xcp_ng_sha
+    #    auth_protocol: hmac-sha
+    #    priv_key: !secret xcp_ng_aes
+    #    priv_protocol: aes-cfb-128
+    #    username: !secret xcp_ng_user
     version: "2c"
     unit_of_measurement: "%"
     accept_errors: true
     default_value: 0
     icon: "mdi:cpu-64-bit"
-#
+  #
   - platform: snmp
     name: "xcp-ng cpu 3"
     baseoid: 1.3.6.1.2.1.25.3.3.1.2.196610
     unique_id: "56469141-371d-4ac0-b70a-950f7dcaa05c"
     host: 192.168.3.4
     community: public
-#    auth_key: !secret xcp_ng_sha
-#    auth_protocol: hmac-sha
-#    priv_key: !secret xcp_ng_aes
-#    priv_protocol: aes-cfb-128
-#    username: !secret xcp_ng_user
+    #    auth_key: !secret xcp_ng_sha
+    #    auth_protocol: hmac-sha
+    #    priv_key: !secret xcp_ng_aes
+    #    priv_protocol: aes-cfb-128
+    #    username: !secret xcp_ng_user
     version: "2c"
     unit_of_measurement: "%"
     accept_errors: true
     default_value: 0
     icon: "mdi:cpu-64-bit"
-#
+  #
   - platform: snmp
     name: "xcp-ng cpu 4"
     baseoid: 1.3.6.1.2.1.25.3.3.1.2.196611
     unique_id: "ce70b7bd-d7a5-4b3a-bad0-8b3c4dd5ee0d"
     host: 192.168.3.4
     community: public
-#    auth_key: !secret xcp_ng_sha
-#    auth_protocol: hmac-sha
-#    priv_key: !secret xcp_ng_aes
-#    priv_protocol: aes-cfb-128
-#    username: !secret xcp_ng_user
+    #    auth_key: !secret xcp_ng_sha
+    #    auth_protocol: hmac-sha
+    #    priv_key: !secret xcp_ng_aes
+    #    priv_protocol: aes-cfb-128
+    #    username: !secret xcp_ng_user
     version: "2c"
     unit_of_measurement: "%"
     accept_errors: true
     default_value: 0
     icon: "mdi:cpu-64-bit"
 
-#  - platform: snmp
-#    name: "edgeos cpu 1"
-#    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196608
-#    unique_id: "d3f4cee1-fc9a-48b6-b038-5cdd48f3eb6d"
-#    host: 192.168.3.1
-#    auth_key: !secret edgeos_snmp_key
-#    auth_protocol: hmac-sha
-#    priv_key: !secret edgeos_snmp_key
-#    priv_protocol: aes-cfb-128
-#    username: !secret edgeos_snmp_user
-#    version: "3"
-#    unit_of_measurement: "%"
-#    accept_errors: true
-#    default_value: 0
-#    icon: "mdi:cpu-64-bit"
-#
-#  - platform: snmp
-#    name: "edgeos cpu 2"
-#    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196609
-#    unique_id: ""
-#    host: 192.168.3.1
-#    auth_key: !secret edgeos_snmp_key
-#    auth_protocol: hmac-sha
-#    priv_key: !secret edgeos_snmp_key
-#    priv_protocol: aes-cfb-128
-#    username: !secret edgeos_snmp_user
-#    version: "3"
-#    unit_of_measurement: "%"
-#    accept_errors: true
-#    default_value: 0
-#    icon: "mdi:cpu-64-bit"
-#
-#  - platform: snmp
-#    name: "edgeos cpu 3"
-#    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196610
-#    unique_id: "524f06c2-75df-48f0-85f2-1ebf496f94dc"
-#    host: 192.168.3.1
-#    auth_key: !secret edgeos_snmp_key
-#    auth_protocol: hmac-sha
-#    priv_key: !secret edgeos_snmp_key
-#    priv_protocol: aes-cfb-128
-#    username: !secret edgeos_snmp_user
-#    version: "3"
-#    unit_of_measurement: "%"
-#    accept_errors: true
-#    default_value: 0
-#    icon: "mdi:cpu-64-bit"
-#
-#  - platform: snmp
-#    name: "edgeos cpu 4"
-#    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196611
-#    unique_id: "bae11c03-95f0-46c8-be38-91b3de540ffb"
-#    host: 192.168.3.1
-#    auth_key: !secret edgeos_snmp_key
-#    auth_protocol: hmac-sha
-#    priv_key: !secret edgeos_snmp_key
-#    priv_protocol: aes-cfb-128
-#    username: !secret edgeos_snmp_user
-#    version: "3"
-#    unit_of_measurement: "%"
-#    accept_errors: true
-#    default_value: 0
-#    icon: "mdi:cpu-64-bit"
+  #  - platform: snmp
+  #    name: "edgeos cpu 1"
+  #    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196608
+  #    unique_id: "d3f4cee1-fc9a-48b6-b038-5cdd48f3eb6d"
+  #    host: 192.168.3.1
+  #    auth_key: !secret edgeos_snmp_key
+  #    auth_protocol: hmac-sha
+  #    priv_key: !secret edgeos_snmp_key
+  #    priv_protocol: aes-cfb-128
+  #    username: !secret edgeos_snmp_user
+  #    version: "3"
+  #    unit_of_measurement: "%"
+  #    accept_errors: true
+  #    default_value: 0
+  #    icon: "mdi:cpu-64-bit"
+  #
+  #  - platform: snmp
+  #    name: "edgeos cpu 2"
+  #    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196609
+  #    unique_id: ""
+  #    host: 192.168.3.1
+  #    auth_key: !secret edgeos_snmp_key
+  #    auth_protocol: hmac-sha
+  #    priv_key: !secret edgeos_snmp_key
+  #    priv_protocol: aes-cfb-128
+  #    username: !secret edgeos_snmp_user
+  #    version: "3"
+  #    unit_of_measurement: "%"
+  #    accept_errors: true
+  #    default_value: 0
+  #    icon: "mdi:cpu-64-bit"
+  #
+  #  - platform: snmp
+  #    name: "edgeos cpu 3"
+  #    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196610
+  #    unique_id: "524f06c2-75df-48f0-85f2-1ebf496f94dc"
+  #    host: 192.168.3.1
+  #    auth_key: !secret edgeos_snmp_key
+  #    auth_protocol: hmac-sha
+  #    priv_key: !secret edgeos_snmp_key
+  #    priv_protocol: aes-cfb-128
+  #    username: !secret edgeos_snmp_user
+  #    version: "3"
+  #    unit_of_measurement: "%"
+  #    accept_errors: true
+  #    default_value: 0
+  #    icon: "mdi:cpu-64-bit"
+  #
+  #  - platform: snmp
+  #    name: "edgeos cpu 4"
+  #    baseoid: 1.3.6.1.2.1.25.3.3.1.2.196611
+  #    unique_id: "bae11c03-95f0-46c8-be38-91b3de540ffb"
+  #    host: 192.168.3.1
+  #    auth_key: !secret edgeos_snmp_key
+  #    auth_protocol: hmac-sha
+  #    priv_key: !secret edgeos_snmp_key
+  #    priv_protocol: aes-cfb-128
+  #    username: !secret edgeos_snmp_user
+  #    version: "3"
+  #    unit_of_measurement: "%"
+  #    accept_errors: true
+  #    default_value: 0
+  #    icon: "mdi:cpu-64-bit"
 
   - platform: snmp
-    name: 'Firewall Firmware Version'
+    name: "Firewall Firmware Version"
     host: !secret firewall_ip
     baseoid: 1.3.6.1.4.1.12356.101.4.1.1.0
     auth_key: !secret forti_auth
@@ -295,10 +293,10 @@ sensor:
     priv_protocol: aes-cfb-256
     version: "3"
     username: !secret forti_snmp_user
-    value_template: "{{ value.split(',')[0] }}"   
+    value_template: "{{ value.split(',')[0] }}"
     scan_interval: 60
   - platform: snmp
-    name: 'Firewall Uptime'
+    name: "Firewall Uptime"
     host: !secret firewall_ip
     baseoid: 1.3.6.1.2.1.1.3.0
     auth_key: !secret forti_auth
@@ -333,7 +331,7 @@ sensor:
           {%- endif -%}
         {%- endif -%}
   - platform: snmp
-    name: 'Firewall WAN In'
+    name: "Firewall WAN In"
     host: !secret firewall_ip
     baseoid: 1.3.6.1.2.1.2.2.1.10.1
     auth_key: !secret forti_auth
@@ -344,7 +342,7 @@ sensor:
     username: !secret forti_snmp_user
     scan_interval: 60
   - platform: snmp
-    name: 'Firewall WAN Out'
+    name: "Firewall WAN Out"
     host: !secret firewall_ip
     baseoid: 1.3.6.1.2.1.2.2.1.16.1
     auth_key: !secret forti_auth
@@ -355,17 +353,17 @@ sensor:
     username: !secret forti_snmp_user
     scan_interval: 60
   - platform: derivative
-    name: 'Firewall WAN In Stats'
+    name: "Firewall WAN In Stats"
     source: sensor.firewall_wan_in
     unit_time: s
     unit: B
   - platform: derivative
-    name: 'Firewall WAN Out Stats'
+    name: "Firewall WAN Out Stats"
     source: sensor.firewall_wan_out
     unit_time: s
     unit: B
   - platform: snmp
-    name: 'Firewall CPU Used Percentage'
+    name: "Firewall CPU Used Percentage"
     host: !secret firewall_ip
     baseoid: 1.3.6.1.4.1.12356.101.4.1.3.0
     auth_key: !secret forti_auth
@@ -374,11 +372,11 @@ sensor:
     priv_protocol: aes-cfb-256
     version: "3"
     username: !secret forti_snmp_user
-    value_template: '{{ value | float }}'
-    unit_of_measurement: '%'
+    value_template: "{{ value | float }}"
+    unit_of_measurement: "%"
     scan_interval: 60
   - platform: snmp
-    name: 'Firewall Memory Used Percentage'
+    name: "Firewall Memory Used Percentage"
     host: !secret firewall_ip
     baseoid: 1.3.6.1.4.1.12356.101.4.1.4.0
     auth_key: !secret forti_auth
@@ -387,11 +385,11 @@ sensor:
     priv_protocol: aes-cfb-256
     version: "3"
     username: !secret forti_snmp_user
-    value_template: '{{ value | float }}'
+    value_template: "{{ value | float }}"
     unit_of_measurement: "%"
     scan_interval: 60
   - platform: snmp
-    name: 'Firewall Session Count'
+    name: "Firewall Session Count"
     host: !secret firewall_ip
     baseoid: 1.3.6.1.4.1.12356.101.4.1.8.0
     auth_key: !secret forti_auth
@@ -400,11 +398,11 @@ sensor:
     priv_protocol: aes-cfb-256
     version: "3"
     username: !secret forti_snmp_user
-    value_template: '{{ value | float }}'
+    value_template: "{{ value | float }}"
     scan_interval: 60
   - platform: rest
     resource: https://192.168.3.1/api/v2/cmdb/system/interface?filter="name==wan1"
-    headers: 
+    headers:
       Authorization: !secret firewall_bearer_token
       Content-Type: application/json
     value_template: "{{value_json['results'][0]['ip']}}"
@@ -420,7 +418,7 @@ sensor:
     verify_ssl: false
   - platform: rest
     resource: https://192.168.3.1/api/v2/cmdb/system/interface?filter="name==wan1"
-    headers: 
+    headers:
       Authorization: !secret firewall_bearer_token
       Content-Type: application/json
     value_template: "{{value_json['results'][0]['ipv6']['ip6-address']}}"
@@ -433,7 +431,7 @@ sensor:
     verify_ssl: false
   - platform: rest
     resource: https://192.168.3.1/api/v2/cmdb/system/interface?filter="name==lan"
-    headers: 
+    headers:
       Authorization: !secret firewall_bearer_token
       Content-Type: application/json
     value_template: "{{value_json['results'][0]['ipv6']['ip6-address']}}"
@@ -446,7 +444,7 @@ sensor:
     verify_ssl: false
   - platform: rest
     resource: https://192.168.3.1/api/v2/cmdb/system/interface?filter="name==lan"
-    headers: 
+    headers:
       Authorization: !secret firewall_bearer_token
       Content-Type: application/json
     value_template: "{{value_json['results'][0]['ip']}}"

@@ -82,7 +82,7 @@ blueprint:
           - Anything that may be special or unique, such as celebrating a birthday
 
 trigger:
-  platform: time
+  trigger: time
   at: !input notify_time
 
 action:
@@ -93,14 +93,14 @@ action:
       prompt: !input prompt
 
   - alias: Fetch Calendar Agenda
-    service: calendar.get_events
+    action: calendar.get_events
     target: !input calendar_entity
     response_variable: agenda
     data:
       duration: !input calendar_duration
 
   - alias: "Conversation Agent Notification Text"
-    service: conversation.process
+    action: conversation.process
     data:
       text: |-
         Time: {{ now() }}
@@ -172,12 +172,12 @@ action:
       agent_id: !input conversation_agent
     response_variable: agent
   - alias: "Send notification"
-    service: !input notify_service
+    action: !input notify_service
     data:
       title: "{{ now().strftime('%A') }} Agenda"
       message: "{{ agent.response.speech.plain.speech }}"
   - alias: mail
-    service: notify.a_buurman_gmail_com
+    action: notify.a_buurman_gmail_com
     data:
       message: "{{ agent.response.speech.plain.speech }}"
       title: "{{ now().strftime('%A') }} Agenda"

@@ -2,9 +2,9 @@ automation:
   - alias: "test"
     id: "de51b506-99f3-4d4c-bcb5-3abeec41921c9"
     trigger:
-      platform: time
+      trigger: time
       at: 07:00
-    
+
     action:
       - variables:
           weather_entity: sensor.nextday_weather
@@ -12,7 +12,7 @@ automation:
           prompt: |-
             Please generate text for a notification that will be sent to the users
             smartphone with helpful information.
-    
+
             You are a helpful personal agent that generates text for the user:
             - Your answers are helpful, friendly, warm, insightful.
             - Your answers are not technical, and do not include Home Assistant internal details such as entities in responses.
@@ -21,18 +21,18 @@ automation:
               - How much time remaining until their first meeting
               - Anything that may be special or unique, such as celebrating a birthday
       - alias: Fetch Calendar Agenda
-        service: calendar.get_events
-        target: 
+        action: calendar.get_events
+        target:
           entity_id:
             - calendar.abuurmangmailcom
             - calendar.action
         response_variable: agenda
         data:
-          duration: 
+          duration:
             hours: 18
-    
+
       - alias: "Conversation Agent Notification Text"
-        service: conversation.process
+        action: conversation.process
         data:
           text: |-
             Time: {{ now() }}
@@ -40,7 +40,7 @@ automation:
             Latitude: {{ state_attr(zone_entity, 'latitude') | round(1) }}
             Longitude: {{ state_attr(zone_entity, 'longitude') | round(1) }}
             {% endif %}
-    
+
             {%- if weather_entity is defined %}
             {%- set forecast = state_attr(weather_entity, 'forecast')[0] %}
             {%- set temperature_unit = state_attr(weather_entity, 'temperature_unit') -%}
@@ -102,15 +102,14 @@ automation:
           agent_id: 7df39e215dafbd1d3d853b5366ab81c1
         response_variable: agent
       - alias: "Send notification"
-        service: notify.webbrowser
+        action: notify.webbrowser
         data:
           title: "{{ now().strftime('%A') }} Agenda"
           message: "{{ agent.response.speech.plain.speech }}"
       - alias: mail
-        service: notify.a_buurman_gmail_com
+        action: notify.a_buurman_gmail_com
         data:
           message: "{{ agent.response.speech.plain.speech }}"
           title: "{{ now().strftime('%A') }} Agenda"
           target:
             - "a.buurman@gmail.com"
-

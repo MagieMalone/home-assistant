@@ -22,12 +22,12 @@ blueprint:
       default:
         hours: 18
 trigger:
-  platform: time
+  trigger: time
   at: 07:00
 
 action:
   - alias: Fetch Calendar Agenda
-    service: calendar.get_events
+    action: calendar.get_events
     target: !input calendar_entity
     response_variable: agenda
     data:

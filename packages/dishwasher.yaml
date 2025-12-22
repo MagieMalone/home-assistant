@@ -11,11 +11,11 @@ automation:
           - sensor.dishwasher_operation_state
         to: finished
     actions:
-      - service: input_boolean.turn_on
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.input_dishwasher_has_run
       - action: notify.mobile_app_kb2003
-      # https://companion.home-assistant.io/docs/notifications/notifications-basic/#specific-channel-properties
+        # https://companion.home-assistant.io/docs/notifications/notifications-basic/#specific-channel-properties
         data:
           title: "Vaatwasser status"
           message: "De vaatwasser is klaar"
@@ -43,7 +43,7 @@ automation:
         entity_id: input_boolean.input_dishwasher_has_run
         state: "on"
     actions:
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.input_dishwasher_has_run
   - alias: "Dishwasher smart start"
@@ -61,15 +61,15 @@ automation:
         above: 1000
         for:
           minutes: 10
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sun.sun
         attribute: "azimuth"
         above: 151
         id: "solarmax"
-# disabled as peak & off peak tarif are the same.
-#      - trigger: time
-#        at: "04:00:00"
-#        id: "time"
+    # disabled as peak & off peak tarif are the same.
+    #      - trigger: time
+    #        at: "04:00:00"
+    #        id: "time"
     conditions:
       - condition: state
         entity_id: sensor.dishwasher_door
@@ -82,49 +82,49 @@ automation:
         state: "off"
     actions:
       - choose:
-        - conditions:
-          - condition: trigger
-            id: "cloudy"
-          - condition: template
-            value_template: "{{state_attr('sensor.knmi_fcast_daily','forecast')[0]['condition']!='clear'}}"
-          sequence:
-            - service: home_connect.set_program_and_options
-              data:
-                device_id: "a52333b43d1f0a033cf901b01ed25cee"
-                affects_to: "active_program"
-                program: "dishcare_dishwasher_program_intensiv_70"
-                dishcare_dishwasher_option_brilliance_dry: true
-        - conditions:
-          - or:
-            - condition: trigger
-              id: "clear"
-            # if cloudy doesn't trigger start dishwasher an hour and a half before solar max production
-            - condition: trigger
-              id: "solarmax"
-          sequence:
-            - service: home_connect.set_program_and_options
-              data:
-                device_id: "a52333b43d1f0a033cf901b01ed25cee"
-                affects_to: "active_program"
-                program: "dishcare_dishwasher_program_intensiv_70"
-                dishcare_dishwasher_option_brilliance_dry: true
-# disabled as peak & off peak tarif are the same.
-#        - conditions:
-#          - condition: trigger
-#            id: "time"
-#          - condition: template
-#            value_template: "{{ now().month in [1,2,3,10,11,12] }}"
-#          - condition: template
-#            value_template: "{{state_attr('sensor.knmi_fcast_daily','forecast')[0]['condition'] in ['cloudy','fog','rainy','light-rain','light-snow','snowy','snowy-rainy','lightning']}}"
-#          sequence:
-#            - service: home_connect.set_program_and_options
-#              data:
-#                device_id: "a52333b43d1f0a033cf901b01ed25cee"
-#                affects_to: "active_program"
-#                program: "dishcare_dishwasher_program_intensiv_70"
-#                dishcare_dishwasher_option_brilliance_dry: true
+          - conditions:
+              - condition: trigger
+                id: "cloudy"
+              - condition: template
+                value_template: "{{state_attr('sensor.knmi_fcast_daily','forecast')[0]['condition']!='clear'}}"
+            sequence:
+              - action: home_connect.set_program_and_options
+                data:
+                  device_id: "a52333b43d1f0a033cf901b01ed25cee"
+                  affects_to: "active_program"
+                  program: "dishcare_dishwasher_program_intensiv_70"
+                  dishcare_dishwasher_option_brilliance_dry: true
+          - conditions:
+              - or:
+                  - condition: trigger
+                    id: "clear"
+                  # if cloudy doesn't trigger start dishwasher an hour and a half before solar max production
+                  - condition: trigger
+                    id: "solarmax"
+            sequence:
+              - action: home_connect.set_program_and_options
+                data:
+                  device_id: "a52333b43d1f0a033cf901b01ed25cee"
+                  affects_to: "active_program"
+                  program: "dishcare_dishwasher_program_intensiv_70"
+                  dishcare_dishwasher_option_brilliance_dry: true
+        # disabled as peak & off peak tarif are the same.
+        #        - conditions:
+        #          - condition: trigger
+        #            id: "time"
+        #          - condition: template
+        #            value_template: "{{ now().month in [1,2,3,10,11,12] }}"
+        #          - condition: template
+        #            value_template: "{{state_attr('sensor.knmi_fcast_daily','forecast')[0]['condition'] in ['cloudy','fog','rainy','light-rain','light-snow','snowy','snowy-rainy','lightning']}}"
+        #          sequence:
+        #            - action: home_connect.set_program_and_options
+        #              data:
+        #                device_id: "a52333b43d1f0a033cf901b01ed25cee"
+        #                affects_to: "active_program"
+        #                program: "dishcare_dishwasher_program_intensiv_70"
+        #                dishcare_dishwasher_option_brilliance_dry: true
         default:
-          - service: notify.pushover
+          - action: notify.pushover
             data:
               title: Dishwasher
               message: "Not ran as no conditions match "

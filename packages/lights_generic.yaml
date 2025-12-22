@@ -163,32 +163,32 @@ script:
           random_2: "{{states('sensor.random_0_15')|int}}"
       - delay:
           minutes: "{{random_1|int}}"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id:
             - light.hue_lightstrip_plus_1
             - light.staande_lamp
             - light.hue_color_pendant_down_1
             - light.hue_color_pendant_up_1
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.sk_duo_spot_1
             - light.sk_duo_spot_2
             - light.trap_hal
       - delay: 5
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id:
             - light.overloop
       - delay: 25
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id:
             - light.trap_hal
       - delay:
           minutes: "{{random_2}}"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id:
             - light.sk_duo_spot_1
@@ -202,7 +202,7 @@ script:
           - conditions:
               - "{{ light_entities == '' }}"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id:
                     - light.hue_lightstrip_plus_1
@@ -210,14 +210,14 @@ script:
               - variables:
                   light_hal: "{{state_attr('light.hal', 'brightness')|int}}"
                   light_lightstrip: "{{state_attr('light.hue_lightstrip_plus_1', 'brightness')|int}}"
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id:
                     - light.hue_lightstrip_plus_1
                     - light.hal
                 data:
                   brightness: 100
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id:
                     - light.hue_lightstrip_plus_1
@@ -225,23 +225,23 @@ script:
                 data:
                   flash: long
               - delay: 5
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.hue_lightstrip_plus_1
                 data:
                   brightness: "{{light_lightstrip}}"
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.hal
                 data:
                   brightness: "{{light_hal}}"
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id:
                     - light.hue_lightstrip_plus_1
                     - light.hal
         default:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: "{{light_entities}}"
             data:
@@ -258,7 +258,7 @@ script:
         description: "color in xy color notation"
         example: "[0.5, 0.5]"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "{{states.light|rejectattr('state', 'eq', 'off')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
         data: >
@@ -287,14 +287,14 @@ script:
         description: "brightness in %"
         example: "75"
     sequence:
-#      - action: scene.delete
-#        data:
-#          entity_id: scene.before
-#      - service: scene.create
-#        data:
-#          scene_id: before
-#          snapshot_entities: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
-      - service: script.update_lights_attributes
+      #      - action: scene.delete
+      #        data:
+      #          entity_id: scene.before
+      #      - action: scene.create
+      #        data:
+      #          scene_id: before
+      #          snapshot_entities: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
+      - action: script.update_lights_attributes
         data:
           brightness_pct: >
             {% if brightness_pct %}
@@ -312,20 +312,20 @@ script:
             {% endif %}
       - delay:
           seconds: 5
-#      - service: scene.turn_on
-#        target:
-#          entity_id: scene.before
-#        data:
-#          transition: 2
-      - service: light.turn_on
+      #      - action: scene.turn_on
+      #        target:
+      #          entity_id: scene.before
+      #        data:
+      #          transition: 2
+      - action: light.turn_on
         target:
           entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|rejectattr('entity_id','eq','light.hue_color_pendant_up_1' )|rejectattr('entity_id','eq','light.hue_lightstrip_plus_1' )|map(attribute='entity_id')|list}}"
-        data: 
+        data:
           brightness_pct: 50
           transition: 2
           kelvin: 3000
       - alias: strip
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|selectattr('entity_id','eq','light.hue_lightstrip_plus_1' )|map(attribute='entity_id')|list}}"
         data:
@@ -335,7 +335,7 @@ script:
           brightness_pct: 30
           transition: 2
       - alias: pendant_up
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|selectattr('entity_id','eq','light.hue_color_pendant_up_1' )|map(attribute='entity_id')|list}}"
         data:
@@ -348,13 +348,13 @@ automation:
   - alias: "lights off when leaving"
     id: "782368093283658209"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         to: "Net Weg"
-        for: 
+        for:
           minutes: 3
     action:
-      - service: homeassistant.turn_off
+      - action: homeassistant.turn_off
         target:
           entity_id:
             - light.lampen
@@ -363,7 +363,7 @@ automation:
   - alias: "sunrise lights off"
     id: "47893265301237"
     trigger:
-      platform: sun
+      trigger: sun
       event: sunrise
       offset: "00:20:00"
     condition:
@@ -374,14 +374,14 @@ automation:
         entity_id: script.wakeup_light
         state: "off"
     action:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.lampen
 
   - alias: "lights off "
     id: "1528912303194"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: schedule.lights
         to: "off"
     condition:
@@ -389,7 +389,7 @@ automation:
         entity_id: light.lampen
         state: "on"
     action:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.lampen
         data:
@@ -398,7 +398,7 @@ automation:
   - alias: "vakantie lights off "
     id: "830ea569-b7fe-46d2-900b-42e80f9ddd6a"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: schedule.vakantie_lights
         to: "off"
     condition:
@@ -409,12 +409,12 @@ automation:
         entity_id: input_boolean.vakantie_mode
         state: "on"
     action:
-      - service: script.random_light_off
+      - action: script.random_light_off
   - alias: "update brightness based on house status"
     id: "4a57e407-f48e-4c1e-a7a6-be8314f4a48c"
     trigger:
-      - platform: state
-        entity_id: 
+      - trigger: state
+        entity_id:
           - light.hue_lightstrip_plus_1
           - light.staande_lamp
           - light.hue_color_pendant_down_1
@@ -440,8 +440,8 @@ automation:
                 entity_id: input_select.house_mode
                 state: "overdag"
             sequence:
-              - service: light.turn_on
-                target: 
+              - action: light.turn_on
+                target:
                   entity_id: "{{trigger.entity_id}}"
                 data:
                   brightness: 191
@@ -451,8 +451,8 @@ automation:
                 entity_id: input_select.house_mode
                 state: "avond"
             sequence:
-              - service: light.turn_on
-                target: 
+              - action: light.turn_on
+                target:
                   entity_id: "{{trigger.entity_id}}"
                 data:
                   brightness: 128
@@ -462,8 +462,8 @@ automation:
                 entity_id: input_select.house_mode
                 state: "nacht"
             sequence:
-              - service: light.turn_on
-                target: 
+              - action: light.turn_on
+                target:
                   entity_id: "{{trigger.entity_id}}"
                 data:
                   brightness: 1
@@ -474,38 +474,38 @@ automation:
                 state: "astro"
             sequence:
               - choose:
-                - conditions:
-                  - "{{'xy' in state_attr(trigger.entity_id, 'supported_color_modes') }}"
-                  sequence:
-                    - service: light.turn_on
-                      target: 
-                        entity_id: "{{trigger.entity_id}}"
-                      data:
-                        brightness: 28
-                        transition: 2
-                        xy_color:
-                          - 0.6915
-                          - 0.3083
-                - conditions:
-                  - "{{'color_temp' in state_attr(trigger.entity_id, 'supported_color_modes') }}"
-                  sequence:
-                    - service: light.turn_on
-                      target: 
-                        entity_id: "{{trigger.entity_id}}"
-                      data:
-                        brightness: 1
-                        transition: 2
-                        color_temp: "{{state_attr(trigger.entity_id, 'max_mireds')}}"
+                  - conditions:
+                      - "{{'xy' in state_attr(trigger.entity_id, 'supported_color_modes') }}"
+                    sequence:
+                      - action: light.turn_on
+                        target:
+                          entity_id: "{{trigger.entity_id}}"
+                        data:
+                          brightness: 28
+                          transition: 2
+                          xy_color:
+                            - 0.6915
+                            - 0.3083
+                  - conditions:
+                      - "{{'color_temp' in state_attr(trigger.entity_id, 'supported_color_modes') }}"
+                    sequence:
+                      - action: light.turn_on
+                        target:
+                          entity_id: "{{trigger.entity_id}}"
+                        data:
+                          brightness: 1
+                          transition: 2
+                          color_temp: "{{state_attr(trigger.entity_id, 'max_mireds')}}"
                 default:
-                  - service: light.turn_on
-                    target: 
+                  - action: light.turn_on
+                    target:
                       entity_id: "{{trigger.entity_id}}"
                     data:
                       brightness: 1
                       transition: 2
         default:
-          - service: light.turn_on
-            target: 
+          - action: light.turn_on
+            target:
               entity_id: "{{trigger.entity_id}}"
             data:
               brightness: 255
@@ -513,25 +513,25 @@ automation:
   - alias: "do astro mode"
     id: "3e857202-9058-4f02-b34e-c6c79e0d2dac"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.astro
         to: "on"
     action:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|selectattr('attributes.supported_color_modes','search', 'xy', )|map(attribute='entity_id')|list}}"
-        data: 
+        data:
           brightness: 2
           transition: 2
           xy_color:
             - 0.691
             - 0.3083
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|selectattr('attributes.supported_color_modes','search', 'color_temp', )|rejectattr('attributes.supported_color_modes','search', 'xy', )|map(attribute='entity_id')|list}}"
-        data: 
+        data:
           color_temp: 454
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.house_mode
         data:
@@ -539,23 +539,23 @@ automation:
   - alias: "undo astro mode"
     id: "6bdec97d-0991-4f54-a29e-9d1c7b9330a0"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.astro
         to: "off"
     variables:
       off_lights: "{{states.light|rejectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
     action:
-      - service: automation.trigger
+      - action: automation.trigger
         data: {}
         target:
           entity_id: automation.change_house_status
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "{{states.light|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
-        data: 
+        data:
           color_temp: 298
       - alias: strip
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_lightstrip_plus_1
         data:
@@ -563,7 +563,7 @@ automation:
             - 0.3388
             - 0.1332
       - alias: pendant_up
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_up_1
         data:
@@ -571,20 +571,19 @@ automation:
             - 0.324
             - 0.154
       - alias: pendant_down
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
           color_temp: 449
-      - service: light.turn_off
-        target: 
+      - action: light.turn_off
+        target:
           entity_id: "{{off_lights}}"
-
 
   - alias: "dim lights in day"
     id: "54618293609860132486029"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_select.house_mode
         to: "overdag"
     condition:
@@ -592,7 +591,7 @@ automation:
       entity_id: light.lampen
       state: "on"
     action:
-      - service: script.update_lights_attributes
+      - action: script.update_lights_attributes
         data:
           brightness_pct: 75
           transition: 60
@@ -600,7 +599,7 @@ automation:
   - alias: "dim lights in avond"
     id: "235689056329850982360158"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_select.house_mode
         to: "avond"
     condition:
@@ -608,7 +607,7 @@ automation:
       entity_id: light.lampen
       state: "on"
     action:
-      - service: script.update_lights_attributes
+      - action: script.update_lights_attributes
         data:
           brightness_pct: 50
           transition: 60
@@ -616,7 +615,7 @@ automation:
   - alias: "dim lights in nacht"
     id: "56132890612345689532108"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_select.house_mode
         to: "nacht"
     condition:
@@ -624,7 +623,7 @@ automation:
       entity_id: light.lampen
       state: "on"
     action:
-      - service: script.slow_flash_color_on_lights
+      - action: script.slow_flash_color_on_lights
         data:
           brightness_pct: 10
           xy_color:

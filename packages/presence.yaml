@@ -37,9 +37,9 @@ input_boolean:
 
 template:
   - sensor:
-    - name: "arnoud_status"
-      unique_id: "8ef066b3-0304-4fd2-bda0-282b24a11a8d"
-      state: "{{ states('input_select.arnoud_status') }}"
+      - name: "arnoud_status"
+        unique_id: "8ef066b3-0304-4fd2-bda0-282b24a11a8d"
+        state: "{{ states('input_select.arnoud_status') }}"
 #    - name: "prox_home_dir_of_travel"
 #      unique_id: "d72f5617-b74d-4f48-a889-e4ae5472fc3d"
 #      state: "{{state_attr('proximity.home','dir_of_travel')}}"
@@ -74,44 +74,44 @@ binary_sensor:
 #
 #      - device_tracker.kb2003
 #      - device_tracker.467cfa38bbada1bf
-#      
+#
 #    unit_of_measurement: km
 #    tolerance: 50
 
 automation:
-  - alias: 'edwin-binnen'
-    id: c97ea8e3-8a93-4a66-ad8e-54e59c44b01f 
+  - alias: "edwin-binnen"
+    id: c97ea8e3-8a93-4a66-ad8e-54e59c44b01f
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: device_tracker.edgeos_oneplus_nord2_5g_edwin
-        to: 'home'
+        to: "home"
     action:
-      - service: alarm_control_panel.alarm_disarm
+      - action: alarm_control_panel.alarm_disarm
         target:
           entity_id: alarm_control_panel.ha_alarm
         data:
           code: !secret alarm_code
-      - service: input_boolean.turn_on
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.guests_boolean
       - wait_for_trigger:
-          platform: state
+          trigger: state
           entity_id: device_tracker.edgeos_oneplus_nord2_5g_edwin
-          to: 'not_home'
-          for: '00:15:00'
+          to: "not_home"
+          for: "00:15:00"
         timeout: "10:00:00"
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.guests_boolean
 
   - alias: "Mark person as just arrived"
     id: "548327489170419324086"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: person.arnoud
         to: "home"
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: >
             {% if trigger.entity_id == 'person.arnoud' %}
@@ -137,17 +137,17 @@ automation:
   - alias: "Mark person as home"
     id: "014567856438345707843571"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         to: "Net Thuis"
         for:
           minutes: 15
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         from: "Net Weg"
         to: "Net Thuis"
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: >
             {% if trigger.entity_id == 'input_select.arnoud_status' %}
@@ -160,11 +160,11 @@ automation:
   - alias: "Mark person as just left"
     id: "578344801378074356"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: person.arnoud
         from: "home"
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: >
             {% if trigger.entity_id == 'person.arnoud' %}
@@ -177,13 +177,13 @@ automation:
   - alias: "Mark person as away"
     id: "80941237089760310"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         to: "Net Weg"
         for:
           minutes: 15
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: >
             {% if trigger.entity_id == 'input_select.arnoud_status' %}
@@ -197,51 +197,51 @@ automation:
   - alias: "change house status"
     id: "3a35f68a-b0c5-416e-8761-c85d2e62a63b"
     trigger:
-      - platform: time
+      - trigger: time
         at:
           - "00:00:01"
           - input_datetime.bedtime
           - input_datetime.wakeuptime
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         for: "00:05:00"
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.guests_boolean
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sun.sun
         attribute: elevation
         below: 3.5
         id: "sun_below"
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sun.sun
         attribute: elevation
         above: 3.5
         id: "sun_above"
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.astro
         to: "off"
     action:
       - choose:
           - conditions:
               - and:
-                - or:
-                  - condition: state
-                    entity_id: input_select.arnoud_status
-                    state: "Thuis"
-                  - condition: state
-                    entity_id: input_select.arnoud_status
-                    state: "Net Thuis"
-                  - condition: state
-                    entity_id: input_boolean.guests_boolean
-                    state: "on"
+                  - or:
+                      - condition: state
+                        entity_id: input_select.arnoud_status
+                        state: "Thuis"
+                      - condition: state
+                        entity_id: input_select.arnoud_status
+                        state: "Net Thuis"
+                      - condition: state
+                        entity_id: input_boolean.guests_boolean
+                        state: "on"
             sequence:
               - choose:
-                  - conditions: 
-                    - condition: state
-                      entity_id: input_boolean.astro
-                      state: "on"
+                  - conditions:
+                      - condition: state
+                        entity_id: input_boolean.astro
+                        state: "on"
                     sequence:
-                      - service: input_select.select_option
+                      - action: input_select.select_option
                         target:
                           entity_id: input_select.house_mode
                         data:
@@ -249,7 +249,7 @@ automation:
                   # status set to nacht by bedtime
                   - conditions: "{{ trigger.entity_id == 'input_datetime.bedtime' }}"
                     sequence:
-                      - service: input_select.select_option
+                      - action: input_select.select_option
                         target:
                           entity_id: input_select.house_mode
                         data:
@@ -263,7 +263,7 @@ automation:
                           - condition: sun
                             after: sunset
                     sequence:
-                      - service: input_select.select_option
+                      - action: input_select.select_option
                         target:
                           entity_id: input_select.house_mode
                         data:
@@ -271,29 +271,29 @@ automation:
                   # status set to overdag by wakeuptime
                   - conditions: "{{ trigger.entity_id == 'input_datetime.wakeuptime' }}"
                     sequence:
-                      - service: input_select.select_option
+                      - action: input_select.select_option
                         target:
                           entity_id: input_select.house_mode
                         data:
                           option: overdag
                   # status set to nacht by before sunrise
                   - conditions:
-                      - and: 
-                        - condition: sun
-                          before: sunrise
-                        - or:
-                          - alias: "only when comming from weg or evening or already night"
-                            condition: state
-                            entity_id: input_select.house_mode
-                            state: "weg"
-                          - condition: state
-                            entity_id: input_select.house_mode
-                            state: "avond"
-                          - condition: state
-                            entity_id: input_select.house_mode
-                            state: "nacht"
+                      - and:
+                          - condition: sun
+                            before: sunrise
+                          - or:
+                              - alias: "only when comming from weg or evening or already night"
+                                condition: state
+                                entity_id: input_select.house_mode
+                                state: "weg"
+                              - condition: state
+                                entity_id: input_select.house_mode
+                                state: "avond"
+                              - condition: state
+                                entity_id: input_select.house_mode
+                                state: "nacht"
                     sequence:
-                      - service: input_select.select_option
+                      - action: input_select.select_option
                         target:
                           entity_id: input_select.house_mode
                         data:
@@ -308,18 +308,18 @@ automation:
                             after: sunrise
                             before: sunset
                     sequence:
-                      - service: input_select.select_option
+                      - action: input_select.select_option
                         target:
                           entity_id: input_select.house_mode
                         data:
                           option: overdag
                 default:
-                  - service: notify.pushover
+                  - action: notify.pushover
                     data:
                       title: house-status
                       message: "status not set as no conditions match "
         default:
-          - service: input_select.select_option
+          - action: input_select.select_option
             target:
               entity_id: input_select.house_mode
             data:

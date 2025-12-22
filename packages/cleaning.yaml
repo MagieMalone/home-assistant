@@ -2,48 +2,48 @@ input_boolean:
   cleaningmode:
     name: cleaning mode
 automation:
-  - alias: 'cleaning mode on'
-    id: '0643587777777738989'
+  - alias: "cleaning mode on"
+    id: "0643587777777738989"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.cleaningmode
-        to: 'on'
+        to: "on"
     action:
-      - service: script.cleaningmode_on
-  - alias: 'cleaning mode off'
-    id: '6753290123480'
+      - action: script.cleaningmode_on
+  - alias: "cleaning mode off"
+    id: "6753290123480"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.cleaningmode
-        to: 'off'
+        to: "off"
     action:
-      - service: script.cleaningmode_off
-  - alias: 'hue dimmer switch on'
-    id: '167521365098632509816235'
-    trigger: 
-      - platform: state
+      - action: script.cleaningmode_off
+  - alias: "hue dimmer switch on"
+    id: "167521365098632509816235"
+    trigger:
+      - trigger: state
         entity_id: sensor.0x0017880102e1e3b4_action
-        to: 'on-press'
+        to: "on-press"
     action:
-      - service: input_boolean.turn_on
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.cleaningmode
-  - alias: 'hue dimmer switch off'
-    id: '87504935709864210938'
-    trigger: 
-      - platform: state
+  - alias: "hue dimmer switch off"
+    id: "87504935709864210938"
+    trigger:
+      - trigger: state
         entity_id: sensor.0x0017880102e1e3b4_action
-        to: 'off-press'
+        to: "off-press"
     action:
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.cleaningmode
-  - alias: 'jacqueline-binnen'
-    id: 142c8938-9513-48fe-9345-01f55a7992a9 
+  - alias: "jacqueline-binnen"
+    id: 142c8938-9513-48fe-9345-01f55a7992a9
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: device_tracker.edgeos_jacqueline
-        to: 'home'
+        to: "home"
     condition:
       - condition: time
         after: "07:30:00"
@@ -59,12 +59,12 @@ automation:
             entity_id: input_select.arnoud_status
             state: "Net Weg"
     action:
-      - service: alarm_control_panel.alarm_disarm
+      - action: alarm_control_panel.alarm_disarm
         target:
           entity_id: alarm_control_panel.ha_alarm
         data:
           code: !secret alarm_code
-      - service: input_boolean.turn_on
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.cleaningmode
       - action: tts.speak
@@ -73,38 +73,38 @@ automation:
         data:
           cache: true
           media_player_entity_id: media_player.speakers
-          message: 'Goedemorgen jacqueline'
+          message: "Goedemorgen jacqueline"
           language: nl-NL
       - delay:
           seconds: 5
-      - service: spotcast.start
+      - action: spotcast.start
         target:
           entity_id: media_player.speakerfancy
         data:
-          uri: 'spotify:playlist:37i9dQZF1DXbkk7Hqpo679'
+          uri: "spotify:playlist:37i9dQZF1DXbkk7Hqpo679"
           shuffle: true
           start_volume: 40
           random_song: true
       - wait_for_trigger:
-          platform: state
+          trigger: state
           entity_id: device_tracker.edgeos_jacqueline
-          to: 'away'
-          for: '00:15:00'
+          to: "away"
+          for: "00:15:00"
         timeout: "04:00:00"
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.cleaningmode
-      - service: media_player.turn_off
+      - action: media_player.turn_off
         target:
           entity_id: media_player.speakerfancy
-      - service: alarm_control_panel.alarm_arm_away
+      - action: alarm_control_panel.alarm_arm_away
         target:
           entity_id: alarm_control_panel.ha_alarm
 
 script:
   cleaningmode_on:
     sequence:
-      - service: scene.create
+      - action: scene.create
         data:
           scene_id: before_cleaning1
           snapshot_entities:
@@ -124,10 +124,10 @@ script:
             - light.keuken_2
             - light.keuken_3
             - light.trap_hal
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.lampen
-      - service: scene.create
+      - action: scene.create
         data:
           scene_id: before_cleaning2
           snapshot_entities:
@@ -147,9 +147,9 @@ script:
             - light.keuken_2
             - light.keuken_3
             - light.trap_hal
-      - service: light.turn_on
+      - action: light.turn_on
         target:
-          entity_id: 
+          entity_id:
             - light.computer
             - light.hal
             - light.sk_ceiling
@@ -161,9 +161,9 @@ script:
           color_name: white
           brightness_pct: 100
           transition: 15
-      - service: light.turn_on
+      - action: light.turn_on
         target:
-          entity_id: 
+          entity_id:
             - light.trap_hal
             - light.overloop
             - light.sk_spot
@@ -174,12 +174,12 @@ script:
           transition: 15
   cleaningmode_off:
     sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.before_cleaning2
         data:
           transition: 2
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.before_cleaning1
         data:

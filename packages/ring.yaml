@@ -11,13 +11,13 @@
 # ffmpeg:
 
 #sensor:
-  #  - platform: ring
-  #    monitored_conditions:
-  #      - battery
-  #      - last_activity
-  #      - last_ding
-  #      - last_motion
-  #      - volume
+#  - platform: ring
+#    monitored_conditions:
+#      - battery
+#      - last_activity
+#      - last_ding
+#      - last_motion
+#      - volume
 
 template:
   - sensor:
@@ -38,23 +38,23 @@ automation:
   - alias: "flash lights with doorbell"
     id: "753125809170657784308"
     trigger:
-      platform: state
+      trigger: state
       entity_id: binary_sensor.voordeur_ding_2
       to: "on"
     action:
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.flash_lights
       - alias: "Play sound when there is someone at the door"
-        service: script.google_home_resume
+        action: script.google_home_resume
         data:
           action:
-            - service: media_player.volume_set
+            - action: media_player.volume_set
               target:
                 entity_id: media_player.speakers
               data:
                 volume_level: "{{states('input_number.tts_volume')| float}}"
-            - service: media_player.play_media
+            - action: media_player.play_media
               target:
                 entity_id: media_player.speakers
               data:
@@ -65,7 +65,7 @@ automation:
                   title: Doorbell
             - delay: "00:00:03"
             - alias: "Send TTS using Google Home Resume script"
-              service: script.turn_on
+              action: script.turn_on
               target:
                 entity_id: script.google_home_resume
               data:

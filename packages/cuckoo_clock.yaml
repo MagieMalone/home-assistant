@@ -6,10 +6,10 @@ automation:
   - alias: "Cuckoo Clock "
     id: "573800813250385379285"
     trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: 00
         seconds: 20
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: 30
         seconds: 00
 
@@ -33,7 +33,7 @@ automation:
             true
           {% endif %}
     action:
-      - service: media_player.play_media
+      - action: media_player.play_media
         target:
           entity_id: media_player.huiskamer_hub
         data:

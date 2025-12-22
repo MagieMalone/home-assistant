@@ -2,9 +2,9 @@ automation:
   - id: "708bc1ca-52c7-4ab5-ac79-6330121aa58e"
     alias: battery check
     trigger:
-      - platform: time
+      - trigger: time
         at: "12:00:00"
     action:
-      service: python_script.batterywarning
+      action: python_script.batterywarning
       data:
         threshold: 25

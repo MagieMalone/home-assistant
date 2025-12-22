@@ -100,7 +100,7 @@ input_number:
 
 template:
   - trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         hours: "0"
         minutes: "10"
     binary_sensor:
@@ -174,46 +174,46 @@ automation:
     id: "432578090243508970892435"
     mode: queued
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         to: "Net Thuis"
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         to: "Weg"
         for: "01:00:00"
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.home_nearest_distance
         above: 11.8
         id: "proximity_above"
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.home_nearest_distance
         below: 25
         id: "proximity_below"
-      - platform: state
+      - trigger: state
         entity_id: group.windows_kachel
         from: "off"
         to: "on"
         for: "00:05:00"
-      - platform: state
+      - trigger: state
         entity_id: person.arnoud
         from: "Action"
         for: "00:03:00"
         id: "leave_action"
-      - platform: state
+      - trigger: state
         entity_id: group.windows_kachel
         from: "on"
         to: "off"
-      - platform: time
+      - trigger: time
         at:
           - "08:00:00"
           - "09:00:00"
           - "23:00:00"
           - "21:30:00"
-      - platform: time
+      - trigger: time
         at:
           - input_datetime.pre_heat_time
         id: "pre_heat"
-      - platform: state
+      - trigger: state
         entity_id: sensor.thermostat_condition
     action:
       - choose:
@@ -222,7 +222,7 @@ automation:
               id: "proximity_above"
             sequence:
               - alias: "zet kachel uit"
-                service: script.kachel_mode
+                action: script.kachel_mode
                 data:
                   mode: "away"
           - conditions:
@@ -237,16 +237,16 @@ automation:
                 entity_id: binary_sensor.badkamer_raam_contact
                 state: "off"
               - alias: "zet kachel aan"
-                service: script.kachel_mode
+                action: script.kachel_mode
                 data:
                   mode: "comfort"
               - wait_for_trigger:
-                  platform: numeric_state
+                  trigger: numeric_state
                   entity_id: sensor.badkamer_temperature
                   above: 20
                 timeout: "00:30:00"
               - alias: "zet kachel uit"
-                service: script.kachel_mode
+                action: script.kachel_mode
                 data:
                   mode: "sleep"
           - conditions:
@@ -285,7 +285,7 @@ automation:
                         id: "action_leave"
             sequence:
               - alias: "zet kachel aan"
-                service: script.kachel_mode
+                action: script.kachel_mode
                 data:
                   mode: "home"
           - conditions:
@@ -303,7 +303,7 @@ automation:
                         state: "unavailable"
                     sequence:
                       - alias: "melding op speakers"
-                        service: script.turn_on
+                        action: script.turn_on
                         target:
                           entity_id: script.google_home_resume
                         data:
@@ -323,14 +323,14 @@ automation:
                       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
                         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
                       - alias: "Apply TTS volume"
-                        service: media_player.volume_set
+                        action: media_player.volume_set
                         target:
                           entity_id: media_player.speakers
                         data:
                           volume_level: "{{states('input_number.tts_volume')| float}}"
                 default:
                   - alias: "zet kachel uit"
-                    service: script.kachel_mode
+                    action: script.kachel_mode
                     data:
                       mode: "sleep"
         default:
@@ -345,7 +345,7 @@ automation:
                     entity_id: schedule.tts_announce
                     state: "on"
                   - alias: "melding op speakers"
-                    service: script.turn_on
+                    action: script.turn_on
                     target:
                       entity_id: script.google_home_resume
                     data:
@@ -364,14 +364,14 @@ automation:
                   - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
                     wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
                   - alias: "Apply TTS volume"
-                    service: media_player.volume_set
+                    action: media_player.volume_set
                     target:
                       entity_id: media_player.speakers
                     data:
                       volume_level: "{{states('input_number.tts_volume')| float}}"
             default:
               - alias: "zet kachel uit"
-                service: script.kachel_mode
+                action: script.kachel_mode
                 data:
                   mode: "sleep"
 
@@ -384,7 +384,7 @@ automation:
   - alias: "zet heating input select based on toon output"
     id: "32847030987420324"
     trigger:
-      platform: state
+      trigger: state
       entity_id: sensor.heating_preset_mode
     condition:
       condition: or
@@ -402,7 +402,7 @@ automation:
           entity_id: sensor.heating_preset_mode
           state: away
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.heating
         data:
@@ -410,14 +410,14 @@ automation:
   - alias: "zet toon based on heating input select"
     id: "3098476890309834039342"
     trigger:
-      platform: state
+      trigger: state
       entity_id: input_select.heating
     condition:
       condition: state
       entity_id: timer.toon_automation
       state: idle
     action:
-      - service: climate.set_preset_mode
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.toon_thermostat
         data:
@@ -425,7 +425,7 @@ automation:
   - alias: "zet toon thermostaat based on input value"
     id: "98487940987349821"
     trigger:
-      platform: state
+      trigger: state
       entity_id: input_number.thermostat_set_point
     condition:
       condition: and
@@ -435,7 +435,7 @@ automation:
           entity_id: timer.toon_automation
           state: idle
     action:
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.toon_thermostat
         data:
@@ -443,10 +443,10 @@ automation:
   - alias: "zet thermostaat input value based on toon"
     id: "230983248701908743"
     trigger:
-      platform: state
+      trigger: state
       entity_id: sensor.heating_set_temperature
     action:
-      - service: input_number.set_value
+      - action: input_number.set_value
         target:
           entity_id: input_number.thermostat_set_point
         data:
@@ -458,13 +458,13 @@ script:
         description: "Kachel mode"
         example: "away"
     sequence:
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.toon_automation
       - repeat:
           sequence:
             - alias: "zet kachel mode"
-              service: climate.set_preset_mode
+              action: climate.set_preset_mode
               target:
                 entity_id: climate.toon_thermostat
               data:

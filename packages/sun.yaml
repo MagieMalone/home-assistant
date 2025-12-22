@@ -27,70 +27,70 @@ input_select:
       - Astronomical Night
       - Day
 automation:
-  - alias: 'change sun input-select to Civil twilight'
-    id: '4123640981203846398246230'
+  - alias: "change sun input-select to Civil twilight"
+    id: "4123640981203846398246230"
     trigger:
-      platform: numeric_state
+      trigger: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
       below: 0
       above: -6
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.sun
         data:
           option: Civil Twilight
-  - alias: 'change sun input-select to Nautical twilight'
-    id: '5213750890823516089612035'
+  - alias: "change sun input-select to Nautical twilight"
+    id: "5213750890823516089612035"
     trigger:
-      platform: numeric_state
+      trigger: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
       below: -6
       above: -12
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.sun
         data:
           option: Nautical Twilight
-  - alias: 'change sun input-select to Astronomical twilight'
-    id: '352685008321468093260148'
+  - alias: "change sun input-select to Astronomical twilight"
+    id: "352685008321468093260148"
     trigger:
-      platform: numeric_state
+      trigger: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
       below: -12
       above: -18
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.sun
         data:
           option: Astronomical Twilight
-  - alias: 'change sun input-select to Astronomical Night'
-    id: '4614908633412089056302164'
+  - alias: "change sun input-select to Astronomical Night"
+    id: "4614908633412089056302164"
     trigger:
-      platform: numeric_state
+      trigger: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
       below: -18
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.sun
         data:
           option: Astronomical Night
-  - alias: 'change sun input-select to Day'
-    id: '8326453830123460986134'
+  - alias: "change sun input-select to Day"
+    id: "8326453830123460986134"
     trigger:
-      platform: numeric_state
+      trigger: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
       above: 0
     action:
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.sun
         data:

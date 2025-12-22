@@ -1,206 +1,206 @@
 nacht:
   sequence:
-  - service: media_player.turn_off
-    data: {}
-    target:
-      entity_id: media_player.tv_samsung
-  - service: light.turn_off
-    target:
-      entity_id:
-      - light.computer
-      - light.hal
-      - light.hue_lightstrip_plus_1
-      - light.staande_lamp
-      - light.keuken_1
-      - light.keuken_2
-      - light.keuken_3
-      - light.hue_color_pendant_down_1
-      - light.hue_color_pendant_up_1
-    data:
-      transition: 10
-  - service: light.turn_on
-    target:
-      entity_id: light.slaapkamer
-    data: {}
-  - service: switch.turn_off
-    target:
-      entity_id: switch.tplink_b0_4e_26_6b_a1_f5
-    data: {}
-  - delay:
-      seconds: 10
-  - service: homeassistant.turn_off
-    target:
-      entity_id: switch.media_group
-    data: {}
-  - action: tts.speak
-    target:
-      entity_id: tts.home_assistant_cloud
-    data:
-      cache: true
-      media_player_entity_id: media_player.speakers
-      message: Nighty night
-      language: en-US
-  - delay:
-      minutes: 30
-  - service: input_select.select_option
-    target:
-      entity_id: input_select.house_mode
-    data:
-      option: nacht
-  - service: climate.set_preset_mode
-    data:
-      preset_mode: sleep
-    target:
-      entity_id: climate.toon_thermostat
-  alias: ''
+    - action: media_player.turn_off
+      data: {}
+      target:
+        entity_id: media_player.tv_samsung
+    - action: light.turn_off
+      target:
+        entity_id:
+          - light.computer
+          - light.hal
+          - light.hue_lightstrip_plus_1
+          - light.staande_lamp
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
+          - light.hue_color_pendant_down_1
+          - light.hue_color_pendant_up_1
+      data:
+        transition: 10
+    - action: light.turn_on
+      target:
+        entity_id: light.slaapkamer
+      data: {}
+    - action: switch.turn_off
+      target:
+        entity_id: switch.tplink_b0_4e_26_6b_a1_f5
+      data: {}
+    - delay:
+        seconds: 10
+    - action: homeassistant.turn_off
+      target:
+        entity_id: switch.media_group
+      data: {}
+    - action: tts.speak
+      target:
+        entity_id: tts.home_assistant_cloud
+      data:
+        cache: true
+        media_player_entity_id: media_player.speakers
+        message: Nighty night
+        language: en-US
+    - delay:
+        minutes: 30
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.house_mode
+      data:
+        option: nacht
+    - action: climate.set_preset_mode
+      data:
+        preset_mode: sleep
+      target:
+        entity_id: climate.toon_thermostat
+  alias: ""
   mode: single
 nacht_aangepast:
   sequence:
-  - service: media_player.turn_off
-    data: {}
-    target:
-      entity_id: media_player.tv_samsung
-  - service: light.turn_off
-    target:
-      entity_id:
-      - light.computer
-      - light.hal
-      - light.hue_lightstrip_plus_1
-      - light.staande_lamp
-      - light.keuken_1
-      - light.keuken_2
-      - light.keuken_3
-      - light.hue_color_pendant_down_1
-      - light.hue_color_pendant_up_1
-    data:
-      transition: 10
-  - service: light.turn_on
-    target:
-      entity_id: light.slaapkamer
-    data: {}
-  - service: switch.turn_off
-    target:
-      entity_id: switch.tplink_b0_4e_26_6b_a1_f5
-    data: {}
-  - delay:
-      seconds: 5
-  - action: tts.speak
-    target:
-      entity_id: tts.home_assistant_cloud
-    data:
-      cache: true
-      media_player_entity_id: media_player.speakers
-      message: Nighty night
-      language: en-US
-  - delay:
-      minutes: 30
-  - service: input_select.select_option
-    target:
-      entity_id: input_select.house_mode
-    data:
-      option: nacht
+    - action: media_player.turn_off
+      data: {}
+      target:
+        entity_id: media_player.tv_samsung
+    - action: light.turn_off
+      target:
+        entity_id:
+          - light.computer
+          - light.hal
+          - light.hue_lightstrip_plus_1
+          - light.staande_lamp
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
+          - light.hue_color_pendant_down_1
+          - light.hue_color_pendant_up_1
+      data:
+        transition: 10
+    - action: light.turn_on
+      target:
+        entity_id: light.slaapkamer
+      data: {}
+    - action: switch.turn_off
+      target:
+        entity_id: switch.tplink_b0_4e_26_6b_a1_f5
+      data: {}
+    - delay:
+        seconds: 5
+    - action: tts.speak
+      target:
+        entity_id: tts.home_assistant_cloud
+      data:
+        cache: true
+        media_player_entity_id: media_player.speakers
+        message: Nighty night
+        language: en-US
+    - delay:
+        minutes: 30
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.house_mode
+      data:
+        option: nacht
 eten:
   sequence:
-  - service: light.turn_on
-    target:
-      entity_id:
-      - light.hue_color_pendant_down_1
-      - light.hue_color_pendant_up_1
-      - light.keuken_1
-      - light.keuken_2
-      - light.keuken_3
-    data:
-      brightness: 64
-      color_temp: 500
-  - delay:
-      seconds: 2
-  - action: tts.speak
-    target:
-      entity_id: tts.home_assistant_cloud
-    data:
-      cache: true
-      media_player_entity_id: media_player.speakers
-      message: Eet smakelijk
-      language: nl-NL
+    - action: light.turn_on
+      target:
+        entity_id:
+          - light.hue_color_pendant_down_1
+          - light.hue_color_pendant_up_1
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
+      data:
+        brightness: 64
+        color_temp: 500
+    - delay:
+        seconds: 2
+    - action: tts.speak
+      target:
+        entity_id: tts.home_assistant_cloud
+      data:
+        cache: true
+        media_player_entity_id: media_player.speakers
+        message: Eet smakelijk
+        language: nl-NL
 koken:
   sequence:
-  - service: light.turn_on
-    target:
-      entity_id:
-      - light.keuken_1
-      - light.keuken_2
-      - light.keuken_3
-    data:
-      brightness: 255
-      color_temp: 153
+    - action: light.turn_on
+      target:
+        entity_id:
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
+      data:
+        brightness: 255
+        color_temp: 153
 tv:
   sequence:
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.media_group
-  - service: light.turn_off
-    target:
-      entity_id:
-      - light.computer
-      - light.hue_color_pendant_down_1
-      - light.hue_color_pendant_up_1
-      - light.hal
-      - light.keuken_1
-      - light.keuken_2
-      - light.keuken_3
-    data:
-      transition: 10
-  - service: light.turn_on
-    target:
-      entity_id: light.hue_lightstrip_plus_1
-    data:
-      brightness: 85
-      xy_color:
-      - 0.3388
-      - 0.1332
-      transition: 10
-  - service: light.turn_on
-    target:
-      entity_id: light.staande_lamp
-    data:
-      brightness: 128
-      color_temp: 500
-      transition: 10
-  - delay:
-      seconds: 2
-  - action: tts.speak
-    target:
-      entity_id: tts.home_assistant_cloud
-    data:
-      cache: true
-      media_player_entity_id: media_player.speakers
-      message: Veel plezier
-      language: nl-NL
+    - action: homeassistant.turn_on
+      target:
+        entity_id: switch.media_group
+    - action: light.turn_off
+      target:
+        entity_id:
+          - light.computer
+          - light.hue_color_pendant_down_1
+          - light.hue_color_pendant_up_1
+          - light.hal
+          - light.keuken_1
+          - light.keuken_2
+          - light.keuken_3
+      data:
+        transition: 10
+    - action: light.turn_on
+      target:
+        entity_id: light.hue_lightstrip_plus_1
+      data:
+        brightness: 85
+        xy_color:
+          - 0.3388
+          - 0.1332
+        transition: 10
+    - action: light.turn_on
+      target:
+        entity_id: light.staande_lamp
+      data:
+        brightness: 128
+        color_temp: 500
+        transition: 10
+    - delay:
+        seconds: 2
+    - action: tts.speak
+      target:
+        entity_id: tts.home_assistant_cloud
+      data:
+        cache: true
+        media_player_entity_id: media_player.speakers
+        message: Veel plezier
+        language: nl-NL
 start_chromecast:
   alias: Start chromecast
   sequence:
-  - service: media_player.turn_on
-    data: {}
-    target:
-      entity_id: media_player.tv_samsung
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
-  - service: media_player.select_source
-    data:
-      source: HDMI
-    target:
-      entity_id: media_player.tv_samsung
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 3
-      milliseconds: 0
-  - service: media_player.select_source
-    data:
-      source: HDMI2
-    target:
-      entity_id: media_player.ht_nt5_2
+    - action: media_player.turn_on
+      data: {}
+      target:
+        entity_id: media_player.tv_samsung
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 10
+        milliseconds: 0
+    - action: media_player.select_source
+      data:
+        source: HDMI
+      target:
+        entity_id: media_player.tv_samsung
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 3
+        milliseconds: 0
+    - action: media_player.select_source
+      data:
+        source: HDMI2
+      target:
+        entity_id: media_player.ht_nt5_2
   mode: single

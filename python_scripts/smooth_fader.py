@@ -5,7 +5,7 @@
 #--------------------------------------
 #
 #  HOW TO CALL
-#   service: python_script.smooth_fader
+#   action: python_script.smooth_fader
 #   data:
 #     entity_id: light.entity ; required
 #     duration: '00:00:00' ; required, time under 10 seconds is not advised

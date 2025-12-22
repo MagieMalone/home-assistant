@@ -35,11 +35,9 @@ sensor:
 #    minutes: 1
 #
 
-
-
 template:
   - trigger:
-      - platform: event
+      - trigger: event
         event_type: p2000_ambu
     sensor:
       - name: "P2000_last_ambu"
@@ -58,7 +56,7 @@ template:
               {{state_attr('sensor.p2000_latest', 'capcode')}}
             {% endif %}
           longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
-          latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
+          latitude: "{{state_attr('sensor.p2000_latest', 'latitude')}}"
           distance: "{{state_attr('sensor.p2000_latest', 'distance')}}"
           regio: "{{state_attr('sensor.p2000_latest', 'regio')}}"
           "regio name": "{{state_attr('sensor.p2000_latest', 'regio name')}}"
@@ -67,7 +65,7 @@ template:
           attribution: "{{state_attr('sensor.p2000_latest', 'attribution')}}"
           friendly_name: "Last announced P2000 Ambulance"
   - trigger:
-      - platform: event
+      - trigger: event
         event_type: p2000_bran
     sensor:
       - name: "P2000_last_bran"
@@ -86,7 +84,7 @@ template:
               {{state_attr('sensor.p2000_latest', 'capcode')}}
             {% endif %}
           longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
-          latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
+          latitude: "{{state_attr('sensor.p2000_latest', 'latitude')}}"
           distance: "{{state_attr('sensor.p2000_latest', 'distance')}}"
           regio: "{{state_attr('sensor.p2000_latest', 'regio')}}"
           "regio name": "{{state_attr('sensor.p2000_latest', 'regio name')}}"
@@ -95,7 +93,7 @@ template:
           attribution: "{{state_attr('sensor.p2000_latest', 'attribution')}}"
           friendly_name: "Last announced P2000 Firetruck"
   - trigger:
-      - platform: event
+      - trigger: event
         event_type: p2000_grip
     sensor:
       - name: "P2000_last_grip"
@@ -114,7 +112,7 @@ template:
               {{state_attr('sensor.p2000_latest', 'capcode')}}
             {% endif %}
           longitude: "{{state_attr('sensor.p2000_latest', 'longitude')}}"
-          latitude:  "{{state_attr('sensor.p2000_latest', 'latitude')}}"
+          latitude: "{{state_attr('sensor.p2000_latest', 'latitude')}}"
           distance: "{{state_attr('sensor.p2000_latest', 'distance')}}"
           regio: "{{state_attr('sensor.p2000_latest', 'regio')}}"
           "regio name": "{{state_attr('sensor.p2000_latest', 'regio name')}}"
@@ -123,15 +121,15 @@ template:
           attribution: "{{state_attr('sensor.p2000_latest', 'attribution')}}"
           friendly_name: "Last announced P2000 GRIP"
   - trigger:
-      - platform: event
+      - trigger: event
         event_type: p2000_heli
     sensor:
       - name: "P2000_last_heli"
         unique_id: "e6d9879f-070d-4c27-8b42-2c6b64b46500"
         state: >
-            {% set map = {'sensor.ll1':'LL1','sensor.ll2':'LL2','sensor.ll3':'LL3','sensor.ll4':'LL4'} %}
-            {% set heli = trigger.event.data.entity_id %}
-            {{map.get(heli, 'unknown')}}: {{states(trigger.event.data.entity_id)}}
+          {% set map = {'sensor.ll1':'LL1','sensor.ll2':'LL2','sensor.ll3':'LL3','sensor.ll4':'LL4'} %}
+          {% set heli = trigger.event.data.entity_id %}
+          {{map.get(heli, 'unknown')}}: {{states(trigger.event.data.entity_id)}}
         icon: "mdi:alarm-light"
         attributes:
           capcode: >
@@ -145,7 +143,7 @@ template:
               {{state_attr(trigger.event.data.entity_id, 'capcode')}}
             {% endif %}
           longitude: "{{state_attr(trigger.event.data.entity_id, 'longitude')}}"
-          latitude:  "{{state_attr(trigger.event.data.entity_id, 'latitude')}}"
+          latitude: "{{state_attr(trigger.event.data.entity_id, 'latitude')}}"
           distance: "{{state_attr(trigger.event.data.entity_id, 'distance')}}"
           regio: "{{state_attr(trigger.event.data.entity_id, 'regio')}}"
           "regio name": "{{state_attr(trigger.event.data.entity_id, 'regio name')}}"
@@ -294,7 +292,6 @@ template:
               {{state_attr(entity, 'friendly_name')}}
             {% endif %}
 
-
 #     - name: "p2000_latest_location"
 #       state: >
 #           {% set bran_reden = '(' ~ BR_code ~ '|' ~ HV_code ~ '|' ~DV_code ~ '|' ~ no_code ~ ')' %}
@@ -315,12 +312,11 @@ timer:
   p2000_announce:
     duration: "00:01:00"
 
-
 automation:
   - id: 33b77f22-f101-4641-82f2-70c7e4a1d703
     alias: "Send notification of RSS feed title when updated"
     trigger:
-      platform: event
+      trigger: event
       event_type: feedreader
     condition:
       - alias: "Only nearby villages"
@@ -331,7 +327,7 @@ automation:
           {% set location = title |regex_replace(find=bon_string, replace='', ignorecase=False) %}
           {{ (location.split(' ')|last |lower ) in ['hoogkarspel', 'lutjebroek', 'grootebroek'] }}
     action:
-      service: persistent_notification.create
+      action: persistent_notification.create
       data:
         title: "{{ trigger.event.data.title }}"
         message: >
@@ -341,10 +337,10 @@ automation:
   - id: 789d0d2c-4ee0-41af-999d-c6f5a9f28c85
     alias: Lifeliners_announce
     trigger:
-#      - platform: numeric_state
-#        entity_id: proximity.lifeliner
-#        below: 15
-      - platform: state
+      #      - trigger: numeric_state
+      #        entity_id: proximity.lifeliner
+      #        below: 15
+      - trigger: state
         entity_id:
           - sensor.ll1
           - sensor.ll2
@@ -375,7 +371,7 @@ automation:
                   {{ dist <= 15 and dist > 0 }}
 
     action:
-      - service: script.p2000_announce
+      - action: script.p2000_announce
         data:
           my_state: "{{states(trigger.entity_id)}}"
           heli: >
@@ -383,11 +379,10 @@ automation:
             {% set nearest = trigger.to_state.object_id %}
             {{map.get(nearest, 'unknown')}}
 
-
   - id: e0473ff9-da96-4466-8d7b-3ec432eb5772
     alias: P2000_announce
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.p2000_latest
         to:
     condition:
@@ -448,13 +443,13 @@ automation:
                         value_template: >-
                           {% set dist = distance(state_attr('sensor.p2000_latest' , 'latitude'), state_attr('sensor.p2000_latest', 'longitude'), states.zone.ymke_buurt)|float %}
                           {{ dist <= 0.1 and dist > 0 }}
-#                  - "{{states('sensor.p2000_latest') is search('Lutjebroek|Grootebroek|Hoogkarspel', ignorecase=true)}}"
+                  #                  - "{{states('sensor.p2000_latest') is search('Lutjebroek|Grootebroek|Hoogkarspel', ignorecase=true)}}"
                   - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
                   - "{{states('sensor.p2000_latest' ) is not search('Intrekken Alarm', ignorecase=True)}}"
               - condition: and
                 conditions:
                   - "{{states('sensor.p2000_latest') is search('GRIP', ignorecase=true)}}"
-#                  - "{{(state_attr('sensor.p2000_latest','distance')| int <= 30000) and (state_attr('sensor.p2000_latest','distance')| int != 0)}}"
+                  #                  - "{{(state_attr('sensor.p2000_latest','distance')| int <= 30000) and (state_attr('sensor.p2000_latest','distance')| int != 0)}}"
                   - condition: numeric_state
                     entity_id: sensor.p2000_latest
                     attribute: distance
@@ -462,7 +457,7 @@ automation:
                     below: 15000
 
     action:
-      - service: script.p2000_announce
+      - action: script.p2000_announce
         data:
           my_state: "{{states('sensor.p2000_latest')}}"
 
@@ -470,10 +465,10 @@ automation:
     alias: P2000_templates_update
     mode: queued
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.p2000_latest
         to:
-      - platform: state
+      - trigger: state
         entity_id:
           - sensor.ll1
           - sensor.ll2
@@ -483,93 +478,93 @@ automation:
         id: "heli"
     condition:
       - or:
-        - and:
-          - or:
-            - and:
-                - condition: state
-                  entity_id: sensor.p2000_latest
-                  attribute: discipline
-                  state: "Brandweerdiensten"
-                - condition: numeric_state
-                  entity_id: sensor.p2000_latest
-                  attribute: distance
-                  above: 0.1
-                  below: 7500
-            -  and:
-                - condition: state
-                  entity_id: sensor.p2000_latest
-                  attribute: discipline
-                  state: "Ambulancediensten"
-                - condition: numeric_state
-                  entity_id: sensor.p2000_latest
-                  attribute: distance
-                  above: 0.1
-                  below: 1000
-            - and:
-                - condition: state
-                  entity_id: sensor.p2000_latest
-                  attribute: discipline
-                  state: "Politiediensten"
-                - condition: numeric_state
-                  entity_id: sensor.p2000_latest
-                  attribute: distance
-                  above: 0.1
-                  below: 3000
-            - condition: template
-              value_template: >-
-                {% set dist = distance(state_attr('sensor.p2000_latest' , 'latitude'), state_attr('sensor.p2000_latest', 'longitude'), states.zone.ymke_buurt)|float %}
-                {{ dist <= 0.1 and dist > 0 }}
-          - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
-          - "{{states('sensor.p2000_latest' ) is not search('Intrekken Alarm', ignorecase=True)}}"
-          - not:
-            - condition: trigger
-              id: "heli"
-        - and:
-          - "{{states('sensor.p2000_latest') is search('GRIP', ignorecase=true)}}"
-          - condition: numeric_state
-            entity_id: sensor.p2000_latest
-            attribute: distance
-            above: 0.1
-            below: 15000
-        - and:
-          - condition: trigger
-            id: "heli"
-          - "{{ (state_attr(trigger.entity_id,'distance')| int <= 15000) and (state_attr(trigger.entity_id,'distance')| int != 0)}}"
+          - and:
+              - or:
+                  - and:
+                      - condition: state
+                        entity_id: sensor.p2000_latest
+                        attribute: discipline
+                        state: "Brandweerdiensten"
+                      - condition: numeric_state
+                        entity_id: sensor.p2000_latest
+                        attribute: distance
+                        above: 0.1
+                        below: 7500
+                  - and:
+                      - condition: state
+                        entity_id: sensor.p2000_latest
+                        attribute: discipline
+                        state: "Ambulancediensten"
+                      - condition: numeric_state
+                        entity_id: sensor.p2000_latest
+                        attribute: distance
+                        above: 0.1
+                        below: 1000
+                  - and:
+                      - condition: state
+                        entity_id: sensor.p2000_latest
+                        attribute: discipline
+                        state: "Politiediensten"
+                      - condition: numeric_state
+                        entity_id: sensor.p2000_latest
+                        attribute: distance
+                        above: 0.1
+                        below: 3000
+                  - condition: template
+                    value_template: >-
+                      {% set dist = distance(state_attr('sensor.p2000_latest' , 'latitude'), state_attr('sensor.p2000_latest', 'longitude'), states.zone.ymke_buurt)|float %}
+                      {{ dist <= 0.1 and dist > 0 }}
+              - "{{states('sensor.p2000_latest') is not search('VWS', ignorecase=False)}}"
+              - "{{states('sensor.p2000_latest' ) is not search('Intrekken Alarm', ignorecase=True)}}"
+              - not:
+                  - condition: trigger
+                    id: "heli"
+          - and:
+              - "{{states('sensor.p2000_latest') is search('GRIP', ignorecase=true)}}"
+              - condition: numeric_state
+                entity_id: sensor.p2000_latest
+                attribute: distance
+                above: 0.1
+                below: 15000
+          - and:
+              - condition: trigger
+                id: "heli"
+              - "{{ (state_attr(trigger.entity_id,'distance')| int <= 15000) and (state_attr(trigger.entity_id,'distance')| int != 0)}}"
     action:
       - choose:
-        - conditions:
-            - "{{ states('sensor.p2000_latest') is search('GRIP', ignorecase=true) }}"
-          sequence:
-            - event: p2000_grip
-              event_data:
-                state: "on"
-        - conditions:
-            - condition: trigger
-              id: "heli"
-          sequence:
-            - event: p2000_heli
-              event_data:
-                state: "on"
-                entity_id: "{{trigger.entity_id}}"
-        - conditions:
-            - "{{ is_state_attr('sensor.p2000_latest','discipline','Ambulancediensten') }}"
-          sequence:
-            - event: p2000_ambu
-              event_data:
-                state: "on"
-        - conditions:
-            - "{{ is_state_attr('sensor.p2000_latest','discipline','Brandweerdiensten') }}"
-          sequence:
-            - event: p2000_bran
-              event_data:
-                state: "on"
+          - conditions:
+              - "{{ states('sensor.p2000_latest') is search('GRIP', ignorecase=true) }}"
+            sequence:
+              - event: p2000_grip
+                event_data:
+                  state: "on"
+          - conditions:
+              - condition: trigger
+                id: "heli"
+            sequence:
+              - event: p2000_heli
+                event_data:
+                  state: "on"
+                  entity_id: "{{trigger.entity_id}}"
+          - conditions:
+              - "{{ is_state_attr('sensor.p2000_latest','discipline','Ambulancediensten') }}"
+            sequence:
+              - event: p2000_ambu
+                event_data:
+                  state: "on"
+          - conditions:
+              - "{{ is_state_attr('sensor.p2000_latest','discipline','Brandweerdiensten') }}"
+            sequence:
+              - event: p2000_bran
+                event_data:
+                  state: "on"
 
   - id: 36348df1-34fc-4466-99b1-75e2ca91415b
     alias: P2000_announce_latest
     mode: queued
     initial_state: false
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.p2000_latest
         to:
     condition:
@@ -591,7 +586,7 @@ automation:
           - "{{states('sensor.p2000_latest') is not search('Intrekken Alarm', ignorecase=True)}}"
           - "{{states('sensor.p2000_latest') is not search('Nacontrole', ignorecase=True)}}"
     action:
-      - service: script.p2000_announce
+      - action: script.p2000_announce
         data:
           my_state: "{{states(trigger.entity_id)}}"
 
@@ -599,9 +594,9 @@ automation:
     alias: Lifeliners_pushover
     mode: queued
     trigger:
-#      - platform: state
-#        entity_id: proximity.lifeliner
-      - platform: state
+      #      - trigger: state
+      #        entity_id: proximity.lifeliner
+      - trigger: state
         entity_id:
           - sensor.ll1
           - sensor.ll2
@@ -609,7 +604,7 @@ automation:
           - sensor.ll4
         to:
     action:
-      - service: notify.pushover
+      - action: notify.pushover
         data:
           message: >
             {% set map = {'ll1':'Lifeliner1','ll2':'Lifeliner2','ll3':'Lifeliner3','ll4':'Lifeliner4'} %}
@@ -632,14 +627,14 @@ automation:
   - alias: "NL gdacs alert"
     id: "823f535d-77df-48de-8589-8fa6d3534f28"
     trigger:
-      platform: geo_location
+      trigger: geo_location
       source: gdacs
       zone: zone.nederland
       event: enter
-#    condition:
-#      - "{{is_state_attr(trigger.entity_id, 'country', 'Netherlands')}}"  
+    #    condition:
+    #      - "{{is_state_attr(trigger.entity_id, 'country', 'Netherlands')}}"
     action:
-      - service: persistent_notification.create
+      - action: persistent_notification.create
         data:
           message: >
             {{ trigger.to_state.name }} - {{ trigger.to_state.attributes['event type'] }} - {{trigger.to_state.attributes.country}} - {{ trigger.to_state.attributes['alert level'] }}
@@ -657,19 +652,19 @@ script:
         example: "Lifeliner 1"
     sequence:
       # Wait until media player is stopped
-#      - service: timer.start
-#        target:
-#          entity_id: timer.p2000_announce
-#      - alias: "Wait until media player is stopped or timer runs out"
-#        wait_template: "{{ is_state('media_player.speakers', 'idle') or is_state('media_player.speakers', 'off') or is_state('timer.p2000_announce', 'idle')}}"
+      #      - action: timer.start
+      #        target:
+      #          entity_id: timer.p2000_announce
+      #      - alias: "Wait until media player is stopped or timer runs out"
+      #        wait_template: "{{ is_state('media_player.speakers', 'idle') or is_state('media_player.speakers', 'off') or is_state('timer.p2000_announce', 'idle')}}"
       - alias: "mute the soundbar"
-        service: media_player.volume_mute
+        action: media_player.volume_mute
         target:
           entity_id: media_player.ht_nt5_surround
         data:
           is_volume_muted: true
       - alias: "Send TTS using Google Home Resume script"
-        service: script.turn_on
+        action: script.turn_on
         target:
           entity_id: script.google_home_resume
         data:
@@ -727,18 +722,17 @@ script:
                       De {{dienst}} is onderweg naar {{location}}
                     {% endif %}
 
-
       - alias: "Wait until the target is idle or off before applying the volume for the TTS message"
         wait_template: "{{ states('media_player.speakers') in ['idle', 'off'] }}"
       - alias: "Apply TTS volume"
-        service: media_player.volume_set
+        action: media_player.volume_set
         target:
           entity_id: media_player.speakers
         data:
           volume_level: "{{states('input_number.p2000_announce_volume')|float}}"
       - delay: "00:00:10"
       - alias: "unmute the soundbar"
-        service: media_player.volume_mute
+        action: media_player.volume_mute
         target:
           entity_id: media_player.ht_nt5_surround
         data:

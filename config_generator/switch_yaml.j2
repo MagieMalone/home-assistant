@@ -3,7 +3,7 @@
 
 - alias: 'button click {{room}}  right '
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: 'right'
   action:
@@ -24,7 +24,7 @@
 
 - alias: 'button click {{room}}  left '
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: 'left'
   action:
@@ -45,7 +45,7 @@
 
 - alias: 'button click {{room}}  both '
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: 'both'
   action:
@@ -60,57 +60,57 @@
 
 - alias: 'button long_click {{room}}  right on '
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: 'right_long'
   action:
-    - service: script.dim_light
+    - action: script.dim_light
       data:
         light_entity: {{right.entity}}
 
 - alias: 'button long_click {{room}}  right off'
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: ''
       from: 'right_long'
   action:
-    - service: homeassistant.turn_off
+    - action: homeassistant.turn_off
       entity_id: script.dim_light
-    - service: homeassistant.turn_off
+    - action: homeassistant.turn_off
       entity_id: script.dim_light_loop
       
 - alias: 'button long_click {{room}}  left on '
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: 'left_long'
   action:
-    - service: script.dim_light
+    - action: script.dim_light
       data:
         light_entity: {{left.entity}}
 
 - alias: 'button long_click {{room}}  left off'
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: ''
       from: 'left_long'
   action:
-    - service: homeassistant.turn_off
+    - action: homeassistant.turn_off
       entity_id: script.dim_light
-    - service: homeassistant.turn_off
+    - action: homeassistant.turn_off
       entity_id: script.dim_light_loop
 
 - alias: 'button click {{room}}  right_double '
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: 'right_double'
   action:
-    - service: switch.turn_off
+    - action: switch.turn_off
       entity_id: switch.circadian_lighting_circadian_lighting
-    - service: script.turn_on_light
+    - action: script.turn_on_light
       data:
         light_entities: {{right.entity}}
         kelvin: >
@@ -125,13 +125,13 @@
       
 - alias: 'button click {{room}}  left_double '
   trigger:
-    - platform: state
+    - trigger: state
       entity_id: sensor.{{switchname}}_click
       to: 'left_double'
   action:
-    - service: switch.turn_off
+    - action: switch.turn_off
       entity_id: switch.circadian_lighting_circadian_lighting
-    - service: script.turn_on_light
+    - action: script.turn_on_light
       data:
         light_entities: {{left.entity}}
         kelvin: >

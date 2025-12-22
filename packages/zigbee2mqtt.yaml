@@ -24,7 +24,7 @@ script:
   zigbee2mqtt_rename:
     alias: Zigbee2mqtt Rename
     sequence:
-      service: mqtt.publish
+      action: mqtt.publish
       data:
         topic: zigbee2mqtt/bridge/config/rename
         payload_template: >-
@@ -35,7 +35,7 @@ script:
   zigbee2mqtt_remove:
     alias: Zigbee2mqtt Remove
     sequence:
-      service: mqtt.publish
+      action: mqtt.publish
       data:
         topic: zigbee2mqtt/bridge/config/remove
         payload_template: "{{ states('input_text.zigbee2mqtt_remove') | string }}"
@@ -74,17 +74,17 @@ mqtt:
       command_topic: "zigbee2mqtt/bridge/config/permit_join"
       payload_on: "true"
       payload_off: "false"
-  
+
 automation:
   # Automation for sending MQTT message on input select change
   - id: zigbee2mqtt_log_level
     alias: Zigbee2mqtt Log Level
     initial_state: on
     trigger:
-      platform: state
+      trigger: state
       entity_id: input_select.zigbee2mqtt_log_level
     action:
-      - service: mqtt.publish
+      - action: mqtt.publish
         data:
           payload_template: "{{ states('input_select.zigbee2mqtt_log_level') }}"
           topic: zigbee2mqtt/bridge/config/log_level
@@ -92,28 +92,28 @@ automation:
   - id: zigbee_join_enabled
     alias: Zigbee Join Enabled
     trigger:
-      platform: state
+      trigger: state
       entity_id: switch.zigbee2mqtt_main_join
       to: "on"
     action:
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.zigbee_permit_join
   # Automation to stop timer when switch turned off and turn off switch when timer finished
   - id: zigbee_join_disabled
     alias: Zigbee Join Disabled
     trigger:
-      - platform: event
+      - trigger: event
         event_type: timer.finished
         event_data:
           entity_id: timer.zigbee_permit_join
-      - platform: state
+      - trigger: state
         entity_id: switch.zigbee2mqtt_main_join
         to: "off"
     action:
-      - service: timer.cancel
+      - action: timer.cancel
         target:
           entity_id: timer.zigbee_permit_join
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id: switch.zigbee2mqtt_main_join

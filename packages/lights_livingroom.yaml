@@ -2,7 +2,7 @@ automation:
   - alias: "Lights on normal"
     id: "1528911899317"
     trigger:
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sun.sun
         attribute: elevation
         below: 3.5
@@ -13,21 +13,21 @@ automation:
           entity_id: light.woonkamer
           state: "off"
         - or:
-          - "{{ not is_state('input_select.house_mode', 'weg') }}"
-          - condition: state
-            entity_id: input_boolean.vakantie_mode
-            state: "on"
+            - "{{ not is_state('input_select.house_mode', 'weg') }}"
+            - condition: state
+              entity_id: input_boolean.vakantie_mode
+              state: "on"
         - condition: state
           entity_id:
             - schedule.lights
           state: "on"
     action:
-      - service: script.woonkamer_lights_fadein
+      - action: script.woonkamer_lights_fadein
 
   - alias: "Lights on bad weather"
     id: "5312689562015890236985290"
     trigger:
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sun.sun
         value_template: "{{ state.attributes.elevation }}"
         below: 7
@@ -38,24 +38,24 @@ automation:
           entity_id: light.woonkamer
           state: "off"
         - or:
-          - "{{ not is_state('input_select.house_mode', 'weg') }}"
-          - condition: state
-            entity_id: input_boolean.vakantie_mode
-            state: "on"
+            - "{{ not is_state('input_select.house_mode', 'weg') }}"
+            - condition: state
+              entity_id: input_boolean.vakantie_mode
+              state: "on"
         # measurement newer then 30 minutes
         #- "{{as_timestamp(states.sensor.berkhout_condition.last_updated)+1800 > as_timestamp(now())}}"
         # sky not clear
         - "{{ not is_state('sensor.berkhout_condition', 'clear') }}"
     action:
-      - service: script.woonkamer_lights_fadein
+      - action: script.woonkamer_lights_fadein
 
   - alias: "Lights on thuiskomst"
     id: "5480797213460891"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         to: "Net Thuis"
-      - platform: state
+      - trigger: state
         entity_id: input_select.arnoud_status
         to: "Thuis"
     condition:
@@ -87,24 +87,24 @@ automation:
               entity_id: input_select.house_mode
               state: "weg"
     action:
-      - service: script.woonkamer_lights
+      - action: script.woonkamer_lights
 
 script:
   woonkamer_lights_fadein:
     sequence:
       - alias: "turn off brightness automation"
-        service: automation.turn_off
+        action: automation.turn_off
         target:
           entity_id: automation.update_brightness_based_on_house_status
       - alias: staande lamp
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.staande_lamp
         data:
           brightness_pct: 1
           kelvin: 3000
       - alias: strip
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_lightstrip_plus_1
         data:
@@ -113,7 +113,7 @@ script:
             - 0.1332
           brightness_pct: 1
       - alias: pendant_up
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_up_1
         data:
@@ -122,14 +122,14 @@ script:
             - 0.154
           brightness_pct: 1
       - alias: pendant_down
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
           color_temp: 449
           brightness_pct: 1
       - alias: staande lamp
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.staande_lamp
         data:
@@ -137,7 +137,7 @@ script:
           brightness_pct: 50
           kelvin: 3000
       - alias: strip
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_lightstrip_plus_1
         data:
@@ -147,7 +147,7 @@ script:
             - 0.1332
           brightness_pct: 30
       - alias: pendant_up
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_up_1
         data:
@@ -157,7 +157,7 @@ script:
           brightness_pct: 50
           transition: 300
       - alias: pendant_down
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
@@ -167,13 +167,13 @@ script:
       - delay:
           seconds: 5
       - alias: "turn on brightness automation"
-        service: automation.turn_on
+        action: automation.turn_on
         target:
           entity_id: automation.update_brightness_based_on_house_status
   woonkamer_lights:
     sequence:
       - alias: staande lamp
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.staande_lamp
         data:
@@ -181,7 +181,7 @@ script:
           brightness_pct: 50
           kelvin: 3000
       - alias: strip
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_lightstrip_plus_1
         data:
@@ -191,7 +191,7 @@ script:
             - 0.1332
           brightness_pct: 30
       - alias: pendant_up
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_up_1
         data:
@@ -201,7 +201,7 @@ script:
           brightness_pct: 50
           transition: 300
       - alias: pendant_down
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
@@ -211,14 +211,14 @@ script:
   woonkamer_lights_fadein_smooth:
     sequence:
       - alias: staande lamp
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.staande_lamp
         data:
           brightness_pct: 1
           kelvin: 3000
       - alias: strip
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_lightstrip_plus_1
         data:
@@ -227,7 +227,7 @@ script:
             - 0.1332
           brightness_pct: 1
       - alias: pendant_up
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_up_1
         data:
@@ -236,32 +236,32 @@ script:
             - 0.154
           brightness_pct: 1
       - alias: pendant_down
-        service: light.turn_on
+        action: light.turn_on
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
           color_temp: 449
           brightness_pct: 1
       - alias: staande lamp
-        service: python_script.smooth_fader
+        action: python_script.smooth_fader
         data:
           entity_id: light.staande_lamp
           duration: "00:05:00"
           brightness_end: 128
       - alias: strip
-        service: python_script.smooth_fader
+        action: python_script.smooth_fader
         data:
           entity_id: light.hue_lightstrip_plus_1
           duration: "00:05:00"
           brightness_end: 85
       - alias: pendant_up
-        service: python_script.smooth_fader
+        action: python_script.smooth_fader
         data:
           entity_id: light.hue_color_pendant_up_1
           duration: "00:05:00"
           brightness_end: 128
       - alias: pendant_down
-        service: python_script.smooth_fader
+        action: python_script.smooth_fader
         data:
           entity_id: light.hue_color_pendant_down_1
           duration: "00:05:00"

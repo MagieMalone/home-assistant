@@ -2,47 +2,72 @@ automation:
   - alias: "turn off espressomaker"
     id: "678328023792301"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: schedule.espresso
         to: "off"
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: zone.home
         below: 1
-        for: 
+        for:
           minutes: 10
     action:
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id: switch.shellyplugsg3_espresso
   - alias: "Turn on espresso maker"
     id: "1529161701532"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: schedule.espresso
         to: "on"
-      - platform: numeric_state
+      - trigger: state
+        entity_id: schedule.espresso_vacation
+        to: "on"
+      - trigger: numeric_state
         entity_id: zone.home
         above: 0
     condition:
-      condition: and
-      conditions:
-        - condition: state
-          entity_id:
-            - schedule.espresso
-          state: "on"
-        - condition: numeric_state
-          entity_id:
-            - zone.home
-          above: 0
+      - condition: numeric_state
+        entity_id:
+          - zone.home
+        above: 0
     action:
-      - repeat:
-          sequence:
-            - service: switch.turn_on
-              target:
-                entity_id: switch.shellyplugsg3_espresso
-            - delay:
-                seconds: 60
-          until:
+      - choose:
+        - conditions:
             - condition: state
-              entity_id: sswitch.shellyplugsg3_espresso
+              entity_id: schedule.espresso
               state: "on"
+            - condition: state
+              entity_id: binary_sensor.workday_sensor_mod
+              state: "on"
+          sequence:
+            - repeat:
+                sequence:
+                  - action: switch.turn_on
+                    target:
+                      entity_id: switch.shellyplugsg3_espresso
+                  - delay:
+                      seconds: 60
+                until:
+                  - condition: state
+                    entity_id: switch.shellyplugsg3_espresso
+                    state: "on"
+        - conditions:
+            - condition: state
+              entity_id: schedule.espresso_vacation
+              state: "on"
+            - condition: state
+              entity_id: binary_sensor.workday_sensor_mod
+              state: "off"
+          sequence:
+            - repeat:
+                sequence:
+                  - action: switch.turn_on
+                    target:
+                      entity_id: switch.shellyplugsg3_espresso
+                  - delay:
+                      seconds: 60
+                until:
+                  - condition: state
+                    entity_id: switch.shellyplugsg3_espresso
+                    state: "on"
