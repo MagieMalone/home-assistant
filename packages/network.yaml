@@ -133,23 +133,22 @@ automation:
     id: "5d4c55c9-12ad-48f6-8a4f-4e5d51448724"
     trigger:
       - trigger: state
-        entity_id: binary_sensor.router_interface_eth0_status
-        attribute: addresses
+        entity_id: sensor.firewall_ipv4
     action:
       - action: notify.persistent_notification
         data:
           title: "IPv4 address changed"
           message: "Internet address changed from {{trigger.from_state}} to {{trigger.to_state}}"
-  - alias: "reload-edgeos"
-    id: "a2c7f335-8592-4a50-8b64-148a8abf20c6"
+  - alias: "ipv6_test"
+    id: "019b4577-7eee-764a-b472-efa4a1e6fc45"
     trigger:
-      - trigger: time
-        at: "00:30:00"
+      - trigger: state
+        entity_id: sensor.firewall_ipv6_lan
     action:
-      - action: homeassistant.reload_config_entry
-        data: {}
-        target:
-          device_id: a22c03e9fff39036212524820e2f68b5
+      - action: notify.persistent_notification
+        data:
+          title: "IPv6 address changed"
+          message: "LAN address changed from {{trigger.from_state}} to {{trigger.to_state}}"
 
 sensor:
   - platform: snmp

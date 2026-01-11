@@ -5,15 +5,46 @@ automation:
       - trigger: state
         entity_id: schedule.espresso
         to: "off"
+      - trigger: state
+        entity_id: schedule.espresso_vacation
+        to: "off"
       - trigger: numeric_state
         entity_id: zone.home
         below: 1
         for:
           minutes: 10
+        id: "away"
     action:
-      - action: switch.turn_off
-        target:
-          entity_id: switch.shellyplugsg3_espresso
+      - choose:
+        - conditions:
+            - condition: state
+              entity_id: schedule.espresso
+              state: "off"
+            - condition: state
+              entity_id: binary_sensor.workday_sensor_mod
+              state: "on"
+          sequence:
+            - action: switch.turn_off
+              target:
+                entity_id: switch.shellyplugsg3_espresso
+        - conditions:
+            - condition: state
+              entity_id: schedule.espresso_vacation
+              state: "off"
+            - condition: state
+              entity_id: binary_sensor.workday_sensor_mod
+              state: "off"
+          sequence:
+            - action: switch.turn_off
+              target:
+                entity_id: switch.shellyplugsg3_espresso
+        - conditions:
+            condition: trigger
+            id: "away"
+          sequence:
+            - action: switch.turn_off
+              target:
+                entity_id: switch.shellyplugsg3_espresso
   - alias: "Turn on espresso maker"
     id: "1529161701532"
     trigger:

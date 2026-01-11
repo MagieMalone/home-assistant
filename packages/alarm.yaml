@@ -232,7 +232,7 @@ automation:
         to: "on"
     condition: []
     action:
-      - action: notify.pushover
+      - action: notify.mobile_app_kb2003
         data:
           message: "De {{states[trigger.to_state.domain][trigger.to_state.object_id].name}} detecteerd rook. test: {{state_attr(trigger.entity_id, 'test' )}}"
           title: "Rook alarm"

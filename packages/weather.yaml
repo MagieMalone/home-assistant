@@ -212,11 +212,21 @@ template:
         wind_speed_unit: "m/s"
         wind_bearing_template: "{{ states('sensor.sbws_90cm_2eb8_direction') }}"
   - sensor:
+    # \(T_{wc}=13.12+(0.6215\times T_{a})-(11.37\times V^{0.16})+(0.3965\times T_{a}\times V^{0.16})\) with V in km/h
       - name: windchill
         unique_id: "3d5430b2-5622-449e-81e5-e95626e0292b"
         state: >
-          {% set V = (states('sensor.sbws_90cm_2eb8_speed') | float * 0.75)**0.16 %}
+          {% set V = (states('sensor.sbws_90cm_2eb8_speed') | float * 3.6)**0.16 %}
           {% set T = states('sensor.sbws_90cm_2eb8_temperature') |float %}
+          {{(13.12 + 0.6215*T - 11.37*V + 0.3965*T*V)|round(1)}}
+        device_class: temperature
+        unit_of_measurement: °C
+        icon: mdi:thermometer
+      - name: windchill-berkhout
+        unique_id: "019ba6f4-4722-71e3-ba97-ad0017d6cc1a"
+        state: >
+          {% set V = (states('sensor.berkhout_wind_speed') | float )**0.16 %}
+          {% set T = states('sensor.berkhout_temperature') |float %}
           {{(13.12 + 0.6215*T - 11.37*V + 0.3965*T*V)|round(1)}}
         device_class: temperature
         unit_of_measurement: °C
@@ -226,6 +236,41 @@ template:
         state: "{{states('sensor.sbws_90cm_2eb8_illuminance')|float * 0.0079}}"
         unit_of_measurement: W/m²
         icon: mdi:sun-wireless
+      - name: berkhout_beaufort
+        unique_id: "019b7de7-06e6-76d2-af9e-c90a4033ca11"
+        icon: mdi:weather-windy
+        unit_of_measurement: Bft
+        state: >
+          {% set v = (states('sensor.berkhout_wind_speed')|float)/3.6 %}
+          {% if v <= 0.2 %}
+          {{0|int}}
+          {% elif v <= 1.5 %}
+          {{1|int}}
+          {% elif v <= 3.3 %}
+          {{2|int}}
+          {% elif v <= 5.4 %}
+          {{3|int}}
+          {% elif v <= 7.9 %}
+          {{4|int}}
+          {% elif v <= 10.7 %}
+          {{5|int}}
+          {% elif v <= 13.8 %}
+          {{6|int}}
+          {% elif v <= 17.1 %}
+          {{7|int}}
+          {% elif v <= 20.7 %}
+          {{8|int}}
+          {% elif v <= 24.4 %}
+          {{9|int}}
+          {% elif v <= 28.4 %}
+          {{10|int}}
+          {% elif v <= 32.6 %}
+          {{11|int}}
+          {% elif v > 32.6 %}
+          {{12|int}}
+          {% else %}
+          Unknown
+          {% endif %}
 
   - trigger:
       - trigger: time

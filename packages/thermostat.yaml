@@ -1,14 +1,14 @@
 #toon:
 #  client_id: !secret toon_consumer_key
 #  client_secret: !secret toon_consumer_secret
-climate:
-  - platform: toon_climate
-    name: Toon Thermostat
-    host: !secret toon_ip
-    port: 80
-    scan_interval: 10
-    min_temp: 6.0
-    max_temp: 30.0
+#climate:
+#  - platform: toon_climate
+#    name: Toon Thermostat
+#    host: !secret toon_ip
+#    port: 80
+#    scan_interval: 10
+#    min_temp: 6.0
+#    max_temp: 30.0
 sensor:
   - platform: toon_smartmeter
     host: !secret toon_ip
@@ -33,19 +33,19 @@ sensor:
       - waterflow
       - waterquantity
 
-  - platform: toon_boilerstatus
-    name: Toon
-    host: !secret toon_ip
-    port: 80
-    scan_interval: 10
-    resources:
-      - boilersetpoint
-      - boilerintemp
-      - boilerouttemp
-      - boilerpressure
-      - boilermodulationlevel
-      - roomtemp
-      - roomtempsetpoint
+#  - platform: toon_boilerstatus
+#    name: Toon
+#    host: !secret toon_ip
+#    port: 80
+#    scan_interval: 10
+#    resources:
+#      - boilersetpoint
+#      - boilerintemp
+#      - boilerouttemp
+#      - boilerpressure
+#      - boilermodulationlevel
+#      - roomtemp
+#      - roomtempsetpoint
 utility_meter:
   daily_energy_offpeak:
     source: sensor.toon_p1_power_use_cnt_low
