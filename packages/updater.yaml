@@ -7,7 +7,15 @@ automation:
         - update.home_assistant_core_update
         - update.home_assistant_operating_system_update
         - update.home_assistant_supervisor_update
+    conditions:
+      - "{{trigger.from_state.attributes.latest_version}} != {{trigger.to_state.attributes.latest_version}} "
     action:
       action: notify.mobile_app_kb2003
       data:
-        message: "Update to {{states('trigger.entity_id')}} for Home Assistant is available."
+        message: >
+          Update to {{trigger.to_state.attributes.title}} to {{trigger.to_state.attributes.latest_version}} is available.
+          see {{trigger.to_state.attributes.release_url}}
+        # IOS url
+        url: "{{trigger.to_state.attributes.release_url}}"
+        # Android URL
+        clickAction: "{{trigger.to_state.attributes.release_url}}"

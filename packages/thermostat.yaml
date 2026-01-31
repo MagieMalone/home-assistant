@@ -101,13 +101,41 @@ input_number:
 template:
   - trigger:
       - trigger: time_pattern
-        hours: "0"
-        minutes: "10"
+        minutes: "/10"
     binary_sensor:
       - name: "workday_sensor_mod"
         unique_id: "c662b422-0024-46cb-b4d2-289a15a5dbef"
         # if workday and alarm before 8 o'clock then workday, otherwise it's vacation
-        state: "{{states('binary_sensor.workday_sensor') and as_datetime(state_attr('calendar.alarm', 'start_time'))|as_local < today_at('8:00')}}"
+        state: >
+          {% if has_value('binary_sensor.workday_sensor_mod') and states.binary_sensor.workday_sensor_mod.attributes.alarmtime_today is defined %}
+            {% set alarm = state_attr('binary_sensor.workday_sensor_mod', 'alarmtime_today') %}
+            {{(states('binary_sensor.workday_sensor')|bool and as_datetime(alarm) < (today_at('8:00')))|bool }}
+          {% else %}
+            {{states('binary_sensor.workday_sensor')|bool }}
+          {% endif %}
+        attributes:
+          alarmtime_today: >
+            {% if states.binary_sensor.workday_sensor_mod.attributes.alarmtime_today is defined -%}
+              {% if states.calendar.alarm.attributes.start_time is defined %}
+                {% if now() > as_datetime(state_attr('binary_sensor.workday_sensor_mod', 'alarmtime_today' )) and as_datetime(state_attr('calendar.alarm', 'start_time'))|as_local > today_at('08:00') -%}
+                    {{state_attr('binary_sensor.workday_sensor_mod', 'alarmtime_today')}}
+                {% else -%}
+                  {% if states.calendar.alarm.attributes.start_time is defined -%}
+                    {{as_datetime(state_attr('calendar.alarm', 'start_time'))|as_local }}
+                  {% else -%}
+                    {{now()|as_local }}
+                  {% endif %}
+                {% endif -%}
+              {% else %}
+                {{state_attr('binary_sensor.workday_sensor_mod', 'alarmtime_today')}}
+              {% endif -%}
+            {% else -%}
+              {% if states.calendar.alarm.attributes.start_time is defined -%}
+                {{as_datetime(state_attr('calendar.alarm', 'start_time'))|as_local }}
+              {% else -%}
+                {{now()|as_local }}
+              {% endif -%}
+            {% endif -%}
   - sensor:
       - name: "heating_set_temperature"
         unique_id: "1394c112-73e9-4884-b8a3-6c01ce3e5d85"
@@ -203,12 +231,16 @@ automation:
         entity_id: group.windows_kachel
         from: "on"
         to: "off"
-      - trigger: time
-        at:
-          - "08:00:00"
-          - "09:00:00"
-          - "23:00:00"
-          - "21:30:00"
+      - trigger: state
+        entity_id: schedule.thermostat
+      - trigger: state
+        entity_id: schedule.thermostat_vacation
+#      - trigger: time
+#        at:
+#          - "08:00:00"
+#          - "09:00:00"
+#          - "23:00:00"
+#          - "21:30:00"
       - trigger: time
         at:
           - input_datetime.pre_heat_time
@@ -258,20 +290,46 @@ automation:
                     entity_id: group.windows_kachel
                     state: "off"
                   - or:
-                      - and:
-                          - condition: time
-                            after: "07:59:59"
-                            before: "21:00:00"
+                    - and:
+                      - condition: state
+                        entity_id: schedule.thermostat_vacation
+                        state: "on"
+                      - condition: state
+                        entity_id: binary_sensor.workday_sensor_mod
+                        state: "off"
+                      - condition: state
+                        entity_id: binary_sensor.workday_sensor
+                        state: "on"
+                    - and:
+                      - condition: state
+                        entity_id: schedule.thermostat
+                        state: "on"
+                      - or:
+                        - and:
                           - condition: state
                             entity_id: binary_sensor.workday_sensor_mod
                             state: "on"
-                      - and:
-                          - condition: time
-                            after: "08:59:59"
-                            before: "22:00:00"
                           - condition: state
-                            entity_id: binary_sensor.workday_sensor_mod
-                            state: "off"
+                            entity_id: binary_sensor.workday_sensor
+                            state: "on"
+                        - condition: state
+                          entity_id: binary_sensor.workday_sensor
+                          state: "off"
+
+#                      - and:
+#                          - condition: time
+#                            after: "07:59:59"
+#                            before: "21:00:00"
+#                          - condition: state
+#                            entity_id: binary_sensor.workday_sensor_mod
+#                            state: "on"
+#                      - and:
+#                          - condition: time
+#                            after: "08:59:59"
+#                            before: "22:00:00"
+#                          - condition: state
+#                            entity_id: binary_sensor.workday_sensor_mod
+#                            state: "off"
                   - or:
                       - condition: state
                         entity_id: input_select.arnoud_status
@@ -289,12 +347,39 @@ automation:
                 data:
                   mode: "home"
           - conditions:
-              - and:
-                  - condition: state
-                    entity_id: binary_sensor.workday1d
-                    state: "on"
-                  - condition: time
-                    after: "21:29:59"
+                  - or:
+                    - and:
+                      - condition: state
+                        entity_id: schedule.thermostat_vacation
+                        state: "off"
+                      - condition: state
+                        entity_id: binary_sensor.workday_sensor_mod
+                        state: "off"
+                      - condition: state
+                        entity_id: binary_sensor.workday_sensor
+                        state: "on"
+                    - and:
+                      - condition: state
+                        entity_id: schedule.thermostat
+                        state: "off"
+                      - or:
+                        - and:
+                          - condition: state
+                            entity_id: binary_sensor.workday_sensor_mod
+                            state: "on"
+                          - condition: state
+                            entity_id: binary_sensor.workday_sensor
+                            state: "on"
+                        - condition: state
+                          entity_id: binary_sensor.workday_sensor
+                          state: "off"
+
+#              - and:
+#                  - condition: state
+#                    entity_id: binary_sensor.workday1d
+#                    state: "on"
+#                  - condition: time
+#                    after: "21:29:59"
             sequence:
               - choose:
                   - conditions:
