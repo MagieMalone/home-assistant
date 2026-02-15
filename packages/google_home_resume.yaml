@@ -3,7 +3,7 @@
 # Package contains 3 main scripts, the helper script to perform the resume and supporting template sensor and automation
 # for more details:
 #
-## Google Home Resume: https://github.com/TheFes/HA-configuration/blob/main/include/script/00_general/google_cast/docs/google_home_resume.md
+## Google Home Resume: https://github.com/TheFes/Google-Home-Resume
 ## Google Home Event: https://github.com/TheFes/HA-configuration/blob/main/include/integrations/packages/google_cast/docs/google_home_event.md
 ## Google Home Voice: https://github.com/TheFes/HA-configuration/blob/main/include/integrations/packages/google_cast/docs/google_home_voice.md
 
@@ -13,7 +13,7 @@ homeassistant:
       # enter settings for the script here, all settings are optional, you can remove sections if you don't need them
       # always leave the line with "settings: &settings" in!
       settings: &settings
-        primary_spotcast: "pepijn"
+        primary_spotcast: "arnoud_buurman"
         radio_data:
           NPO Radio 2:
             picture: "http://192.168.2.3:8123/local/pictures/radio/npo_radio_2.png"
@@ -28,27 +28,15 @@ homeassistant:
             picture: "http://192.168.2.3:8123/local/pictures/radio/kink.jpg"
             title: "NO ALTERNATIVE"
         speaker_groups:
-          media_player.huis_groep:
-            - media_player.keuken_hub
-            - media_player.slaapkamer_hub
-            - media_player.pepijn_mini
-            - media_player.woonkamer_home
-            - media_player.werkamer_marleen_minini
-            - media_player.zolder_werkkamer_stereo
-            - media_player.floris_mini
-          media_player.boven_groep:
-            - media_player.pepijn_mini
-            - media_player.slaapkamer_hub
-            - media_player.werkamer_marleen_mini
-            - media_player.zolder_werkkamer_stereo
-            - media_player.floris_mini
-          media_player.beneden_groep:
-            - media_player.keuken_hub
-            - media_player.woonkamer_home
-          media_player.zolder_groep:
-            - media_player.slaapkamer_hub
-            - media_player.zolder_werkkamer_stereo
-        default_volume_level: 0.25
+          media_player.speakers:
+            - media_player.huiskamer_hub
+            - media_player.slaapkamer_speaker
+            - media_player.paar_studeerkamer
+          media_player.speakerfancy:
+            - media_player.slaapkamer_speaker
+            - media_player.paar_studeerkamer
+            - media_player.ht_nt5
+        default_volume_level: 0.5
         dummy_player: media_player.vlc_telnet
         default_resume_delay:
           seconds: 20

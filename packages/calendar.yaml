@@ -96,14 +96,14 @@ template:
           {% else %}
             {{ state_attr('calendar.alarm', 'location') }}
           {% endif %}
-  - sensor:
-      - name: cal_reminders_name
-        unique_id: "9aa64b47-5434-4399-81a6-65c338bf6a5e"
-        state: "{{ state_attr('calendar.reminders', 'message') | replace('#reminders', '')}}"
-      - name: cal_reminders_date
-        unique_id: "6e1e91bd-9fae-4723-8a28-a1adfd50de3e"
-        device_class: "timestamp"
-        state: "{{(state_attr('calendar.reminders', 'start_time')|as_datetime).astimezone()}}"
+#  - sensor:
+#      - name: cal_reminders_name
+#        unique_id: "9aa64b47-5434-4399-81a6-65c338bf6a5e"
+#        state: "{{ state_attr('calendar.reminders', 'message') | replace('#reminders', '')}}"
+#      - name: cal_reminders_date
+#        unique_id: "6e1e91bd-9fae-4723-8a28-a1adfd50de3e"
+#        device_class: "timestamp"
+#        state: "{{(state_attr('calendar.reminders', 'start_time')|as_datetime).astimezone()}}"
   - trigger:
       - trigger: state
         entity_id: sensor.waze_travel_time

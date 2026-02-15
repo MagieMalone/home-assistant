@@ -102,7 +102,7 @@ automation:
           agent_id: 7df39e215dafbd1d3d853b5366ab81c1
         response_variable: agent
       - alias: "Send notification"
-        action: notify.webbrowser
+        action: notify.html5
         data:
           title: "{{ now().strftime('%A') }} Agenda"
           message: "{{ agent.response.speech.plain.speech }}"

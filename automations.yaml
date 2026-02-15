@@ -110,7 +110,7 @@
     path: myown/notitfy_agent_agenda_mod.yaml
     input:
       conversation_agent: 7df39e215dafbd1d3d853b5366ab81c1
-      notify_action: notify.webbrowser
+      notify_action: notify.html5
       calendar_entity:
         entity_id:
           - calendar.abuurmangmailcom
