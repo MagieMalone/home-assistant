@@ -1,7 +1,7 @@
 sensor:
   - platform: history_stats
     name: arnoud_at_home
-    entity_id: device_tracker.467cfa38bbada1bf
+    entity_id: device_tracker.8877c83ae202869c
     state:
       - "home"
       - "parking"

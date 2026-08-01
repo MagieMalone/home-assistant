@@ -54,7 +54,13 @@ binary_sensor:
     observations:
       - platform: template
         value_template: >
-          {{not is_state('device_tracker.467cfa38bbada1bf','home') and ((as_timestamp(now()) - as_timestamp(states.device_tracker['467cfa38bbada1bf'].last_changed)) > 300)}}
+          {% set ent = states.device_tracker.get('8877c83ae202869c') %}
+          {{
+            ent is not none and
+            not is_state('device_tracker.8877c83ae202869c', 'home') and
+            ent.state not in ['unknown', 'unavailable'] and
+            (as_timestamp(now()) - as_timestamp(ent.last_changed)) > 300
+          }}
         prob_given_true: 0.006
         prob_given_false: 0.994
 

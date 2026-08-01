@@ -82,16 +82,16 @@ recorder:
       - sensor.iss
 
 influxdb:
-  api_version: 2
-  ssl: false
-  token: !secret influxdb_token
-  organization: 58f4d308ad4d35a0
-  bucket: home_assistant/90_days
+#  api_version: 2
+#  ssl: false
+#  token: !secret influxdb_token
+#  organization: 58f4d308ad4d35a0
+#  bucket: home_assistant/90_days
   tags:
     source: HA
   default_measurement: units
-  host: 192.168.3.6
-  port: 8086
+#  host: 192.168.3.6
+#  port: 8086
   exclude:
     domains:
       - updater
@@ -143,6 +143,9 @@ tts:
 #  radius: 172
 #  latitude: 52.23677047848721
 #  longitude: 5.383300781250001
+
+remote_homeassistant:
+  instances:
 
 wake_on_lan:
 

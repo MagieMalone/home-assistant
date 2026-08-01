@@ -217,7 +217,7 @@ automation:
             - light.sk_duo_spot_1
             - light.sk_duo_spot_2
         data:
-          color_temp: 153
+          color_temp_kelvin: 5000
           brightness_pct: 100
       - action: script.flash_lights
 
@@ -232,7 +232,7 @@ automation:
         to: "on"
     condition: []
     action:
-      - action: notify.mobile_app_kb2003
+      - action: notify.oneplus13
         data:
           message: "De {{states[trigger.to_state.domain][trigger.to_state.object_id].name}} detecteerd rook. test: {{state_attr(trigger.entity_id, 'test' )}}"
           title: "Rook alarm"
@@ -281,7 +281,7 @@ automation:
             - light.sk_duo_spot_1
             - light.sk_duo_spot_2
         data:
-          color_temp: 153
+          color_temp_kelvin: 5000
           brightness_pct: 100
   - alias: "Turn lights back to before when smoke alarm clears"
     id: "7ba56b40-b860-4c89-ab45-6f5306bfa7c1"

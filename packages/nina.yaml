@@ -1,0 +1,187 @@
+mqtt:
+
+
+
+
+
+
+  sensor:
+################################
+#  sensors from image metadata #
+################################
+
+  - name: "NINA Target Start"
+    unique_id: 019fb8b5-f24d-77fb-ba9a-f3472e067507
+#    state_topic: "Astro/NINA/target/start"
+    state_topic: "Astro/NINA/latestimage/metadata"
+#    2026-08-01 08:05:17.259628+00:00
+#    value_template: "{{ strptime( (value_json.ImageMetaData.Image.ExposureStart |regex_replace(find='(\\+|\\-)([0-9]+):([0-9]+)', replace='\\1\\2\\3', ignorecase=False)) , '%Y-%m-%d %H:%M:%S.%f%z') }}"
+    value_template: "{{ value_json.ImageMetaData.Image.ExposureStart }}"
+    device_class: timestamp
+
+  - name: "NINA Target"
+#    state_topic: "Astro/NINA/target/name"
+    icon: mdi:target
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Target.Name }}"
+    unique_id: 019fb8b7-060c-75da-9978-af348db716bd
+
+  - name: "NINA Target RA"
+    unique_id: 019fb8b7-2393-7120-b887-5ef6ec631535
+#    state_topic: "Astro/NINA/target/ra"
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Target.Coordinates.RA |float }}"
+    state_class: measurement_angle
+    unit_of_measurement: "°"
+
+  - name: "NINA Target DEC"
+    unique_id: 019fbcc2-8326-734d-a012-35b9e9c17018
+#    state_topic: "Astro/NINA/target/dec"
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Target.Coordinates.Dec |float }}"
+    state_class: measurement_angle
+    unit_of_measurement: "°"
+
+  - name: "NINA Camera Temp"
+    unique_id: 019fb8bd-c109-73ce-8967-b0d170ae8803
+#    state_topic: "Astro/NINA/equipment/camtemp"
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Camera.Temperature |float }}"
+    unit_of_measurement: "°C"
+    icon: mdi:camera-enhance
+    device_class: temperature
+
+
+  - name: "NINA Focuser position"
+    unique_id: 019fbcc3-90af-75be-bdb5-159a8fa9c65c
+#    state_topic: "Astro/NINA/equipment/focuserpos"
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Focuser.Position |int }}"
+
+
+  - name: "NINA Focuser temperature"
+    unique_id: 019fbcc3-eab6-717a-94a3-d9a99f5ad588
+#    state_topic: "Astro/NINA/equipment/focusertemp"
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Focuser.Temperature |float }}"
+    unit_of_measurement: "°C"
+    device_class: temperature
+
+
+  - name: "NINA Mount sideofpeer"
+    unique_id: 019fb8d9-633c-7437-8e78-5d13b3e03a72
+#    state_topic: "Astro/NINA/equipment/mountpointing"
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: >-
+      {% if value_json.ImageMetaData.Telescope.SideOfPier == 0 -%}
+        East
+      {% else -%}
+        West
+      {% endif -%}
+
+  - name: "NINA Exposure Number"
+    unique_id: 019fb8bd-ebef-767d-90c2-37fbf649e81f
+    icon: mdi:format-list-numbered
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Image.ExposureNumber |int }}"
+
+  - name: "NINA Exposure Time"
+    unique_id: 019fb8bf-1d0b-753a-85e8-f49dcc071b97
+    icon: mdi:camera-timer
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Image.ExposureTime |int }}"
+    unit_of_measurement: "s"
+
+  - name: Nina image raw
+    unique_id: 019fbcd3-e2e0-7714-9545-3825ea8d6840
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Image.RecordedRMS }}"
+
+  - name: "NINA Total RMS"
+    unique_id: 019fb8bf-424d-742a-9755-7f8625426305
+    icon: mdi:chart-bell-curve
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Image.RecordedRMS.Total |float }}"
+
+  - name: "NINA PeakRA"
+    unique_id: 019fb8bf-54b9-7756-8906-c8e0a7ebef82
+    icon: mdi:arrow-left-top
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Image.RecordedRMS.PeakRA |float }}"
+
+  - name: "NINA PeakDec"
+    unique_id: 019fb8bf-6cd6-7570-aef2-74e783567bac
+    icon: mdi:arrow-oscillating
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.Image.RecordedRMS.PeakDec |float }}"
+
+  - name: "NINA Filter Wheel Filter"
+    unique_id: 019fb8bf-eef4-7021-be18-0846d5e0cf71
+    icon: mdi:movie-roll
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageMetaData.FilterWheel.Filter }}"
+
+  - name: "NINA Target Max Saturated Pixels"
+    unique_id: 019fb8c0-2ed3-7411-9c01-7c5b577511cf
+    icon: mdi:view-grid-compact
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.ImageStatistics.Max |int }}"
+
+  - name: "NINA Star HFR"
+    unique_id: 019fb8c0-434c-7725-9cbd-da27b1218cfe
+    icon: mdi:star-outline
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.StarDetectionAnalysis.HFR |float }}"
+
+  - name: "NINA Star HFRStDev"
+    unique_id: 019fb8c0-60eb-7785-8240-ac6ca8576009
+    icon: mdi:star-three-points-outline
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.StarDetectionAnalysis.HFRStDev |float }}"
+
+  - name: "NINA Star DetectedStars"
+    unique_id: 019fb8c0-785b-769b-8237-c6542c38582a
+    icon: mdi:star-settings
+    state_topic: "Astro/NINA/latestimage/metadata"
+    value_template: "{{ value_json.StarDetectionAnalysis.DetectedStars |int }}"
+
+###################################
+# Sensors from Groundstation push #
+###################################
+
+  - name: "NINA Flip Time"
+    state_topic: "Astro/NINA/fliptime"
+    unique_id: dyitunyj019fb8b6-d9dc-77fd-ae2d-1774bb595883ghnj7
+
+  - name: "NINA Mount alt"
+    state_topic: "Astro/NINA/equipment/mountalt"
+    unique_id: 019fb8dc-a8b9-75fa-80cf-5ec65b18e54a
+    state_class: measurement_angle
+    unit_of_measurement: "°"
+    value_template: "{{ value | float }}"
+
+  - name: "NINA Mount az"
+    state_topic: "Astro/NINA/equipment/mountaz"
+    unique_id: 019fb8dd-13ed-748f-a8d8-96b6589ab4e3
+    state_class: measurement_angle
+    unit_of_measurement: "°"
+    value_template: "{{ value | float }}"
+
+  binary_sensor:
+  - name: "NINA Mount parked"
+    state_topic: "Astro/NINA/equipment/mountparked"
+    unique_id: 019fb8db-bac1-77dd-8c42-b27a2486dc87
+    payload_on: "True"
+    payload_off: "False"
+
+  - name: "NINA Mount home"
+    state_topic: "Astro/NINA/equipment/mounthome"
+    unique_id: 019fb8dc-3c0b-763e-a31c-ac28c0796d70
+    payload_on: "True"
+    payload_off: "False"
+
+  - name: "NINA Session live"
+    state_topic: "Astro/NINA/SessionStatus"
+    unique_id: 019fbcc4-5660-705f-8a6a-9cbf29b17018
+    payload_on: "True"
+    payload_off: "False"

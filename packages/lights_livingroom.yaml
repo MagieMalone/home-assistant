@@ -102,7 +102,7 @@ script:
           entity_id: light.staande_lamp
         data:
           brightness_pct: 1
-          kelvin: 3000
+          color_temp_kelvin: 3000
       - alias: strip
         action: light.turn_on
         target:
@@ -126,7 +126,7 @@ script:
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
-          color_temp: 449
+          color_temp_kelvin: 2202
           brightness_pct: 1
       - alias: staande lamp
         action: light.turn_on
@@ -135,7 +135,7 @@ script:
         data:
           transition: 300
           brightness_pct: 50
-          kelvin: 3000
+          color_temp_kelvin: 3000
       - alias: strip
         action: light.turn_on
         target:
@@ -161,7 +161,7 @@ script:
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
-          color_temp: 449
+          color_temp_kelvin: 3000
           brightness_pct: 50
           transition: 300
       - delay:
@@ -179,7 +179,7 @@ script:
         data:
           transition: 2
           brightness_pct: 50
-          kelvin: 3000
+          color_temp_kelvin: 3000
       - alias: strip
         action: light.turn_on
         target:
@@ -205,7 +205,7 @@ script:
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
-          color_temp: 449
+          color_temp_kelvin: 3000
           brightness_pct: 50
           transition: 30
   woonkamer_lights_fadein_smooth:
@@ -216,7 +216,7 @@ script:
           entity_id: light.staande_lamp
         data:
           brightness_pct: 1
-          kelvin: 3000
+          color_temp_kelvin: 3000
       - alias: strip
         action: light.turn_on
         target:
@@ -240,7 +240,7 @@ script:
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
-          color_temp: 449
+          color_temp_kelvin: 3000
           brightness_pct: 1
       - alias: staande lamp
         action: python_script.smooth_fader

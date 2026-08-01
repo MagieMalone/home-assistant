@@ -111,7 +111,7 @@ eten:
           - light.keuken_3
       data:
         brightness: 64
-        color_temp: 500
+        color_temp_kelvin: 2202
     - delay:
         seconds: 2
     - action: tts.speak
@@ -132,7 +132,7 @@ koken:
           - light.keuken_3
       data:
         brightness: 255
-        color_temp: 153
+        color_temp_kelvin: 5000
 tv:
   sequence:
     - action: homeassistant.turn_on
@@ -164,7 +164,7 @@ tv:
         entity_id: light.staande_lamp
       data:
         brightness: 128
-        color_temp: 500
+        color_temp_kelvin: 2202
         transition: 10
     - delay:
         seconds: 2

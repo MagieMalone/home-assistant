@@ -14,7 +14,7 @@ automation:
       - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.input_dishwasher_has_run
-      - action: notify.mobile_app_kb2003
+      - action: notify.oneplus13
         # https://companion.home-assistant.io/docs/notifications/notifications-basic/#specific-channel-properties
         data:
           title: "Vaatwasser status"
@@ -25,7 +25,7 @@ automation:
             importance: high
             vibrationPattern: "500, 1000, 500, 1000, 500"
             ledColor: "orange"
-      - action: notify.mobile_app_kb2003
+      - action: notify.oneplus13
         data:
           message: "TTS"
           data:
@@ -81,12 +81,18 @@ automation:
         entity_id: input_boolean.input_dishwasher_has_run
         state: "off"
     actions:
+      - action: weather.get_forecasts
+        target:
+          entity_id: weather.knmi_home
+        data:
+          type: hourly
+        response_variable: weather_forecast
       - choose:
           - conditions:
               - condition: trigger
                 id: "cloudy"
               - condition: template
-                value_template: "{{state_attr('sensor.knmi_fcast_daily','forecast')[0]['condition']!='clear'}}"
+                value_template: "{{weather_forecast['weather.knmi_home']['forecast'][0]['condition']!='clear'}}"
             sequence:
               - action: home_connect.set_program_and_options
                 data:
@@ -115,7 +121,7 @@ automation:
         #          - condition: template
         #            value_template: "{{ now().month in [1,2,3,10,11,12] }}"
         #          - condition: template
-        #            value_template: "{{state_attr('sensor.knmi_fcast_daily','forecast')[0]['condition'] in ['cloudy','fog','rainy','light-rain','light-snow','snowy','snowy-rainy','lightning']}}"
+        #            value_template: "{{weather_forecast['weather.knmi_home']['forecast'][0]['condition'] in ['cloudy','fog','rainy','light-rain','light-snow','snowy','snowy-rainy','lightning']}}"
         #          sequence:
         #            - action: home_connect.set_program_and_options
         #              data:

@@ -60,7 +60,7 @@ else :
   # GET CURRENT STATE
   states = hass.states.get (entity_id)
   b_cur = b_initial = states.attributes.get ('brightness') or 0
-  t_cur = t_initial = states.attributes.get ('color_temp') or 0
+  t_cur = t_initial = states.attributes.get ('color_temp_kelvin') or 0
   if (b_start < 1 and b_end < 1) :
     logger.error ("Curved fader: When light is off or brighness_start and brighness_end is not defined or 0, the light will remain off, please define brightness")
   if (b_cur == 0 and t_start == -1) :
@@ -95,7 +95,7 @@ else :
   b_new = b_last = b_lag = b_start
   t_new = t_last = b_lag = t_start
 
-  data = { "entity_id" : entity_id, "brightness" : b_new, "color_temp" : t_new }
+  data = { "entity_id" : entity_id, "brightness" : b_new, "color_temp_kelvin" : t_new }
   hass.services.call('light', 'turn_on', data)
   lag = {}
   lag[x] = {"b": b_new, "t": t_new}
@@ -112,7 +112,7 @@ else :
 
     states = hass.states.get(entity_id)
     b_cur = states.attributes.get('brightness') or 0
-    t_cur = states.attributes.get('color_temp') or 0
+    t_cur = states.attributes.get('color_temp_kelvin') or 0
 
     #  Because the script runs synchronous and there is no button to stop a running
     #  python script, we need a break.
@@ -133,7 +133,7 @@ else :
       break
 
     if ((b_new != b_last) or (t_new != t_last)):
-      data = { "entity_id" : entity_id, "brightness" : b_new, "color_temp" : t_new }
+      data = { "entity_id" : entity_id, "brightness" : b_new, "color_temp_kelvin" : t_new }
       hass.services.call('light', 'turn_on', data)
       if (debug_report > 0) : logger.info("Setting %s: brightness from %s to %s and color from %s to %s", entity_id, b_last, b_new, t_last, t_new)
       b_last = b_new

@@ -169,7 +169,7 @@ script:
             - light.sk_spot
 
         data:
-          color_temp: 153
+          color_temp_kelvin: 5000
           brightness_pct: 100
           transition: 15
   cleaningmode_off:

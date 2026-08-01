@@ -99,73 +99,59 @@ action:
     data:
       duration: !input calendar_duration
 
+  - action: weather.get_forecasts
+    target:
+      entity_id: !input weather_entity
+    data:
+      type: daily
+    response_variable: weather_forecast
+
   - alias: "Conversation Agent Notification Text"
     action: conversation.process
     data:
       text: |-
         Time: {{ now() }}
         {%- if zone_entity is defined %}
-        Latitude: {{ state_attr(zone_entity, 'latitude') | round(1) }}
-        Longitude: {{ state_attr(zone_entity, 'longitude') | round(1) }}
+          Latitude: {{ state_attr(zone_entity, 'latitude') | round(1) }}
+          Longitude: {{ state_attr(zone_entity, 'longitude') | round(1) }}
         {% endif %}
-
         {%- if weather_entity is defined %}
-        {%- set forecast = state_attr(weather_entity, 'forecast')[0] %}
-        {%- set temperature_unit = state_attr(weather_entity, 'temperature_unit') -%}
-        Weather: {{ forecast.condition }} ({{ forecast.temperature }}{{ temperature_unit }}, {{ forecast.precipitation }}% precipitation)
+          {%- set forecast = weather_forecast['weather.knmi_home']['forecast'][0] %}
+          {%- set temperature_unit = state_attr(weather_entity, 'temperature_unit') -%}
+          Weather: {{ forecast.condition }} ({{ forecast.temperature }}{{ temperature_unit }}, {{ forecast.precipitation_probability }}% precipitation)
         {%- endif %}
         Calendar events for the next {{ calendar_duration.hours }}:
-        {%- if not agenda.items() %}
+        {% set merged_agenda = (merge_response(agenda) | sort(attribute='start')) %}
+        {% set ns = namespace(valid_events=0) %}
+        {%- if merged_agenda|length == 0 %}
           - No upcoming events.
         {%- else %}
-          {%- for key, value in agenda.items() %}
-            {% if key == "calendar.action" %}
-              {%- for event in value.events %}
-                {%- if event.summary is defined %}
-                  {%- if  event.summary != "Private Appointment" and event.summary != "lunch"  and event.summary != "outside working hours" %}
-                    - Summary: {{ event.summary }}
-                      Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
-                    {%- if event.descripton is defined %}
-                      Description: {{ event.descripton }}
-                    {% endif -%}
-                    {%- if event.location is defined %}
-                      Location: {{ event.location }}
-                    {% endif -%}
-                  {% endif -%}
-                {%- else %}
-                  - Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
-                  {%- if event.descripton is defined %}
-                    Description: {{ event.descripton }}
-                  {% endif -%}
-                  {%- if event.location is defined %}
-                    Location: {{ event.location }}
-                  {% endif -%}
+          {%- for event in merged_agenda %}
+            {%- if event.summary is defined %}
+              {%- if  event.summary != "Private Appointment" and event.summary != "lunch"  and event.summary != "outside working hours" and event.summary != "reflectie" %}
+                {% set ns.valid_events = ns.valid_events + 1 %}
+                - Summary: {{ event.summary }}
+                  Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
+                {%- if event.descripton is defined %}
+                  Description: {{ event.descripton }}
                 {% endif -%}
-              {%- endfor %}
-            {% else %}
-              {%- for event in value.events %}
-                {%- if event.summary is defined %}
-                  {%- if  event.summary != "Private Appointment" and event.summary != "lunch"  and event.summary != "outside working hours" %}
-                    - Summary: {{ event.summary }}
-                      Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
-                    {%- if event.descripton is defined %}
-                      Description: {{ event.descripton }}
-                    {% endif -%}
-                    {%- if event.location is defined %}
-                      Location: {{ event.location }}
-                    {% endif -%}
-                  {% endif -%}
-                {%- else %}
-                  - Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
-                  {%- if event.descripton is defined %}
-                    Description: {{ event.descripton }}
-                  {% endif -%}
-                  {%- if event.location is defined %}
-                    Location: {{ event.location }}
-                  {% endif -%}
+                {%- if event.location is defined %}
+                  Location: {{ event.location }}
                 {% endif -%}
-              {%- endfor %}
-            {%- endif %}
+              {% endif -%}
+            {%- else %}
+              {% set ns.valid_events = ns.valid_events + 1 %}
+              - Start-End: {% if event.start is defined %}{{ event.start }} to {{ event.end }}{% else %}All Day{% endif %}
+              {%- if event.descripton is defined %}
+                Description: {{ event.descripton }}
+              {% endif -%}
+              {%- if event.location is defined %}
+                Location: {{ event.location }}
+              {% endif -%}
+            {% endif -%}
+            {% if loop.last and ns.valid_events == 0 %}
+              - No upcoming events.
+            {% endif %}
           {%- endfor %}
         {%- endif %}
         {{ prompt }}
@@ -175,11 +161,13 @@ action:
     action: !input notify_service
     data:
       title: "{{ now().strftime('%A') }} Agenda"
-      message: "{{ agent.response.speech.plain.speech }}"
+      message: |
+        {{ agent.response.speech.plain.speech }}
   - alias: mail
     action: notify.a_buurman_gmail_com
     data:
-      message: "{{ agent.response.speech.plain.speech }}"
+      message: |
+        {{ agent.response.speech.plain.speech|replace("\n", "<br />") }}
       title: "{{ now().strftime('%A') }} Agenda"
       target:
         - "a.buurman@gmail.com"

@@ -229,6 +229,30 @@ automation:
       - action: switch.turn_on
         target:
           entity_id: switch.media_group
+  - alias: f1_lights_save
+    id: "019f0d0c-0f45-762d-8d0e-de7d8c0de4ad"
+    trigger:
+      - trigger: state
+        entity_id: sensor.f1_session_status
+        to:
+          - "pre"
+    actions:
+      - action: scene.create
+        data:
+          scene_id: before_f1lights
+          snapshot_entities:
+            - light.hue_lightstrip_plus_1
+  - alias: f1_lights_restore
+    id: "019f0d0f-9f2f-76aa-aeed-39a6763eabe9"
+    trigger:
+      - trigger: state
+        entity_id: sensor.f1_session_status
+        to:
+          - "ended"
+    actions:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.before_f1lights
   - alias: f1_lights
     id: "440dee78-1a97-429e-8311-0cadb276dc85"
     triggers:
@@ -246,17 +270,18 @@ automation:
           entity_id: input_boolean.guests_boolean
           state: "on"
     actions:
-      - if:
-          - condition: template
-            value_template: "{{trigger.from_state.state == 'CLEAR'}}"
-        then:
-          - action: scene.create
-            data:
-              scene_id: before_f1lights
-              snapshot_entities:
-                - light.hue_lightstrip_plus_1
       - choose:
         # CLEAR, YELLOW, VSC, VSC_ENDING, SC, RED
+          - conditions:
+            - condition: state
+              entity_id: sensor.f1_track_status
+              state: "CLEAR"
+            sequence:
+              - action: light.turn_on
+                target: 
+                  entity_id: light.hue_lightstrip_plus_1
+                data:
+                  color_name: "green"
           - conditions:
             - condition: state
               entity_id: sensor.f1_track_status
@@ -298,6 +323,7 @@ automation:
                   entity_id: light.hue_lightstrip_plus_1
                 data:
                   color_name: "darkorange"
+                  flash: long
           - conditions:
             - condition: state
               entity_id: sensor.f1_track_status
@@ -308,8 +334,4 @@ automation:
                   entity_id: light.hue_lightstrip_plus_1
                 data:
                   color_name: "red"
-        default:
-          - action: scene.turn_on
-            target:
-              entity_id: scene.before_f1lights
 

@@ -96,14 +96,14 @@ template:
           {% else %}
             {{ state_attr('calendar.alarm', 'location') }}
           {% endif %}
-#  - sensor:
-#      - name: cal_reminders_name
-#        unique_id: "9aa64b47-5434-4399-81a6-65c338bf6a5e"
-#        state: "{{ state_attr('calendar.reminders', 'message') | replace('#reminders', '')}}"
-#      - name: cal_reminders_date
-#        unique_id: "6e1e91bd-9fae-4723-8a28-a1adfd50de3e"
-#        device_class: "timestamp"
-#        state: "{{(state_attr('calendar.reminders', 'start_time')|as_datetime).astimezone()}}"
+  #  - sensor:
+  #      - name: cal_reminders_name
+  #        unique_id: "9aa64b47-5434-4399-81a6-65c338bf6a5e"
+  #        state: "{{ state_attr('calendar.reminders', 'message') | replace('#reminders', '')}}"
+  #      - name: cal_reminders_date
+  #        unique_id: "6e1e91bd-9fae-4723-8a28-a1adfd50de3e"
+  #        device_class: "timestamp"
+  #        state: "{{(state_attr('calendar.reminders', 'start_time')|as_datetime).astimezone()}}"
   - trigger:
       - trigger: state
         entity_id: sensor.waze_travel_time
@@ -235,7 +235,7 @@ automation:
                 data:
                   volume_level: "{{states('input_number.tts_volume')| float}}"
         default:
-          - action: notify.mobile_app_kb2003
+          - action: notify.oneplus13
             data:
               message: >
                 {%- if states('sensor.waze_travel_time') == None %}
@@ -298,7 +298,7 @@ automation:
     trigger:
       - trigger: calendar
         event: start
-        entity_id: calendar.action
+        entity_id: calendar.action_2
         offset: "-00:02:00"
     condition:
       - condition: state
@@ -319,7 +319,7 @@ automation:
                 data:
                   cache: false
                   media_player_entity_id: media_player.speakers
-                  #                  message: "De meeting {{state_attr('calendar.action', 'message')}} begint over twee minuten"
+                  #                  message: "De meeting {{state_attr('calendar.action_2', 'message')}} begint over twee minuten"
                   message: "De meeting {{trigger.calendar_event.summary}} begint over twee minuten"
                   options:
                     voice: FennaNeural

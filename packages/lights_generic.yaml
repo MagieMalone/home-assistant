@@ -323,7 +323,7 @@ script:
         data:
           brightness_pct: 50
           transition: 2
-          kelvin: 3000
+          color_temp_kelvin: 3000
       - alias: strip
         action: light.turn_on
         target:
@@ -431,6 +431,7 @@ automation:
           - light.keuken_2
           - light.keuken_3
           - light.trap_hal
+          - light.badkamer_spiegel
         from: "off"
         to: "on"
     action:
@@ -487,7 +488,7 @@ automation:
                             - 0.6915
                             - 0.3083
                   - conditions:
-                      - "{{'color_temp' in state_attr(trigger.entity_id, 'supported_color_modes') }}"
+                      - "{{'color_temp_kelvin' in state_attr(trigger.entity_id, 'supported_color_modes') }}"
                     sequence:
                       - action: light.turn_on
                         target:
@@ -495,7 +496,7 @@ automation:
                         data:
                           brightness: 1
                           transition: 2
-                          color_temp: "{{state_attr(trigger.entity_id, 'max_mireds')}}"
+                          color_temp_kelvin: "{{state_attr(trigger.entity_id, 'max_mireds')}}"
                 default:
                   - action: light.turn_on
                     target:
@@ -514,7 +515,7 @@ automation:
     id: "3e857202-9058-4f02-b34e-c6c79e0d2dac"
     trigger:
       - trigger: state
-        entity_id: input_boolean.astro
+        entity_id: binary_sensor.nina_session_live
         to: "on"
     action:
       - action: light.turn_on
@@ -528,9 +529,9 @@ automation:
             - 0.3083
       - action: light.turn_on
         target:
-          entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|selectattr('attributes.supported_color_modes','search', 'color_temp', )|rejectattr('attributes.supported_color_modes','search', 'xy', )|map(attribute='entity_id')|list}}"
+          entity_id: "{{states.light|selectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|selectattr('attributes.supported_color_modes','search', 'color_temp_kelvin', )|rejectattr('attributes.supported_color_modes','search', 'xy', )|map(attribute='entity_id')|list}}"
         data:
-          color_temp: 454
+          color_temp_kelvin: 2202
       - action: input_select.select_option
         target:
           entity_id: input_select.house_mode
@@ -540,7 +541,7 @@ automation:
     id: "6bdec97d-0991-4f54-a29e-9d1c7b9330a0"
     trigger:
       - trigger: state
-        entity_id: input_boolean.astro
+        entity_id: binary_sensor.nina_session_live
         to: "off"
     variables:
       off_lights: "{{states.light|rejectattr('state', 'eq', 'on')|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
@@ -553,7 +554,7 @@ automation:
         target:
           entity_id: "{{states.light|selectattr('attributes.entity_id', 'undefined')|map(attribute='entity_id')|list}}"
         data:
-          color_temp: 298
+          color_temp_kelvin: 4000
       - alias: strip
         action: light.turn_on
         target:
@@ -575,7 +576,7 @@ automation:
         target:
           entity_id: light.hue_color_pendant_down_1
         data:
-          color_temp: 449
+          color_temp_kelvin: 2202
       - action: light.turn_off
         target:
           entity_id: "{{off_lights}}"
