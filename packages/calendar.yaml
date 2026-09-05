@@ -235,7 +235,7 @@ automation:
                 data:
                   volume_level: "{{states('input_number.tts_volume')| float}}"
         default:
-          - action: notify.oneplus13
+          - action: notify.mobile_app_oneplus13
             data:
               message: >
                 {%- if states('sensor.waze_travel_time') == None %}

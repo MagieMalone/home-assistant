@@ -236,6 +236,8 @@ automation:
         entity_id: sensor.f1_session_status
         to:
           - "pre"
+        not_from:
+          - "unavailable"
     actions:
       - action: scene.create
         data:
@@ -249,6 +251,8 @@ automation:
         entity_id: sensor.f1_session_status
         to:
           - "ended"
+        not_from:
+          - "unavailable"
     actions:
       - action: scene.turn_on
         target:
@@ -258,6 +262,8 @@ automation:
     triggers:
       - trigger: state
         entity_id: sensor.f1_track_status
+        not_from:
+          - "unavailable"
     conditions:
       - or:
         - condition: state

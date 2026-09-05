@@ -10,7 +10,7 @@ automation:
     conditions:
       - "{{trigger.from_state.attributes.latest_version}} != {{trigger.to_state.attributes.latest_version}} "
     action:
-      action: notify.oneplus13
+      action: notify.mobile_app_oneplus13
       data:
         message: >
           Update to {{trigger.to_state.attributes.title}} to {{trigger.to_state.attributes.latest_version}} is available.

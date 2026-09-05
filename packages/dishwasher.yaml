@@ -14,7 +14,7 @@ automation:
       - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.input_dishwasher_has_run
-      - action: notify.oneplus13
+      - action: notify.mobile_app_oneplus13
         # https://companion.home-assistant.io/docs/notifications/notifications-basic/#specific-channel-properties
         data:
           title: "Vaatwasser status"
@@ -25,7 +25,7 @@ automation:
             importance: high
             vibrationPattern: "500, 1000, 500, 1000, 500"
             ledColor: "orange"
-      - action: notify.oneplus13
+      - action: notify.mobile_app_oneplus13
         data:
           message: "TTS"
           data:

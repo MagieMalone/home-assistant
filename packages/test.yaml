@@ -16,7 +16,7 @@ automation:
         data:
           duration:
             hours: 18
-      - action: notify.oneplus13
+      - action: notify.mobile_app_oneplus13
         data:
           message: |
             {% set merged_agenda = (merge_response(agenda) | sort(attribute='start')) %}

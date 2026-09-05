@@ -13,14 +13,14 @@
 #    endpoint: http://192.168.3.152:10000/sony
 switch:
   - platform: wake_on_lan
-    mac: "90:F1:AA:2A:59:50"
-    name: "samsungtv"
-    host: "192.168.3.119"
+    mac: "d0:cd:bf:28:71:8b"
+    name: "lgwebos"
+    host: "192.168.3.52"
     turn_off:
       action: media_player.turn_off
       data: {}
       target:
-        entity_id: media_player.tv_samsung
+        entity_id: media_player.lg_webos_tv_oled55c54la_deuqljp
 
 automation:
   - alias: "Turn off mediacenter when leaving"

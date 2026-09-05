@@ -1,29 +1,29 @@
-- id: "1651741431457"
+- id: '1651741431457'
   alias: notify if TV is missing
-  description: ""
+  description: ''
   trigger:
-    - trigger: state
-      entity_id: media_player.tv_samsung
-      to: unavailable
-      for:
-        hours: 12
-        minutes: 0
-        seconds: 0
+  - trigger: state
+    entity_id: media_player.lg_webos_tv_oled55c54la_deuqljp
+    to: unavailable
+    for:
+      hours: 12
+      minutes: 0
+      seconds: 0
   condition:
-    - condition: not
-      conditions:
-        - condition: state
-          entity_id: input_select.house_mode
-          state: weg
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: input_select.house_mode
+      state: weg
   action:
-    - action: persistent_notification.create
-      data:
-        message: "TV unavailable "
-        title: "TV unavailable "
+  - action: persistent_notification.create
+    data:
+      message: 'TV unavailable '
+      title: 'TV unavailable '
   mode: single
-- id: "1664433767950"
+- id: '1664433767950'
   alias: Motion-activated Light Lightlevel hal
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/motion_light_lightlevel.yaml
     input:
@@ -31,9 +31,9 @@
       light_entity: light.hal
       threshold_input: input_number.lightlevel
       illu_entity: sensor.hal_illuminance
-- id: "1664434226722"
+- id: '1664434226722'
   alias: Motion-activated Light Lightlevel overloop
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/motion_light_lightlevel.yaml
     input:
@@ -41,9 +41,9 @@
       light_entity: light.overloop
       threshold_input: input_number.lightlevel
       illu_entity: sensor.overloop_illuminance
-- id: "1664434460237"
+- id: '1664434460237'
   alias: Motion-activated Light Lightlevel traphal
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/motion_light_lightlevel.yaml
     input:
@@ -51,9 +51,9 @@
       light_entity: light.trap_hal
       threshold_input: input_number.lightlevel
       illu_entity: sensor.traphal_illuminance
-- id: "1670329716450"
+- id: '1670329716450'
   alias: Motion-activated Light-hal-default
-  description: ""
+  description: ''
   use_blueprint:
     path: homeassistant/motion_light.yaml
     input:
@@ -61,9 +61,9 @@
       light_target:
         entity_id: light.hal
       no_motion_wait: 0
-- id: "1670329753777"
+- id: '1670329753777'
   alias: Motion-activated Light-overloop-default
-  description: ""
+  description: ''
   use_blueprint:
     path: homeassistant/motion_light.yaml
     input:
@@ -71,9 +71,9 @@
       light_target:
         entity_id: light.overloop
       no_motion_wait: 0
-- id: "1670329790024"
+- id: '1670329790024'
   alias: Motion-activated Light-traphal-default
-  description: ""
+  description: ''
   use_blueprint:
     path: homeassistant/motion_light.yaml
     input:
@@ -81,9 +81,9 @@
       light_target:
         entity_id: light.trap_hal
       no_motion_wait: 0
-- id: "1688716773073"
+- id: '1688716773073'
   alias: Conversation agent agenda notification
-  description: ""
+  description: ''
   use_blueprint:
     path: homeassistant/notify_agent_agenda.yaml
     input:
@@ -92,261 +92,277 @@
       weather_entity: weather.berkhout
       zone_entity: zone.home
       notify_action: notify.notify
-- id: "1702198164985"
+- id: '1702198164985'
   alias: test-calendar
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/test.yaml
     input:
       calendar_entity:
         entity_id:
-          - calendar.abuurmangmailcom
-          - calendar.action_2
-- id: "1702198681269"
+        - calendar.abuurmangmailcom
+        - calendar.action_2
+- id: '1702198681269'
   alias: Conversation agent agenda notification fixed
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/notitfy_agent_agenda_mod.yaml
     input:
       conversation_agent: 7df39e215dafbd1d3d853b5366ab81c1
-      notify_action: notify.oneplus13
+      notify_action: notify.mobile_app_oneplus13
       calendar_entity:
         entity_id:
-          - calendar.abuurmangmailcom
-          - calendar.action_2
-          - calendar.birthdays
+        - calendar.abuurmangmailcom
+        - calendar.action_2
+        - calendar.birthdays
       weather_entity: weather.knmi_home
       zone_entity: zone.home
-- id: "1736856884500"
+- id: '1736856884500'
   alias: sw_keuken_single_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 9dd5732a111d48efbbbabc90d41ef787
       light_entity: light.eetkamer
       my_action: single_left
-- id: "1736857048411"
+- id: '1736857048411'
   alias: sw_keuken_single_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 9dd5732a111d48efbbbabc90d41ef787
       light_entity: light.keuken
       my_action: single_right
-- id: "1736857140632"
+- id: '1736857140632'
   alias: sw_slaapkamer_single_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 9ffb11cd66084c9180697da85c7744dd
       my_action: single_left
       light_entity: light.sk_spot
-- id: "1736857340401"
+- id: '1736857340401'
   alias: sw_woonkamer_single_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
       light_entity: light.hue_lightstrip_plus_1
       my_action: single_left
-- id: "1736857386492"
+- id: '1736857386492'
   alias: sw_slaapkamer_single_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 9ffb11cd66084c9180697da85c7744dd
       my_action: single_right
       light_entity: light.sk_ceiling
-- id: "1736857428495"
+- id: '1736857428495'
   alias: sw_slaapkamer_single_both
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 9ffb11cd66084c9180697da85c7744dd
       my_action: single_both
       light_entity: light.slaapkamer
-- id: "1736857514490"
+- id: '1736857514490'
   alias: sw_keuken_double_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-double-light.yaml
     input:
       switch_entity: 9dd5732a111d48efbbbabc90d41ef787
       light_entity: light.eetkamer
       my_action: double_left
-- id: "1736857572928"
+- id: '1736857572928'
   alias: sw_keuken_double_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-double-light.yaml
     input:
       switch_entity: 9dd5732a111d48efbbbabc90d41ef787
       light_entity: light.keuken
       my_action: double_right
-- id: "1736857622382"
+- id: '1736857622382'
   alias: sw_slaapkamer_double_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-double-light.yaml
     input:
       switch_entity: 9ffb11cd66084c9180697da85c7744dd
       light_entity: light.sk_spot
       my_action: double_left
-- id: "1736857666912"
+- id: '1736857666912'
   alias: sw_slaapkamer_double_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-double-light.yaml
     input:
       switch_entity: 9ffb11cd66084c9180697da85c7744dd
       light_entity: light.sk_ceiling
       my_action: double_right
-- id: "1736857709640"
+- id: '1736857709640'
   alias: sw_woonkamer_double_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-double-light.yaml
     input:
       switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
       light_entity: light.hue_lightstrip_plus_1
       my_action: double_left
-- id: "1736857786952"
+- id: '1736857786952'
   alias: sw_woonkamer_double_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-double-light.yaml
     input:
       switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
       light_entity: light.staande_lamp
       my_action: double_right
-- id: "1736857837284"
+- id: '1736857837284'
   alias: sw_keuken_hold_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 9dd5732a111d48efbbbabc90d41ef787
       light_entity: light.eetkamer
       my_action: hold_left
-- id: "1736857897391"
+- id: '1736857897391'
   alias: sw_keuken_hold_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 9dd5732a111d48efbbbabc90d41ef787
       light_entity: light.keuken
       my_action: hold_right
-- id: "1736857951540"
+- id: '1736857951540'
   alias: sw_slaapkamer_hold_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 9ffb11cd66084c9180697da85c7744dd
       light_entity: light.sk_spot
       my_action: hold_left
-- id: "1736857995030"
+- id: '1736857995030'
   alias: sw_slaapkamer_hold_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 9ffb11cd66084c9180697da85c7744dd
       light_entity: light.sk_ceiling
       my_action: hold_right
-- id: "1736858039240"
+- id: '1736858039240'
   alias: sw_slaapkamer_hold_both
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 9ffb11cd66084c9180697da85c7744dd
       light_entity: light.slaapkamer
       my_action: hold_both
-- id: "1736858069003"
+- id: '1736858069003'
   alias: sw_woonkamer_hold_left
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
       light_entity: light.hue_lightstrip_plus_1
       my_action: hold_left
-- id: "1736858109015"
+- id: '1736858109015'
   alias: sw_woonkamer_hold_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
       light_entity: light.staande_lamp
       my_action: hold_right
-- id: "1736858150889"
+- id: '1736858150889'
   alias: sw_woonkamer_hold_both
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
       light_entity: light.woonkamer
       my_action: hold_both
-- id: "1736930888506"
+- id: '1736930888506'
   alias: sw_keuken_hold_both
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-hold-light.yaml
     input:
       switch_entity: 9dd5732a111d48efbbbabc90d41ef787
       light_entity: light.keuken_en_eethoek
       my_action: hold_both
-- id: "1736930948607"
+- id: '1736930948607'
   alias: sw_keuken_single_both
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 9dd5732a111d48efbbbabc90d41ef787
       light_entity: light.keuken_en_eethoek
       my_action: single_both
-- id: "1736931305029"
+- id: '1736931305029'
   alias: sw_woonkamer_single_right
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
       light_entity: light.staande_lamp
       my_action: single_right
-- id: "1736931379088"
+- id: '1736931379088'
   alias: sw_woonkamer_single_both
-  description: ""
+  description: ''
   use_blueprint:
     path: myown/aqara_double-sw-single-light.yaml
     input:
       switch_entity: 57c872d7c98141bf86eb0c49857a2d8f
       light_entity: light.woonkamer
       my_action: single_both
-- id: "1758094424329"
+- id: '1758094424329'
   alias: update-manual-entities
-  description: ""
+  description: ''
   triggers:
-    - trigger: time_pattern
-      minutes: /5
-    - trigger: homeassistant
-      event: start
+  - trigger: time_pattern
+    minutes: /5
+  - trigger: homeassistant
+    event: start
   conditions: []
   actions:
-    - action: homeassistant.update_entity
-      metadata: {}
-      data:
-        entity_id:
-          - sensor.waze_travel_time
-          - sensor.waze_travel_time_alarm
+  - action: homeassistant.update_entity
+    metadata: {}
+    data:
+      entity_id:
+      - sensor.waze_travel_time
+      - sensor.waze_travel_time_alarm
+  mode: single
+- id: '1788593613282'
+  alias: WebOs-device-turnon-to-WOL
+  description: ''
+  triggers:
+  - device_id: e2595ab33b78f76f46832a7afd3acb6e
+    domain: webostv
+    type: webostv.turn_on
+    trigger: device
+  conditions: []
+  actions:
+  - action: button.press
+    metadata: {}
+    target:
+      device_id: 71772d76c023ef1a2fd4eb98384a12c6
+    data: {}
   mode: single
